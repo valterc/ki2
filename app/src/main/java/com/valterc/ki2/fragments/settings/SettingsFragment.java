@@ -1,4 +1,4 @@
-package com.valterc.ki2.fragments;
+package com.valterc.ki2.fragments.settings;
 
 import android.os.Bundle;
 
