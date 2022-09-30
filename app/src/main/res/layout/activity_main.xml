@@ -2,50 +2,49 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/hh_yellow"
             android:orientation="vertical"
-            android:background="@color/hh_yellow">
+            app:layout_scrollFlags="scroll|enterAlways|snap|exitUntilCollapsed"
+            android:minHeight="80dp"
+            app:layout_scrollEffect="compress">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
-                android:fontFamily="sans-serif-condensed-medium"
-                android:paddingTop="20dp"
-                android:paddingBottom="0dp"
+                android:fontFamily="sans-serif-medium"
+                android:padding="0dp"
                 android:text="@string/app_name"
                 android:textAlignment="center"
-                android:textAllCaps="false"
                 android:textColor="@color/black"
-                android:textSize="60sp" />
+                android:textSize="50sp" />
 
             <TextView
+                android:id="@+id/textview_main_message"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/textview_main_message"
+                android:paddingBottom="10dp"
                 android:text="Di2 back to Karoo"
                 android:textAlignment="center"
-                android:paddingBottom="20dp"
-                android:textColor="@color/black"/>
+                android:textColor="@color/black" />
 
         </LinearLayout>
-
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_scrollFlags="scroll|enterAlways"
             app:tabMode="scrollable"
             app:tabIndicatorColor="@color/black"
             app:tabTextColor="@color/gray"
@@ -65,12 +64,20 @@
                 android:icon="@drawable/ic_gear" />
 
         </com.google.android.material.tabs.TabLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
         <androidx.viewpager2.widget.ViewPager2
-            android:layout_height="match_parent"
+            android:id="@+id/viewpager2_main"
             android:layout_width="match_parent"
-            android:id="@+id/viewpager2_main"/>
+            android:layout_height="match_parent" />
 
-    </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
