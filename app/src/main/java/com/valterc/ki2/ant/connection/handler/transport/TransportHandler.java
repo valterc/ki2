@@ -119,12 +119,10 @@ public class TransportHandler implements ITransportHandler {
                 break;
 
             case RX_FAIL_GO_TO_SEARCH:
-
                 this.connectionEstablished = false;
                 this.antBroadcasting = false;
                 this.acknowledgedDataSent = null;
                 deviceConnectionListener.onConnectionStatus(deviceId, ConnectionStatus.SEARCHING);
-
                 break;
 
             default:
