@@ -3,6 +3,7 @@ plugins {
 }
 
 android {
+    namespace 'com.valterc.ki2'
     compileSdk 32
 
     defaultConfig {
