@@ -37,7 +37,9 @@
             </intent-filter>
         </receiver>
 
-        <service android:name="com.valterc.ki2.services.Ki2Service" android:exported="true"></service>
+        <service
+            android:name="com.valterc.ki2.services.Ki2Service"
+            android:exported="true" />
     </application>
 
     <uses-permission android:name="android.permission.INJECT_EVENTS" tools:ignore="ProtectedPermissions" />
