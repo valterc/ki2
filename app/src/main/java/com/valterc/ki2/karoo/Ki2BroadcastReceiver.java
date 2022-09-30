@@ -10,11 +10,8 @@ import timber.log.Timber;
 
 public class Ki2BroadcastReceiver extends BroadcastReceiver {
 
-    private static final Timber.Tree Logger = Timber.tag(Ki2BroadcastReceiver.class.getName());
-
     @Override
     public void onReceive(Context context, Intent intent) {
-        Logger.d("Ki2BroadcastReceiver: Module loaded");
-        SdkContext sdkContext = SdkContext.buildSdkContext(context);
+        Timber.d("Module loaded");
     }
 }
