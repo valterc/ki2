@@ -23,7 +23,7 @@ jobs:
 
     - name: Inject secrets
       run: |
-        "<?xml version="1.0" encoding="utf-8"?><resources><string name="network_key">${{ secrets.S_NETWORK_KEY }}</string></resources>" > app/src/main/res/values/secrets.xml
+        echo "<?xml version=\"1.0\" encoding=\"utf-8\"?><resources><string name=\"network_key\">${{ secrets.S_NETWORK_KEY }}</string></resources>" > app/src/main/res/values/secrets.xml
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
