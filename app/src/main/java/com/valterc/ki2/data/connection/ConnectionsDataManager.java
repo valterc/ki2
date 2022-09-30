@@ -24,6 +24,14 @@ public class ConnectionsDataManager {
         }
     }
 
+    public void addConnection(DeviceId deviceId){
+        connectionDataManagersMap.put(deviceId, new ConnectionDataManager(deviceId));
+    }
+
+    public void removeConnection(DeviceId deviceId){
+        connectionDataManagersMap.remove(deviceId);
+    }
+
     public boolean onConnectionStatus(DeviceId deviceId, ConnectionStatus connectionStatus){
         ConnectionDataManager connectionDataManager = connectionDataManagersMap.get(deviceId);
         if (connectionDataManager != null)

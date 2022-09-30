@@ -74,7 +74,7 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
             }
 
             serviceHandler.postAction(() -> {
-                for (ConnectionDataManager connectionDataManager: connectionsDataManager.getDataManagers()) {
+                for (ConnectionDataManager connectionDataManager : connectionsDataManager.getDataManagers()) {
                     try {
                         assert callback != null;
                         callback.onConnectionDataInfo(
@@ -104,7 +104,7 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
             }
 
             serviceHandler.postAction(() -> {
-                for (ConnectionDataManager connectionDataManager: connectionsDataManager.getDataManagers()) {
+                for (ConnectionDataManager connectionDataManager : connectionsDataManager.getDataManagers()) {
                     try {
                         assert callback != null;
                         callback.onConnectionInfo(
@@ -134,7 +134,7 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
             }
 
             serviceHandler.postAction(() -> {
-                for (ConnectionDataManager connectionDataManager: connectionsDataManager.getDataManagers()) {
+                for (ConnectionDataManager connectionDataManager : connectionsDataManager.getDataManagers()) {
                     try {
                         ShiftingInfo shiftingInfo = (ShiftingInfo) connectionDataManager.getData(DataType.SHIFTING);
                         if (shiftingInfo != null) {
@@ -167,7 +167,7 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
             }
 
             serviceHandler.postAction(() -> {
-                for (ConnectionDataManager connectionDataManager: connectionsDataManager.getDataManagers()) {
+                for (ConnectionDataManager connectionDataManager : connectionsDataManager.getDataManagers()) {
                     try {
                         BatteryInfo batteryInfo = (BatteryInfo) connectionDataManager.getData(DataType.BATTERY);
                         if (batteryInfo != null) {
@@ -200,7 +200,7 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
             }
 
             serviceHandler.postAction(() -> {
-                for (ConnectionDataManager connectionDataManager: connectionsDataManager.getDataManagers()) {
+                for (ConnectionDataManager connectionDataManager : connectionsDataManager.getDataManagers()) {
                     try {
                         ManufacturerInfo manufacturerInfo = (ManufacturerInfo) connectionDataManager.getData(DataType.MANUFACTURER_INFO);
                         if (manufacturerInfo != null) {
@@ -283,6 +283,17 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
         @Override
         public void changeShiftMode(DeviceId deviceId) throws RemoteException {
             Ki2Service.this.changeShiftMode(deviceId);
+        }
+
+        @Override
+        public void reconnectDevice(DeviceId deviceId) {
+            serviceHandler.postRetriableAction(() -> {
+                antConnectionManager.disconnect(deviceId);
+                connectionsDataManager.removeConnection(deviceId);
+
+                connectionsDataManager.addConnection(deviceId);
+                antConnectionManager.connect(deviceId, Ki2Service.this);
+            });
         }
 
         @Override
