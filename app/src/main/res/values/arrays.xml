@@ -1,12 +1,32 @@
 <resources>
     <!-- Reply Preference -->
-    <string-array name="reply_entries">
-        <item>Reply</item>
-        <item>Reply to all</item>
+    <string-array name="preference_titles_switch_press_action">
+        <item>None</item>
+        <item>Navigate Left</item>
+        <item>Navigate Right</item>
+        <item>Pause/Resume Ride/Confirm</item>
+        <item>Mark Lap/Cycle Map Zoom/Back</item>
+        <item>Mark Lap</item>
     </string-array>
 
-    <string-array name="reply_values">
-        <item>reply</item>
-        <item>reply_all</item>
+    <string-array name="preference_values_switch_press_action">
+        <item>none</item>
+        <item>navigate_left</item>
+        <item>navigate_right</item>
+        <item>pause_resume_confirm</item>
+        <item>lap_map_back</item>
+        <item>lap</item>
+    </string-array>
+
+    <string-array name="preference_titles_switch_hold_action">
+        <item>None</item>
+        <item>Map/Graph zoom out</item>
+        <item>Map/Graph zoom in</item>
+    </string-array>
+
+    <string-array name="preference_values_switch_hold_action">
+        <item>none</item>
+        <item>map_graph_zoom_out</item>
+        <item>map_graph_zoom_in</item>
     </string-array>
 </resources>

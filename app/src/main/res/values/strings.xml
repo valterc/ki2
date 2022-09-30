@@ -4,12 +4,7 @@
     <string name="title_activity_settings">SettingsActivity</string>
 
     <!-- Preference Titles -->
-    <string name="messages_header">Messages</string>
     <string name="sync_header">Sync</string>
-
-    <!-- Messages Preferences -->
-    <string name="signature_title">Your signature</string>
-    <string name="reply_title">Default reply action</string>
 
     <!-- Sync Preferences -->
     <string name="sync_title">Sync email periodically</string>
@@ -17,4 +12,22 @@
     <string name="attachment_summary_on">Automatically download attachments for incoming emails
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
+
+    <!-- Preference Keys -->
+
+    <string name="category_preference_switches">Switches</string>
+    <string name="category_preference_left_switch">Left Switch</string>
+    <string name="category_preference_right_switch">Right Switch</string>
+
+    <string name="title_preference_single_press">Single Press</string>
+    <string name="title_preference_double_press">Double Press</string>
+    <string name="title_preference_hold">Hold</string>
+
+    <string name="preference_left_switch_single_press">LEFT_SWITCH_SINGLE_PRESS</string>
+    <string name="preference_left_switch_double_press">LEFT_SWITCH_DOUBLE_PRESS</string>
+    <string name="preference_left_switch_hold">LEFT_SWITCH_HOLD</string>
+    <string name="preference_right_switch_single_press">RIGHT_SWITCH_SINGLE_PRESS</string>
+    <string name="preference_right_switch_double_press">RIGHT_SWITCH_DOUBLE_PRESS</string>
+    <string name="preference_right_switch_hold">RIGHT_SWITCH_HOLD</string>
+
 </resources>

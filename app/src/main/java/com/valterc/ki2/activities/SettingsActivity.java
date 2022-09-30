@@ -1,10 +1,10 @@
-package com.valterc.ki2.Activities;
+package com.valterc.ki2.activities;
 
 import android.os.Bundle;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.valterc.ki2.Fragments.SettingsFragment;
+import com.valterc.ki2.fragments.SettingsFragment;
 import com.valterc.ki2.R;
 
 public class SettingsActivity extends AppCompatActivity {

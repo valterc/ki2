@@ -6,9 +6,13 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.valterc.ki2.karoo.Ki2BroadcastReceiver;
+
+import io.hammerhead.sdk.v0.SdkContext;
 import timber.log.Timber;
 
 public class Ki2Application extends Application {
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -19,4 +23,5 @@ public class Ki2Application extends Application {
             }
         });
     }
+
 }
