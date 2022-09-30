@@ -1,10 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
+    <color name="climb_blue_400">#a3d5ff</color>
+    <color name="climb_blue_500">#2386d9</color>
+    <color name="climb_blue_600">#005297</color>
+    <color name="climb_blue_700">#00294b</color>
+
+    <color name="gears_active_bottom">#9f041b</color>
+    <color name="gears_active_top">#f5515f</color>
+    <color name="gears_border">#000000</color>
+
+    <color name="k2Black">#1b2d2d</color>
+    <color name="k2DarkBlue">#214559</color>
+    <color name="k2DarkGrey">#636363</color>
+    <color name="k2DividerColor">#dddddd</color>
+    <color name="k2FadedGrey">#898989</color>
+    <color name="k2Green700">#1c2e2e</color>
+    <color name="k2Grey">#a0b4be</color>
+    <color name="k2LightBlue">#9fb3bd</color>
+    <color name="k2LightGrey">#879090</color>
+    <color name="k2MonochromeGrey400">#979797</color>
+    <color name="k2MonochromeGrey500">#7d7d7d</color>
+    <color name="k2Red">#c84e35</color>
+    <color name="k2Red600">#d34343</color>
+    <color name="k2Red700">#993d2b</color>
+    <color name="k2Title">#1a2d3d</color>
+    <color name="k2Yellow">#ffe714</color>
+
+    <color name="k2YellowV2">#ffe900</color>
+
+    <color name="strava_orange">#fc4c02</color>
+    <color name="strava_orange_400">#feb07f</color>
+
+    <color name="strava_orange_700">#a14e11</color>
+
+    <color name="hh_orange">#fd7919</color>
+    <color name="hh_orange_dark">#db6216</color>
+
+    <color name="hh_yellow">#FFE900</color>
+    <color name="hh_yellow_dark">#cbba00</color>
+
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="white_10">#FFFAFAFA</color>
+    <color name="gray">#777777</color>
 </resources>
