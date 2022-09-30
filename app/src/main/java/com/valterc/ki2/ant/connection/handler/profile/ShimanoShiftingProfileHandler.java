@@ -25,6 +25,7 @@ import com.valterc.ki2.data.switches.SwitchType;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -32,7 +33,7 @@ import timber.log.Timber;
 
 public class ShimanoShiftingProfileHandler implements IDeviceProfileHandler {
 
-    private static final Collection<CommandType> SUPPORTED_COMMANDS = Arrays.asList(CommandType.SHIFTING_MODE);
+    private static final Collection<CommandType> SUPPORTED_COMMANDS = Collections.singletonList(CommandType.SHIFTING_MODE);
 
     private final DeviceId deviceId;
     private final ITransportHandler transportHandler;
@@ -193,12 +194,10 @@ public class ShimanoShiftingProfileHandler implements IDeviceProfileHandler {
         if ((switchCommand == SwitchCommand.NO_SWITCH || switchData.getSequenceNumber() != -1)
                 && switchData.getSequenceNumber() != sequenceNumber) {
 
-            switch (switchCommand)
-            {
-                case LONG_PRESS_CONTINUE:
-                    switchData.incrementRepeat();
-                default:
-                    switchData.resetRepeat();
+            if (switchCommand == SwitchCommand.LONG_PRESS_CONTINUE) {
+                switchData.incrementRepeat();
+            } else {
+                switchData.resetRepeat();
             }
 
             deviceConnectionListener.onData(deviceId, DataType.SWITCH, new SwitchEvent(type, switchCommand, switchData.getRepeat()));
@@ -332,8 +331,8 @@ public class ShimanoShiftingProfileHandler implements IDeviceProfileHandler {
 
     @Override
     public void sendCommand(CommandType commandType, Object data) {
-        switch (commandType)
-        {
+        switch (commandType) {
+
             case SHIFTING_MODE:
                 changeShiftMode();
                 break;
