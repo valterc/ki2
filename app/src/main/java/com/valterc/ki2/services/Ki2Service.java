@@ -354,19 +354,32 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
     }
 
     private void processScan() throws Exception {
-        if (callbackListScan.getRegisteredCallbackCount() == 0) {
-            antScanner.stopScan();
-        } else {
+        if (callbackListScan.getRegisteredCallbackCount() != 0) {
             if (antManager.isReady()) {
                 antScanner.startScan(ConfigurationStore.getScanChannelConfiguration(Ki2Service.this));
             }
+        } else {
+            antScanner.stopScan();
         }
     }
 
     private void processConnections() throws Exception {
-        Collection<DeviceId> devices = deviceStore.getDevices();
-        connectionsDataManager.setConnections(devices);
-        antConnectionManager.connectOnly(devices, this);
+        if (callbackListSwitch.getRegisteredCallbackCount() != 0
+                || callbackListConnectionInfo.getRegisteredCallbackCount() != 0
+                || callbackListBattery.getRegisteredCallbackCount() != 0
+                || callbackListConnectionDataInfo.getRegisteredCallbackCount() != 0
+                || callbackListManufacturerInfo.getRegisteredCallbackCount() != 0
+                || callbackListShifting.getRegisteredCallbackCount() != 0
+                || callbackListSwitchKey.getRegisteredCallbackCount() != 0) {
+            if (antManager.isReady()) {
+                Collection<DeviceId> devices = deviceStore.getDevices();
+                connectionsDataManager.setConnections(devices);
+                antConnectionManager.connectOnly(devices, this);
+            }
+        } else {
+            connectionsDataManager.clearConnections();
+            antConnectionManager.disconnectAll();
+        }
     }
 
     private void changeShiftMode(DeviceId deviceId) throws RemoteException {

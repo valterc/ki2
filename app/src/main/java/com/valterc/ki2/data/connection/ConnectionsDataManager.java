@@ -86,4 +86,7 @@ public class ConnectionsDataManager {
         return connectionDataManagersMap.values();
     }
 
+    public void clearConnections() {
+        connectionDataManagersMap.clear();
+    }
 }
