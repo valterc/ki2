@@ -56,7 +56,6 @@
             android:exported="true">
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
-
                 <action android:name="io.hammerhead.sdk.INITIALIZE" />
             </intent-filter>
         </receiver>
