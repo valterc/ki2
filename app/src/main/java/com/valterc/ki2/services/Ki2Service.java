@@ -293,6 +293,24 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
         }
 
         @Override
+        public void restartDeviceScan() throws RemoteException {
+            serviceHandler.postRetriableAction(() -> {
+                antScanner.stopScan();
+                processScan();
+            });
+        }
+
+        @Override
+        public void restartDeviceConnections() throws RemoteException {
+            serviceHandler.postRetriableAction(() -> {
+                antConnectionManager.disconnectAll();
+                connectionsDataManager.clearConnections();
+
+                processConnections();
+            });
+        }
+
+        @Override
         public void changeShiftMode(DeviceId deviceId) throws RemoteException {
             Ki2Service.this.changeShiftMode(deviceId);
         }
