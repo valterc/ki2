@@ -29,11 +29,11 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:clickable="true"
-        app:icon="@drawable/ic_back"
+        app:icon="@drawable/ic_refresh"
         app:collapsedSize="50dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:contentDescription="Back"
-        android:onClick="finish"/>
+        android:enabled="false"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

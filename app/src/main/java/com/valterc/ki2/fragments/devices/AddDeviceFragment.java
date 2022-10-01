@@ -2,6 +2,7 @@ package com.valterc.ki2.fragments.devices;
 
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -12,7 +13,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.valterc.ki2.R;
+import com.valterc.ki2.activities.devices.AddDeviceActivity;
 
 public class AddDeviceFragment extends Fragment {
 
@@ -36,4 +39,14 @@ public class AddDeviceFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_add_device, container, false);
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        ExtendedFloatingActionButton buttonAddDevice = view.findViewById(R.id.button_add_devices_refresh);
+        buttonAddDevice.setOnClickListener(v -> {
+            startActivity(new Intent(getContext(), AddDeviceActivity.class));
+        });
+
+    }
 }
