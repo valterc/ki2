@@ -471,7 +471,9 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
                         break;
 
                     case SWITCH_KEY:
-
+                        broadcastData(callbackListSwitchKey,
+                                () -> (SwitchKeyEvent) connectionsDataManager.getData(deviceId, dataType),
+                                (callback, ske) -> callback.onSwitchKeyEvent(deviceId, ske));
                         break;
 
                     case MANUFACTURER_INFO:
