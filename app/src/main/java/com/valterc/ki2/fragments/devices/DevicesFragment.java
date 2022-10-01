@@ -16,7 +16,9 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.valterc.ki2.R;
+import com.valterc.ki2.activities.devices.AddDeviceActivity;
 import com.valterc.ki2.data.device.DeviceId;
 import com.valterc.ki2.services.IKi2Service;
 import com.valterc.ki2.services.Ki2Service;
@@ -34,9 +36,7 @@ public class DevicesFragment extends Fragment {
         super.onCreate(savedInstanceState);
         viewModel = new ViewModelProvider(this).get(DevicesViewModel.class);
 
-        Intent serviceIntent = new Intent();
-        serviceIntent.setComponent(new ComponentName("com.valterc.ki2", "com.valterc.ki2.services.Ki2Service"));
-
+        /*
         boolean result = getContext().bindService(serviceIntent, new ServiceConnection() {
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
@@ -60,6 +60,7 @@ public class DevicesFragment extends Fragment {
         }, Context.BIND_AUTO_CREATE | Context.BIND_INCLUDE_CAPABILITIES);
 
         Timber.d("Bind result: %s", result);
+         */
     }
 
     @Nullable
@@ -72,5 +73,10 @@ public class DevicesFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        ExtendedFloatingActionButton buttonAddDevice = view.findViewById(R.id.button_devices_add);
+        buttonAddDevice.setOnClickListener(v -> {
+            startActivity(new Intent(getContext(), AddDeviceActivity.class));
+        });
     }
 }

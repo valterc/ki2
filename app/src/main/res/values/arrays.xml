@@ -1,5 +1,4 @@
 <resources>
-    <!-- Reply Preference -->
     <string-array name="preference_titles_switch_press_action">
         <item>None</item>
         <item>Navigate Left</item>

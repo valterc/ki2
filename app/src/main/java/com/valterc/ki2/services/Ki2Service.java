@@ -2,6 +2,7 @@ package com.valterc.ki2.services;
 
 import android.app.NotificationManager;
 import android.app.Service;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.os.IBinder;
 import android.os.IInterface;
@@ -48,6 +49,17 @@ import java.util.function.Supplier;
 import timber.log.Timber;
 
 public class Ki2Service extends Service implements IAntStateListener, IAntScanListener, IDeviceConnectionListener {
+
+    /**
+     * Get intent to bind to this service.
+     *
+     * @return Intent configured to be used to bind to this service.
+     */
+    public static Intent getIntent(){
+        Intent  serviceIntent = new Intent();
+        serviceIntent.setComponent(new ComponentName("com.valterc.ki2", "com.valterc.ki2.services.Ki2Service"));
+        return serviceIntent;
+    }
 
     private final RemoteCallbackList<IConnectionDataInfoCallback> callbackListConnectionDataInfo
             = new RemoteCallbackList<>();

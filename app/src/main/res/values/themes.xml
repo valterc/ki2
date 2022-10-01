@@ -1,6 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Theme.Ki2" parent="Theme.MaterialComponents.Light.NoActionBar">
+
+
+    <style name="Theme.Ki2.NoActionBar" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/hh_yellow</item>
         <item name="colorPrimaryVariant">@color/hh_yellow_dark</item>
@@ -13,4 +14,19 @@
         <item name="android:statusBarColor" >?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
+
+    <style name="Theme.Ki2.ActionBar" parent="Theme.MaterialComponents.Light.DarkActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/hh_yellow</item>
+        <item name="colorPrimaryVariant">@color/hh_yellow_dark</item>
+        <item name="colorOnPrimary">@color/hh_blueish_gray</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/hh_light_blue_dark</item>
+        <item name="colorSecondaryVariant">@color/hh_dark_blue</item>
+        <item name="colorOnSecondary">@color/hh_blueish_gray</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" >?attr/colorPrimaryVariant</item>
+        <!-- Customize your theme here. -->
+    </style>
+
 </resources>
