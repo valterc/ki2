@@ -19,9 +19,13 @@
     <string name="category_preference_left_switch">Left Switch</string>
     <string name="category_preference_right_switch">Right Switch</string>
 
-    <string name="title_preference_single_press">Single Press</string>
-    <string name="title_preference_double_press">Double Press</string>
-    <string name="title_preference_hold">Hold</string>
+    <string name="title_preference_left_single_press">Left Single Press</string>
+    <string name="title_preference_left_double_press">Left Double Press</string>
+    <string name="title_preference_left_hold">Left Hold</string>
+
+    <string name="title_preference_right_single_press">Right Single Press</string>
+    <string name="title_preference_right_double_press">Right Double Press</string>
+    <string name="title_preference_right_hold">Right Hold</string>
 
     <string name="preference_left_switch_single_press">LEFT_SWITCH_SINGLE_PRESS</string>
     <string name="preference_left_switch_double_press">LEFT_SWITCH_DOUBLE_PRESS</string>

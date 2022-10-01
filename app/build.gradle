@@ -43,6 +43,9 @@ dependencies {
     implementation 'io.hammerhead:karoo-sdk:0.0.7'
     implementation files('libs/fit.jar')
     implementation files('libs/android_antlib_4-12-0.jar')
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.4.1'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'

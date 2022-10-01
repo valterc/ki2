@@ -338,6 +338,8 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
         deviceStore = new DeviceStore(this);
         connectionsDataManager = new ConnectionsDataManager();
         inputManager = new InputManager(this);
+
+        Timber.i("Service created");
     }
 
     @Override
