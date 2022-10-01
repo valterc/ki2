@@ -64,37 +64,30 @@
         </com.google.android.material.tabs.TabLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.core.widget.NestedScrollView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
         android:fillViewport="true">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/viewpager2_main"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fillViewport="true">
+            android:layout_height="match_parent"/>
 
-            <androidx.viewpager2.widget.ViewPager2
-                android:id="@+id/viewpager2_main"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/button_back"
+            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlayLeftSide"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:clickable="true"
+            app:icon="@drawable/ic_back"
+            app:collapsedSize="50dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:contentDescription="Back" />
 
-            <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-                android:id="@+id/button_back"
-                app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlayLeftSide"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:clickable="true"
-                app:icon="@drawable/ic_back"
-                app:collapsedSize="50dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                android:contentDescription="Back" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </androidx.core.widget.NestedScrollView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
