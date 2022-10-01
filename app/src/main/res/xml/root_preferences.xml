@@ -8,7 +8,7 @@
 
                 <ListPreference
                     app:key="@string/preference_left_switch_single_press"
-                    app:title="@string/title_preference_single_press"
+                    app:title="@string/title_preference_left_single_press"
                     app:entries="@array/preference_titles_switch_press_action"
                     app:entryValues="@array/preference_values_switch_press_action"
                     app:defaultValue="navigate_left"
@@ -16,15 +16,15 @@
 
                 <ListPreference
                     app:key="@string/preference_left_switch_double_press"
-                    app:title="@string/title_preference_double_press"
+                    app:title="@string/title_preference_left_double_press"
                     app:entries="@array/preference_titles_switch_press_action"
                     app:entryValues="@array/preference_values_switch_press_action"
-                    app:defaultValue="lap_map"
+                    app:defaultValue="lap_map_back"
                     app:useSimpleSummaryProvider="true"/>
 
                 <ListPreference
                     app:key="@string/preference_left_switch_hold"
-                    app:title="@string/title_preference_hold"
+                    app:title="@string/title_preference_left_hold"
                     app:entries="@array/preference_titles_switch_hold_action"
                     app:entryValues="@array/preference_values_switch_hold_action"
                     app:defaultValue="map_graph_zoom_out"
@@ -36,7 +36,7 @@
 
             <ListPreference
                 app:key="@string/preference_right_switch_single_press"
-                app:title="@string/title_preference_single_press"
+                app:title="@string/title_preference_right_single_press"
                 app:entries="@array/preference_titles_switch_press_action"
                 app:entryValues="@array/preference_values_switch_press_action"
                 app:defaultValue="navigate_right"
@@ -44,15 +44,15 @@
 
             <ListPreference
                 app:key="@string/preference_right_switch_double_press"
-                app:title="@string/title_preference_double_press"
+                app:title="@string/title_preference_right_double_press"
                 app:entries="@array/preference_titles_switch_press_action"
                 app:entryValues="@array/preference_values_switch_press_action"
-                app:defaultValue="pause"
+                app:defaultValue="pause_resume_confirm"
                 app:useSimpleSummaryProvider="true"/>
 
             <ListPreference
                 app:key="@string/preference_right_switch_hold"
-                app:title="@string/title_preference_hold"
+                app:title="@string/title_preference_right_hold"
                 app:entries="@array/preference_titles_switch_hold_action"
                 app:entryValues="@array/preference_values_switch_hold_action"
                 app:defaultValue="map_graph_zoom_in"

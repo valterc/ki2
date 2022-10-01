@@ -1,3 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <style name="ShapeAppearanceOverlayLeftSide" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopLeft">0dp</item>
+        <item name="cornerSizeBottomLeft">0dp</item>
+        <item name="cornerSizeTopRight">25dp</item>
+        <item name="cornerSizeBottomRight">25dp</item>
+    </style>
+
+    <style name="ShapeAppearanceOverlayRightSide" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopLeft">25dp</item>
+        <item name="cornerSizeBottomLeft">25dp</item>
+        <item name="cornerSizeTopRight">0dp</item>
+        <item name="cornerSizeBottomRight">0dp</item>
+    </style>
+
 </resources>

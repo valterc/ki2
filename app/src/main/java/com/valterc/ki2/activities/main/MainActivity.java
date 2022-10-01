@@ -5,7 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.os.Bundle;
+import android.widget.Button;
 
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.valterc.ki2.R;
@@ -42,6 +44,11 @@ public class MainActivity extends AppCompatActivity {
             public void onPageSelected(int position) {
                 tabLayout.selectTab(tabLayout.getTabAt(position));
             }
+        });
+
+        ExtendedFloatingActionButton buttonBack = findViewById(R.id.button_back);
+        buttonBack.setOnClickListener((view) -> {
+            finish();
         });
     }
 }
