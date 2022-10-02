@@ -7,29 +7,40 @@ import android.os.Message;
 import androidx.annotation.NonNull;
 
 import java.util.function.Consumer;
-import java.util.function.Predicate;
 
 import timber.log.Timber;
 
-public class ServiceHandler extends Handler {
+public class ServiceHandler {
 
     private static final long RETRY_DELAY_MS = 100;
     private static final int MESSAGE_PROCESS_RUNNABLE = 1000;
 
+    private final Thread thread;
+    private Handler handler;
+
     public ServiceHandler() {
-        super(Looper.getMainLooper());
+        this.thread = new Thread(() -> {
+            Looper.prepare();
+            this.handler = new RunnableHandler();
+            Looper.loop();
+        }, "ServiceHandler");
+        this.thread.start();
+
+        while (this.handler == null) {
+            Thread.yield();
+        }
     }
 
     public void postAction(Runnable runnable) {
-        Message message = Message.obtain(this, runnable);
+        Message message = Message.obtain(handler, runnable);
         message.what = MESSAGE_PROCESS_RUNNABLE;
-        sendMessage(message);
+        handler.sendMessage(message);
     }
 
     public void postDelayedAction(Runnable runnable, long delayMs) {
-        Message message = Message.obtain(this, runnable);
+        Message message = Message.obtain(handler, runnable);
         message.what = MESSAGE_PROCESS_RUNNABLE;
-        sendMessageDelayed(message, delayMs);
+        handler.sendMessageDelayed(message, delayMs);
     }
 
     public void postRetriableAction(UnsafeRunnable runnable) {
@@ -40,7 +51,7 @@ public class ServiceHandler extends Handler {
                     runnable.run();
                 } catch (Exception e) {
                     if (retry < 2) {
-                        postDelayedAction(() -> this.accept(retry + 1), 100);
+                        postDelayedAction(() -> this.accept(retry + 1), RETRY_DELAY_MS);
                     } else {
                         throw new RuntimeException(e);
                     }
@@ -48,28 +59,33 @@ public class ServiceHandler extends Handler {
             }
         };
 
-        Message message = Message.obtain(this, () -> {
+        Message message = Message.obtain(handler, () -> {
             p.accept(0);
         });
         message.what = MESSAGE_PROCESS_RUNNABLE;
-        sendMessage(message);
+        handler.sendMessage(message);
     }
 
-    @Override
-    public void handleMessage(@NonNull Message message) {
-        if (message.what == MESSAGE_PROCESS_RUNNABLE) {
-            Runnable runnable = message.getCallback();
-            if (runnable != null) {
-                try {
-                    message.getCallback().run();
-                } catch (Exception e) {
-                    Timber.e(e, "Error executing runnable");
+    private class RunnableHandler extends Handler {
+
+        @Override
+        public void handleMessage(@NonNull Message message) {
+            if (message.what == MESSAGE_PROCESS_RUNNABLE) {
+                Runnable runnable = message.getCallback();
+                if (runnable != null) {
+                    try {
+                        message.getCallback().run();
+                    } catch (Exception e) {
+                        Timber.e(e, "Error executing runnable");
+                    }
+                } else {
+                    Timber.w("Unexpected null runnable");
                 }
             } else {
-                Timber.w("Unexpected null runnable");
+                super.handleMessage(message);
             }
-        } else {
-            super.handleMessage(message);
         }
+
     }
+
 }
