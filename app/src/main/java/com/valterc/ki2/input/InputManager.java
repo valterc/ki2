@@ -73,10 +73,17 @@ public class InputManager {
         }
 
         if (karooCommand.first == null) {
-            karooCommand = getKarooCommand(switchEvent.getType(), karooCommand.second);
-            if (karooCommand == null) {
+            Pair<KarooKey, SwitchCommandType> newKarooCommand = getKarooCommand(switchEvent.getType(), karooCommand.second);
+            if (newKarooCommand == null) {
+                Timber.w("Unable to retranslate command, original: {switch=%s, command=%s}, target: {switch=%s, command=%s}",
+                        switchEvent.getType(),
+                        switchEvent.getCommand().getCommandType(),
+                        switchEvent.getType(),
+                        karooCommand.second);
                 return null;
             }
+
+            karooCommand = newKarooCommand;
         }
 
         return getSwitchKeyEvent(switchEvent, karooCommand);
