@@ -78,4 +78,13 @@ public class DeviceId implements Parcelable {
         result = 31 * result + (deviceType != null ? deviceType.hashCode() : 0);
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "DeviceId{" +
+                "deviceType=" + deviceType +
+                ", uid='" + uid + '\'' +
+                ", antId='" + getAntDeviceId() + '\'' +
+                '}';
+    }
 }

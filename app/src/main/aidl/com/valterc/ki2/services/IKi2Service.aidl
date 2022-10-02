@@ -38,6 +38,9 @@ interface IKi2Service {
     void registerScanListener(IScanCallback callback);
     void unregisterScanListener(IScanCallback callback);
 
+    void restartDeviceScan();
+    void restartDeviceConnections();
+
     void changeShiftMode(in DeviceId deviceId);
     void reconnectDevice(in DeviceId deviceId);
 

@@ -32,20 +32,24 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Ki2"
+        android:theme="@style/Theme.Ki2.NoActionBar"
         tools:targetApi="32">
+        <activity
+            android:name=".activities.devices.AddDeviceActivity"
+            android:exported="false">
+        </activity>
         <activity
             android:name=".activities.main.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.SettingsActivity"
-            android:exported="true">
-        </activity>
+            android:name=".activities.settings.SettingsActivity"
+            android:exported="true"></activity>
 
         <meta-data
             android:name="io.hammerhead.sdk.v0.SDK_MODULE"
@@ -56,6 +60,7 @@
             android:exported="true">
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <action android:name="io.hammerhead.sdk.INITIALIZE" />
             </intent-filter>
         </receiver>

@@ -1,4 +1,4 @@
-package com.valterc.ki2.activities;
+package com.valterc.ki2.activities.settings;
 
 import android.os.Bundle;
 import androidx.appcompat.app.ActionBar;
