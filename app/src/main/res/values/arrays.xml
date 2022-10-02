@@ -19,13 +19,15 @@
 
     <string-array name="preference_titles_switch_hold_action">
         <item>None</item>
-        <item>Map/Graph zoom out</item>
-        <item>Map/Graph zoom in</item>
+        <item>Map/Graph Zoom Out</item>
+        <item>Map/Graph Zoom In</item>
+        <item>Repeat Single Press</item>
     </string-array>
 
     <string-array name="preference_values_switch_hold_action">
         <item>none</item>
         <item>map_graph_zoom_out</item>
         <item>map_graph_zoom_in</item>
+        <item>repeat_single_press</item>
     </string-array>
 </resources>
