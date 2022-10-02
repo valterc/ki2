@@ -29,12 +29,12 @@ public class DeviceStore {
 
     private Set<DeviceId> load() {
         try {
-            SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREFERENCES_DEVICE_STORE, context.MODE_PRIVATE);
+            SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREFERENCES_DEVICE_STORE, Context.MODE_PRIVATE);
             String devices = sharedPreferences.getString(DEVICES, null);
 
             if (devices != null) {
                 Set<DeviceId> deviceSet = Collections.newSetFromMap(new ConcurrentHashMap<>());
-                deviceSet.retainAll(new Gson().fromJson(devices, new TypeToken<HashSet<DeviceId>>(){}.getType()));
+                deviceSet.addAll(new Gson().fromJson(devices, new TypeToken<HashSet<DeviceId>>(){}.getType()));
                 return deviceSet;
             }
         } catch (Exception e) {
@@ -46,8 +46,7 @@ public class DeviceStore {
 
     private void persist() {
         try {
-
-            SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREFERENCES_DEVICE_STORE, context.MODE_PRIVATE);
+            SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREFERENCES_DEVICE_STORE, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putString(DEVICES, new Gson().toJson(deviceSet));
             editor.apply();

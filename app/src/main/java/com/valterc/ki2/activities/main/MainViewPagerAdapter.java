@@ -5,7 +5,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.valterc.ki2.fragments.devices.DevicesFragment;
+import com.valterc.ki2.fragments.devices.list.ListDevicesFragment;
 import com.valterc.ki2.fragments.settings.SettingsFragment;
 
 public class MainViewPagerAdapter extends FragmentStateAdapter {
@@ -19,7 +19,7 @@ public class MainViewPagerAdapter extends FragmentStateAdapter {
     public Fragment createFragment(int position) {
 
         switch (position) {
-            case 0: return new DevicesFragment();
+            case 0: return new ListDevicesFragment();
             case 1: return new SettingsFragment();
         }
 

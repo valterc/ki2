@@ -48,5 +48,10 @@
     <string name="text_unable_to_save_device">Unable to save device</string>
     <string name="text_service_disconnected">Service disconnected</string>
     <string name="text_unable_to_communicate_with_service">Unable to communicate with service</string>
+    <string name="text_add_device">Add device</string>
+    <string name="text_no_devices_saved">No devices saved</string>
+    <string name="text_connecting">Connecting…</string>
+    <string name="text_connected">Connected</string>
+    <string name="text_not_found">Not found</string>
 
 </resources>

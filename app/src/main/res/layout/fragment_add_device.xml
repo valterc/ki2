@@ -49,7 +49,6 @@
         app:layout_constraintTop_toTopOf="parent"
         android:visibility="gone"/>
 
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview_add_devices_scan_results"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
