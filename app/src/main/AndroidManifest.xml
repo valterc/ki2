@@ -36,8 +36,7 @@
         tools:targetApi="32">
         <activity
             android:name=".activities.devices.AddDeviceActivity"
-            android:exported="false"
-            android:theme="@style/Theme.Ki2.ActionBar">
+            android:exported="false">
         </activity>
         <activity
             android:name=".activities.main.MainActivity"
