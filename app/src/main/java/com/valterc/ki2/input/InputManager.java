@@ -4,9 +4,11 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Pair;
 
+import androidx.annotation.Nullable;
 import androidx.preference.PreferenceManager;
 
 import com.valterc.ki2.R;
+import com.valterc.ki2.data.command.CommandType;
 import com.valterc.ki2.data.switches.SwitchCommand;
 import com.valterc.ki2.data.switches.SwitchCommandType;
 import com.valterc.ki2.data.switches.SwitchEvent;
@@ -21,6 +23,11 @@ import timber.log.Timber;
 
 public class InputManager {
 
+    /**
+     * This map will translate a preference value to a Karoo key action.
+     * Special cases:
+     *   - When KarooKey is null: The manager will retranslate the event using the original Karoo key and the new command type.
+     */
     private static final Map<String, Pair<KarooKey, SwitchCommandType>> stringValueMap = new HashMap<>();
 
     static {
@@ -32,12 +39,16 @@ public class InputManager {
         stringValueMap.put("lap", new Pair<>(KarooKey.BACK, SwitchCommandType.DOUBLE_PRESS));
         stringValueMap.put("map_graph_zoom_out", new Pair<>(KarooKey.LEFT, SwitchCommandType.HOLD));
         stringValueMap.put("map_graph_zoom_in", new Pair<>(KarooKey.RIGHT, SwitchCommandType.HOLD));
+        stringValueMap.put("repeat_single_press", new Pair<>(null, SwitchCommandType.SINGLE_PRESS));
     }
 
     private final Context context;
     private final InputAdapter inputAdapter;
     private final SharedPreferences preferences;
 
+    /**
+     * This map with translate the physical switch (Left, Right) commands to a preference key.
+     */
     private final Map<Pair<SwitchType, SwitchCommandType>, String> preferenceMap;
 
     public InputManager(Context context) {
@@ -56,7 +67,24 @@ public class InputManager {
 
     private SwitchKeyEvent convertSwitchToSwitchKey(SwitchEvent switchEvent) {
 
-        String preferenceKey = preferenceMap.get(new Pair<>(switchEvent.getType(), switchEvent.getCommand().getCommandType()));
+        Pair<KarooKey, SwitchCommandType> karooCommand = getKarooCommand(switchEvent.getType(), switchEvent.getCommand().getCommandType());
+        if (karooCommand == null) {
+            return null;
+        }
+
+        if (karooCommand.first == null) {
+            karooCommand = getKarooCommand(switchEvent.getType(), karooCommand.second);
+            if (karooCommand == null) {
+                return null;
+            }
+        }
+
+        return getSwitchKeyEvent(switchEvent, karooCommand);
+    }
+
+    @Nullable
+    private Pair<KarooKey, SwitchCommandType> getKarooCommand(SwitchType switchType, SwitchCommandType commandType) {
+        String preferenceKey = preferenceMap.get(new Pair<>(switchType, commandType));
         if (preferenceKey == null) {
             return null;
         }
@@ -68,17 +96,19 @@ public class InputManager {
 
         Pair<KarooKey, SwitchCommandType> karooCommand = stringValueMap.get(preference);
         if (karooCommand == null) {
-            Timber.w("Invalid karoo command from combination, switch: %s, command type: %s", switchEvent.getType(), switchEvent.getCommand().getCommandType());
+            Timber.w("Invalid karoo command from combination, switch: %s, command type: %s", switchType, commandType);
             return null;
         }
 
-        return getSwitchKeyEvent(switchEvent, karooCommand);
+        return karooCommand;
     }
 
     private SwitchKeyEvent getSwitchKeyEvent(SwitchEvent switchEvent, Pair<KarooKey, SwitchCommandType> karooCommand) {
         if (karooCommand.first == KarooKey.NONE || karooCommand.second == SwitchCommandType.NONE) {
             return null;
         }
+
+        KarooKey karooKey = karooCommand.first;
 
         if (karooCommand.second == SwitchCommandType.HOLD) {
             return new SwitchKeyEvent(karooCommand.first, switchEvent.getCommand(), switchEvent.getRepeat());
