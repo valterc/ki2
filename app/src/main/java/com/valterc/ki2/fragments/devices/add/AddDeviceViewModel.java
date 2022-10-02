@@ -1,4 +1,4 @@
-package com.valterc.ki2.fragments.devices;
+package com.valterc.ki2.fragments.devices.add;
 
 import android.content.ComponentName;
 import android.content.ServiceConnection;
@@ -15,8 +15,6 @@ import com.valterc.ki2.services.callbacks.IScanCallback;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import timber.log.Timber;
 
@@ -53,13 +51,11 @@ public class AddDeviceViewModel extends ViewModel {
         }
     };
 
-    private final ExecutorService executorService;
     private final MutableLiveData<IKi2Service> service;
     private final MutableLiveData<Set<DeviceId>> devices;
     private final MutableLiveData<Boolean> scanning;
 
     public AddDeviceViewModel() {
-        this.executorService = Executors.newFixedThreadPool(1);
         this.service = new MutableLiveData<>();
         this.devices = new MutableLiveData<>(new HashSet<>());
         this.scanning = new MutableLiveData<>(false);
@@ -88,14 +84,13 @@ public class AddDeviceViewModel extends ViewModel {
         }
 
         scanning.setValue(true);
-        executorService.submit(() -> {
-            try {
-                service.registerScanListener(scanCallback);
-            } catch (RemoteException e) {
-                Timber.e(e, "Unable to start device scan");
-                scanning.postValue(false);
-            }
-        });
+        try {
+            service.registerScanListener(scanCallback);
+        } catch (RemoteException e) {
+            scanning.postValue(false);
+            Timber.e(e, "Unable to start device scan");
+            throw new Exception("Unable to start device scan", e);
+        }
     }
 
     public void stopScan() {
@@ -112,4 +107,17 @@ public class AddDeviceViewModel extends ViewModel {
         }
     }
 
+    public void addDevice(DeviceId device) throws Exception {
+        IKi2Service service = this.service.getValue();
+        if (service == null) {
+            throw new Exception("Service is not ready");
+        }
+
+        try {
+            service.saveDevice(device);
+        } catch (RemoteException e) {
+            Timber.e(e, "Unable to save device");
+            throw new Exception("Unable to save device", e);
+        }
+    }
 }

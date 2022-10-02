@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".activities.devices.AddDeviceActivity"
-        android:name="com.valterc.ki2.fragments.devices.AddDeviceFragment"
+        android:name="com.valterc.ki2.fragments.devices.add.AddDeviceFragment"
         tools:layout="@layout/fragment_add_device" />
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
@@ -26,7 +26,7 @@
         app:collapsedSize="50dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:contentDescription="Back" />
+        android:contentDescription="@string/text_back" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

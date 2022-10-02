@@ -1,7 +1,8 @@
-package com.valterc.ki2.fragments.devices;
+package com.valterc.ki2.fragments.devices.add;
 
 import androidx.lifecycle.ViewModelProvider;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 
@@ -11,7 +12,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Handler;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,16 +22,16 @@ import com.google.android.material.floatingactionbutton.ExtendedFloatingActionBu
 import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.valterc.ki2.R;
 import com.valterc.ki2.data.device.DeviceId;
-import com.valterc.ki2.fragments.KarooKeyListener;
+import com.valterc.ki2.fragments.IKarooKeyListener;
 import com.valterc.ki2.karoo.input.KarooKey;
 import com.valterc.ki2.services.Ki2Service;
 
-import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import timber.log.Timber;
 
-public class AddDeviceFragment extends Fragment implements KarooKeyListener {
+public class AddDeviceFragment extends Fragment implements IKarooKeyListener {
 
     private static final long DURATION_SCAN_MS = 20_000;
 
@@ -55,7 +55,7 @@ public class AddDeviceFragment extends Fragment implements KarooKeyListener {
         super.onResume();
         serviceBound = requireContext().bindService(Ki2Service.getIntent(), viewModel.getServiceConnection(), Context.BIND_AUTO_CREATE);
         if (!serviceBound) {
-            Toast.makeText(getContext(), "Unable to communicate with service", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), R.string.text_unable_to_communicate_with_service, Toast.LENGTH_LONG).show();
         }
     }
 
@@ -87,6 +87,17 @@ public class AddDeviceFragment extends Fragment implements KarooKeyListener {
         CircularProgressIndicator progressIndicator = view.findViewById(R.id.progressindicator_add_devices_scanning);
         RecyclerView recyclerViewDevices = view.findViewById(R.id.recyclerview_add_devices_scan_results);
 
+        SearchDevicesAdapter searchDevicesAdapter = new SearchDevicesAdapter(device -> {
+            try {
+                viewModel.addDevice(device);
+                Toast.makeText(getContext(), R.string.text_saved_device, Toast.LENGTH_SHORT).show();
+                requireActivity().finish();
+            } catch (Exception e) {
+                Toast.makeText(getContext(), R.string.text_unable_to_save_device, Toast.LENGTH_SHORT).show();
+            }
+        });
+        recyclerViewDevices.setAdapter(searchDevicesAdapter);
+
         viewModel.getScanning().observe(getViewLifecycleOwner(), scanning -> {
             buttonScan.setEnabled(!scanning);
 
@@ -109,21 +120,18 @@ public class AddDeviceFragment extends Fragment implements KarooKeyListener {
             }
         });
 
-        viewModel.getDevices().observe(getViewLifecycleOwner(), devices -> {
-            Toast.makeText(getContext(), "Devices: " + devices, Toast.LENGTH_SHORT).show();
-        });
+        viewModel.getDevices().observe(getViewLifecycleOwner(), searchDevicesAdapter::setDevices);
 
         viewModel.getService().observe(getViewLifecycleOwner(), service -> {
             if (service != null) {
                 startScan();
             } else if (Boolean.TRUE.equals(viewModel.getScanning().getValue())) {
-                Toast.makeText(getContext(), "Service disconnected", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), R.string.text_service_disconnected, Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void startScan() {
-
         if (Boolean.TRUE.equals(viewModel.getScanning().getValue())) {
             return;
         }

@@ -20,6 +20,8 @@ import com.google.android.material.floatingactionbutton.ExtendedFloatingActionBu
 import com.valterc.ki2.R;
 import com.valterc.ki2.activities.devices.AddDeviceActivity;
 import com.valterc.ki2.data.device.DeviceId;
+import com.valterc.ki2.fragments.IKarooKeyListener;
+import com.valterc.ki2.karoo.input.KarooKey;
 import com.valterc.ki2.services.IKi2Service;
 import com.valterc.ki2.services.Ki2Service;
 
@@ -27,7 +29,7 @@ import java.util.List;
 
 import timber.log.Timber;
 
-public class DevicesFragment extends Fragment {
+public class DevicesFragment extends Fragment implements IKarooKeyListener {
 
     private DevicesViewModel viewModel;
 
@@ -78,5 +80,15 @@ public class DevicesFragment extends Fragment {
         buttonAddDevice.setOnClickListener(v -> {
             startActivity(new Intent(getContext(), AddDeviceActivity.class));
         });
+    }
+
+    @Override
+    public boolean onKarooKeyPressed(KarooKey karooKey) {
+        if (karooKey == KarooKey.CONFIRM) {
+            startActivity(new Intent(getContext(), AddDeviceActivity.class));
+            return true;
+        }
+
+        return false;
     }
 }

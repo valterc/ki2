@@ -5,25 +5,64 @@
     android:id="@+id/add_device"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.devices.AddDeviceFragment">
+    tools:context=".fragments.devices.add.AddDeviceFragment">
 
+    <LinearLayout
+        android:id="@+id/linearlayout_add_top_panel"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:orientation="horizontal"
+        android:background="@color/hh_divider_color">
 
+            <com.google.android.material.progressindicator.CircularProgressIndicator
+                android:id="@+id/progressindicator_add_devices_scanning"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:indicatorSize="24dp"
+                android:layout_gravity="center"
+                android:indeterminate="true"
+                app:indicatorColor="?colorSecondary"
+                android:paddingEnd="0dp"
+                android:paddingStart="10dp" />
 
+            <TextView
+                android:id="@+id/textview_add_device_top_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_searching_for_devices"
+                android:layout_gravity="center_vertical"
+                android:paddingHorizontal="15dp"/>
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/textview_add_device_no_devices_found"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="No devices found"
+        android:text="@string/text_no_devices_found"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="gone"/>
 
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerview_add_devices_scan_results"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/linearlayout_add_top_panel"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:listitem="@layout/view_add_device_item"
+        tools:itemCount="10"
+        android:paddingBottom="80dp"/>
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/button_add_devices_refresh"
+        android:id="@+id/button_add_devices_scan"
         app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlayRightSide"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -33,7 +72,7 @@
         app:collapsedSize="50dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:contentDescription="Back"
+        android:contentDescription="@string/text_search_for_devices"
         android:enabled="false"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
