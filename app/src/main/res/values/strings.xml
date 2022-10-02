@@ -34,4 +34,19 @@
     <string name="preference_right_switch_double_press">RIGHT_SWITCH_DOUBLE_PRESS</string>
     <string name="preference_right_switch_hold">RIGHT_SWITCH_HOLD</string>
 
+    <string name="text_param_found_devices">Found %d device(s)</string>
+    <string name="text_searching_for_devices">Searching for devices…</string>
+    <string name="text_unable_to_scan_devices">Unable to search for devices</string>
+    <string name="text_no_devices_found">No devices found</string>
+    <string name="text_search_for_devices">Search for devices</string>
+    <string name="text_di2_name">Di2 %s</string>
+    <string name="text_sensor_name">Sensor %s</string>
+    <string name="text_add">Add</string>
+    <string name="text_sensor">Sensor</string>
+    <string name="text_back">Back</string>
+    <string name="text_saved_device">Saved device</string>
+    <string name="text_unable_to_save_device">Unable to save device</string>
+    <string name="text_service_disconnected">Service disconnected</string>
+    <string name="text_unable_to_communicate_with_service">Unable to communicate with service</string>
+
 </resources>
