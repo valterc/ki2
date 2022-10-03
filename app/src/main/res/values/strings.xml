@@ -59,6 +59,14 @@
     <string name="text_remove">Remove</string>
     <string name="text_param_question_remove">Remove %s?</string>
     <string name="text_unable_to_remove">Unable to remove</string>
+    <string name="text_signal">Signal</string>
+    <string name="text_connection_status">Connection Status</string>
+    <string name="text_battery">Battery</string>
+    <string name="text_manufacturer">Manufacturer</string>
+    <string name="text_serial_number">Serial Number</string>
+    <string name="text_model">Model</string>
+    <string name="text_software_version">Software Version</string>
+    <string name="text_hardware_version">Hardware Version</string>
 
 
 </resources>
