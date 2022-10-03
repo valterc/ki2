@@ -434,7 +434,7 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
             Timber.i("Sent command %s to device %s", commandType, deviceId);
         } catch (Exception e) {
             Timber.e(e, "Unable to send command %s to device %s", commandType, deviceId);
-            throw new RemoteException("Unable to change shift mode");
+            throw new RemoteException("Unable to send command");
         }
     }
 
@@ -473,15 +473,15 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
     }
 
     @Override
-    public void onData(DeviceId deviceId, DataType dataType, Object data) {
+    public void onData(DeviceId deviceId, DataType dataType, Parcelable data) {
 
-        if (dataType == DataType.UNKNOWN || !(data instanceof Parcelable)) {
+        if (dataType == DataType.UNKNOWN) {
             Timber.d("[%s] Unsupported data (type=%s, value=%s)", deviceId, dataType, data);
             return;
         }
 
         serviceHandler.postAction(() -> {
-            boolean sendUpdate = connectionsDataManager.onData(deviceId, dataType, (Parcelable) data);
+            boolean sendUpdate = connectionsDataManager.onData(deviceId, dataType, data);
 
             if (sendUpdate) {
                 switch (dataType) {
@@ -528,7 +528,7 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
                         break;
 
                     default:
-                        Timber.d("[%s] Unsupported data type %s", deviceId, dataType);
+                        Timber.d("[%s] Not sending update for data type %s", deviceId, dataType);
                 }
             }
 

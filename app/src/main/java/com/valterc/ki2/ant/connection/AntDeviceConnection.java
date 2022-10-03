@@ -1,5 +1,6 @@
 package com.valterc.ki2.ant.connection;
 
+import android.os.Parcelable;
 import android.os.RemoteException;
 import android.util.Pair;
 
@@ -189,7 +190,7 @@ public class AntDeviceConnection implements IAntDeviceConnection, IDeviceConnect
     }
 
     @Override
-    public void onData(DeviceId deviceId, DataType dataType, Object data) {
+    public void onData(DeviceId deviceId, DataType dataType, Parcelable data) {
         if (deviceConnectionListener != null) {
             deviceConnectionListener.onData(deviceId, dataType, data);
         }
