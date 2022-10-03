@@ -16,12 +16,29 @@ public class Ki2Application extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Timber.plant(new Timber.DebugTree() {
-            @Override
-            protected void log(int priority, @Nullable String tag, @NonNull String message, @Nullable Throwable t) {
-                Log.println(priority, tag, message + (t == null ? "" : "\n" + t.getMessage() + "\n" + Log.getStackTraceString(t)));
-            }
-        });
+
+        if (BuildConfig.DEBUG) {
+            Timber.plant(new Timber.DebugTree() {
+                @Override
+                protected void log(int priority, @Nullable String tag, @NonNull String message, @Nullable Throwable t) {
+                    Log.println(priority, tag, message + (t == null ? "" : "\n" + t.getMessage() + "\n" + Log.getStackTraceString(t)));
+                }
+            });
+        } else {
+            Timber.plant(new Timber.Tree() {
+                @Override
+                protected boolean isLoggable(@Nullable String tag, int priority) {
+                    return priority > Log.DEBUG;
+                }
+
+                @Override
+                protected void log(int priority, @Nullable String tag, @NonNull String message, @Nullable Throwable t) {
+                    Log.println(priority, tag, message + (t == null ? "" : "\n" + t.getMessage() + "\n" + Log.getStackTraceString(t)));
+                }
+            });
+        }
+
+
     }
 
 }

@@ -11,6 +11,7 @@ import com.valterc.ki2.data.device.BatteryInfo;
 import com.valterc.ki2.data.device.DeviceId;
 import com.valterc.ki2.data.device.DeviceType;
 import com.valterc.ki2.data.device.ShimanoPageType;
+import com.valterc.ki2.data.device.SignalInfo;
 import com.valterc.ki2.data.device.StatusIndicator;
 import com.valterc.ki2.data.info.DataType;
 import com.valterc.ki2.data.info.ManufacturerInfoBuilder;
@@ -125,6 +126,8 @@ public class ShimanoShiftingProfileHandler implements IDeviceProfileHandler {
         String softwareVersionFromRevisions = softwareVersionFromRevisions(majorRevision, minorRevision);
         long serialNumber = MessageUtils.numberFromBytes(payload, 4, 4);
 
+        Timber.d("[%s] Received manufacturer info: {software=%s, serial=%s}", deviceId, softwareVersionFromRevisions, serialNumber);
+
         if (serialNumber != 0xFFFFFFFF) {
             manufacturerInfoBuilder.setSerialNumber(Long.toString(serialNumber));
         }else {
@@ -140,10 +143,10 @@ public class ShimanoShiftingProfileHandler implements IDeviceProfileHandler {
 
     public final String softwareVersionFromRevisions(int majorRevision, int minorRevision) {
         if (minorRevision == 255) {
-            return String.valueOf(majorRevision / 10);
+            return String.valueOf((float)majorRevision / 10);
         }
 
-        return String.valueOf(((majorRevision * 100) + minorRevision) / 1000);
+        return String.valueOf((float)((majorRevision * 100) + minorRevision) / 1000);
     }
 
 
@@ -151,6 +154,8 @@ public class ShimanoShiftingProfileHandler implements IDeviceProfileHandler {
         String hardwareVersion = String.valueOf(MessageUtils.numberFromBytes(payload, 3, 1));
         String manufacturerId = Integer.toString((int) MessageUtils.numberFromBytes(payload, 4, 2));
         String modelNumber = String.valueOf(MessageUtils.numberFromBytes(payload, 6, 2));
+
+        Timber.d("[%s] Received manufacturer info: {hardware=%s, manufacturer=%s, model=%s}", deviceId, hardwareVersion, manufacturerId, modelNumber);
 
         manufacturerInfoBuilder.setHardwareVersion(hardwareVersion);
         manufacturerInfoBuilder.setManufacturer(manufacturerId);
@@ -185,13 +190,19 @@ public class ShimanoShiftingProfileHandler implements IDeviceProfileHandler {
         SwitchCommand switchCommandLeft = SwitchCommand.fromCommandNumber((int)MessageUtils.numberFromBytes(payload, 1, 1) & 240);
         handleSwitch(switchCommandLeft, switchDataLeft, sequenceNumberLeft, SwitchType.LEFT);
 
-        int sequenceNumberRight = (int) (MessageUtils.numberFromBytes(payload, 1, 1) & 15);
-        SwitchCommand switchCommandRight = SwitchCommand.fromCommandNumber((int)MessageUtils.numberFromBytes(payload, 1, 1) & 240);
+        int sequenceNumberRight = (int) (MessageUtils.numberFromBytes(payload, 2, 1) & 15);
+        SwitchCommand switchCommandRight = SwitchCommand.fromCommandNumber((int)MessageUtils.numberFromBytes(payload, 2, 1) & 240);
         handleSwitch(switchCommandRight, switchDataRight, sequenceNumberRight, SwitchType.RIGHT);
+
+        Timber.d("[%s] Received switch info: {left={command=%s, sequence=%s}, right={command=%s, sequence=%s}}",
+                deviceId,
+                switchCommandLeft, sequenceNumberLeft,
+                switchCommandRight, sequenceNumberRight);
     }
 
     private void handleSwitch(SwitchCommand switchCommand, SwitchData switchData, int sequenceNumber, SwitchType type) {
-        if ((switchCommand == SwitchCommand.NO_SWITCH || switchData.getSequenceNumber() != -1)
+        if (switchCommand != SwitchCommand.NO_SWITCH
+                && switchData.getSequenceNumber() != -1
                 && switchData.getSequenceNumber() != sequenceNumber) {
 
             if (switchCommand == SwitchCommand.LONG_PRESS_CONTINUE) {
@@ -212,7 +223,7 @@ public class ShimanoShiftingProfileHandler implements IDeviceProfileHandler {
         int frontGearMax = (int) MessageUtils.numberFromBytes(payload, 2, 1);
         int rearGearMax = (int) MessageUtils.numberFromBytes(payload, 3, 1);
 
-        Timber.i("[%s] Received bike status, front gear max: %s, rear gear max: %s", deviceId, frontGearMax, rearGearMax);
+        Timber.d("[%s] Received bike status: {front_gear_max=%s, rear_gear_max=%s}", deviceId, frontGearMax, rearGearMax);
 
         if (frontGearMax == 0 || frontGearMax == 255) {
             frontGearMax = 1;
@@ -240,6 +251,8 @@ public class ShimanoShiftingProfileHandler implements IDeviceProfileHandler {
             this.missingIndicators.remove(StatusIndicator.FRONT_SPEEDS_CURRENT);
             this.missingIndicators.remove(StatusIndicator.REAR_SPEEDS_CURRENT);
 
+            Timber.d("[%s] Received speeds: {front=%s, rear=%s}", deviceId, frontGear, rearGear);
+
             if (frontGear == 0 || frontGear == 255) {
                 frontGear = 1;
             }
@@ -261,8 +274,12 @@ public class ShimanoShiftingProfileHandler implements IDeviceProfileHandler {
         int batteryPercentage = (int) MessageUtils.numberFromBytes(payload, 4, 1);
         deviceConnectionListener.onData(deviceId, DataType.BATTERY, new BatteryInfo(batteryPercentage));
 
+        Timber.d("[%s] Received battery: %s", deviceId, batteryPercentage);
+
         ShiftingMode shiftingMode = ShiftingMode.fromValue((int)MessageUtils.numberFromBytes(payload, 5, 1));
         shiftingInfoBuilder.setShiftingMode(shiftingMode);
+
+        Timber.d("[%s] Received shifting mode: %s", deviceId, shiftingMode);
 
         if (shiftingInfoBuilder.allSet()) {
             deviceConnectionListener.onData(deviceId, DataType.SHIFTING, shiftingInfoBuilder.build());
@@ -311,7 +328,7 @@ public class ShimanoShiftingProfileHandler implements IDeviceProfileHandler {
 
     @Override
     public void onRssi(Rssi rssi) {
-        deviceConnectionListener.onData(deviceId, DataType.SIGNAL, rssi.getRssiValue());
+        deviceConnectionListener.onData(deviceId, DataType.SIGNAL, new SignalInfo(rssi.getRssiValue()));
     }
 
     @Override
@@ -337,6 +354,7 @@ public class ShimanoShiftingProfileHandler implements IDeviceProfileHandler {
                 changeShiftMode();
                 break;
 
+            case UNKNOWN:
             default:
                 throw new RuntimeException("Unsupported command: " + commandType);
         }

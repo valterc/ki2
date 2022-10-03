@@ -13,14 +13,14 @@ import java.util.stream.Collectors;
 
 public class ConnectionDataManager {
 
-    private DeviceId deviceId;
+    private final DeviceId deviceId;
+    private final Map<DataType, DataInfoBuilder> dataMap;
     private ConnectionStatus status;
-    private Map<DataType, DataInfoBuilder> dataMap;
 
     public ConnectionDataManager(DeviceId deviceId) {
         this.deviceId = deviceId;
-        status = ConnectionStatus.INVALID;
         dataMap = new HashMap<>();
+        status = ConnectionStatus.INVALID;
     }
 
     public boolean onConnectionStatus(ConnectionStatus connectionStatus){
