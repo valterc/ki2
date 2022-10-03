@@ -53,5 +53,6 @@
     <string name="text_connecting">Connecting…</string>
     <string name="text_connected">Connected</string>
     <string name="text_not_found">Not found</string>
+    <string name="text_failed">Failed</string>
 
 </resources>

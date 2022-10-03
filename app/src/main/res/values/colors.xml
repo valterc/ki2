@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <color name="hh_success_green_400">#8cf2c9</color>
+    <color name="hh_success_green_500">#32e09a</color>
+    <color name="hh_success_green_600">#0dba75</color>
+    <color name="hh_success_green_700">#007a49</color>
 
     <color name="hh_climb_blue_400">#a3d5ff</color>
     <color name="hh_climb_blue_500">#2386d9</color>
@@ -11,6 +15,7 @@
     <color name="hh_gears_active_top">#f5515f</color>
     <color name="hh_gears_border">#000000</color>
 
+    <color name="hh_green">#209f13</color>
     <color name="hh_orange">#fd7919</color>
     <color name="hh_orange_dark">#db6216</color>
     <color name="hh_yellow">#FFE900</color>

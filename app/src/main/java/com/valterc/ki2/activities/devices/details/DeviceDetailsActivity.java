@@ -1,28 +1,37 @@
-package com.valterc.ki2.activities.devices.add;
+package com.valterc.ki2.activities.devices.details;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.valterc.ki2.R;
+import com.valterc.ki2.data.device.DeviceId;
 import com.valterc.ki2.fragments.IKarooKeyListener;
 import com.valterc.ki2.fragments.devices.add.AddDeviceFragment;
+import com.valterc.ki2.fragments.devices.details.DeviceDetailsFragment;
 import com.valterc.ki2.karoo.input.KarooKey;
 
-public class AddDeviceActivity extends AppCompatActivity {
+public class DeviceDetailsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_device);
+
+        DeviceId deviceId = getIntent().getParcelableExtra(DeviceId.class.getSimpleName());
+
+        if (deviceId == null) {
+            throw new IllegalArgumentException("Device Id was not provided to activity");
+        }
+
+        setContentView(R.layout.activity_device_details);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.container, AddDeviceFragment.newInstance())
+                    .replace(R.id.container, DeviceDetailsFragment.newInstance(deviceId))
                     .commitNow();
         }
 

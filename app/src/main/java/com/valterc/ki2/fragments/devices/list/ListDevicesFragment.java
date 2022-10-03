@@ -17,13 +17,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.valterc.ki2.R;
-import com.valterc.ki2.activities.devices.AddDeviceActivity;
+import com.valterc.ki2.activities.devices.add.AddDeviceActivity;
+import com.valterc.ki2.activities.devices.details.DeviceDetailsActivity;
 import com.valterc.ki2.data.device.DeviceId;
 import com.valterc.ki2.fragments.IKarooKeyListener;
 import com.valterc.ki2.karoo.input.KarooKey;
 import com.valterc.ki2.services.Ki2Service;
 
 import java.util.List;
+
+import timber.log.Timber;
 
 public class ListDevicesFragment extends Fragment implements IKarooKeyListener {
 
@@ -49,6 +52,7 @@ public class ListDevicesFragment extends Fragment implements IKarooKeyListener {
     public void onStop() {
         super.onStop();
         if (serviceBound) {
+            viewModel.stopReceivingData();
             requireContext().unbindService(viewModel.getServiceConnection());
         }
     }
@@ -67,7 +71,19 @@ public class ListDevicesFragment extends Fragment implements IKarooKeyListener {
         TextView textViewNoSavedDevices = view.findViewById(R.id.textview_list_devices_no_devices);
         ExtendedFloatingActionButton buttonAddDevice = view.findViewById(R.id.button_list_devices_add);
         RecyclerView recyclerView = view.findViewById(R.id.recyclerview_list_devices);
-        ListDevicesAdapter listDevicesAdapter = new ListDevicesAdapter(null, null);
+        ListDevicesAdapter listDevicesAdapter = new ListDevicesAdapter(deviceId -> {
+            Intent intent = new Intent(getContext(), DeviceDetailsActivity.class);
+            intent.putExtra(DeviceId.class.getSimpleName(), deviceId);
+            startActivity(intent);
+        }, deviceId -> {
+            try {
+                viewModel.removeDevice(deviceId);
+                return true;
+            } catch (Exception e) {
+                Toast.makeText(getContext(), "Unable to remove device", Toast.LENGTH_SHORT).show();
+            }
+            return false;
+        });
         recyclerView.setAdapter(listDevicesAdapter);
 
         viewModel.getService().observe(getViewLifecycleOwner(), service -> {
@@ -76,15 +92,16 @@ public class ListDevicesFragment extends Fragment implements IKarooKeyListener {
                     List<DeviceId> devices = viewModel.getSavedDevices();
                     listDevicesAdapter.setDevices(devices);
                     textViewNoSavedDevices.setVisibility(devices.size() == 0 ? View.VISIBLE : View.GONE);
+                    viewModel.startReceivingData();
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    Timber.e(e, "Unable to get devices and start receiving data");
+                    Toast.makeText(getContext(), R.string.text_unable_to_communicate_with_service, Toast.LENGTH_LONG).show();
                 }
             }
         });
 
-        buttonAddDevice.setOnClickListener(v -> {
-            startActivity(new Intent(getContext(), AddDeviceActivity.class));
-        });
+        viewModel.getDeviceConnectionDataEvent().observe(getViewLifecycleOwner(), listDevicesAdapter::addConnectionDataInfo);
+        buttonAddDevice.setOnClickListener(v -> startActivity(new Intent(getContext(), AddDeviceActivity.class)));
     }
 
     @Override
