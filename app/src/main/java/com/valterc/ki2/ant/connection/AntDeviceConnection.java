@@ -25,6 +25,9 @@ import timber.log.Timber;
 
 public class AntDeviceConnection implements IAntDeviceConnection, IDeviceConnectionListener {
 
+    private static final int MAX_RECONNECT_ATTEMPTS = 10;
+
+    private final AntManager antManager;
     private final DeviceId deviceId;
     private final ChannelConfiguration channelConfiguration;
     private final IDeviceConnectionListener deviceConnectionListener;
@@ -33,15 +36,15 @@ public class AntDeviceConnection implements IAntDeviceConnection, IDeviceConnect
     private ConnectionStatus connectionStatus;
     private AntChannelWrapper antChannelWrapper;
     private ITransportHandler transportHandler;
+    private int searchReconnectAttempts;
 
     public AntDeviceConnection(AntManager antManager, DeviceId deviceId, ChannelConfiguration channelConfiguration, IDeviceConnectionListener deviceConnectionListener) throws Exception {
-
+        this.antManager = antManager;
         this.deviceId = deviceId;
         this.channelConfiguration = channelConfiguration;
         this.deviceConnectionListener = deviceConnectionListener;
         this.messageQueue = new LinkedList<>();
         onConnectionStatus(deviceId, ConnectionStatus.NEW);
-
         connect(antManager);
     }
 
@@ -54,6 +57,8 @@ public class AntDeviceConnection implements IAntDeviceConnection, IDeviceConnect
 
             @Override
             public void onChannelDeath() {
+                Timber.d("Channel died for device %s", deviceId);
+
                 disconnect();
 
                 if (antManager.isReady()) {
@@ -66,7 +71,8 @@ public class AntDeviceConnection implements IAntDeviceConnection, IDeviceConnect
             }
         }, null);
 
-        transportHandler = new TransportHandler(deviceId, this, deviceConnectionListener);
+        onConnectionStatus(deviceId, ConnectionStatus.CONNECTING);
+        transportHandler = new TransportHandler(deviceId, this, this);
         pushQueuedMessages();
     }
 
@@ -94,13 +100,7 @@ public class AntDeviceConnection implements IAntDeviceConnection, IDeviceConnect
         }
     }
 
-    @Override
-    public DeviceId getDeviceId() {
-        return deviceId;
-    }
-
-    @Override
-    public void disconnect() {
+    private void disconnectInternal(){
         messageQueue.clear();
         AntChannelWrapper antChannelWrapper = this.antChannelWrapper;
         this.antChannelWrapper = null;
@@ -109,8 +109,25 @@ public class AntDeviceConnection implements IAntDeviceConnection, IDeviceConnect
         if (antChannelWrapper != null) {
             antChannelWrapper.dispose();
         }
+    }
 
-        onConnectionStatus(deviceId, ConnectionStatus.CLOSED);
+    private void postConnectionStatus(DeviceId deviceId, ConnectionStatus connectionStatus) {
+        this.connectionStatus = connectionStatus;
+        if (deviceConnectionListener != null) {
+            deviceConnectionListener.onConnectionStatus(deviceId, connectionStatus);
+        }
+    }
+
+    @Override
+    public DeviceId getDeviceId() {
+        return deviceId;
+    }
+
+    @Override
+    public void disconnect() {
+        disconnectInternal();
+        searchReconnectAttempts = MAX_RECONNECT_ATTEMPTS;
+        postConnectionStatus(deviceId, ConnectionStatus.CLOSED);
     }
 
     @Override
@@ -151,11 +168,24 @@ public class AntDeviceConnection implements IAntDeviceConnection, IDeviceConnect
 
     @Override
     public void onConnectionStatus(DeviceId deviceId, ConnectionStatus connectionStatus) {
-        this.connectionStatus = connectionStatus;
 
-        if (deviceConnectionListener != null) {
-            deviceConnectionListener.onConnectionStatus(deviceId, connectionStatus);
+        if (connectionStatus == ConnectionStatus.ESTABLISHED) {
+            searchReconnectAttempts = 0;
+        } else if (connectionStatus == ConnectionStatus.CLOSED && searchReconnectAttempts < MAX_RECONNECT_ATTEMPTS) {
+            searchReconnectAttempts++;
+            connectionStatus = ConnectionStatus.CONNECTING;
+
+            try {
+                Timber.d("[%s] Retrying connection, attempt %d...", deviceId, searchReconnectAttempts);
+                disconnectInternal();
+                connect(antManager);
+            } catch (Exception e) {
+                Timber.e(e, "Unable to connect");
+                connectionStatus = ConnectionStatus.CLOSED;
+            }
         }
+
+        postConnectionStatus(deviceId, connectionStatus);
     }
 
     @Override

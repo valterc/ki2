@@ -80,12 +80,12 @@ public class TransportHandler implements ITransportHandler {
                 if (channelResponseMessage.getResponseCode() == ResponseCode.RESPONSE_NO_ERROR) {
                     return;
                 }
-                Timber.i("[%s] Channel response: %s", deviceId, channelResponseMessage);
+                Timber.d("[%s] Channel response: %s", deviceId, channelResponseMessage);
                 break;
 
             case CHANNEL_STATUS:
                 ChannelStatusMessage channelStatusMessage = new ChannelStatusMessage(antMessageParcel);
-                Timber.i("[%s] Channel status: %s", deviceId, channelStatusMessage);
+                Timber.d("[%s] Channel status: %s", deviceId, channelStatusMessage);
                 break;
 
             default:
@@ -94,6 +94,8 @@ public class TransportHandler implements ITransportHandler {
     }
 
     private void processAntEvent(ChannelEventMessage channelEventMessage) {
+        Timber.d("Received ANT message %s: %s", channelEventMessage.getEventCode(), channelEventMessage);
+
         switch (channelEventMessage.getEventCode()) {
             case RX_SEARCH_TIMEOUT:
             case CHANNEL_CLOSED:
@@ -122,7 +124,7 @@ public class TransportHandler implements ITransportHandler {
                 this.connectionEstablished = false;
                 this.antBroadcasting = false;
                 this.acknowledgedDataSent = null;
-                deviceConnectionListener.onConnectionStatus(deviceId, ConnectionStatus.SEARCHING);
+                deviceConnectionListener.onConnectionStatus(deviceId, ConnectionStatus.CONNECTING);
                 break;
 
             default:

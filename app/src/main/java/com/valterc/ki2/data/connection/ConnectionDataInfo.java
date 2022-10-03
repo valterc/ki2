@@ -3,6 +3,7 @@ package com.valterc.ki2.data.connection;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.valterc.ki2.data.device.DeviceId;
 import com.valterc.ki2.data.info.DataInfo;
 import com.valterc.ki2.data.info.DataType;
 
@@ -12,8 +13,9 @@ import java.util.Objects;
 
 public class ConnectionDataInfo implements Parcelable {
 
-    public ConnectionStatus status;
-    public Map<DataType, DataInfo> dataMap;
+    private DeviceId deviceId;
+    private ConnectionStatus status;
+    private Map<DataType, DataInfo> dataMap;
 
     public static final Parcelable.Creator<ConnectionDataInfo> CREATOR = new Parcelable.Creator<ConnectionDataInfo>() {
         public ConnectionDataInfo createFromParcel(Parcel in) {
@@ -25,7 +27,8 @@ public class ConnectionDataInfo implements Parcelable {
         }
     };
 
-    public ConnectionDataInfo(ConnectionStatus status, Map<DataType, DataInfo> dataMap) {
+    public ConnectionDataInfo(DeviceId deviceId, ConnectionStatus status, Map<DataType, DataInfo> dataMap) {
+        this.deviceId = deviceId;
         this.status = status;
         this.dataMap = dataMap;
     }
@@ -40,6 +43,7 @@ public class ConnectionDataInfo implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel out, int flags) {
+        out.writeParcelable(deviceId, flags);
         out.writeInt(status.getValue());
 
         out.writeInt(dataMap.size());
@@ -50,6 +54,7 @@ public class ConnectionDataInfo implements Parcelable {
     }
 
     public void readFromParcel(Parcel in) {
+        deviceId = in.readParcelable(DeviceId.class.getClassLoader());
         status = ConnectionStatus.fromValue(in.readInt());
 
         int size = in.readInt();
@@ -70,12 +75,20 @@ public class ConnectionDataInfo implements Parcelable {
         return status == ConnectionStatus.ESTABLISHED;
     }
 
-    public boolean isSearching() {
-        return status == ConnectionStatus.SEARCHING;
+    public boolean isConnecting() {
+        return status == ConnectionStatus.CONNECTING;
+    }
+
+    public boolean isNewOrConnecting() {
+        return status == ConnectionStatus.NEW || status == ConnectionStatus.CONNECTING;
     }
 
     public ConnectionStatus getStatus() {
         return status;
+    }
+
+    public DeviceId getDeviceId() {
+        return deviceId;
     }
 
     public Map<DataType, DataInfo> getDataMap() {

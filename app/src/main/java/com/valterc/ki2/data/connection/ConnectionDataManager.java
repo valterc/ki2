@@ -51,7 +51,7 @@ public class ConnectionDataManager {
     }
 
     public ConnectionDataInfo buildConnectionDataInfo(){
-        return new ConnectionDataInfo(status, dataMap.values().stream().collect(Collectors.toMap(DataInfoBuilder::getType, DataInfoBuilder::buildDataInfo)));
+        return new ConnectionDataInfo(deviceId, status, dataMap.values().stream().collect(Collectors.toMap(DataInfoBuilder::getType, DataInfoBuilder::buildDataInfo)));
     }
 
     public DataInfo buildDataInfo(DataType dataType) {

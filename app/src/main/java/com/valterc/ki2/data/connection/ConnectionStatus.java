@@ -7,7 +7,7 @@ public enum ConnectionStatus {
 
     INVALID(0),
     NEW(1),
-    SEARCHING(2),
+    CONNECTING(2),
     ESTABLISHED(3),
     CLOSED(4);
 
