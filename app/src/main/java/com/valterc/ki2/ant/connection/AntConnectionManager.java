@@ -40,7 +40,6 @@ public class AntConnectionManager {
     }
 
     public void connect(Collection<DeviceId> devices, IDeviceConnectionListener deviceConnectionListener) throws Exception {
-
         int newDeviceCount = (int) devices.stream().filter(d -> !connectionMap.containsKey(d)).count();
         int availableAntChannels = antManager.getAvailableChannelCount();
 
@@ -49,17 +48,17 @@ public class AntConnectionManager {
         }
 
         for (DeviceId deviceId : devices) {
-            connect(deviceId, deviceConnectionListener);
+            connect(deviceId, deviceConnectionListener, false);
         }
     }
 
-    public void connect(DeviceId deviceId, IDeviceConnectionListener deviceConnectionListener) {
+    public void connect(DeviceId deviceId, IDeviceConnectionListener deviceConnectionListener, boolean forceReconnect) {
         IAntDeviceConnection existingConnection = connectionMap.get(deviceId);
         if (existingConnection != null) {
-            if (existingConnection.getConnectionStatus() == ConnectionStatus.ESTABLISHED) {
-                return;
-            } else {
+            if (forceReconnect || existingConnection.getConnectionStatus() == ConnectionStatus.INVALID) {
                 existingConnection.disconnect();
+            } else {
+                return;
             }
         }
 

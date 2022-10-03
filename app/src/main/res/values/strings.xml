@@ -54,5 +54,11 @@
     <string name="text_connected">Connected</string>
     <string name="text_not_found">Not found</string>
     <string name="text_failed">Failed</string>
+    <string name="text_devices">Devices</string>
+    <string name="text_settings">Settings</string>
+    <string name="text_remove">Remove</string>
+    <string name="text_param_question_remove">Remove %s?</string>
+    <string name="text_unable_to_remove">Unable to remove</string>
+
 
 </resources>

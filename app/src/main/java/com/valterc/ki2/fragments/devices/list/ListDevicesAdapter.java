@@ -29,11 +29,11 @@ import java.util.function.Function;
 public class ListDevicesAdapter extends RecyclerView.Adapter<ListDevicesViewHolder> {
 
     private final Consumer<DeviceId> listenerConfigureDevice;
-    private final Function<DeviceId, Boolean> listenerRemoveDevice;
+    private final Consumer<DeviceId> listenerRemoveDevice;
     private final List<DeviceId> devices;
     private final Map<DeviceId, ConnectionDataInfo> connectionDataInfoMap;
 
-    public ListDevicesAdapter(Consumer<DeviceId> listenerConfigureDevice, Function<DeviceId, Boolean> listenerRemoveDevice) {
+    public ListDevicesAdapter(Consumer<DeviceId> listenerConfigureDevice, Consumer<DeviceId> listenerRemoveDevice) {
         this.listenerConfigureDevice = listenerConfigureDevice;
         this.listenerRemoveDevice = listenerRemoveDevice;
         this.devices = new ArrayList<>();
@@ -57,6 +57,15 @@ public class ListDevicesAdapter extends RecyclerView.Adapter<ListDevicesViewHold
         if (index != -1) {
             this.connectionDataInfoMap.put(connectionDataInfo.getDeviceId(), connectionDataInfo);
             notifyItemChanged(index);
+        }
+    }
+
+    public void onDeviceRemoved(DeviceId deviceId) {
+        int index = devices.indexOf(deviceId);
+        if (index != -1) {
+            devices.remove(deviceId);
+            connectionDataInfoMap.remove(deviceId);
+            notifyItemRemoved(index);
         }
     }
 
@@ -86,14 +95,7 @@ public class ListDevicesAdapter extends RecyclerView.Adapter<ListDevicesViewHold
         setConnectionStatusIndicator(holder, connectionDataInfoMap.get(deviceId));
         holder.getRootView().setOnClickListener(e -> listenerConfigureDevice.accept(deviceId));
         holder.getButtonConfigure().setOnClickListener(e -> listenerConfigureDevice.accept(deviceId));
-        holder.getButtonRemove().setOnClickListener(e -> {
-            Boolean result = listenerRemoveDevice.apply(deviceId);
-
-            if (result != null && result) {
-                devices.remove(deviceId);
-                connectionDataInfoMap.remove(deviceId);
-            }
-        });
+        holder.getButtonRemove().setOnClickListener(e -> listenerRemoveDevice.accept(deviceId));
     }
 
     @Override

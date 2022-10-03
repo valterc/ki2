@@ -44,21 +44,21 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:tabMode="scrollable"
-            app:tabIndicatorColor="@color/black"
+            app:tabIndicatorColor="@color/hh_black"
             app:tabTextColor="@color/grey"
-            app:tabSelectedTextColor="@color/black"
+            app:tabSelectedTextColor="@color/hh_black"
             app:tabInlineLabel="true">
 
             <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Devices"
+                android:text="@string/text_devices"
                 android:icon="@drawable/ic_di2" />
 
             <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Settings"
+                android:text="@string/text_settings"
                 android:icon="@drawable/ic_gear" />
 
         </com.google.android.material.tabs.TabLayout>

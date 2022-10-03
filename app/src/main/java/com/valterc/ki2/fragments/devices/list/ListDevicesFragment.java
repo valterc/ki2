@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
@@ -30,7 +31,9 @@ import timber.log.Timber;
 
 public class ListDevicesFragment extends Fragment implements IKarooKeyListener {
 
+    private TextView textViewNoSavedDevices;
     private ListDevicesViewModel viewModel;
+    private ListDevicesAdapter listDevicesAdapter;
     private boolean serviceBound;
 
     @Override
@@ -68,22 +71,28 @@ public class ListDevicesFragment extends Fragment implements IKarooKeyListener {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        TextView textViewNoSavedDevices = view.findViewById(R.id.textview_list_devices_no_devices);
+        textViewNoSavedDevices = view.findViewById(R.id.textview_list_devices_no_devices);
         ExtendedFloatingActionButton buttonAddDevice = view.findViewById(R.id.button_list_devices_add);
         RecyclerView recyclerView = view.findViewById(R.id.recyclerview_list_devices);
-        ListDevicesAdapter listDevicesAdapter = new ListDevicesAdapter(deviceId -> {
+        listDevicesAdapter = new ListDevicesAdapter(deviceId -> {
             Intent intent = new Intent(getContext(), DeviceDetailsActivity.class);
             intent.putExtra(DeviceId.class.getSimpleName(), deviceId);
             startActivity(intent);
-        }, deviceId -> {
-            try {
-                viewModel.removeDevice(deviceId);
-                return true;
-            } catch (Exception e) {
-                Toast.makeText(getContext(), "Unable to remove device", Toast.LENGTH_SHORT).show();
-            }
-            return false;
-        });
+        }, deviceId -> new AlertDialog.Builder(requireContext())
+                .setTitle(R.string.text_remove)
+                .setMessage(getString(R.string.text_param_question_remove, getString(R.string.text_di2_name, deviceId.getName())))
+                .setIcon(R.drawable.ic_delete)
+                .setPositiveButton(android.R.string.yes, (dialog, whichButton) ->
+                {
+                    try {
+                        viewModel.removeDevice(deviceId);
+                        listDevicesAdapter.onDeviceRemoved(deviceId);
+                        textViewNoSavedDevices.setVisibility(viewModel.anyDevicesSaved() ? View.GONE : View.VISIBLE);
+                    } catch (Exception e) {
+                        Toast.makeText(getContext(), R.string.text_unable_to_remove, Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .setNegativeButton(android.R.string.no, null).show());
         recyclerView.setAdapter(listDevicesAdapter);
 
         viewModel.getService().observe(getViewLifecycleOwner(), service -> {
@@ -91,7 +100,7 @@ public class ListDevicesFragment extends Fragment implements IKarooKeyListener {
                 try {
                     List<DeviceId> devices = viewModel.getSavedDevices();
                     listDevicesAdapter.setDevices(devices);
-                    textViewNoSavedDevices.setVisibility(devices.size() == 0 ? View.VISIBLE : View.GONE);
+                    textViewNoSavedDevices.setVisibility(viewModel.anyDevicesSaved() ? View.GONE : View.VISIBLE);
                     viewModel.startReceivingData();
                 } catch (Exception e) {
                     Timber.e(e, "Unable to get devices and start receiving data");
