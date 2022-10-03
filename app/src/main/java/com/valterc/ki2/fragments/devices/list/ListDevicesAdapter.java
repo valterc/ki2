@@ -3,8 +3,6 @@ package com.valterc.ki2.fragments.devices.list;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.ColorStateList;
-import android.content.res.Resources;
-import android.graphics.PorterDuff;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.valterc.ki2.R;
 import com.valterc.ki2.data.connection.ConnectionDataInfo;
-import com.valterc.ki2.data.connection.ConnectionStatus;
 import com.valterc.ki2.data.device.DeviceId;
 import com.valterc.ki2.data.device.DeviceType;
 
@@ -24,7 +21,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 public class ListDevicesAdapter extends RecyclerView.Adapter<ListDevicesViewHolder> {
 
@@ -118,7 +114,7 @@ public class ListDevicesAdapter extends RecyclerView.Adapter<ListDevicesViewHold
         holder.getTextViewName().setTextColor(context.getColor(R.color.hh_black));
         holder.getTextViewConnectionStatus().setVisibility(View.VISIBLE);
 
-        switch (connectionDataInfo.getStatus()) {
+        switch (connectionDataInfo.getConnectionStatus()) {
 
             case INVALID:
                 holder.getTextViewConnectionStatus().setText(R.string.text_failed);

@@ -10,16 +10,12 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.valterc.ki2.data.connection.ConnectionDataInfo;
 import com.valterc.ki2.data.connection.ConnectionInfo;
 import com.valterc.ki2.data.device.DeviceId;
-import com.valterc.ki2.karoo.Ki2BroadcastReceiver;
 import com.valterc.ki2.services.IKi2Service;
 import com.valterc.ki2.services.Ki2Service;
-import com.valterc.ki2.services.callbacks.IConnectionDataInfoCallback;
 import com.valterc.ki2.services.callbacks.IConnectionInfoCallback;
 
-import io.hammerhead.sdk.v0.SdkContext;
 import timber.log.Timber;
 
 public class Ki2Application extends Application {
@@ -47,7 +43,7 @@ public class Ki2Application extends Application {
     private final IConnectionInfoCallback connectionDataInfoCallback = new IConnectionInfoCallback.Stub() {
         @Override
         public void onConnectionInfo(DeviceId deviceId, ConnectionInfo connectionInfo) throws RemoteException {
-            Timber.d("[%s] Connection status: %s", deviceId, connectionInfo.getStatus());
+            Timber.d("[%s] Connection status: %s", deviceId, connectionInfo.getConnectionStatus());
         }
     };
 

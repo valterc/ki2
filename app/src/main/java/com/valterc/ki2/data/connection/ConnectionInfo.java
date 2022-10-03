@@ -51,7 +51,7 @@ public class ConnectionInfo implements Parcelable {
         return status == ConnectionStatus.NEW || status == ConnectionStatus.CONNECTING;
     }
 
-    public ConnectionStatus getStatus() {
+    public ConnectionStatus getConnectionStatus() {
         return status;
     }
 
