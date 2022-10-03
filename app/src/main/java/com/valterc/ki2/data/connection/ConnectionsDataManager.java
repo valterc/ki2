@@ -11,7 +11,7 @@ import java.util.Map;
 
 public class ConnectionsDataManager {
 
-    private Map<DeviceId, ConnectionDataManager> connectionDataManagersMap;
+    private final Map<DeviceId, ConnectionDataManager> connectionDataManagersMap;
 
     public ConnectionsDataManager() {
         connectionDataManagersMap = new HashMap<>();
@@ -20,7 +20,7 @@ public class ConnectionsDataManager {
     public void setConnections(Collection<DeviceId> devices){
         connectionDataManagersMap.keySet().removeIf(deviceId -> !devices.contains(deviceId));
         for (DeviceId deviceId: devices) {
-            connectionDataManagersMap.computeIfAbsent(deviceId, (d) -> new ConnectionDataManager(d));
+            connectionDataManagersMap.computeIfAbsent(deviceId, ConnectionDataManager::new);
         }
     }
 

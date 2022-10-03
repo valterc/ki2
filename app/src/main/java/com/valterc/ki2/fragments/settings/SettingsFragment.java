@@ -1,6 +1,8 @@
 package com.valterc.ki2.fragments.settings;
 
+import android.content.res.Resources;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -20,7 +22,9 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        final RecyclerView rv = getListView();
-        rv.setPadding(0, 0, 0, 80);
+        final RecyclerView recyclerView = getListView();
+        final Resources resources = getResources();
+        float paddingBottom = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 80, resources.getDisplayMetrics());
+        recyclerView.setPadding(0, 0, 0, (int) paddingBottom);
     }
 }

@@ -3,16 +3,9 @@ package com.valterc.ki2.data.connection;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.valterc.ki2.data.info.DataInfo;
-import com.valterc.ki2.data.info.DataType;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-
 public class ConnectionInfo implements Parcelable {
 
-    public ConnectionStatus status;
+    private ConnectionStatus status;
 
     public static final Parcelable.Creator<ConnectionInfo> CREATOR = new Parcelable.Creator<ConnectionInfo>() {
         public ConnectionInfo createFromParcel(Parcel in) {
@@ -50,8 +43,12 @@ public class ConnectionInfo implements Parcelable {
         return status == ConnectionStatus.ESTABLISHED;
     }
 
-    public boolean isSearching() {
-        return status == ConnectionStatus.SEARCHING;
+    public boolean isConnecting() {
+        return status == ConnectionStatus.CONNECTING;
+    }
+
+    public boolean isNewOrConnecting() {
+        return status == ConnectionStatus.NEW || status == ConnectionStatus.CONNECTING;
     }
 
     public ConnectionStatus getStatus() {

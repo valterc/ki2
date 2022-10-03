@@ -1,4 +1,4 @@
-package com.valterc.ki2.activities.devices;
+package com.valterc.ki2.activities.devices.add;
 
 import android.os.Bundle;
 import android.view.KeyEvent;

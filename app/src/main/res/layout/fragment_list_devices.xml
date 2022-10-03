@@ -5,24 +5,34 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.devices.DevicesFragment">
+    tools:context=".fragments.devices.list.ListDevicesFragment">
 
     <TextView
-        android:id="@+id/textview_devices_no_devices"
+        android:id="@+id/textview_list_devices_no_devices"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="No devices saved"
+        android:text="@string/text_no_devices_saved"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerview_list_devices"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:listitem="@layout/view_list_devices_item"
+        tools:itemCount="20"
+        android:paddingBottom="80dp"
+        android:clipToPadding="false"
+        android:scrollbarStyle="outsideOverlay"
+        android:scrollbars="vertical"/>
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/button_devices_add"
+        android:id="@+id/button_list_devices_add"
         app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlayRightSide"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -33,6 +43,6 @@
         app:collapsedSize="50dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:contentDescription="Add device"/>
+        android:contentDescription="@string/text_add_device"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
