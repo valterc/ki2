@@ -67,6 +67,9 @@
     <string name="text_model">Model</string>
     <string name="text_software_version">Software Version</string>
     <string name="text_hardware_version">Hardware Version</string>
+    <string name="text_rear_gear">Rear Gear</string>
+    <string name="text_front_gear">Front gear</string>
+    <string name="text_shifting_mode">Shifting Mode</string>
 
 
 </resources>

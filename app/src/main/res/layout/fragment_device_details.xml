@@ -61,7 +61,7 @@
              - Status / (Signal)
              - Battery
              - Product Information
-             Shifting
+             - Shifting
              Switch
 
              Remove
@@ -326,10 +326,92 @@
                 android:orientation="vertical">
 
                 <com.valterc.ki2.views.DrivetrainView
+                    android:id="@+id/drivetrainview_device_details_gears"
                     android:layout_width="match_parent"
-                    android:layout_height="100dp"/>
+                    android:layout_height="140dp"
+                    app:frontGearMax="2"
+                    app:frontGear="1"
+                    app:rearGear="5"
+                    android:textSize="12sp"
+                    android:textColor="@color/hh_black"/>
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="15dp">
 
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:paddingTop="5dp">
+
+                        <TextView
+                            android:id="@+id/textview_device_details_rear_gear"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/hh_black"
+                            android:textStyle="bold"
+                            tools:text="05/11" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/text_rear_gear"
+                            android:textColor="@color/hh_light_grey"
+                            android:textSize="13sp"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:paddingTop="5dp">
+
+                        <TextView
+                            android:id="@+id/textview_device_details_front_gear"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/hh_black"
+                            android:textStyle="bold"
+                            tools:text="01/02" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/text_front_gear"
+                            android:textColor="@color/hh_light_grey"
+                            android:textSize="13sp"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingTop="5dp">
+
+                    <TextView
+                        android:id="@+id/textview_device_details_shifting_mode"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/hh_black"
+                        android:textStyle="bold"
+                        tools:text="S1" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/text_shifting_mode"
+                        android:textColor="@color/hh_light_grey"
+                        android:textSize="13sp"/>
+
+                </LinearLayout>
 
             </LinearLayout>
 
