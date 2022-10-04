@@ -4,17 +4,47 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.Rect;
+import android.graphics.Typeface;
+import android.text.SpannableStringBuilder;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.View;
 
 import androidx.annotation.Nullable;
 
+import com.google.android.material.color.MaterialColors;
 import com.valterc.ki2.R;
 
 public class DrivetrainView extends View {
+
+    private static final int DEFAULT_FRONT_GEAR_MAX = 2;
+    private static final int DEFAULT_REAR_GEAR_MAX = 11;
+
+    private static final int DEFAULT_FRONT_GEAR = 1;
+    private static final int DEFAULT_REAR_GEAR = 1;
+
+    private static final int DEFAULT_DRIVETRAIN_COLOR = 0xff1b2d2d;
+    private static final int DEFAULT_SELECTED_GEAR_COLOR = 0xffc84e35;
+    private static final int DEFAULT_CHAIN_COLOR = 0xffdddddd;
+
+    private static final boolean DEFAULT_TEXT_ENABLED = true;
+
+    private static final int DEFAULT_DRIVETRAIN_STROKE_WIDTH = 2;
+    private static final int DEFAULT_SELECTED_GEAR_STROKE_WIDTH = 3;
+    private static final int DEFAULT_CHAIN_STROKE_WIDTH = 3;
+
+    private static final String STRING_MEASURE = "F1/";
+    private static final String STRING_REAR_SPACE = "Rear ";
+    private static final String STRING_FRONT_SPACE = "Front ";
+    private static final String STRING_GEAR_SEPARATOR = "/";
+
+    private final boolean initialized;
+
+    private boolean textEnabled;
 
     private int frontGearMax;
     private int frontGear;
@@ -22,7 +52,9 @@ public class DrivetrainView extends View {
     private int rearGear;
 
     private Paint drivetrainPaint;
+    private Paint selectedGearPaint;
     private Paint chainPaint;
+    private Paint textPaint;
 
     private float rearGearPositionX;
     private float rearGearPositionY;
@@ -38,54 +70,123 @@ public class DrivetrainView extends View {
     private float currentRearGearRadius;
     private float currentFrontGearRadius;
 
-    private float rearTopDeraileurPositionX;
-    private float rearTopDeraileurPositionY;
-    private float rearBottomDeraileurPositionX;
-    private float rearBottomDeraileurPositionY;
-    private float rearDeraileurRadius;
+    private float rearTopDerailleurPositionX;
+    private float rearTopDerailleurPositionY;
+    private float rearBottomDerailleurPositionX;
+    private float rearBottomDerailleurPositionY;
+    private float rearDerailleurRadius;
 
-    private Path chainPath;
+    private final Path chainPath;
+    private final Path textPath;
 
+    private final Path tempPath1;
+    private final Path tempPath2;
+
+    private final Rect tempRect;
 
     public DrivetrainView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-
-        setFrontGearMax(2);
-        setFrontGear(2);
-        setRearGearMax(11);
-        setRearGear(11);
+        initPaint();
 
         TypedArray array = context.getTheme().obtainStyledAttributes(attrs, R.styleable.DrivetrainView, 0, 0);
-
         try {
+            setFrontGearMax(array.getInt(R.styleable.DrivetrainView_frontGearMax, DEFAULT_FRONT_GEAR_MAX));
+            setRearGearMax(array.getInt(R.styleable.DrivetrainView_rearGearMax, DEFAULT_REAR_GEAR_MAX));
+            setFrontGear(array.getInt(R.styleable.DrivetrainView_frontGear, DEFAULT_FRONT_GEAR));
+            setRearGear(array.getInt(R.styleable.DrivetrainView_rearGear, DEFAULT_REAR_GEAR));
 
+            setDrivetrainColor(array.getColor(R.styleable.DrivetrainView_drivetrainColor, DEFAULT_DRIVETRAIN_COLOR));
+            setSelectedGearColor(array.getColor(R.styleable.DrivetrainView_selectedGearColor, DEFAULT_SELECTED_GEAR_COLOR));
+            setChainColor(array.getColor(R.styleable.DrivetrainView_chainColor, DEFAULT_CHAIN_COLOR));
+
+            setTextEnabled(array.getBoolean(R.styleable.DrivetrainView_textEnabled, DEFAULT_TEXT_ENABLED));
+
+            float drivetrainStrokeWidth = array.getDimension(R.styleable.DrivetrainView_drivetrainStrokeWidth, -1);
+            if (drivetrainStrokeWidth != -1) {
+                drivetrainPaint.setStrokeWidth(drivetrainStrokeWidth);
+            } else {
+                setDrivetrainStrokeWidth(DEFAULT_DRIVETRAIN_STROKE_WIDTH);
+            }
+
+            float selectedGearStrokeWidth = array.getDimension(R.styleable.DrivetrainView_selectedGearStrokeWidth, -1);
+            if (selectedGearStrokeWidth != -1) {
+                selectedGearPaint.setStrokeWidth(selectedGearStrokeWidth);
+            } else {
+                setSelectedGearStrokeWidth(DEFAULT_SELECTED_GEAR_STROKE_WIDTH);
+            }
+
+            float chainStrokeWidth = array.getDimension(R.styleable.DrivetrainView_chainStrokeWidth, -1);
+            if (chainStrokeWidth != -1) {
+                chainPaint.setStrokeWidth(chainStrokeWidth);
+            } else {
+                setChainStrokeWidth(DEFAULT_CHAIN_STROKE_WIDTH);
+            }
+
+            int textSize = array.getDimensionPixelSize(R.styleable.DrivetrainView_android_textSize, -1);
+            if (textSize != -1) {
+                textPaint.setTextSize(textSize);
+            } else {
+                TypedValue sizeValue = new TypedValue();
+                context.getTheme().resolveAttribute(android.R.attr.textSize, sizeValue, true);
+                setTextSize(sizeValue.data);
+            }
+
+            int textColor = array.getColor(R.styleable.DrivetrainView_android_textColor, -1);
+            if (textColor != -1) {
+                setTextColor(textColor);
+            } else {
+                TypedValue colorValue = new TypedValue();
+                context.getTheme().resolveAttribute(android.R.attr.textColorPrimary, colorValue, true);
+                setTextColor(colorValue.data);
+            }
         } finally {
             array.recycle();
         }
 
-        init();
+        setFocusable(false);
+
+        chainPath = new Path();
+        textPath = new Path();
+        tempPath1 = new Path();
+        tempPath2 = new Path();
+        tempRect = new Rect();
+
+        initialized = true;
     }
 
-    private void init() {
-        final Resources resources = getResources();
+    private void initPaint() {
+        initDrivetrainPaint();
+        initSelectedGearPaint();
+        initChainPaint();
+        initTextPaint();
+    }
 
+    private void initDrivetrainPaint() {
         drivetrainPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         drivetrainPaint.setStyle(Paint.Style.STROKE);
-        drivetrainPaint.setStrokeWidth(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2, resources.getDisplayMetrics()));
-        drivetrainPaint.setColor(0xff1b2d2d);
+    }
 
-        Paint selectedGearPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private void initSelectedGearPaint() {
+        selectedGearPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         selectedGearPaint.setStyle(Paint.Style.STROKE);
-        selectedGearPaint.setStrokeWidth(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 3, resources.getDisplayMetrics()));
-        selectedGearPaint.setColor(0xffc84e35);
+    }
 
+    private void initChainPaint() {
         chainPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         chainPaint.setStyle(Paint.Style.STROKE);
-        chainPaint.setStrokeWidth(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 3, resources.getDisplayMetrics()));
-        chainPaint.setColor(0xffdddddd);
         chainPaint.setStrokeMiter(1);
         chainPaint.setStrokeJoin(Paint.Join.ROUND);
         chainPaint.setStrokeCap(Paint.Cap.ROUND);
+    }
+
+    private void initTextPaint() {
+        textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    }
+
+    private int measureTextHeight(float padding) {
+        textPaint.setTypeface(Typeface.DEFAULT_BOLD);
+        textPaint.getTextBounds(STRING_MEASURE, 0, STRING_MEASURE.length(), tempRect);
+        return (int) (tempRect.height() + padding);
     }
 
     @Override
@@ -95,79 +196,121 @@ public class DrivetrainView extends View {
         int internalWidth = w - (getPaddingStart() + getPaddingEnd());
         int internalHeight = h - (getPaddingTop() + getPaddingBottom());
 
-        float horizontalCenter = (float) internalWidth * 0.5f;
-        float verticalCenter = (float) internalHeight * 0.5f;
+        int drivetrainBoxWidth = internalWidth;
+        int drivetrainBoxHeight = internalHeight;
+
+        if (textEnabled) {
+            final Resources resources = getResources();
+            float textVerticalPadding = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2, resources.getDisplayMetrics());
+            drivetrainBoxHeight -= measureTextHeight(textVerticalPadding);
+            initTextPath(drivetrainBoxHeight + textVerticalPadding);
+        }
+
+        float horizontalCenter = (float) drivetrainBoxWidth * 0.5f;
+        float verticalCenter = (float) drivetrainBoxHeight * 0.5f;
 
         rearGearPositionX = horizontalCenter * 0.5f;
         frontGearPositionX = horizontalCenter + horizontalCenter * 0.5f;
 
-        rearGearPositionY = verticalCenter * 0.75f;
-        frontGearPositionY = verticalCenter;
+        rearGearPositionY = verticalCenter * 0.65f;
+        frontGearPositionY = verticalCenter * 0.9f;
 
-        rearGearRadius = Math.min(horizontalCenter * 0.55f, internalHeight * 0.45f) * 0.5f;
-        frontGearRadius = Math.min(horizontalCenter * 0.7f, internalHeight * 0.7f) * 0.5f;
+        rearGearRadius = Math.min(horizontalCenter * 0.6f, drivetrainBoxHeight * 0.5f) * 0.5f;
+        frontGearRadius = Math.min(horizontalCenter * 0.75f, drivetrainBoxHeight * 0.75f) * 0.5f;
 
         frontGearSpacing = frontGearRadius * 0.66f / frontGearMax;
         rearGearSpacing = rearGearRadius * 0.8f / rearGearMax;
 
-        rearDeraileurRadius = rearGearRadius * 0.25f;
+        rearDerailleurRadius = rearGearRadius * 0.25f;
 
-        rearTopDeraileurPositionX = rearGearPositionX + rearGearRadius * 0.5f;
-        rearTopDeraileurPositionY = rearGearPositionY + rearGearRadius + rearDeraileurRadius + drivetrainPaint.getStrokeWidth();
+        rearTopDerailleurPositionX = rearGearPositionX + rearGearRadius * 0.5f;
+        rearTopDerailleurPositionY = rearGearPositionY + rearGearRadius + rearDerailleurRadius + drivetrainPaint.getStrokeWidth();
 
-        rearBottomDeraileurPositionX = rearGearPositionX - rearGearRadius + ((float) rearGear / rearGearMax * (rearGearRadius * 2f));
-        rearBottomDeraileurPositionY = rearTopDeraileurPositionY + rearDeraileurRadius * 3 + drivetrainPaint.getStrokeWidth() * 2;
+        rearBottomDerailleurPositionX = rearGearPositionX - rearGearRadius + ((float) rearGear / rearGearMax * (rearGearRadius * 2f));
+        rearBottomDerailleurPositionY = rearTopDerailleurPositionY + rearDerailleurRadius * 3 + drivetrainPaint.getStrokeWidth() * 2;
 
         currentRearGearRadius = rearGearRadius - (rearGearSpacing * (rearGearMax - rearGear));
         currentFrontGearRadius = frontGearRadius - (frontGearSpacing * (frontGearMax - frontGear));
 
         initChainPath();
+        initTextPath(drivetrainBoxHeight);
     }
 
-    private void initChainPath(){
+    private void initTextPath(float positionYOffset) {
+        textPath.reset();
+        tempPath1.reset();
+        tempPath2.reset();
 
+        textPaint.setTypeface(Typeface.DEFAULT_BOLD);
+        textPaint.getTextBounds(STRING_MEASURE, 0, STRING_MEASURE.length(), tempRect);
+
+        float appendedWidth = appendString(tempPath2, tempPath1, STRING_REAR_SPACE, Typeface.DEFAULT, 0);
+        appendedWidth += appendString(tempPath2, tempPath1, Integer.toString(rearGear), Typeface.DEFAULT_BOLD, appendedWidth);
+        appendedWidth += appendString(tempPath2, tempPath1, STRING_GEAR_SEPARATOR, Typeface.DEFAULT, appendedWidth);
+        appendedWidth += appendString(tempPath2, tempPath1, Integer.toString(rearGearMax), Typeface.DEFAULT, appendedWidth);
+
+        textPath.addPath(tempPath2, rearGearPositionX - appendedWidth * .5f, positionYOffset + tempRect.height());
+        tempPath2.reset();
+
+        appendedWidth = appendString(tempPath2, tempPath1, STRING_FRONT_SPACE, Typeface.DEFAULT, 0);
+        appendedWidth += appendString(tempPath2, tempPath1, Integer.toString(frontGear), Typeface.DEFAULT_BOLD, appendedWidth);
+        appendedWidth += appendString(tempPath2, tempPath1, STRING_GEAR_SEPARATOR, Typeface.DEFAULT, appendedWidth);
+        appendedWidth += appendString(tempPath2, tempPath1, Integer.toString(frontGearMax), Typeface.DEFAULT, appendedWidth);
+
+        textPath.addPath(tempPath2, frontGearPositionX - appendedWidth * .5f, positionYOffset + tempRect.height());
+    }
+
+    private float appendString(Path targetPath, Path scratchPath, String text, Typeface typeface, float x) {
+        textPaint.setTypeface(typeface);
+        textPaint.setTextAlign(Paint.Align.LEFT);
+        textPaint.getTextPath(text, 0, text.length(), 0, 0, scratchPath);
+        targetPath.addPath(scratchPath, x, 0);
+        return textPaint.measureText(text);
+    }
+
+    private void initChainPath() {
         float chainTopOriginPositionX = rearGearPositionX;
         float chainTopOriginPositionY = rearGearPositionY - currentRearGearRadius;
 
         float chainTopTargetPositionX = frontGearPositionX;
         float chainTopTargetPositionY = frontGearPositionY - currentFrontGearRadius;
 
-        float chainBetweenGearAndDeraileurOriginPositionX = rearGearPositionX;
-        float chainBetweenGearAndDeraileurOriginPositionY = rearGearPositionY + currentRearGearRadius;
+        float chainBetweenGearAndDerailleurOriginPositionX = rearGearPositionX;
+        float chainBetweenGearAndDerailleurOriginPositionY = rearGearPositionY + currentRearGearRadius;
 
-        double deltaX = Math.abs(rearTopDeraileurPositionX - chainBetweenGearAndDeraileurOriginPositionX);
-        double deltaY = Math.abs(rearTopDeraileurPositionY - chainBetweenGearAndDeraileurOriginPositionY);
+        double deltaX = Math.abs(rearTopDerailleurPositionX - chainBetweenGearAndDerailleurOriginPositionX);
+        double deltaY = Math.abs(rearTopDerailleurPositionY - chainBetweenGearAndDerailleurOriginPositionY);
         double thetaRadians = Math.atan2(deltaY, deltaX);
 
-        float chainBetweenGearAndDeraileurTargetPositionX = rearTopDeraileurPositionX + (float) (rearDeraileurRadius * Math.sin(thetaRadians));
-        float chainBetweenGearAndDeraileurTargetPositionY = rearTopDeraileurPositionY - (float) (rearDeraileurRadius * Math.cos(thetaRadians));
+        float chainBetweenGearAndDerailleurTargetPositionX = rearTopDerailleurPositionX + (float) (rearDerailleurRadius * Math.sin(thetaRadians));
+        float chainBetweenGearAndDerailleurTargetPositionY = rearTopDerailleurPositionY - (float) (rearDerailleurRadius * Math.cos(thetaRadians));
 
-        deltaX = Math.abs(rearTopDeraileurPositionX - rearBottomDeraileurPositionX);
-        deltaY = Math.abs(rearTopDeraileurPositionY - rearBottomDeraileurPositionY);
+        deltaX = Math.abs(rearTopDerailleurPositionX - rearBottomDerailleurPositionX);
+        deltaY = Math.abs(rearTopDerailleurPositionY - rearBottomDerailleurPositionY);
         thetaRadians = Math.atan2(deltaY, deltaX);
 
-        float chainBetweenDeraileurWheelsOriginPositionX = rearTopDeraileurPositionX + (float) (rearDeraileurRadius * Math.sin(thetaRadians));
-        float chainBetweenDeraileurWheelsOriginPositionY = rearTopDeraileurPositionY + (float) (rearDeraileurRadius * Math.cos(thetaRadians));
+        float chainBetweenDerailleurWheelsOriginPositionX = rearTopDerailleurPositionX + (float) (rearDerailleurRadius * Math.sin(thetaRadians));
+        float chainBetweenDerailleurWheelsOriginPositionY = rearTopDerailleurPositionY + (float) (rearDerailleurRadius * Math.cos(thetaRadians));
 
-        deltaX = Math.abs(rearBottomDeraileurPositionX - rearTopDeraileurPositionX);
-        deltaY = Math.abs(rearBottomDeraileurPositionY - rearTopDeraileurPositionY);
+        deltaX = Math.abs(rearBottomDerailleurPositionX - rearTopDerailleurPositionX);
+        deltaY = Math.abs(rearBottomDerailleurPositionY - rearTopDerailleurPositionY);
         thetaRadians = Math.atan2(deltaY, deltaX);
 
-        float chainBetweenDeraileurWheelsTargetPositionX = rearBottomDeraileurPositionX - (float) (rearDeraileurRadius * Math.sin(thetaRadians));
-        float chainBetweenDeraileurWheelsTargetPositionY = rearBottomDeraileurPositionY - (float) (rearDeraileurRadius * Math.cos(thetaRadians));
+        float chainBetweenDerailleurWheelsTargetPositionX = rearBottomDerailleurPositionX - (float) (rearDerailleurRadius * Math.sin(thetaRadians));
+        float chainBetweenDerailleurWheelsTargetPositionY = rearBottomDerailleurPositionY - (float) (rearDerailleurRadius * Math.cos(thetaRadians));
 
-        float chainBottomOriginPositionX = rearBottomDeraileurPositionX;
-        float chainBottomOriginPositionY = rearBottomDeraileurPositionY + rearDeraileurRadius;
+        float chainBottomOriginPositionX = rearBottomDerailleurPositionX;
+        float chainBottomOriginPositionY = rearBottomDerailleurPositionY + rearDerailleurRadius;
         float chainBottomTargetPositionX = frontGearPositionX;
         float chainBottomTargetPositionY = frontGearPositionY + frontGearRadius - (frontGearSpacing * (frontGearMax - frontGear));
 
-        chainPath = new Path();
+        chainPath.reset();
 
         chainPath.moveTo(chainTopOriginPositionX, chainTopOriginPositionY);
         chainPath.lineTo(chainTopTargetPositionX, chainTopTargetPositionY);
 
-        float startAngle = (float)Math.toDegrees(Math.atan2(chainTopOriginPositionY - rearGearPositionY, chainTopOriginPositionX - rearGearPositionX));
-        float sweepAngle = (float)Math.toDegrees(Math.atan2(chainTopOriginPositionY - chainBetweenGearAndDeraileurOriginPositionY, chainTopOriginPositionX - chainBetweenGearAndDeraileurOriginPositionX));
+        float startAngle = (float) Math.toDegrees(Math.atan2(chainTopOriginPositionY - rearGearPositionY, chainTopOriginPositionX - rearGearPositionX));
+        float sweepAngle = (float) Math.toDegrees(Math.atan2(chainTopOriginPositionY - chainBetweenGearAndDerailleurOriginPositionY, chainTopOriginPositionX - chainBetweenGearAndDerailleurOriginPositionX));
         chainPath.addArc(
                 rearGearPositionX - currentRearGearRadius,
                 rearGearPositionY - currentRearGearRadius,
@@ -175,36 +318,36 @@ public class DrivetrainView extends View {
                 rearGearPositionY + currentRearGearRadius,
                 startAngle, sweepAngle * 2f);
 
-        chainPath.moveTo(chainBetweenGearAndDeraileurOriginPositionX, chainBetweenGearAndDeraileurOriginPositionY);
-        chainPath.lineTo(chainBetweenGearAndDeraileurTargetPositionX, chainBetweenGearAndDeraileurTargetPositionY);
+        chainPath.moveTo(chainBetweenGearAndDerailleurOriginPositionX, chainBetweenGearAndDerailleurOriginPositionY);
+        chainPath.lineTo(chainBetweenGearAndDerailleurTargetPositionX, chainBetweenGearAndDerailleurTargetPositionY);
 
-        startAngle = (float)Math.toDegrees(Math.atan2(chainBetweenGearAndDeraileurTargetPositionY - rearTopDeraileurPositionY, chainBetweenGearAndDeraileurTargetPositionX - rearTopDeraileurPositionX));
-        sweepAngle = (float)Math.toDegrees(Math.atan2(chainBetweenDeraileurWheelsOriginPositionY - chainBetweenGearAndDeraileurTargetPositionY, chainBetweenDeraileurWheelsOriginPositionX - chainBetweenGearAndDeraileurTargetPositionX));
+        startAngle = (float) Math.toDegrees(Math.atan2(chainBetweenGearAndDerailleurTargetPositionY - rearTopDerailleurPositionY, chainBetweenGearAndDerailleurTargetPositionX - rearTopDerailleurPositionX));
+        sweepAngle = (float) Math.toDegrees(Math.atan2(chainBetweenDerailleurWheelsOriginPositionY - chainBetweenGearAndDerailleurTargetPositionY, chainBetweenDerailleurWheelsOriginPositionX - chainBetweenGearAndDerailleurTargetPositionX));
         chainPath.addArc(
-                rearTopDeraileurPositionX - rearDeraileurRadius,
-                rearTopDeraileurPositionY - rearDeraileurRadius,
-                rearTopDeraileurPositionX + rearDeraileurRadius,
-                rearTopDeraileurPositionY + rearDeraileurRadius,
+                rearTopDerailleurPositionX - rearDerailleurRadius,
+                rearTopDerailleurPositionY - rearDerailleurRadius,
+                rearTopDerailleurPositionX + rearDerailleurRadius,
+                rearTopDerailleurPositionY + rearDerailleurRadius,
                 startAngle, sweepAngle);
 
-        chainPath.moveTo(chainBetweenDeraileurWheelsOriginPositionX, chainBetweenDeraileurWheelsOriginPositionY);
-        chainPath.lineTo(chainBetweenDeraileurWheelsTargetPositionX, chainBetweenDeraileurWheelsTargetPositionY);
+        chainPath.moveTo(chainBetweenDerailleurWheelsOriginPositionX, chainBetweenDerailleurWheelsOriginPositionY);
+        chainPath.lineTo(chainBetweenDerailleurWheelsTargetPositionX, chainBetweenDerailleurWheelsTargetPositionY);
 
 
-        startAngle = (float)Math.toDegrees(Math.atan2(chainBetweenDeraileurWheelsTargetPositionY - rearBottomDeraileurPositionY, chainBetweenDeraileurWheelsTargetPositionX - rearBottomDeraileurPositionX));
-        sweepAngle = (float)Math.toDegrees(Math.atan2(chainBottomOriginPositionY - chainBetweenDeraileurWheelsTargetPositionY, chainBottomOriginPositionX - chainBetweenDeraileurWheelsTargetPositionX));
+        startAngle = (float) Math.toDegrees(Math.atan2(chainBetweenDerailleurWheelsTargetPositionY - rearBottomDerailleurPositionY, chainBetweenDerailleurWheelsTargetPositionX - rearBottomDerailleurPositionX));
+        sweepAngle = (float) Math.toDegrees(Math.atan2(chainBottomOriginPositionY - chainBetweenDerailleurWheelsTargetPositionY, chainBottomOriginPositionX - chainBetweenDerailleurWheelsTargetPositionX));
         chainPath.addArc(
-                rearBottomDeraileurPositionX - rearDeraileurRadius,
-                rearBottomDeraileurPositionY - rearDeraileurRadius,
-                rearBottomDeraileurPositionX + rearDeraileurRadius,
-                rearBottomDeraileurPositionY + rearDeraileurRadius,
+                rearBottomDerailleurPositionX - rearDerailleurRadius,
+                rearBottomDerailleurPositionY - rearDerailleurRadius,
+                rearBottomDerailleurPositionX + rearDerailleurRadius,
+                rearBottomDerailleurPositionY + rearDerailleurRadius,
                 startAngle, -sweepAngle * 2f);
 
         chainPath.moveTo(chainBottomOriginPositionX, chainBottomOriginPositionY);
         chainPath.lineTo(chainBottomTargetPositionX, chainBottomTargetPositionY);
 
-        startAngle = (float)Math.toDegrees(Math.atan2(chainBottomTargetPositionY - frontGearPositionY, chainBottomTargetPositionX - frontGearPositionX));
-        sweepAngle = (float)Math.toDegrees(Math.atan2(chainBottomTargetPositionY - chainTopTargetPositionY, chainBottomTargetPositionX - chainTopTargetPositionX));
+        startAngle = (float) Math.toDegrees(Math.atan2(chainBottomTargetPositionY - frontGearPositionY, chainBottomTargetPositionX - frontGearPositionX));
+        sweepAngle = (float) Math.toDegrees(Math.atan2(chainBottomTargetPositionY - chainTopTargetPositionY, chainBottomTargetPositionX - chainTopTargetPositionX));
         chainPath.addArc(
                 frontGearPositionX - currentFrontGearRadius,
                 frontGearPositionY - currentFrontGearRadius,
@@ -219,29 +362,89 @@ public class DrivetrainView extends View {
 
         drawFrontGears(canvas);
         drawRearGears(canvas);
-        drawRearDeraileur(canvas);
+        drawRearDerailleur(canvas);
         drawChainPath(canvas);
+        drawText(canvas);
+    }
+
+    private void drawText(Canvas canvas) {
+        if (textEnabled) {
+            canvas.drawPath(textPath, textPaint);
+        }
     }
 
     private void drawFrontGears(Canvas canvas) {
         for (int i = 1; i <= frontGearMax; i++) {
-            canvas.drawCircle(frontGearPositionX, frontGearPositionY, frontGearRadius - (frontGearSpacing * (frontGearMax - i)), drivetrainPaint);
+            Paint paint = (frontGear == i ? selectedGearPaint : drivetrainPaint);
+            canvas.drawCircle(frontGearPositionX, frontGearPositionY, frontGearRadius - (frontGearSpacing * (frontGearMax - i)), paint);
         }
     }
 
     private void drawRearGears(Canvas canvas) {
         for (int i = 1; i <= rearGearMax; i++) {
-            canvas.drawCircle(rearGearPositionX, rearGearPositionY, rearGearRadius - (rearGearSpacing * (rearGearMax - i)), drivetrainPaint);
+            Paint paint = (rearGear == i ? selectedGearPaint : drivetrainPaint);
+            canvas.drawCircle(rearGearPositionX, rearGearPositionY, rearGearRadius - (rearGearSpacing * (rearGearMax - i)), paint);
         }
     }
 
-    private void drawRearDeraileur(Canvas canvas) {
-        canvas.drawCircle(rearTopDeraileurPositionX, rearTopDeraileurPositionY, rearDeraileurRadius, drivetrainPaint);
-        canvas.drawCircle(rearBottomDeraileurPositionX, rearBottomDeraileurPositionY, rearDeraileurRadius, drivetrainPaint);
+    private void drawRearDerailleur(Canvas canvas) {
+        canvas.drawCircle(rearTopDerailleurPositionX, rearTopDerailleurPositionY, rearDerailleurRadius, drivetrainPaint);
+        canvas.drawCircle(rearBottomDerailleurPositionX, rearBottomDerailleurPositionY, rearDerailleurRadius, drivetrainPaint);
     }
 
     private void drawChainPath(Canvas canvas) {
         canvas.drawPath(chainPath, chainPaint);
+    }
+
+    public int getDrivetrainColor() {
+        return drivetrainPaint.getColor();
+    }
+
+    public void setDrivetrainColor(int drivetrainColor) {
+        drivetrainPaint.setColor(drivetrainColor);
+
+        if (initialized) {
+            invalidate();
+            requestLayout();
+        }
+    }
+
+    public void setDrivetrainColor(Color drivetrainColor) {
+        setDrivetrainColor(drivetrainColor);
+    }
+
+    public int getSelectedGearColor() {
+        return selectedGearPaint.getColor();
+    }
+
+    public void setSelectedGearColor(int selectedGearColor) {
+        selectedGearPaint.setColor(selectedGearColor);
+
+        if (initialized) {
+            invalidate();
+            requestLayout();
+        }
+    }
+
+    public void setSelectedGearColor(Color selectedGearColor) {
+        setSelectedGearColor(selectedGearColor.toArgb());
+    }
+
+    public int getChainColor() {
+        return chainPaint.getColor();
+    }
+
+    public void setChainColor(int chainColor) {
+        chainPaint.setColor(chainColor);
+
+        if (initialized) {
+            invalidate();
+            requestLayout();
+        }
+    }
+
+    public void setChainColor(Color chainColor) {
+        setChainColor(chainColor.toArgb());
     }
 
     public int getFrontGearMax() {
@@ -249,9 +452,18 @@ public class DrivetrainView extends View {
     }
 
     public void setFrontGearMax(int frontGearMax) {
-        this.frontGearMax = frontGearMax;
-        invalidate();
-        requestLayout();
+        if (frontGearMax <= 0) {
+            throw new IllegalArgumentException("Invalid front gear max value:" + frontGearMax);
+        }
+
+        if (this.frontGearMax != frontGearMax) {
+            this.frontGearMax = frontGearMax;
+
+            if (initialized) {
+                invalidate();
+                requestLayout();
+            }
+        }
     }
 
     public int getFrontGear() {
@@ -259,9 +471,18 @@ public class DrivetrainView extends View {
     }
 
     public void setFrontGear(int frontGear) {
-        this.frontGear = frontGear;
-        invalidate();
-        requestLayout();
+        if (frontGear <= 0 || frontGear > frontGearMax) {
+            throw new IllegalArgumentException("Invalid front gear value:" + frontGear);
+        }
+
+        if (this.frontGear != frontGear) {
+            this.frontGear = frontGear;
+
+            if (initialized) {
+                invalidate();
+                requestLayout();
+            }
+        }
     }
 
     public int getRearGearMax() {
@@ -269,9 +490,18 @@ public class DrivetrainView extends View {
     }
 
     public void setRearGearMax(int rearGearMax) {
-        this.rearGearMax = rearGearMax;
-        invalidate();
-        requestLayout();
+        if (rearGearMax <= 0) {
+            throw new IllegalArgumentException("Invalid rear gear max value:" + rearGearMax);
+        }
+
+        if (this.rearGearMax != rearGearMax) {
+            this.rearGearMax = rearGearMax;
+
+            if (initialized) {
+                invalidate();
+                requestLayout();
+            }
+        }
     }
 
     public int getRearGear() {
@@ -279,9 +509,119 @@ public class DrivetrainView extends View {
     }
 
     public void setRearGear(int rearGear) {
-        this.rearGear = rearGear;
-        invalidate();
-        requestLayout();
+        if (rearGear <= 0 || rearGear > rearGearMax) {
+            throw new IllegalArgumentException("Invalid rear gear value:" + rearGear);
+        }
+
+        if (this.rearGear != rearGear) {
+            this.rearGear = rearGear;
+
+            if (initialized) {
+                invalidate();
+                requestLayout();
+            }
+        }
     }
 
+    public float getTextSize() {
+        return textPaint.getTextSize();
+    }
+
+    public void setTextSize(float textSize) {
+        if (textSize < 0) {
+            throw new IllegalArgumentException("Invalid text size:" + textSize);
+        }
+
+        final Resources resources = getResources();
+        textPaint.setTextSize(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, textSize, resources.getDisplayMetrics()));
+
+        if (initialized) {
+            invalidate();
+            requestLayout();
+        }
+    }
+
+    public int getTextColor() {
+        return textPaint.getColor();
+    }
+
+    public void setTextColor(Color textColor) {
+        setTextColor(textColor.toArgb());
+    }
+
+    public void setTextColor(int textColor) {
+        textPaint.setColor(textColor);
+
+        if (initialized) {
+            invalidate();
+            requestLayout();
+        }
+    }
+
+    public boolean isTextEnabled() {
+        return textEnabled;
+    }
+
+    public void setTextEnabled(boolean textEnabled) {
+        this.textEnabled = textEnabled;
+
+        if (initialized) {
+            invalidate();
+            requestLayout();
+        }
+    }
+
+    public float getDrivetrainStrokeWidth() {
+        return drivetrainPaint.getStrokeWidth();
+    }
+
+    public void setDrivetrainStrokeWidth(float width) {
+        if (width < 0) {
+            throw new IllegalArgumentException("Invalid width:" + width);
+        }
+
+        final Resources resources = getResources();
+        drivetrainPaint.setStrokeWidth(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, width, resources.getDisplayMetrics()));
+
+        if (initialized) {
+            invalidate();
+            requestLayout();
+        }
+    }
+
+    public float getSelectedGearStrokeWidth() {
+        return selectedGearPaint.getStrokeWidth();
+    }
+
+    public void setSelectedGearStrokeWidth(float width) {
+        if (width < 0) {
+            throw new IllegalArgumentException("Invalid width:" + width);
+        }
+
+        final Resources resources = getResources();
+        selectedGearPaint.setStrokeWidth(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, width, resources.getDisplayMetrics()));
+
+        if (initialized) {
+            invalidate();
+            requestLayout();
+        }
+    }
+
+    public float getChainStrokeWidth() {
+        return chainPaint.getStrokeWidth();
+    }
+
+    public void setChainStrokeWidth(float width) {
+        if (width < 0) {
+            throw new IllegalArgumentException("Invalid width:" + width);
+        }
+
+        final Resources resources = getResources();
+        chainPaint.setStrokeWidth(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, width, resources.getDisplayMetrics()));
+
+        if (initialized) {
+            invalidate();
+            requestLayout();
+        }
+    }
 }
