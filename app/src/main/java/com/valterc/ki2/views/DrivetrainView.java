@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.View;
@@ -14,13 +15,6 @@ import androidx.annotation.Nullable;
 import com.valterc.ki2.R;
 
 public class DrivetrainView extends View {
-
-    private static final int REAR_GEAR_INNER = 0;
-    private static final int REAR_GEAR_MIDDLE = 1;
-    private static final int REAR_GEAR_OUTER = 2;
-
-    private static final int FRONT_GEAR_INNER = 0;
-    private static final int FRONT_GEAR_OUTER = 1;
 
     private int frontGearMax;
     private int frontGear;
@@ -32,11 +26,18 @@ public class DrivetrainView extends View {
     private Paint chainPaint;
 
     private float rearGearPositionX;
-    private float frontGearPositionX;
     private float rearGearPositionY;
+
+    private float frontGearPositionX;
     private float frontGearPositionY;
+
     private float rearGearRadius;
+    private float rearGearSpacing;
     private float frontGearRadius;
+    private float frontGearSpacing;
+
+    private float currentRearGearRadius;
+    private float currentFrontGearRadius;
 
     private float rearTopDeraileurPositionX;
     private float rearTopDeraileurPositionY;
@@ -44,13 +45,31 @@ public class DrivetrainView extends View {
     private float rearBottomDeraileurPositionY;
     private float rearDeraileurRadius;
 
+    private float chainTopOriginPositionX;
+    private float chainTopOriginPositionY;
+    private float chainTopTargetPositionX;
+    private float chainTopTargetPositionY;
+    private float chainBetweenDeraileurWheelsOriginPositionX;
+    private float chainBetweenDeraileurWheelsOriginPositionY;
+    private float chainBetweenDeraileurWheelsTargetPositionX;
+    private float chainBetweenDeraileurWheelsTargetPositionY;
+    private float chainBetweenGearAndDeraileurOriginPositionX;
+    private float chainBetweenGearAndDeraileurOriginPositionY;
+    private float chainBetweenGearAndDeraileurTargetPositionX;
+    private float chainBetweenGearAndDeraileurTargetPositionY;
+    private float chainBottomOriginPositionX;
+    private float chainBottomOriginPositionY;
+    private float chainBottomTargetPositionX;
+    private float chainBottomTargetPositionY;
+
+
     public DrivetrainView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
 
         setFrontGearMax(2);
         setFrontGear(2);
         setRearGearMax(11);
-        setRearGear(1);
+        setRearGear(11);
 
         TypedArray array = context.getTheme().obtainStyledAttributes(attrs, R.styleable.DrivetrainView, 0, 0);
 
@@ -80,6 +99,9 @@ public class DrivetrainView extends View {
         chainPaint.setStyle(Paint.Style.STROKE);
         chainPaint.setStrokeWidth(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 3, resources.getDisplayMetrics()));
         chainPaint.setColor(0xffdddddd);
+        chainPaint.setStrokeMiter(10);
+        chainPaint.setStrokeJoin(Paint.Join.ROUND);
+        chainPaint.setStrokeCap(Paint.Cap.ROUND);
     }
 
     @Override
@@ -101,13 +123,54 @@ public class DrivetrainView extends View {
         rearGearRadius = Math.min(horizontalCenter * 0.55f, internalHeight * 0.45f) * 0.5f;
         frontGearRadius = Math.min(horizontalCenter * 0.7f, internalHeight * 0.7f) * 0.5f;
 
+        frontGearSpacing = frontGearRadius * 0.66f / frontGearMax;
+        rearGearSpacing = rearGearRadius * 0.8f / rearGearMax;
+
         rearDeraileurRadius = rearGearRadius * 0.25f;
 
         rearTopDeraileurPositionX = rearGearPositionX + rearGearRadius * 0.5f;
         rearTopDeraileurPositionY = rearGearPositionY + rearGearRadius + rearDeraileurRadius + drivetrainPaint.getStrokeWidth();
 
-        rearBottomDeraileurPositionX = rearGearPositionX - rearGearRadius + ((float)rearGear / rearGearMax * (rearGearRadius * 2f));
+        rearBottomDeraileurPositionX = rearGearPositionX - rearGearRadius + ((float) rearGear / rearGearMax * (rearGearRadius * 2f));
         rearBottomDeraileurPositionY = rearTopDeraileurPositionY + rearDeraileurRadius * 3 + drivetrainPaint.getStrokeWidth() * 2;
+
+        currentRearGearRadius = rearGearRadius - (rearGearSpacing * (rearGearMax - rearGear));
+        currentFrontGearRadius = frontGearRadius - (frontGearSpacing * (frontGearMax - frontGear));
+
+        chainTopOriginPositionX = rearGearPositionX;
+        chainTopOriginPositionY = rearGearPositionY - currentRearGearRadius;
+
+        chainTopTargetPositionX = frontGearPositionX;
+        chainTopTargetPositionY = frontGearPositionY - currentFrontGearRadius;
+
+        chainBetweenGearAndDeraileurOriginPositionX = rearGearPositionX;
+        chainBetweenGearAndDeraileurOriginPositionY = rearGearPositionY + currentRearGearRadius;
+
+        double deltaX = Math.abs(rearTopDeraileurPositionX - chainBetweenGearAndDeraileurOriginPositionX);
+        double deltaY = Math.abs(rearTopDeraileurPositionY - chainBetweenGearAndDeraileurOriginPositionY);
+        double thetaRadians = Math.atan2(deltaY, deltaX);
+
+        chainBetweenGearAndDeraileurTargetPositionX = rearTopDeraileurPositionX + (float) (rearDeraileurRadius * Math.sin(thetaRadians));
+        chainBetweenGearAndDeraileurTargetPositionY = rearTopDeraileurPositionY - (float) (rearDeraileurRadius * Math.cos(thetaRadians));
+
+        deltaX = Math.abs(rearTopDeraileurPositionX - rearBottomDeraileurPositionX);
+        deltaY = Math.abs(rearTopDeraileurPositionY - rearBottomDeraileurPositionY);
+        thetaRadians = Math.atan2(deltaY, deltaX);
+
+        chainBetweenDeraileurWheelsOriginPositionX = rearTopDeraileurPositionX + (float) (rearDeraileurRadius * Math.sin(thetaRadians));
+        chainBetweenDeraileurWheelsOriginPositionY = rearTopDeraileurPositionY + (float) (rearDeraileurRadius * Math.cos(thetaRadians));
+
+        deltaX = Math.abs(rearBottomDeraileurPositionX - rearTopDeraileurPositionX);
+        deltaY = Math.abs(rearBottomDeraileurPositionY - rearTopDeraileurPositionY);
+        thetaRadians = Math.atan2(deltaY, deltaX);
+
+        chainBetweenDeraileurWheelsTargetPositionX = rearBottomDeraileurPositionX - (float) (rearDeraileurRadius * Math.sin(thetaRadians));
+        chainBetweenDeraileurWheelsTargetPositionY = rearBottomDeraileurPositionY - (float) (rearDeraileurRadius * Math.cos(thetaRadians));
+
+        chainBottomOriginPositionX = rearBottomDeraileurPositionX;
+        chainBottomOriginPositionY = rearBottomDeraileurPositionY + rearDeraileurRadius;
+        chainBottomTargetPositionX = frontGearPositionX;
+        chainBottomTargetPositionY = frontGearPositionY + frontGearRadius - (frontGearSpacing * (frontGearMax - frontGear));
 
     }
 
@@ -120,41 +183,129 @@ public class DrivetrainView extends View {
 
         drawRearDeraileur(canvas);
 
-        drawChain(canvas);
+        //drawChain(canvas);
+        drawChainPath(canvas);
+
     }
 
     private void drawFrontGears(Canvas canvas) {
-        float spacing = frontGearRadius * 0.66f / frontGearMax;
-
         for (int i = 1; i <= frontGearMax; i++) {
-            canvas.drawCircle(frontGearPositionX, frontGearPositionY, frontGearRadius - (spacing * (frontGearMax - i)), drivetrainPaint);
+            canvas.drawCircle(frontGearPositionX, frontGearPositionY, frontGearRadius - (frontGearSpacing * (frontGearMax - i)), drivetrainPaint);
         }
     }
 
     private void drawRearGears(Canvas canvas) {
-        float spacing = rearGearRadius * 0.8f / rearGearMax;
-
         for (int i = 1; i <= rearGearMax; i++) {
-            canvas.drawCircle(rearGearPositionX, rearGearPositionY, rearGearRadius - (spacing * (rearGearMax - i)), drivetrainPaint);
+            canvas.drawCircle(rearGearPositionX, rearGearPositionY, rearGearRadius - (rearGearSpacing * (rearGearMax - i)), drivetrainPaint);
         }
     }
 
     private void drawRearDeraileur(Canvas canvas) {
-        canvas.drawCircle(rearTopDeraileurPositionX, rearTopDeraileurPositionY, rearDeraileurRadius, selectedGearPaint);
-        canvas.drawCircle(rearBottomDeraileurPositionX, rearBottomDeraileurPositionY, rearDeraileurRadius, selectedGearPaint);
+        canvas.drawCircle(rearTopDeraileurPositionX, rearTopDeraileurPositionY, rearDeraileurRadius, drivetrainPaint);
+        canvas.drawCircle(rearBottomDeraileurPositionX, rearBottomDeraileurPositionY, rearDeraileurRadius, drivetrainPaint);
 
     }
 
+    private void drawChainPath(Canvas canvas) {
+
+        Path path = new Path();
+
+        path.moveTo(chainTopOriginPositionX, chainTopOriginPositionY);
+        path.lineTo(chainTopTargetPositionX, chainTopTargetPositionY);
+
+        int startAngle = (int) (180 / Math.PI * Math.atan2(chainTopOriginPositionY - rearGearPositionY, chainTopOriginPositionX - rearGearPositionX));
+        float sweepAngle = (int) (180 / Math.PI * Math.atan2(chainTopOriginPositionY - chainBetweenGearAndDeraileurOriginPositionY, chainTopOriginPositionX - chainBetweenGearAndDeraileurOriginPositionX));
+        path.addArc(
+                rearGearPositionX - currentRearGearRadius,
+                rearGearPositionY - currentRearGearRadius,
+                rearGearPositionX + currentRearGearRadius,
+                rearGearPositionY + currentRearGearRadius,
+                startAngle, sweepAngle * 2f);
+
+        path.moveTo(chainBetweenGearAndDeraileurOriginPositionX, chainBetweenGearAndDeraileurOriginPositionY);
+        path.lineTo(chainBetweenGearAndDeraileurTargetPositionX, chainBetweenGearAndDeraileurTargetPositionY);
+
+        startAngle = (int) (180 / Math.PI * Math.atan2(chainBetweenGearAndDeraileurTargetPositionY - rearTopDeraileurPositionY, chainBetweenGearAndDeraileurTargetPositionX - rearTopDeraileurPositionX));
+        sweepAngle = (int) (180 / Math.PI * Math.atan2(chainBetweenDeraileurWheelsOriginPositionY - chainBetweenGearAndDeraileurTargetPositionY, chainBetweenDeraileurWheelsOriginPositionX - chainBetweenGearAndDeraileurTargetPositionX));
+        path.addArc(
+                rearTopDeraileurPositionX - rearDeraileurRadius,
+                rearTopDeraileurPositionY - rearDeraileurRadius,
+                rearTopDeraileurPositionX + rearDeraileurRadius,
+                rearTopDeraileurPositionY + rearDeraileurRadius,
+                startAngle, sweepAngle);
+
+        path.moveTo(chainBetweenDeraileurWheelsOriginPositionX, chainBetweenDeraileurWheelsOriginPositionY);
+        path.lineTo(chainBetweenDeraileurWheelsTargetPositionX, chainBetweenDeraileurWheelsTargetPositionY);
+
+
+        startAngle = (int) (180 / Math.PI * Math.atan2(chainBetweenDeraileurWheelsTargetPositionY - rearBottomDeraileurPositionY, chainBetweenDeraileurWheelsTargetPositionX - rearBottomDeraileurPositionX));
+        sweepAngle = (int) (180 / Math.PI * Math.atan2(chainBottomOriginPositionY - chainBetweenDeraileurWheelsTargetPositionY, chainBottomOriginPositionX - chainBetweenDeraileurWheelsTargetPositionX));
+        path.addArc(
+                rearBottomDeraileurPositionX - rearDeraileurRadius,
+                rearBottomDeraileurPositionY - rearDeraileurRadius,
+                rearBottomDeraileurPositionX + rearDeraileurRadius,
+                rearBottomDeraileurPositionY + rearDeraileurRadius,
+                startAngle, -sweepAngle * 2f);
+
+        path.moveTo(chainBottomOriginPositionX, chainBottomOriginPositionY);
+        path.lineTo(chainBottomTargetPositionX, chainBottomTargetPositionY);
+
+        startAngle = (int) (180 / Math.PI * Math.atan2(chainBottomTargetPositionY - frontGearPositionY, chainBottomTargetPositionX - frontGearPositionX));
+        sweepAngle = (int) (180 / Math.PI * Math.atan2(chainBottomTargetPositionY - chainTopTargetPositionY, chainBottomTargetPositionX - chainTopTargetPositionX));
+        path.addArc(
+                frontGearPositionX - currentFrontGearRadius,
+                frontGearPositionY - currentFrontGearRadius,
+                frontGearPositionX + currentFrontGearRadius,
+                frontGearPositionY + currentFrontGearRadius,
+                startAngle, -sweepAngle * 2f);
+
+        canvas.drawPath(path, chainPaint);
+    }
+
     private void drawChain(Canvas canvas) {
-            float frontGearSpacing = frontGearRadius * 0.66f / frontGearMax;
-            float rearGearSpacing = rearGearRadius * 0.8f / rearGearMax;
+        canvas.drawLine(chainTopOriginPositionX - chainPaint.getStrokeWidth() * .5f, chainTopOriginPositionY, chainTopTargetPositionX + chainPaint.getStrokeWidth(), chainTopTargetPositionY, chainPaint);
 
-            canvas.drawLine(rearGearPositionX, rearGearPositionY - rearGearRadius + (rearGearSpacing * (rearGearMax - rearGear)), frontGearPositionX, frontGearPositionY - frontGearRadius + (frontGearSpacing * (frontGearMax - frontGear)), chainPaint);
+        float startAngle = (float) Math.toDegrees(Math.atan2(chainTopOriginPositionY - rearGearPositionY, chainTopOriginPositionX - rearGearPositionX));
+        float sweepAngle = (float) Math.toDegrees(Math.atan2(chainTopOriginPositionY - chainBetweenGearAndDeraileurOriginPositionY, chainTopOriginPositionX - chainBetweenGearAndDeraileurOriginPositionX));
+        canvas.drawArc(
+                rearGearPositionX - currentRearGearRadius,
+                rearGearPositionY - currentRearGearRadius,
+                rearGearPositionX + currentRearGearRadius,
+                rearGearPositionY + currentRearGearRadius,
+                startAngle, sweepAngle * 2, false, chainPaint);
 
-            canvas.drawLine(rearGearPositionX, rearGearPositionY + rearGearRadius - (rearGearSpacing * (rearGearMax - rearGear)), rearTopDeraileurPositionX, rearTopDeraileurPositionY - rearDeraileurRadius, chainPaint);
-            canvas.drawLine(rearTopDeraileurPositionX + rearDeraileurRadius, rearTopDeraileurPositionY, rearBottomDeraileurPositionX - rearDeraileurRadius, rearBottomDeraileurPositionY, chainPaint);
+        canvas.drawLine(chainBetweenGearAndDeraileurOriginPositionX, chainBetweenGearAndDeraileurOriginPositionY, chainBetweenGearAndDeraileurTargetPositionX, chainBetweenGearAndDeraileurTargetPositionY, chainPaint);
 
-            canvas.drawLine(rearBottomDeraileurPositionX, rearBottomDeraileurPositionY + rearDeraileurRadius, frontGearPositionX, frontGearPositionY + frontGearRadius - (frontGearSpacing * (frontGearMax - frontGear)), chainPaint);
+        startAngle = (float) Math.toDegrees(Math.atan2(chainBetweenGearAndDeraileurTargetPositionY - rearTopDeraileurPositionY, chainBetweenGearAndDeraileurTargetPositionX - rearTopDeraileurPositionX));
+        sweepAngle = (float) Math.toDegrees(Math.atan2(chainBetweenGearAndDeraileurTargetPositionY - chainBetweenDeraileurWheelsOriginPositionY, chainBetweenGearAndDeraileurTargetPositionX - chainBetweenDeraileurWheelsOriginPositionX));
+        canvas.drawArc(
+                rearTopDeraileurPositionX - rearDeraileurRadius,
+                rearTopDeraileurPositionY - rearDeraileurRadius,
+                rearTopDeraileurPositionX + rearDeraileurRadius,
+                rearTopDeraileurPositionY + rearDeraileurRadius,
+                startAngle, -sweepAngle, false, chainPaint);
+
+        canvas.drawLine(chainBetweenDeraileurWheelsOriginPositionX, chainBetweenDeraileurWheelsOriginPositionY, chainBetweenDeraileurWheelsTargetPositionX, chainBetweenDeraileurWheelsTargetPositionY, chainPaint);
+
+        startAngle = (float) Math.toDegrees(Math.atan2(chainBetweenDeraileurWheelsTargetPositionY - rearBottomDeraileurPositionY, chainBetweenDeraileurWheelsTargetPositionX - rearBottomDeraileurPositionX));
+        sweepAngle = (float) Math.toDegrees(Math.atan2(chainBottomOriginPositionY - chainBetweenDeraileurWheelsTargetPositionY, chainBottomOriginPositionX - chainBetweenDeraileurWheelsTargetPositionX));
+        canvas.drawArc(
+                rearBottomDeraileurPositionX - rearDeraileurRadius,
+                rearBottomDeraileurPositionY - rearDeraileurRadius,
+                rearBottomDeraileurPositionX + rearDeraileurRadius,
+                rearBottomDeraileurPositionY + rearDeraileurRadius,
+                startAngle, -sweepAngle * 2f, false, chainPaint);
+
+        canvas.drawLine(chainBottomOriginPositionX - chainPaint.getStrokeWidth() * .5f, chainBottomOriginPositionY, chainBottomTargetPositionX + chainPaint.getStrokeWidth(), chainBottomTargetPositionY, chainPaint);
+
+        startAngle = (float) Math.toDegrees(Math.atan2(chainBottomTargetPositionY - frontGearPositionY, chainBottomTargetPositionX - frontGearPositionX));
+        sweepAngle = (float) Math.toDegrees(Math.atan2(chainBottomTargetPositionY - chainTopTargetPositionY, chainBottomTargetPositionX - chainTopTargetPositionX));
+        canvas.drawArc(
+                frontGearPositionX - currentFrontGearRadius,
+                frontGearPositionY - currentFrontGearRadius,
+                frontGearPositionX + currentFrontGearRadius,
+                frontGearPositionY + currentFrontGearRadius,
+                startAngle, -sweepAngle * 2f, false, chainPaint);
 
     }
 
