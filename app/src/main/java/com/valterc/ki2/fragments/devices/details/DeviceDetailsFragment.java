@@ -32,6 +32,7 @@ import timber.log.Timber;
 
 public class DeviceDetailsFragment extends Fragment implements IKarooKeyListener {
 
+    private static final int ENABLE_REMOVE_BUTTON_DELAY_MS = 1000;
     private static final int SWITCH_AUTO_CLEAR_DELAY_MS = 1000;
 
     private final Handler handler = new Handler();
@@ -162,7 +163,7 @@ public class DeviceDetailsFragment extends Fragment implements IKarooKeyListener
                     }
                 })
                 .setNegativeButton(android.R.string.no, null).show());
-        handler.postDelayed(() -> buttonRemove.setEnabled(true), 1000);
+        handler.postDelayed(() -> buttonRemove.setEnabled(true), ENABLE_REMOVE_BUTTON_DELAY_MS);
 
         viewModel.getService().observe(getViewLifecycleOwner(), service -> {
             if (service == null) {
