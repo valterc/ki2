@@ -1,8 +1,11 @@
 package com.valterc.ki2;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.ComponentName;
 import android.content.ServiceConnection;
+import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.util.Log;
@@ -20,42 +23,86 @@ import timber.log.Timber;
 
 public class Ki2Application extends Application {
 
+    private static final int UNREGISTER_FROM_SERVICE_DELAY_MS = 30_000;
+
     private final ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder binder) {
             Timber.d("Service connected");
             service = IKi2Service.Stub.asInterface(binder);
-
-            try {
-                service.registerConnectionInfoListener(connectionDataInfoCallback);
-            } catch (RemoteException e) {
-                Timber.e(e, "Unable to register connection info listener");
-            }
+            handler.post(() -> {
+                if (activityCount > 0) {
+                    registerConnectionInfoListener();
+                }
+            });
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
             Timber.d("Service disconnected");
             service = null;
+            registeredWithService = false;
         }
     };
 
     private final IConnectionInfoCallback connectionDataInfoCallback = new IConnectionInfoCallback.Stub() {
         @Override
-        public void onConnectionInfo(DeviceId deviceId, ConnectionInfo connectionInfo) throws RemoteException {
+        public void onConnectionInfo(DeviceId deviceId, ConnectionInfo connectionInfo) {
             Timber.d("[%s] Connection status: %s", deviceId, connectionInfo.getConnectionStatus());
         }
     };
 
+    private final ActivityLifecycleCallbacks activityLifecycleCallbacks = new ActivityLifecycleCallbacks() {
+        @Override
+        public void onActivityCreated(@NonNull Activity activity, @Nullable Bundle savedInstanceState) {
+        }
+
+        @Override
+        public void onActivityStarted(@NonNull Activity activity) {
+            Timber.d("Activity started: %s", activity.getLocalClassName());
+            activityCount++;
+            handler.post(() -> registerConnectionInfoListener());
+        }
+
+        @Override
+        public void onActivityResumed(@NonNull Activity activity) {
+        }
+
+        @Override
+        public void onActivityPaused(@NonNull Activity activity) {
+        }
+
+        @Override
+        public void onActivityStopped(@NonNull Activity activity) {
+            Timber.d("Activity stopped: %s", activity.getLocalClassName());
+            activityCount--;
+            if (activityCount <= 0) {
+                handler.postDelayed(() -> {
+                    if (activityCount <= 0) {
+                        unregisterConnectionInfoListener();
+                    }
+                }, UNREGISTER_FROM_SERVICE_DELAY_MS);
+            }
+        }
+
+        @Override
+        public void onActivitySaveInstanceState(@NonNull Activity activity, @NonNull Bundle outState) {
+        }
+
+        @Override
+        public void onActivityDestroyed(@NonNull Activity activity) {
+        }
+    };
+
+    private final Handler handler = new Handler();
     private boolean serviceBound;
     private IKi2Service service;
+    private int activityCount;
+    private boolean registeredWithService;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        Timber.i("Ki2Application started");
-
-        serviceBound = bindService(Ki2Service.getIntent(), serviceConnection, BIND_AUTO_CREATE);
 
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree() {
@@ -77,21 +124,49 @@ public class Ki2Application extends Application {
                 }
             });
         }
+
+        Timber.d("Ki2Application started");
+
+        registerActivityLifecycleCallbacks(activityLifecycleCallbacks);
+        serviceBound = bindService(Ki2Service.getIntent(), serviceConnection, BIND_AUTO_CREATE);
     }
 
     @Override
     public void onTerminate() {
+        unregisterConnectionInfoListener();
         if (serviceBound){
             unbindService(serviceConnection);
         }
 
-        if (service != null) {
-            try {
-                service.unregisterConnectionInfoListener(connectionDataInfoCallback);
-            } catch (RemoteException e) {
-                Timber.e(e, "Unable to unregister connection info listener");
-            }
-        }
+        Timber.d("Ki2Application terminated");
         super.onTerminate();
+    }
+
+    private void registerConnectionInfoListener(){
+        if (service == null || registeredWithService) {
+            return;
+        }
+
+        try {
+            service.registerConnectionInfoListener(connectionDataInfoCallback);
+            registeredWithService = true;
+            Timber.d("Registered with service");
+        } catch (RemoteException e) {
+            Timber.e(e, "Unable to register connection info listener");
+        }
+    }
+
+    private void unregisterConnectionInfoListener() {
+        if (service == null || !registeredWithService) {
+            return;
+        }
+
+        try {
+            service.unregisterConnectionInfoListener(connectionDataInfoCallback);
+            registeredWithService = false;
+            Timber.d("Unregistered with service");
+        } catch (RemoteException e) {
+            Timber.e(e, "Unable to unregister connection info listener");
+        }
     }
 }
