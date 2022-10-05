@@ -31,6 +31,8 @@ import timber.log.Timber;
 
 public class DeviceDetailsFragment extends Fragment implements IKarooKeyListener {
 
+    private static final int SWITCH_AUTO_CLEAR_DELAY_MS = 1000;
+
     private final Handler handler = new Handler();
     private boolean serviceBound;
     private DeviceDetailsViewModel viewModel;
@@ -293,15 +295,15 @@ public class DeviceDetailsFragment extends Fragment implements IKarooKeyListener
             if (autoClear){
                 handler.postDelayed(() -> {
                     if (switchEvent.getType() == SwitchType.LEFT) {
-                        if (System.currentTimeMillis() - timestampLeftSwitch > 800) {
+                        if (System.currentTimeMillis() - timestampLeftSwitch > SWITCH_AUTO_CLEAR_DELAY_MS * 0.8) {
                             textViewLeftSwitch.setText(R.string.text_no_action);
                         }
                     } else {
-                        if (System.currentTimeMillis() - timestampRightSwitch > 800) {
+                        if (System.currentTimeMillis() - timestampRightSwitch > SWITCH_AUTO_CLEAR_DELAY_MS * 0.8) {
                             textViewRightSwitch.setText(R.string.text_no_action);
                         }
                     }
-                }, 1000);
+                }, SWITCH_AUTO_CLEAR_DELAY_MS);
             }
 
         });
