@@ -44,8 +44,6 @@ public class ListDevicesViewModel extends ViewModel {
     private final MutableLiveData<IKi2Service> service;
     private final MutableLiveData<ConnectionDataInfo> deviceConnectionDataEvent;
 
-    private List<DeviceId> savedDeviceList;
-
     public ListDevicesViewModel() {
         this.service = new MutableLiveData<>();
         this.deviceConnectionDataEvent = new MutableLiveData<>();
@@ -63,17 +61,21 @@ public class ListDevicesViewModel extends ViewModel {
         return deviceConnectionDataEvent;
     }
 
-    public List<DeviceId> getSavedDevices() throws Exception {
-        if (savedDeviceList != null) {
-            return savedDeviceList;
+    public boolean anyDevicesSaved(){
+        try {
+            return getSavedDevices().size() != 0;
+        } catch (Exception e) {
+            return false;
         }
+    }
 
-        if (service.getValue() == null) {
+    public List<DeviceId> getSavedDevices() throws Exception {
+        IKi2Service service = this.service.getValue();
+        if (service == null) {
             throw new Exception("Service is not ready");
         }
 
-        savedDeviceList = service.getValue().getSavedDevices();
-        return savedDeviceList;
+        return service.getSavedDevices();
     }
 
     public void startReceivingData() throws Exception {

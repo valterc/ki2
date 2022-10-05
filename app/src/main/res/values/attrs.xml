@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="DrivetrainView">
+        <attr name="android:textSize" format="dimension" />
+        <attr name="android:textColor" format="color" />
+        <attr name="textEnabled" format="boolean" />
+
+        <attr name="drivetrainColor" format="color" />
+        <attr name="selectedGearColor" format="color" />
+        <attr name="chainColor" format="color" />
+
+        <attr name="drivetrainStrokeWidth" format="dimension" />
+        <attr name="selectedGearStrokeWidth" format="dimension" />
+        <attr name="chainStrokeWidth" format="dimension" />
+
+        <attr name="frontGearMax" format="integer" />
+        <attr name="rearGearMax" format="integer" />
+        <attr name="frontGear" format="integer" />
+        <attr name="rearGear" format="integer" />
+    </declare-styleable>
+</resources>

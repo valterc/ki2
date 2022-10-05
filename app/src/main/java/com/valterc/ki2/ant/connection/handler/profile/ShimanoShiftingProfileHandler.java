@@ -14,6 +14,7 @@ import com.valterc.ki2.data.device.ShimanoPageType;
 import com.valterc.ki2.data.device.SignalInfo;
 import com.valterc.ki2.data.device.StatusIndicator;
 import com.valterc.ki2.data.info.DataType;
+import com.valterc.ki2.data.info.Manufacturer;
 import com.valterc.ki2.data.info.ManufacturerInfoBuilder;
 import com.valterc.ki2.data.shifting.BuzzerData;
 import com.valterc.ki2.data.shifting.BuzzerPattern;
@@ -152,13 +153,13 @@ public class ShimanoShiftingProfileHandler implements IDeviceProfileHandler {
 
     private void handleManufacturerInformation(byte[] payload) {
         String hardwareVersion = String.valueOf(MessageUtils.numberFromBytes(payload, 3, 1));
-        String manufacturerId = Integer.toString((int) MessageUtils.numberFromBytes(payload, 4, 2));
+        int manufacturerId = (int) MessageUtils.numberFromBytes(payload, 4, 2);
         String modelNumber = String.valueOf(MessageUtils.numberFromBytes(payload, 6, 2));
 
-        Timber.d("[%s] Received manufacturer info: {hardware=%s, manufacturer=%s, model=%s}", deviceId, hardwareVersion, manufacturerId, modelNumber);
+        Timber.d("[%s] Received manufacturer info: {hardware=%s, manufacturerId=%s, model=%s}", deviceId, hardwareVersion, manufacturerId, modelNumber);
 
         manufacturerInfoBuilder.setHardwareVersion(hardwareVersion);
-        manufacturerInfoBuilder.setManufacturer(manufacturerId);
+        manufacturerInfoBuilder.setManufacturer(Manufacturer.fromId(manufacturerId));
         manufacturerInfoBuilder.setModelNumber(modelNumber);
 
         if (manufacturerInfoBuilder.allSet()) {
@@ -186,13 +187,13 @@ public class ShimanoShiftingProfileHandler implements IDeviceProfileHandler {
     private void handleSwitchStatusPage(byte[] payload) {
         this.missingIndicators.remove(StatusIndicator.SWITCH_COMMAND_NUMBER);
 
-        int sequenceNumberLeft = (int) (MessageUtils.numberFromBytes(payload, 1, 1) & 15);
-        SwitchCommand switchCommandLeft = SwitchCommand.fromCommandNumber((int)MessageUtils.numberFromBytes(payload, 1, 1) & 240);
-        handleSwitch(switchCommandLeft, switchDataLeft, sequenceNumberLeft, SwitchType.LEFT);
-
-        int sequenceNumberRight = (int) (MessageUtils.numberFromBytes(payload, 2, 1) & 15);
-        SwitchCommand switchCommandRight = SwitchCommand.fromCommandNumber((int)MessageUtils.numberFromBytes(payload, 2, 1) & 240);
+        int sequenceNumberRight = (int) (MessageUtils.numberFromBytes(payload, 1, 1) & 15);
+        SwitchCommand switchCommandRight = SwitchCommand.fromCommandNumber((int)MessageUtils.numberFromBytes(payload, 1, 1) & 240);
         handleSwitch(switchCommandRight, switchDataRight, sequenceNumberRight, SwitchType.RIGHT);
+
+        int sequenceNumberLeft = (int) (MessageUtils.numberFromBytes(payload, 2, 1) & 15);
+        SwitchCommand switchCommandLeft = SwitchCommand.fromCommandNumber((int)MessageUtils.numberFromBytes(payload, 2, 1) & 240);
+        handleSwitch(switchCommandLeft, switchDataLeft, sequenceNumberLeft, SwitchType.LEFT);
 
         Timber.d("[%s] Received switch info: {left={command=%s, sequence=%s}, right={command=%s, sequence=%s}}",
                 deviceId,

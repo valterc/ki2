@@ -43,6 +43,18 @@ public class SignalInfo implements Parcelable {
         return value;
     }
 
+    public SignalStrength getSignalStrength(){
+        if (value > -60){
+            return SignalStrength.EXCELLENT;
+        } else if (value > -70) {
+            return SignalStrength.GOOD;
+        } else if (value > -80) {
+            return SignalStrength.FAIR;
+        } else {
+            return SignalStrength.POOR;
+        }
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -1,5 +1,6 @@
 package com.valterc.ki2.data.device;
 
+import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -59,6 +60,15 @@ public class DeviceId implements Parcelable {
         }
 
         return null;
+    }
+
+    public String getName(){
+        Integer antDeviceId = getAntDeviceId();
+        if (antDeviceId != null) {
+            return antDeviceId.toString();
+        }
+
+        return getUid();
     }
 
     @Override

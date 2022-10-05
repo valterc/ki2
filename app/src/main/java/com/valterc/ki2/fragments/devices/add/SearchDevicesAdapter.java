@@ -49,16 +49,15 @@ public class SearchDevicesAdapter extends RecyclerView.Adapter<SearchDevicesView
     @Override
     public void onBindViewHolder(@NonNull SearchDevicesViewHolder holder, int position) {
         DeviceId deviceId = devices.get(position);
-        String deviceName = (deviceId.getAntDeviceId() != null ? deviceId.getAntDeviceId().toString() : deviceId.getUid());
 
         if (deviceId.getDeviceType() == DeviceType.SHIMANO_SHIFTING) {
             holder.getImageViewIcon().setImageResource(R.drawable.ic_di2);
-            String deviceLabel = holder.getTextViewName().getContext().getString(R.string.text_di2_name, deviceName);
+            String deviceLabel = holder.getTextViewName().getContext().getString(R.string.text_param_di2_name, deviceId.getName());
             holder.getTextViewName().setText(deviceLabel);
             holder.getButtonAdd().setVisibility(View.VISIBLE);
         } else {
             holder.getImageViewIcon().setImageResource(R.drawable.ic_memory);
-            String deviceLabel = holder.getTextViewName().getContext().getString(R.string.text_sensor_name, deviceName);
+            String deviceLabel = holder.getTextViewName().getContext().getString(R.string.text_param_sensor_name, deviceId.getName());
             holder.getTextViewName().setText(deviceLabel);
             holder.getButtonAdd().setVisibility(View.INVISIBLE);
         }

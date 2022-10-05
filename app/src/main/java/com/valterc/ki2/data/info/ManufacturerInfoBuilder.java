@@ -4,7 +4,7 @@ public class ManufacturerInfoBuilder {
 
     private String componentId;
     private String hardwareVersion;
-    private String manufacturer;
+    private Manufacturer manufacturer;
     private String modelNumber;
     private String serialNumber;
     private String softwareVersion;
@@ -37,11 +37,11 @@ public class ManufacturerInfoBuilder {
         this.hardwareVersionSet = true;
     }
 
-    public String getManufacturer() {
+    public Manufacturer getManufacturer() {
         return manufacturer;
     }
 
-    public void setManufacturer(String manufacturer) {
+    public void setManufacturer(Manufacturer manufacturer) {
         this.manufacturer = manufacturer;
         this.manufacturerSet = true;
     }

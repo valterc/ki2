@@ -39,8 +39,8 @@
     <string name="text_unable_to_scan_devices">Unable to search for devices</string>
     <string name="text_no_devices_found">No devices found</string>
     <string name="text_search_for_devices">Search for devices</string>
-    <string name="text_di2_name">Di2 %s</string>
-    <string name="text_sensor_name">Sensor %s</string>
+    <string name="text_param_di2_name">Di2 %s</string>
+    <string name="text_param_sensor_name">Sensor %s</string>
     <string name="text_add">Add</string>
     <string name="text_sensor">Sensor</string>
     <string name="text_back">Back</string>
@@ -54,5 +54,35 @@
     <string name="text_connected">Connected</string>
     <string name="text_not_found">Not found</string>
     <string name="text_failed">Failed</string>
+    <string name="text_devices">Devices</string>
+    <string name="text_settings">Settings</string>
+    <string name="text_remove">Remove</string>
+    <string name="text_param_question_remove">Remove %s?</string>
+    <string name="text_unable_to_remove">Unable to remove</string>
+    <string name="text_signal">Signal</string>
+    <string name="text_connection_status">Connection Status</string>
+    <string name="text_battery">Battery</string>
+    <string name="text_manufacturer">Manufacturer</string>
+    <string name="text_serial_number">Serial Number</string>
+    <string name="text_model">Model</string>
+    <string name="text_software_version">Software Ver.</string>
+    <string name="text_hardware_version">Hardware Ver.</string>
+    <string name="text_rear_gear">Rear Gear</string>
+    <string name="text_front_gear">Front gear</string>
+    <string name="text_shifting_mode">Shifting Mode</string>
+    <string name="text_change_mode">Change Mode</string>
+    <string name="text_left_switch">Left Switch</string>
+    <string name="text_right_switch">Right Switch</string>
+    <string name="text_waiting_for_data">Waiting for data…</string>
+    <string name="text_reconnect">Reconnect</string>
+    <string name="text_param_percentage">%d%%</string>
+    <string name="text_unable_to_connect">Unable to connect</string>
+    <string name="text_unable_to_change_shifting_mode">Unable to change shifting mode</string>
+    <string name="text_no_action">No Action</string>
+    <string name="text_single_press">Single Press</string>
+    <string name="text_double_press">Double Press</string>
+    <string name="text_holding">Holding</string>
+    <string name="text_na">N/A</string>
+
 
 </resources>

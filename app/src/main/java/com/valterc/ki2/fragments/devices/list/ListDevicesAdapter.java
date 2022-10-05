@@ -3,8 +3,6 @@ package com.valterc.ki2.fragments.devices.list;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.ColorStateList;
-import android.content.res.Resources;
-import android.graphics.PorterDuff;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.valterc.ki2.R;
 import com.valterc.ki2.data.connection.ConnectionDataInfo;
-import com.valterc.ki2.data.connection.ConnectionStatus;
 import com.valterc.ki2.data.device.DeviceId;
 import com.valterc.ki2.data.device.DeviceType;
 
@@ -24,16 +21,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 public class ListDevicesAdapter extends RecyclerView.Adapter<ListDevicesViewHolder> {
 
     private final Consumer<DeviceId> listenerConfigureDevice;
-    private final Function<DeviceId, Boolean> listenerRemoveDevice;
+    private final Consumer<DeviceId> listenerRemoveDevice;
     private final List<DeviceId> devices;
     private final Map<DeviceId, ConnectionDataInfo> connectionDataInfoMap;
 
-    public ListDevicesAdapter(Consumer<DeviceId> listenerConfigureDevice, Function<DeviceId, Boolean> listenerRemoveDevice) {
+    public ListDevicesAdapter(Consumer<DeviceId> listenerConfigureDevice, Consumer<DeviceId> listenerRemoveDevice) {
         this.listenerConfigureDevice = listenerConfigureDevice;
         this.listenerRemoveDevice = listenerRemoveDevice;
         this.devices = new ArrayList<>();
@@ -54,9 +50,20 @@ public class ListDevicesAdapter extends RecyclerView.Adapter<ListDevicesViewHold
 
     public void addConnectionDataInfo(ConnectionDataInfo connectionDataInfo) {
         int index = devices.indexOf(connectionDataInfo.getDeviceId());
-        if (index != -1) {
+        ConnectionDataInfo existingConnectionDataInfo = connectionDataInfoMap.get(connectionDataInfo.getDeviceId());
+        if (index != -1 &&
+                (existingConnectionDataInfo == null || existingConnectionDataInfo.getConnectionStatus() != connectionDataInfo.getConnectionStatus())) {
             this.connectionDataInfoMap.put(connectionDataInfo.getDeviceId(), connectionDataInfo);
             notifyItemChanged(index);
+        }
+    }
+
+    public void onDeviceRemoved(DeviceId deviceId) {
+        int index = devices.indexOf(deviceId);
+        if (index != -1) {
+            devices.remove(deviceId);
+            connectionDataInfoMap.remove(deviceId);
+            notifyItemRemoved(index);
         }
     }
 
@@ -71,29 +78,22 @@ public class ListDevicesAdapter extends RecyclerView.Adapter<ListDevicesViewHold
     @Override
     public void onBindViewHolder(@NonNull ListDevicesViewHolder holder, int position) {
         DeviceId deviceId = devices.get(position);
-        String deviceName = (deviceId.getAntDeviceId() != null ? deviceId.getAntDeviceId().toString() : deviceId.getUid());
+        String deviceName = deviceId.getName();
 
         if (deviceId.getDeviceType() == DeviceType.SHIMANO_SHIFTING) {
             holder.getImageViewIcon().setImageResource(R.drawable.ic_di2);
-            String deviceLabel = holder.getTextViewName().getContext().getString(R.string.text_di2_name, deviceName);
+            String deviceLabel = holder.getTextViewName().getContext().getString(R.string.text_param_di2_name, deviceName);
             holder.getTextViewName().setText(deviceLabel);
         } else {
             holder.getImageViewIcon().setImageResource(R.drawable.ic_memory);
-            String deviceLabel = holder.getTextViewName().getContext().getString(R.string.text_sensor_name, deviceName);
+            String deviceLabel = holder.getTextViewName().getContext().getString(R.string.text_param_sensor_name, deviceName);
             holder.getTextViewName().setText(deviceLabel);
         }
 
         setConnectionStatusIndicator(holder, connectionDataInfoMap.get(deviceId));
         holder.getRootView().setOnClickListener(e -> listenerConfigureDevice.accept(deviceId));
         holder.getButtonConfigure().setOnClickListener(e -> listenerConfigureDevice.accept(deviceId));
-        holder.getButtonRemove().setOnClickListener(e -> {
-            Boolean result = listenerRemoveDevice.apply(deviceId);
-
-            if (result != null && result) {
-                devices.remove(deviceId);
-                connectionDataInfoMap.remove(deviceId);
-            }
-        });
+        holder.getButtonRemove().setOnClickListener(e -> listenerRemoveDevice.accept(deviceId));
     }
 
     @Override
@@ -116,7 +116,7 @@ public class ListDevicesAdapter extends RecyclerView.Adapter<ListDevicesViewHold
         holder.getTextViewName().setTextColor(context.getColor(R.color.hh_black));
         holder.getTextViewConnectionStatus().setVisibility(View.VISIBLE);
 
-        switch (connectionDataInfo.getStatus()) {
+        switch (connectionDataInfo.getConnectionStatus()) {
 
             case INVALID:
                 holder.getTextViewConnectionStatus().setText(R.string.text_failed);
