@@ -226,10 +226,10 @@ public class DrivetrainView extends View {
         rearTopDerailleurPositionX = rearGearPositionX + rearGearRadius * 0.5f;
         rearTopDerailleurPositionY = rearGearPositionY + rearGearRadius + rearDerailleurRadius + drivetrainPaint.getStrokeWidth();
 
-        rearBottomDerailleurPositionX = rearGearPositionX - rearGearRadius + ((float) rearGear / rearGearMax * (rearGearRadius * 2f));
+        rearBottomDerailleurPositionX = rearGearPositionX - rearGearRadius + ((1 - (float)(rearGear - 1) / rearGearMax) * (rearGearRadius * 2f));
         rearBottomDerailleurPositionY = rearTopDerailleurPositionY + rearDerailleurRadius * 3 + drivetrainPaint.getStrokeWidth() * 2;
 
-        currentRearGearRadius = rearGearRadius - (rearGearSpacing * (rearGearMax - rearGear));
+        currentRearGearRadius = rearGearRadius - (rearGearSpacing * (rearGear - 1));
         currentFrontGearRadius = frontGearRadius - (frontGearSpacing * (frontGearMax - frontGear));
 
         initChainPath();
@@ -383,7 +383,7 @@ public class DrivetrainView extends View {
     private void drawRearGears(Canvas canvas) {
         for (int i = 1; i <= rearGearMax; i++) {
             Paint paint = (rearGear == i ? selectedGearPaint : drivetrainPaint);
-            canvas.drawCircle(rearGearPositionX, rearGearPositionY, rearGearRadius - (rearGearSpacing * (rearGearMax - i)), paint);
+            canvas.drawCircle(rearGearPositionX, rearGearPositionY, rearGearRadius - (rearGearSpacing * (i - 1)), paint);
         }
     }
 
