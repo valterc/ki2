@@ -50,7 +50,9 @@ public class ListDevicesAdapter extends RecyclerView.Adapter<ListDevicesViewHold
 
     public void addConnectionDataInfo(ConnectionDataInfo connectionDataInfo) {
         int index = devices.indexOf(connectionDataInfo.getDeviceId());
-        if (index != -1) {
+        ConnectionDataInfo existingConnectionDataInfo = connectionDataInfoMap.get(connectionDataInfo.getDeviceId());
+        if (index != -1 &&
+                (existingConnectionDataInfo == null || existingConnectionDataInfo.getConnectionStatus() != connectionDataInfo.getConnectionStatus())) {
             this.connectionDataInfoMap.put(connectionDataInfo.getDeviceId(), connectionDataInfo);
             notifyItemChanged(index);
         }
@@ -76,15 +78,15 @@ public class ListDevicesAdapter extends RecyclerView.Adapter<ListDevicesViewHold
     @Override
     public void onBindViewHolder(@NonNull ListDevicesViewHolder holder, int position) {
         DeviceId deviceId = devices.get(position);
-        String deviceName = (deviceId.getAntDeviceId() != null ? deviceId.getAntDeviceId().toString() : deviceId.getUid());
+        String deviceName = deviceId.getName();
 
         if (deviceId.getDeviceType() == DeviceType.SHIMANO_SHIFTING) {
             holder.getImageViewIcon().setImageResource(R.drawable.ic_di2);
-            String deviceLabel = holder.getTextViewName().getContext().getString(R.string.text_di2_name, deviceName);
+            String deviceLabel = holder.getTextViewName().getContext().getString(R.string.text_param_di2_name, deviceName);
             holder.getTextViewName().setText(deviceLabel);
         } else {
             holder.getImageViewIcon().setImageResource(R.drawable.ic_memory);
-            String deviceLabel = holder.getTextViewName().getContext().getString(R.string.text_sensor_name, deviceName);
+            String deviceLabel = holder.getTextViewName().getContext().getString(R.string.text_param_sensor_name, deviceName);
             holder.getTextViewName().setText(deviceLabel);
         }
 

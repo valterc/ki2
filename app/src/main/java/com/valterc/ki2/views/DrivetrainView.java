@@ -209,13 +209,13 @@ public class DrivetrainView extends View {
         float horizontalCenter = (float) drivetrainBoxWidth * 0.5f;
         float verticalCenter = (float) drivetrainBoxHeight * 0.5f;
 
-        rearGearPositionX = horizontalCenter * 0.5f;
-        frontGearPositionX = horizontalCenter + horizontalCenter * 0.5f;
+        rearGearPositionX = horizontalCenter * 0.3f;
+        frontGearPositionX = horizontalCenter + horizontalCenter * 0.6f;
 
         rearGearPositionY = verticalCenter * 0.65f;
         frontGearPositionY = verticalCenter * 0.9f;
 
-        rearGearRadius = Math.min(horizontalCenter * 0.6f, drivetrainBoxHeight * 0.5f) * 0.5f;
+        rearGearRadius = Math.min(horizontalCenter * 0.55f, drivetrainBoxHeight * 0.45f) * 0.5f;
         frontGearRadius = Math.min(horizontalCenter * 0.75f, drivetrainBoxHeight * 0.75f) * 0.5f;
 
         frontGearSpacing = frontGearRadius * 0.66f / frontGearMax;
@@ -456,13 +456,11 @@ public class DrivetrainView extends View {
             throw new IllegalArgumentException("Invalid front gear max value:" + frontGearMax);
         }
 
-        if (this.frontGearMax != frontGearMax) {
-            this.frontGearMax = frontGearMax;
+        this.frontGearMax = frontGearMax;
 
-            if (initialized) {
-                invalidate();
-                requestLayout();
-            }
+        if (initialized) {
+            invalidate();
+            requestLayout();
         }
     }
 
@@ -475,13 +473,11 @@ public class DrivetrainView extends View {
             throw new IllegalArgumentException("Invalid front gear value:" + frontGear);
         }
 
-        if (this.frontGear != frontGear) {
-            this.frontGear = frontGear;
+        this.frontGear = frontGear;
 
-            if (initialized) {
-                invalidate();
-                requestLayout();
-            }
+        if (initialized) {
+            invalidate();
+            requestLayout();
         }
     }
 
@@ -494,13 +490,11 @@ public class DrivetrainView extends View {
             throw new IllegalArgumentException("Invalid rear gear max value:" + rearGearMax);
         }
 
-        if (this.rearGearMax != rearGearMax) {
-            this.rearGearMax = rearGearMax;
+        this.rearGearMax = rearGearMax;
 
-            if (initialized) {
-                invalidate();
-                requestLayout();
-            }
+        if (initialized) {
+            invalidate();
+            requestLayout();
         }
     }
 
@@ -513,13 +507,11 @@ public class DrivetrainView extends View {
             throw new IllegalArgumentException("Invalid rear gear value:" + rearGear);
         }
 
-        if (this.rearGear != rearGear) {
-            this.rearGear = rearGear;
+        this.rearGear = rearGear;
 
-            if (initialized) {
-                invalidate();
-                requestLayout();
-            }
+        if (initialized) {
+            invalidate();
+            requestLayout();
         }
     }
 

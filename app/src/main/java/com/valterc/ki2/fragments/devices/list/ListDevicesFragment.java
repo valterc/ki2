@@ -80,7 +80,7 @@ public class ListDevicesFragment extends Fragment implements IKarooKeyListener {
             startActivity(intent);
         }, deviceId -> new AlertDialog.Builder(requireContext())
                 .setTitle(R.string.text_remove)
-                .setMessage(getString(R.string.text_param_question_remove, getString(R.string.text_di2_name, deviceId.getName())))
+                .setMessage(getString(R.string.text_param_question_remove, getString(R.string.text_param_di2_name, deviceId.getName())))
                 .setIcon(R.drawable.ic_delete)
                 .setPositiveButton(android.R.string.yes, (dialog, whichButton) ->
                 {

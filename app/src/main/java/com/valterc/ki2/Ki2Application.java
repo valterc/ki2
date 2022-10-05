@@ -53,6 +53,7 @@ public class Ki2Application extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        Timber.i("Ki2Application started");
 
         serviceBound = bindService(Ki2Service.getIntent(), serviceConnection, BIND_AUTO_CREATE);
 

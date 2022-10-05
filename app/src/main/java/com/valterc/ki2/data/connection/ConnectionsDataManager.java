@@ -86,7 +86,19 @@ public class ConnectionsDataManager {
         return connectionDataManagersMap.values();
     }
 
+    public ConnectionDataManager getDataManager(DeviceId deviceId){
+        return connectionDataManagersMap.get(deviceId);
+    }
+
     public void clearConnections() {
         connectionDataManagersMap.clear();
+    }
+
+    public void clearEvents(DeviceId deviceId) {
+        ConnectionDataManager connectionDataManager = connectionDataManagersMap.get(deviceId);
+        if (connectionDataManager != null)
+        {
+            connectionDataManager.clearEvents();
+        }
     }
 }

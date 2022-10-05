@@ -9,7 +9,7 @@ public class ManufacturerInfo implements Parcelable {
 
     private String componentId;
     private String hardwareVersion;
-    private String manufacturer;
+    private Manufacturer manufacturer;
     private String modelNumber;
     private String serialNumber;
     private String softwareVersion;
@@ -28,7 +28,7 @@ public class ManufacturerInfo implements Parcelable {
         readFromParcel(in);
     }
 
-    public ManufacturerInfo(String componentId, String hardwareVersion, String manufacturer, String modelNumber, String serialNumber, String softwareVersion) {
+    public ManufacturerInfo(String componentId, String hardwareVersion, Manufacturer manufacturer, String modelNumber, String serialNumber, String softwareVersion) {
         this.componentId = componentId;
         this.hardwareVersion = hardwareVersion;
         this.manufacturer = manufacturer;
@@ -41,7 +41,7 @@ public class ManufacturerInfo implements Parcelable {
     public void writeToParcel(Parcel out, int flags) {
         out.writeString(componentId);
         out.writeString(hardwareVersion);
-        out.writeString(manufacturer);
+        out.writeInt(manufacturer.getId());
         out.writeString(modelNumber);
         out.writeString(serialNumber);
         out.writeString(softwareVersion);
@@ -50,7 +50,7 @@ public class ManufacturerInfo implements Parcelable {
     public void readFromParcel(Parcel in) {
         componentId = in.readString();
         hardwareVersion = in.readString();
-        manufacturer = in.readString();
+        manufacturer = Manufacturer.fromId(in.readInt());
         modelNumber = in.readString();
         serialNumber = in.readString();
         softwareVersion = in.readString();
@@ -69,7 +69,7 @@ public class ManufacturerInfo implements Parcelable {
         return hardwareVersion;
     }
 
-    public String getManufacturer() {
+    public Manufacturer getManufacturer() {
         return manufacturer;
     }
 

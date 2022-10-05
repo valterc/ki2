@@ -52,12 +52,12 @@ public class SearchDevicesAdapter extends RecyclerView.Adapter<SearchDevicesView
 
         if (deviceId.getDeviceType() == DeviceType.SHIMANO_SHIFTING) {
             holder.getImageViewIcon().setImageResource(R.drawable.ic_di2);
-            String deviceLabel = holder.getTextViewName().getContext().getString(R.string.text_di2_name, deviceId.getName());
+            String deviceLabel = holder.getTextViewName().getContext().getString(R.string.text_param_di2_name, deviceId.getName());
             holder.getTextViewName().setText(deviceLabel);
             holder.getButtonAdd().setVisibility(View.VISIBLE);
         } else {
             holder.getImageViewIcon().setImageResource(R.drawable.ic_memory);
-            String deviceLabel = holder.getTextViewName().getContext().getString(R.string.text_sensor_name, deviceId.getName());
+            String deviceLabel = holder.getTextViewName().getContext().getString(R.string.text_param_sensor_name, deviceId.getName());
             holder.getTextViewName().setText(deviceLabel);
             holder.getButtonAdd().setVisibility(View.INVISIBLE);
         }

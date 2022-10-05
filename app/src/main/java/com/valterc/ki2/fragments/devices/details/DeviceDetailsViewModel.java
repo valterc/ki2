@@ -74,6 +74,7 @@ public class DeviceDetailsViewModel extends ViewModel {
         }
     }
 
+    private DeviceId deviceId;
     private final MutableLiveData<IKi2Service> service;
     private final MutableLiveData<ConnectionStatus> connectionStatus;
     private final MutableLiveData<ManufacturerInfo> manufacturerInfo;
@@ -83,13 +84,21 @@ public class DeviceDetailsViewModel extends ViewModel {
     private final MutableLiveData<SignalInfo> signalInfo;
 
     public DeviceDetailsViewModel() {
-        this.service = new MutableLiveData<>();
+        service = new MutableLiveData<>();
         connectionStatus = new MutableLiveData<>();
         manufacturerInfo = new MutableLiveData<>();
         shiftingInfo = new MutableLiveData<>();
         batteryInfo = new MutableLiveData<>();
         switchEvent = new MutableLiveData<>();
         signalInfo = new MutableLiveData<>();
+    }
+
+    public DeviceId getDeviceId() {
+        return deviceId;
+    }
+
+    public void setDeviceId(DeviceId deviceId) {
+        this.deviceId = deviceId;
     }
 
     public ServiceConnection getServiceConnection() {
@@ -100,4 +109,77 @@ public class DeviceDetailsViewModel extends ViewModel {
         return service;
     }
 
+    public LiveData<ConnectionStatus> getConnectionStatus() {
+        return connectionStatus;
+    }
+
+    public LiveData<ManufacturerInfo> getManufacturerInfo() {
+        return manufacturerInfo;
+    }
+
+    public LiveData<ShiftingInfo> getShiftingInfo() {
+        return shiftingInfo;
+    }
+
+    public LiveData<BatteryInfo> getBatteryInfo() {
+        return batteryInfo;
+    }
+
+    public LiveData<SwitchEvent> getSwitchEvent() {
+        return switchEvent;
+    }
+
+    public LiveData<SignalInfo> getSignalInfo() {
+        return signalInfo;
+    }
+
+    public void reconnect() throws Exception {
+        IKi2Service service = this.service.getValue();
+        if (service == null) {
+            throw new Exception("Service is not ready");
+        }
+
+        service.reconnectDevice(deviceId);
+    }
+
+
+    public void stopDataFlow() {
+        IKi2Service service = this.service.getValue();
+        if (service == null) {
+            return;
+        }
+
+        try {
+            service.unregisterConnectionDataInfoListener(connectionDataInfoCallback);
+        } catch (Exception e) {
+            Timber.e(e, "Unable to unregister data info callback");
+        }
+    }
+
+    public void startDataFlow() throws Exception {
+        IKi2Service service = this.service.getValue();
+        if (service == null) {
+            throw new Exception("Service is not ready");
+        }
+
+        service.registerConnectionDataInfoListener(connectionDataInfoCallback);
+    }
+
+    public void remove() throws Exception {
+        IKi2Service service = this.service.getValue();
+        if (service == null) {
+            throw new Exception("Service is not ready");
+        }
+
+        service.deleteDevice(deviceId);
+    }
+
+    public void changeShiftingMode() throws Exception {
+        IKi2Service service = this.service.getValue();
+        if (service == null) {
+            throw new Exception("Service is not ready");
+        }
+
+        service.changeShiftMode(deviceId);
+    }
 }

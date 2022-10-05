@@ -128,7 +128,9 @@ public class AntDeviceConnection implements IAntDeviceConnection, IDeviceConnect
     public void disconnect() {
         disconnectInternal();
         searchReconnectAttempts = MAX_RECONNECT_ATTEMPTS;
-        postConnectionStatus(deviceId, ConnectionStatus.CLOSED);
+        if (this.connectionStatus != ConnectionStatus.CLOSED) {
+            postConnectionStatus(deviceId, ConnectionStatus.CLOSED);
+        }
     }
 
     @Override
@@ -182,6 +184,7 @@ public class AntDeviceConnection implements IAntDeviceConnection, IDeviceConnect
                 connect(antManager);
             } catch (Exception e) {
                 Timber.e(e, "Unable to connect");
+                disconnectInternal();
                 connectionStatus = ConnectionStatus.CLOSED;
             }
         }

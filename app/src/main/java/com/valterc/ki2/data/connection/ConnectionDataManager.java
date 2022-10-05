@@ -76,8 +76,10 @@ public class ConnectionDataManager {
         if (dataInfoBuilder != null){
             return dataInfoBuilder.getValue();
         }
-
         return null;
     }
 
+    public void clearEvents() {
+        dataMap.entrySet().removeIf(dataTypeDataInfoBuilderEntry -> dataTypeDataInfoBuilderEntry.getKey().isEvent());
+    }
 }

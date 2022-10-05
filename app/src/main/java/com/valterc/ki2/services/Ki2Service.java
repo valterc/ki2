@@ -530,6 +530,12 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
                     default:
                         Timber.d("[%s] Not sending update for data type %s", deviceId, dataType);
                 }
+
+                broadcastData(callbackListConnectionDataInfo,
+                        () -> connectionsDataManager.getDataManager(deviceId).buildConnectionDataInfo(),
+                        (callback, connectionDataInfo) -> callback.onConnectionDataInfo(deviceId, connectionDataInfo));
+
+                connectionsDataManager.clearEvents(deviceId);
             }
 
         });
