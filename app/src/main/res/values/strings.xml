@@ -84,6 +84,6 @@
     <string name="text_holding">Holding</string>
     <string name="text_na">N/A</string>
     <string name="text_waiting_for_state">Waiting for state…</string>
-
+    <string name="text_param_dbm">%d dBm</string>
 
 </resources>

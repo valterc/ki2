@@ -212,7 +212,7 @@ public class DeviceDetailsFragment extends Fragment implements IKarooKeyListener
             }
         });
 
-        viewModel.getSignalInfo().observe(getViewLifecycleOwner(), signalInfo -> textViewSignal.setText(Integer.toString(signalInfo.getValue())));
+        viewModel.getSignalInfo().observe(getViewLifecycleOwner(), signalInfo -> textViewSignal.setText(getString(R.string.text_param_dbm, signalInfo.getValue())));
 
         viewModel.getBatteryInfo().observe(getViewLifecycleOwner(), batteryInfo -> {
             int batteryValue = batteryInfo.getValue();
