@@ -9,14 +9,12 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.Typeface;
-import android.text.SpannableStringBuilder;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.View;
 
 import androidx.annotation.Nullable;
 
-import com.google.android.material.color.MaterialColors;
 import com.valterc.ki2.R;
 
 public class DrivetrainView extends View {
@@ -56,6 +54,8 @@ public class DrivetrainView extends View {
     private Paint chainPaint;
     private Paint textPaint;
 
+    private float textPositionYOffset;
+
     private float rearGearPositionX;
     private float rearGearPositionY;
 
@@ -83,6 +83,7 @@ public class DrivetrainView extends View {
     private final Path tempPath2;
 
     private final Rect tempRect;
+
 
     public DrivetrainView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -190,20 +191,23 @@ public class DrivetrainView extends View {
     }
 
     @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        super.onSizeChanged(w, h, oldw, oldh);
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        super.onLayout(changed, left, top, right, bottom);
+        computeMeasurements();
+    }
 
-        int internalWidth = w - (getPaddingStart() + getPaddingEnd());
-        int internalHeight = h - (getPaddingTop() + getPaddingBottom());
+    private void computeMeasurements() {
+        int internalWidth = getWidth() - (getPaddingStart() + getPaddingEnd());
+        int internalHeight = getHeight() - (getPaddingTop() + getPaddingBottom());
 
         int drivetrainBoxWidth = internalWidth;
         int drivetrainBoxHeight = internalHeight;
 
         if (textEnabled) {
             final Resources resources = getResources();
-            float textVerticalPadding = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2, resources.getDisplayMetrics());
+            float textVerticalPadding = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, resources.getDisplayMetrics());
             drivetrainBoxHeight -= measureTextHeight(textVerticalPadding);
-            initTextPath(drivetrainBoxHeight + textVerticalPadding);
+            textPositionYOffset = drivetrainBoxHeight;
         }
 
         float horizontalCenter = (float) drivetrainBoxWidth * 0.5f;
@@ -233,10 +237,12 @@ public class DrivetrainView extends View {
         currentFrontGearRadius = frontGearRadius - (frontGearSpacing * (frontGearMax - frontGear));
 
         initChainPath();
-        initTextPath(drivetrainBoxHeight);
+        if (textEnabled) {
+            initTextPath();
+        }
     }
 
-    private void initTextPath(float positionYOffset) {
+    private void initTextPath() {
         textPath.reset();
         tempPath1.reset();
         tempPath2.reset();
@@ -249,7 +255,7 @@ public class DrivetrainView extends View {
         appendedWidth += appendString(tempPath2, tempPath1, STRING_GEAR_SEPARATOR, Typeface.DEFAULT, appendedWidth);
         appendedWidth += appendString(tempPath2, tempPath1, Integer.toString(rearGearMax), Typeface.DEFAULT, appendedWidth);
 
-        textPath.addPath(tempPath2, rearGearPositionX - appendedWidth * .5f, positionYOffset + tempRect.height());
+        textPath.addPath(tempPath2, Math.max(0, rearGearPositionX - appendedWidth * .5f), textPositionYOffset + tempRect.height());
         tempPath2.reset();
 
         appendedWidth = appendString(tempPath2, tempPath1, STRING_FRONT_SPACE, Typeface.DEFAULT, 0);
@@ -257,7 +263,7 @@ public class DrivetrainView extends View {
         appendedWidth += appendString(tempPath2, tempPath1, STRING_GEAR_SEPARATOR, Typeface.DEFAULT, appendedWidth);
         appendedWidth += appendString(tempPath2, tempPath1, Integer.toString(frontGearMax), Typeface.DEFAULT, appendedWidth);
 
-        textPath.addPath(tempPath2, frontGearPositionX - appendedWidth * .5f, positionYOffset + tempRect.height());
+        textPath.addPath(tempPath2, Math.min(frontGearPositionX - appendedWidth * .5f, getWidth() - appendedWidth), textPositionYOffset + tempRect.height());
     }
 
     private float appendString(Path targetPath, Path scratchPath, String text, Typeface typeface, float x) {
@@ -456,11 +462,13 @@ public class DrivetrainView extends View {
             throw new IllegalArgumentException("Invalid front gear max value:" + frontGearMax);
         }
 
-        this.frontGearMax = frontGearMax;
+        if (this.frontGearMax !=  frontGearMax) {
+            this.frontGearMax = frontGearMax;
 
-        if (initialized) {
-            invalidate();
-            requestLayout();
+            if (initialized) {
+                invalidate();
+                requestLayout();
+            }
         }
     }
 
@@ -473,11 +481,13 @@ public class DrivetrainView extends View {
             throw new IllegalArgumentException("Invalid front gear value:" + frontGear);
         }
 
-        this.frontGear = frontGear;
+        if (this.frontGear != frontGear) {
+            this.frontGear = frontGear;
 
-        if (initialized) {
-            invalidate();
-            requestLayout();
+            if (initialized) {
+                invalidate();
+                requestLayout();
+            }
         }
     }
 
@@ -490,11 +500,13 @@ public class DrivetrainView extends View {
             throw new IllegalArgumentException("Invalid rear gear max value:" + rearGearMax);
         }
 
-        this.rearGearMax = rearGearMax;
+        if (this.rearGearMax != rearGearMax) {
+            this.rearGearMax = rearGearMax;
 
-        if (initialized) {
-            invalidate();
-            requestLayout();
+            if (initialized) {
+                invalidate();
+                requestLayout();
+            }
         }
     }
 
@@ -507,11 +519,13 @@ public class DrivetrainView extends View {
             throw new IllegalArgumentException("Invalid rear gear value:" + rearGear);
         }
 
-        this.rearGear = rearGear;
+        if (this.rearGear != rearGear) {
+            this.rearGear = rearGear;
 
-        if (initialized) {
-            invalidate();
-            requestLayout();
+            if (initialized) {
+                invalidate();
+                requestLayout();
+            }
         }
     }
 
