@@ -105,17 +105,17 @@ public class ListDevicesViewModel extends ViewModel {
         }
     }
 
-    public void removeDevice(DeviceId deviceId) throws Exception {
+    public void reconnect(DeviceId deviceId) throws Exception  {
         IKi2Service service = this.service.getValue();
         if (service == null) {
             throw new Exception("Service is not ready");
         }
 
         try {
-            service.deleteDevice(deviceId);
+            service.reconnectDevice(deviceId);
         } catch (RemoteException e) {
             Timber.e(e, "Unable to delete device");
-            throw new Exception("Unable to remove device", e);
+            throw new Exception("Unable to reconnect to device", e);
         }
     }
 }

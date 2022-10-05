@@ -17,4 +17,17 @@
         <item name="cornerSizeBottomRight">0dp</item>
     </style>
 
+    <style name="AlertDialogStyle" parent="Theme.MaterialComponents.Light.Dialog">
+        <item name="buttonBarNegativeButtonStyle">@style/NegativeButtonStyle</item>
+        <item name="buttonBarPositiveButtonStyle">@style/PositiveButtonStyle</item>
+    </style>
+
+    <style name="NegativeButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/hh_light_blue</item>
+    </style>
+
+    <style name="PositiveButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/hh_light_blue</item>
+    </style>
+
 </resources>

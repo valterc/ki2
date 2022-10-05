@@ -25,13 +25,13 @@ import java.util.function.Consumer;
 public class ListDevicesAdapter extends RecyclerView.Adapter<ListDevicesViewHolder> {
 
     private final Consumer<DeviceId> listenerConfigureDevice;
-    private final Consumer<DeviceId> listenerRemoveDevice;
+    private final Consumer<DeviceId> listenerReconnectDevice;
     private final List<DeviceId> devices;
     private final Map<DeviceId, ConnectionDataInfo> connectionDataInfoMap;
 
-    public ListDevicesAdapter(Consumer<DeviceId> listenerConfigureDevice, Consumer<DeviceId> listenerRemoveDevice) {
+    public ListDevicesAdapter(Consumer<DeviceId> listenerConfigureDevice, Consumer<DeviceId> listenerReconnectDevice) {
         this.listenerConfigureDevice = listenerConfigureDevice;
-        this.listenerRemoveDevice = listenerRemoveDevice;
+        this.listenerReconnectDevice = listenerReconnectDevice;
         this.devices = new ArrayList<>();
         this.connectionDataInfoMap = new HashMap<>();
     }
@@ -92,8 +92,13 @@ public class ListDevicesAdapter extends RecyclerView.Adapter<ListDevicesViewHold
 
         setConnectionStatusIndicator(holder, connectionDataInfoMap.get(deviceId));
         holder.getRootView().setOnClickListener(e -> listenerConfigureDevice.accept(deviceId));
-        holder.getButtonConfigure().setOnClickListener(e -> listenerConfigureDevice.accept(deviceId));
-        holder.getButtonRemove().setOnClickListener(e -> listenerRemoveDevice.accept(deviceId));
+        holder.getButtonReconnect().setOnClickListener(e -> {
+            listenerReconnectDevice.accept(deviceId);
+
+            holder.getTextViewConnectionStatus().setText(R.string.text_connecting);
+            holder.getTextViewConnectionStatus().setTextColor(holder.getTextViewConnectionStatus().getContext().getColor(R.color.hh_faded_gray));
+            holder.getButtonReconnect().setVisibility(View.INVISIBLE);
+        });
     }
 
     @Override
@@ -106,9 +111,10 @@ public class ListDevicesAdapter extends RecyclerView.Adapter<ListDevicesViewHold
         Context context = holder.getTextViewConnectionStatus().getContext();
 
         if (connectionDataInfo == null) {
-            holder.getTextViewConnectionStatus().setVisibility(View.INVISIBLE);
-            holder.getImageViewIcon().setImageTintList(ColorStateList.valueOf(context.getColor(R.color.hh_faded_gray)));
+            holder.getTextViewConnectionStatus().setText(R.string.text_waiting_for_state);
+            holder.getTextViewConnectionStatus().setTextColor(context.getColor(R.color.hh_faded_gray));
             holder.getTextViewName().setTextColor(context.getColor(R.color.hh_faded_gray));
+            holder.getButtonReconnect().setVisibility(View.INVISIBLE);
             return;
         }
 
@@ -121,22 +127,26 @@ public class ListDevicesAdapter extends RecyclerView.Adapter<ListDevicesViewHold
             case INVALID:
                 holder.getTextViewConnectionStatus().setText(R.string.text_failed);
                 holder.getTextViewConnectionStatus().setTextColor(context.getColor(R.color.hh_red));
+                holder.getButtonReconnect().setVisibility(View.VISIBLE);
                 break;
 
             case NEW:
             case CONNECTING:
                 holder.getTextViewConnectionStatus().setText(R.string.text_connecting);
                 holder.getTextViewConnectionStatus().setTextColor(context.getColor(R.color.hh_faded_gray));
+                holder.getButtonReconnect().setVisibility(View.INVISIBLE);
                 break;
 
             case ESTABLISHED:
                 holder.getTextViewConnectionStatus().setText(R.string.text_connected);
                 holder.getTextViewConnectionStatus().setTextColor(context.getColor(R.color.hh_green));
+                holder.getButtonReconnect().setVisibility(View.INVISIBLE);
                 break;
 
             case CLOSED:
                 holder.getTextViewConnectionStatus().setText(R.string.text_not_found);
-                holder.getTextViewConnectionStatus().setTextColor(context.getColor(R.color.hh_red_700));
+                holder.getTextViewConnectionStatus().setTextColor(context.getColor(R.color.hh_red));
+                holder.getButtonReconnect().setVisibility(View.VISIBLE);
                 break;
 
         }

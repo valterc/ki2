@@ -78,21 +78,14 @@ public class ListDevicesFragment extends Fragment implements IKarooKeyListener {
             Intent intent = new Intent(getContext(), DeviceDetailsActivity.class);
             intent.putExtra(DeviceId.class.getSimpleName(), deviceId);
             startActivity(intent);
-        }, deviceId -> new AlertDialog.Builder(requireContext())
-                .setTitle(R.string.text_remove)
-                .setMessage(getString(R.string.text_param_question_remove, getString(R.string.text_param_di2_name, deviceId.getName())))
-                .setIcon(R.drawable.ic_delete)
-                .setPositiveButton(android.R.string.yes, (dialog, whichButton) ->
-                {
-                    try {
-                        viewModel.removeDevice(deviceId);
-                        listDevicesAdapter.onDeviceRemoved(deviceId);
-                        textViewNoSavedDevices.setVisibility(viewModel.anyDevicesSaved() ? View.GONE : View.VISIBLE);
-                    } catch (Exception e) {
-                        Toast.makeText(getContext(), R.string.text_unable_to_remove, Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .setNegativeButton(android.R.string.no, null).show());
+        }, deviceId -> {
+            try {
+                viewModel.reconnect(deviceId);
+            } catch (Exception e) {
+                Timber.e(e, "Unable to reconnect to device");
+                Toast.makeText(getContext(), R.string.text_unable_to_communicate_with_service, Toast.LENGTH_LONG).show();
+            }
+        });
         recyclerView.setAdapter(listDevicesAdapter);
 
         viewModel.getService().observe(getViewLifecycleOwner(), service -> {

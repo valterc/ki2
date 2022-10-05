@@ -16,8 +16,7 @@ public class ListDevicesViewHolder extends RecyclerView.ViewHolder {
     private final ImageView imageViewIcon;
     private final TextView textViewName;
     private final TextView textViewConnectionStatus;
-    private final ImageButton buttonRemove;
-    private final ImageButton buttonConfigure;
+    private final ImageButton buttonReconnect;
 
     public ListDevicesViewHolder(@NonNull View itemView) {
         super(itemView);
@@ -26,8 +25,7 @@ public class ListDevicesViewHolder extends RecyclerView.ViewHolder {
         imageViewIcon = itemView.findViewById(R.id.imageview_list_devices_item_icon);
         textViewName = itemView.findViewById(R.id.textview_list_devices_item_name);
         textViewConnectionStatus = itemView.findViewById(R.id.textview_list_devices_item_connection_status);
-        buttonRemove = itemView.findViewById(R.id.imagebutton_list_devices_item_remove);
-        buttonConfigure = itemView.findViewById(R.id.imagebutton_list_devices_item_info);
+        buttonReconnect = itemView.findViewById(R.id.imagebutton_list_devices_item_reconnect);
     }
 
     public View getRootView(){
@@ -46,11 +44,8 @@ public class ListDevicesViewHolder extends RecyclerView.ViewHolder {
         return textViewConnectionStatus;
     }
 
-    public ImageButton getButtonRemove() {
-        return buttonRemove;
+    public ImageButton getButtonReconnect() {
+        return buttonReconnect;
     }
 
-    public ImageButton getButtonConfigure() {
-        return buttonConfigure;
-    }
 }

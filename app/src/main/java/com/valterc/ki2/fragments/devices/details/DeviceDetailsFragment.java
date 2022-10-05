@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.widget.TextViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -96,19 +97,22 @@ public class DeviceDetailsFragment extends Fragment implements IKarooKeyListener
         TextView textViewName = view.findViewById(R.id.textview_device_details_name);
         textViewName.setText(getString(R.string.text_param_di2_name, viewModel.getDeviceId().getName()));
 
+        TextView textViewConnectionStatus = view.findViewById(R.id.textview_device_details_connection_status);
+        textViewConnectionStatus.setText(R.string.text_connecting);
+
         Button buttonReconnect = view.findViewById(R.id.button_device_details_reconnect);
         buttonReconnect.setOnClickListener(v -> {
             try {
                 viewModel.reconnect();
                 buttonReconnect.setVisibility(ViewGroup.GONE);
+                buttonReconnect.setVisibility(ViewGroup.GONE);
+                textViewConnectionStatus.setText(R.string.text_connecting);
+                textViewConnectionStatus.setTextColor(requireContext().getColor(R.color.hh_black));
             } catch (Exception e) {
                 Timber.e(e, "Unable to reconnect");
                 Toast.makeText(requireContext(), R.string.text_unable_to_connect, Toast.LENGTH_SHORT).show();
             }
         });
-
-        TextView textViewConnectionStatus = view.findViewById(R.id.textview_device_details_connection_status);
-        textViewConnectionStatus.setText(R.string.text_connecting);
 
         TextView textViewSignal = view.findViewById(R.id.textview_device_details_signal);
 
@@ -143,15 +147,22 @@ public class DeviceDetailsFragment extends Fragment implements IKarooKeyListener
         TextView textViewRightSwitch = view.findViewById(R.id.textview_device_details_right_switch);
 
         Button buttonRemove = view.findViewById(R.id.button_device_details_remove);
-        buttonRemove.setOnClickListener(v -> {
-            try {
-                viewModel.remove();
-                requireActivity().finish();
-            } catch (Exception e) {
-                Timber.e(e, "Unable to remove");
-                Toast.makeText(requireContext(), R.string.text_unable_to_remove, Toast.LENGTH_SHORT).show();
-            }
-        });
+        buttonRemove.setOnClickListener(v -> new AlertDialog.Builder(requireContext(), R.style.AlertDialogStyle)
+                .setTitle(R.string.text_remove)
+                .setMessage(getString(R.string.text_param_question_remove, getString(R.string.text_param_di2_name, viewModel.getDeviceId().getName())))
+                .setIcon(R.drawable.ic_delete)
+                .setPositiveButton(android.R.string.yes, (dialog, whichButton) ->
+                {
+                    try {
+                        viewModel.remove();
+                        requireActivity().finish();
+                    } catch (Exception e) {
+                        Timber.e(e, "Unable to remove");
+                        Toast.makeText(getContext(), R.string.text_unable_to_remove, Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .setNegativeButton(android.R.string.no, null).show());
+        handler.postDelayed(() -> buttonRemove.setEnabled(true), 1000);
 
         viewModel.getService().observe(getViewLifecycleOwner(), service -> {
             if (service == null) {
