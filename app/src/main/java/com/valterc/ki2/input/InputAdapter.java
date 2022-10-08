@@ -3,9 +3,12 @@ package com.valterc.ki2.input;
 import android.content.Context;
 import android.hardware.input.InputManager;
 import android.os.SystemClock;
+import android.util.Log;
 import android.view.InputEvent;
 import android.view.KeyEvent;
 
+import com.valterc.ki2.data.switches.SwitchEvent;
+import com.valterc.ki2.data.switches.SwitchKeyEvent;
 import com.valterc.ki2.karoo.input.KarooKey;
 
 import java.lang.reflect.Method;
@@ -37,7 +40,7 @@ public class InputAdapter {
         try {
             injectInputMethod = inputManager.getClass().getMethod("injectInputEvent", paramTypes);
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e("KI2", e.toString());
         }
     }
 
@@ -49,7 +52,7 @@ public class InputAdapter {
 
             injectInputMethod.invoke(inputManager, params);
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e("KI2", e.toString());
         }
     }
 
@@ -61,7 +64,7 @@ public class InputAdapter {
 
             injectInputMethod.invoke(inputManager, params);
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e("KI2", e.toString());
         }
     }
 
@@ -78,11 +81,11 @@ public class InputAdapter {
 
             injectInputMethod.invoke(inputManager, params);
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e("KI2", e.toString());
         }
     }
 
-    public void setKeyDown(KarooKey key, int repeat)
+    private void setKeyDown(KarooKey key, int repeat)
     {
         Long time = keyDownTimeMap.get(key);
 
@@ -94,7 +97,7 @@ public class InputAdapter {
         injectKeyDown(key.getKeyCode(), time, repeat);
     }
 
-    public void setKeyUp(KarooKey key)
+    private void setKeyUp(KarooKey key)
     {
         long time = System.currentTimeMillis();
 
@@ -108,8 +111,31 @@ public class InputAdapter {
 
     }
 
-    public void keyPressed(KarooKey key)
+    private void keyPressed(KarooKey key)
     {
         injectKeyPress(key.getKeyCode());
+    }
+
+    public void executeKeyEvent(SwitchKeyEvent switchKeyEvent) {
+        switch (switchKeyEvent.getCommand())
+        {
+            case SINGLE_CLICK:
+                keyPressed(switchKeyEvent.getKey());
+                break;
+
+            case DOUBLE_CLICK:
+                keyPressed(switchKeyEvent.getKey());
+                keyPressed(switchKeyEvent.getKey());
+                break;
+
+            case LONG_PRESS_DOWN:
+            case LONG_PRESS_CONTINUE:
+                setKeyDown(switchKeyEvent.getKey(), switchKeyEvent.getRepeat());
+                break;
+
+            case LONG_PRESS_UP:
+                setKeyUp(switchKeyEvent.getKey());
+                break;
+        }
     }
 }

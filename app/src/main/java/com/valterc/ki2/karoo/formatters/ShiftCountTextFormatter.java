@@ -1,0 +1,40 @@
+package com.valterc.ki2.karoo.formatters;
+
+import androidx.annotation.NonNull;
+
+import com.valterc.ki2.data.connection.ConnectionInfo;
+import com.valterc.ki2.data.connection.ConnectionStatus;
+import com.valterc.ki2.data.shifting.ShiftingInfo;
+import com.valterc.ki2.karoo.Ki2Context;
+
+import java.util.function.Consumer;
+
+import io.hammerhead.sdk.v0.datatype.formatter.SdkFormatter;
+
+public class ShiftCountTextFormatter extends SdkFormatter {
+
+    private ShiftingInfo lastShiftingInfo;
+    private int shiftCount;
+
+    private final Consumer<ShiftingInfo> shiftingInfoConsumer = shiftingInfo -> {
+        if (lastShiftingInfo == null){
+            lastShiftingInfo = shiftingInfo;
+        }
+
+        if (lastShiftingInfo.getFrontGear() != shiftingInfo.getFrontGear() || lastShiftingInfo.getRearGear()!= shiftingInfo.getRearGear()){
+            shiftCount++;
+        }
+
+        lastShiftingInfo = shiftingInfo;
+    };
+
+    public ShiftCountTextFormatter(Ki2Context ki2Context) {
+        ki2Context.getServiceClient().registerShiftingInfoListener(shiftingInfoConsumer);
+    }
+
+    @NonNull
+    @Override
+    public String formatValue(double value) {
+        return Integer.toString(shiftCount);
+    }
+}

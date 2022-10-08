@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" >
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.valterc.ki2">
 
     <uses-permission
         android:name="android.permission.INJECT_EVENTS"
         tools:ignore="ProtectedPermissions" />
-    <uses-permission android:name="android.permission.FORCE_STOP_PACKAGE" /> <!-- Legacy Bluetooth permissions -->
+    <uses-permission android:name="android.permission.FORCE_STOP_PACKAGE" />
     <uses-permission
         android:name="android.permission.BLUETOOTH"
         android:maxSdkVersion="30" />
@@ -22,6 +23,9 @@
         android:name="android.permission.BLUETOOTH_SCAN"
         android:usesPermissionFlags="neverForLocation" />
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
+    <uses-permission android:name="android.permission.INSTALL_EXISTING_PACKAGES"/>
 
     <application
         android:name=".Ki2Application"
@@ -47,7 +51,6 @@
             android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -64,8 +67,8 @@
             android:exported="true" >
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
-
                 <action android:name="io.hammerhead.sdk.INITIALIZE" />
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
         </receiver>
 

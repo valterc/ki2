@@ -119,6 +119,7 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
                 for (ConnectionDataManager connectionDataManager : connectionsDataManager.getDataManagers()) {
                     try {
                         assert callback != null;
+                        Timber.d("Sending connection info after register");
                         callback.onConnectionInfo(
                                 connectionDataManager.getDeviceId(),
                                 connectionDataManager.buildConnectionInfo());
@@ -183,12 +184,14 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
                     try {
                         BatteryInfo batteryInfo = (BatteryInfo) connectionDataManager.getData(DataType.BATTERY);
                         if (batteryInfo != null) {
+                            Timber.d("Sending battery value after register");
                             assert callback != null;
                             callback.onBattery(
                                     connectionDataManager.getDeviceId(),
                                     batteryInfo);
                         }
                     } catch (RemoteException e) {
+                        Timber.w(e, "Error during callback execution");
                         break;
                     }
                 }
@@ -482,8 +485,9 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
 
         serviceHandler.postAction(() -> {
             boolean sendUpdate = connectionsDataManager.onData(deviceId, dataType, data);
-
             if (sendUpdate) {
+                Timber.d("[%s] Sending update for data (type=%s, value=%s)", deviceId, dataType, data);
+
                 switch (dataType) {
 
                     case SHIFTING:
@@ -580,4 +584,5 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
         }
         callbackList.finishBroadcast();
     }
+
 }

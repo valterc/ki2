@@ -13,7 +13,7 @@
 
     <color name="hh_gears_active_bottom">#9f041b</color>
     <color name="hh_gears_active_top">#f5515f</color>
-    <color name="hh_gears_border">#000000</color>
+    <color name="hh_gears_border">#F0F0F0</color>
 
     <color name="hh_green">#209f13</color>
     <color name="hh_orange">#fd7919</color>

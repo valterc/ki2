@@ -5,28 +5,32 @@ import androidx.annotation.NonNull;
 import com.valterc.ki2.data.connection.ConnectionInfo;
 import com.valterc.ki2.data.connection.ConnectionStatus;
 import com.valterc.ki2.data.device.BatteryInfo;
+import com.valterc.ki2.data.shifting.ShiftingInfo;
 import com.valterc.ki2.karoo.Ki2Context;
 
+import java.text.DecimalFormat;
 import java.util.function.Consumer;
 
 import io.hammerhead.sdk.v0.datatype.formatter.SdkFormatter;
 
-public class BatteryTextFormatter extends SdkFormatter {
+public class GearsTextFormatter extends SdkFormatter {
+
+    private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("00");
 
     private final Consumer<ConnectionInfo> connectionInfoConsumer = connectionInfo -> {
         connectionStatus = connectionInfo.getConnectionStatus();
     };
 
-    private final Consumer<BatteryInfo> batteryInfoConsumer = batteryInfo -> {
-        batteryValue = batteryInfo.getValue();
+    private final Consumer<ShiftingInfo> shiftingInfoConsumer = shiftingInfo -> {
+        this.shiftingInfo = shiftingInfo;
     };
 
     private ConnectionStatus connectionStatus;
-    private int batteryValue;
+    private ShiftingInfo shiftingInfo;
 
-    public BatteryTextFormatter(Ki2Context ki2Context) {
+    public GearsTextFormatter(Ki2Context ki2Context) {
         ki2Context.getServiceClient().registerConnectionInfoListener(connectionInfoConsumer);
-        ki2Context.getServiceClient().registerBatteryInfoListener(batteryInfoConsumer);
+        ki2Context.getServiceClient().registerShiftingInfoListener(shiftingInfoConsumer);
     }
 
     @NonNull
@@ -36,7 +40,10 @@ public class BatteryTextFormatter extends SdkFormatter {
             return "N/A";
         }
 
-        return Integer.toString(batteryValue);
-    }
+        if (shiftingInfo == null) {
+            return "...";
+        }
 
+        return DECIMAL_FORMAT.format(shiftingInfo.getFrontGear()) + "-" + DECIMAL_FORMAT.format(shiftingInfo.getRearGear());
+    }
 }

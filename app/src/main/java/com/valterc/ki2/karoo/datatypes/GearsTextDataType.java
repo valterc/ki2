@@ -1,6 +1,5 @@
 package com.valterc.ki2.karoo.datatypes;
 
-import android.content.Context;
 import android.graphics.drawable.Drawable;
 
 import androidx.annotation.NonNull;
@@ -9,9 +8,8 @@ import androidx.appcompat.content.res.AppCompatResources;
 
 import com.valterc.ki2.R;
 import com.valterc.ki2.karoo.Ki2Context;
-import com.valterc.ki2.karoo.formatters.BatteryTextFormatter;
+import com.valterc.ki2.karoo.formatters.GearsTextFormatter;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -21,29 +19,29 @@ import io.hammerhead.sdk.v0.datatype.transformer.SdkTransformer;
 import io.hammerhead.sdk.v0.datatype.view.BuiltInView;
 import io.hammerhead.sdk.v0.datatype.view.SdkView;
 
-public class BatteryTextDataType extends Ki2DataType {
+public class GearsTextDataType extends Ki2DataType {
 
-    private static final String TYPE_ID = "ki2-battery-text";
+    private static final String TYPE_ID = "ki2-gears-text";
 
     private final List<Drawable> drawables;
 
-    public BatteryTextDataType(@NonNull Ki2Context context) {
+    public GearsTextDataType(@NonNull Ki2Context context) {
         super(context);
 
         this.drawables = Collections.singletonList(
-                AppCompatResources.getDrawable(getContext(), R.drawable.ic_battery));
+                AppCompatResources.getDrawable(getContext(), R.drawable.ic_gear));
     }
 
     @NonNull
     @Override
     public String getDescription() {
-        return "Shifting battery %.";
+        return "Shifting gears in format FF-RR (FF Front, RR Rear), example: 01-05 for gear 1 in front and gear 5 in rear.";
     }
 
     @NonNull
     @Override
     public String getDisplayName() {
-        return "Shf Bat %";
+        return "Gears";
     }
 
     @NonNull
@@ -61,7 +59,7 @@ public class BatteryTextDataType extends Ki2DataType {
 
     @Override
     public double getSampleValue() {
-        return 80;
+        return 01.07;
     }
 
     @NonNull
@@ -77,7 +75,7 @@ public class BatteryTextDataType extends Ki2DataType {
     public SdkFormatter newFormatter() {
         return getKi2Context()
                 .getInstanceManager()
-                .getOrComputeInstance(BatteryTextFormatter.class.getSimpleName(), SdkFormatter.class, () -> new BatteryTextFormatter(getKi2Context()));
+                .getOrComputeInstance(GearsTextFormatter.class.getSimpleName(), SdkFormatter.class, () -> new GearsTextFormatter(getKi2Context()));
     }
 
     @NonNull
@@ -87,5 +85,4 @@ public class BatteryTextDataType extends Ki2DataType {
                 .getInstanceManager()
                 .getOrComputeInstance(BuiltInView.Numeric.class.getSimpleName(), SdkView.class, () -> new BuiltInView.Numeric(getContext()));
     }
-
 }

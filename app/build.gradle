@@ -2,7 +2,19 @@ plugins {
     id 'com.android.application'
 }
 
+def properties = loadLocalProperties();
+
 android {
+    signingConfigs {
+        release {
+            if(!properties.getProperty("RELEASE_STORE_FILE", "").empty){
+                storeFile file(properties.getProperty("RELEASE_STORE_FILE", ""))
+                storePassword properties.getProperty("RELEASE_STORE_PASSWORD", "")
+                keyAlias properties.getProperty("RELEASE_KEY_ALIAS", "")
+                keyPassword properties.getProperty("RELEASE_KEY_PASSWORD", "")
+            }
+        }
+    }
     namespace 'com.valterc.ki2'
     compileSdk 32
 
@@ -15,6 +27,7 @@ android {
         archivesBaseName = "ki2-$versionName"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        signingConfig signingConfigs.release
     }
 
     buildTypes {
@@ -26,6 +39,11 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    lintOptions {
+        checkAllWarnings true
+        enable 'deprecation'
     }
 }
 

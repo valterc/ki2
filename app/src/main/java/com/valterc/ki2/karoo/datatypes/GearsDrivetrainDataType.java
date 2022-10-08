@@ -1,7 +1,7 @@
 package com.valterc.ki2.karoo.datatypes;
 
-import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -9,41 +9,42 @@ import androidx.appcompat.content.res.AppCompatResources;
 
 import com.valterc.ki2.R;
 import com.valterc.ki2.karoo.Ki2Context;
-import com.valterc.ki2.karoo.formatters.BatteryTextFormatter;
+import com.valterc.ki2.karoo.views.DrivetrainSdkView;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import io.hammerhead.sdk.v0.datatype.SdkDataType;
+import io.hammerhead.sdk.v0.datatype.formatter.BuiltInFormatter;
 import io.hammerhead.sdk.v0.datatype.formatter.SdkFormatter;
 import io.hammerhead.sdk.v0.datatype.transformer.BuiltInTransformer;
 import io.hammerhead.sdk.v0.datatype.transformer.SdkTransformer;
 import io.hammerhead.sdk.v0.datatype.view.BuiltInView;
 import io.hammerhead.sdk.v0.datatype.view.SdkView;
 
-public class BatteryTextDataType extends Ki2DataType {
+public class GearsDrivetrainDataType extends Ki2DataType {
 
-    private static final String TYPE_ID = "ki2-battery-text";
+    private static final String TYPE_ID = "ki2-gears-drivetrain";
 
     private final List<Drawable> drawables;
 
-    public BatteryTextDataType(@NonNull Ki2Context context) {
+    public GearsDrivetrainDataType(@NonNull Ki2Context context) {
         super(context);
 
         this.drawables = Collections.singletonList(
-                AppCompatResources.getDrawable(getContext(), R.drawable.ic_battery));
+                AppCompatResources.getDrawable(getContext(), R.drawable.ic_gear));
     }
 
     @NonNull
     @Override
     public String getDescription() {
-        return "Shifting battery %.";
+        return "Drivetrain view.";
     }
 
     @NonNull
     @Override
     public String getDisplayName() {
-        return "Shf Bat %";
+        return "Drivetrain";
     }
 
     @NonNull
@@ -52,32 +53,22 @@ public class BatteryTextDataType extends Ki2DataType {
         return TYPE_ID;
     }
 
-
     @Nullable
     @Override
     public List<Drawable> displayIcons() {
         return drawables;
     }
 
-    @Override
-    public double getSampleValue() {
-        return 80;
-    }
-
     @NonNull
     @Override
     public SdkTransformer newTransformer() {
-        return getKi2Context()
-                .getInstanceManager()
-                .getOrComputeInstance(BuiltInTransformer.Identity.class.getSimpleName(), SdkTransformer.class, () -> new BuiltInTransformer.Identity(getContext()));
+        return new BuiltInTransformer.Identity(getContext());
     }
 
     @NonNull
     @Override
     public SdkFormatter newFormatter() {
-        return getKi2Context()
-                .getInstanceManager()
-                .getOrComputeInstance(BatteryTextFormatter.class.getSimpleName(), SdkFormatter.class, () -> new BatteryTextFormatter(getKi2Context()));
+        return new BuiltInFormatter.None();
     }
 
     @NonNull
@@ -85,7 +76,6 @@ public class BatteryTextDataType extends Ki2DataType {
     public SdkView newView() {
         return getKi2Context()
                 .getInstanceManager()
-                .getOrComputeInstance(BuiltInView.Numeric.class.getSimpleName(), SdkView.class, () -> new BuiltInView.Numeric(getContext()));
+                .getOrComputeInstance(DrivetrainSdkView.class.getSimpleName(), SdkView.class, () -> new DrivetrainSdkView(getKi2Context()));
     }
-
 }

@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.Picture;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
@@ -36,11 +37,12 @@ public class DrivetrainView extends View {
     private static final int DEFAULT_CHAIN_STROKE_WIDTH = 3;
 
     private static final String STRING_MEASURE = "F1/";
-    private static final String STRING_REAR_SPACE = "Rear ";
-    private static final String STRING_FRONT_SPACE = "Front ";
+    private static final String STRING_REAR_PREFIX = "";
+    private static final String STRING_FRONT_PREFIX = "";
     private static final String STRING_GEAR_SEPARATOR = "/";
 
     private final boolean initialized;
+    private Picture picture;
 
     private boolean textEnabled;
 
@@ -83,7 +85,6 @@ public class DrivetrainView extends View {
     private final Path tempPath2;
 
     private final Rect tempRect;
-
 
     public DrivetrainView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -194,6 +195,7 @@ public class DrivetrainView extends View {
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
         computeMeasurements();
+        drawPicture();
     }
 
     private void computeMeasurements() {
@@ -216,11 +218,11 @@ public class DrivetrainView extends View {
         rearGearPositionX = horizontalCenter * 0.3f;
         frontGearPositionX = horizontalCenter + horizontalCenter * 0.6f;
 
-        rearGearPositionY = verticalCenter * 0.65f;
-        frontGearPositionY = verticalCenter * 0.9f;
-
-        rearGearRadius = Math.min(horizontalCenter * 0.55f, drivetrainBoxHeight * 0.45f) * 0.5f;
+        rearGearRadius = Math.min(horizontalCenter * 0.5f, drivetrainBoxHeight * 0.4f) * 0.5f;
         frontGearRadius = Math.min(horizontalCenter * 0.75f, drivetrainBoxHeight * 0.75f) * 0.5f;
+
+        frontGearPositionY = verticalCenter * 0.9f;
+        rearGearPositionY = frontGearPositionY - frontGearRadius + rearGearRadius;
 
         frontGearSpacing = frontGearRadius * 0.66f / frontGearMax;
         rearGearSpacing = rearGearRadius * 0.8f / rearGearMax;
@@ -238,6 +240,7 @@ public class DrivetrainView extends View {
 
         initChainPath();
         if (textEnabled) {
+            textPositionYOffset = Math.max(rearBottomDerailleurPositionY + rearDerailleurRadius, frontGearPositionY + frontGearRadius) + (internalHeight - drivetrainBoxHeight);
             initTextPath();
         }
     }
@@ -250,15 +253,16 @@ public class DrivetrainView extends View {
         textPaint.setTypeface(Typeface.DEFAULT_BOLD);
         textPaint.getTextBounds(STRING_MEASURE, 0, STRING_MEASURE.length(), tempRect);
 
-        float appendedWidth = appendString(tempPath2, tempPath1, STRING_REAR_SPACE, Typeface.DEFAULT, 0);
+        float appendedWidth = appendString(tempPath2, tempPath1, STRING_REAR_PREFIX, Typeface.DEFAULT, 0);
         appendedWidth += appendString(tempPath2, tempPath1, Integer.toString(rearGear), Typeface.DEFAULT_BOLD, appendedWidth);
         appendedWidth += appendString(tempPath2, tempPath1, STRING_GEAR_SEPARATOR, Typeface.DEFAULT, appendedWidth);
         appendedWidth += appendString(tempPath2, tempPath1, Integer.toString(rearGearMax), Typeface.DEFAULT, appendedWidth);
 
         textPath.addPath(tempPath2, Math.max(0, rearGearPositionX - appendedWidth * .5f), textPositionYOffset + tempRect.height());
+        tempPath1.reset();
         tempPath2.reset();
 
-        appendedWidth = appendString(tempPath2, tempPath1, STRING_FRONT_SPACE, Typeface.DEFAULT, 0);
+        appendedWidth = appendString(tempPath2, tempPath1, STRING_FRONT_PREFIX, Typeface.DEFAULT, 0);
         appendedWidth += appendString(tempPath2, tempPath1, Integer.toString(frontGear), Typeface.DEFAULT_BOLD, appendedWidth);
         appendedWidth += appendString(tempPath2, tempPath1, STRING_GEAR_SEPARATOR, Typeface.DEFAULT, appendedWidth);
         appendedWidth += appendString(tempPath2, tempPath1, Integer.toString(frontGearMax), Typeface.DEFAULT, appendedWidth);
@@ -362,15 +366,17 @@ public class DrivetrainView extends View {
                 startAngle, -sweepAngle * 2f);
     }
 
-    @Override
-    public void draw(Canvas canvas) {
-        super.draw(canvas);
+    private void drawPicture(){
+        picture = new Picture();
+        Canvas canvas = picture.beginRecording(getWidth(), getHeight());
 
         drawFrontGears(canvas);
         drawRearGears(canvas);
         drawRearDerailleur(canvas);
         drawChainPath(canvas);
         drawText(canvas);
+
+        picture.endRecording();
     }
 
     private void drawText(Canvas canvas) {
@@ -381,16 +387,18 @@ public class DrivetrainView extends View {
 
     private void drawFrontGears(Canvas canvas) {
         for (int i = 1; i <= frontGearMax; i++) {
-            Paint paint = (frontGear == i ? selectedGearPaint : drivetrainPaint);
-            canvas.drawCircle(frontGearPositionX, frontGearPositionY, frontGearRadius - (frontGearSpacing * (frontGearMax - i)), paint);
+            canvas.drawCircle(frontGearPositionX, frontGearPositionY, frontGearRadius - (frontGearSpacing * (frontGearMax - i)), drivetrainPaint);
         }
+
+        canvas.drawCircle(frontGearPositionX, frontGearPositionY, frontGearRadius - (frontGearSpacing * (frontGearMax - frontGear)), selectedGearPaint);
     }
 
     private void drawRearGears(Canvas canvas) {
         for (int i = 1; i <= rearGearMax; i++) {
-            Paint paint = (rearGear == i ? selectedGearPaint : drivetrainPaint);
-            canvas.drawCircle(rearGearPositionX, rearGearPositionY, rearGearRadius - (rearGearSpacing * (i - 1)), paint);
+            canvas.drawCircle(rearGearPositionX, rearGearPositionY, rearGearRadius - (rearGearSpacing * (i - 1)), drivetrainPaint);
         }
+
+        canvas.drawCircle(rearGearPositionX, rearGearPositionY, rearGearRadius - (rearGearSpacing * (rearGear - 1)), selectedGearPaint);
     }
 
     private void drawRearDerailleur(Canvas canvas) {
@@ -400,6 +408,16 @@ public class DrivetrainView extends View {
 
     private void drawChainPath(Canvas canvas) {
         canvas.drawPath(chainPath, chainPaint);
+    }
+
+    @Override
+    public void draw(Canvas canvas) {
+        super.draw(canvas);
+
+        if (picture != null)
+        {
+            canvas.drawPicture(picture);
+        }
     }
 
     public int getDrivetrainColor() {
@@ -451,6 +469,39 @@ public class DrivetrainView extends View {
 
     public void setChainColor(Color chainColor) {
         setChainColor(chainColor.toArgb());
+    }
+
+    public void setGears(int frontGearMax, int frontGear, int rearGearMax, int rearGear) {
+        if (frontGearMax <= 0) {
+            throw new IllegalArgumentException("Invalid front gear max value:" + frontGearMax);
+        }
+
+        if (frontGear <= 0 || frontGear > frontGearMax) {
+            throw new IllegalArgumentException("Invalid front gear value:" + frontGear);
+        }
+
+        if (rearGearMax <= 0) {
+            throw new IllegalArgumentException("Invalid rear gear max value:" + rearGearMax);
+        }
+
+        if (rearGear <= 0 || rearGear > rearGearMax) {
+            throw new IllegalArgumentException("Invalid rear gear value:" + rearGear);
+        }
+
+        if (this.frontGearMax != frontGearMax ||
+                this.frontGear != frontGear ||
+                this.rearGearMax != rearGearMax ||
+                this.rearGear != rearGear) {
+            this.frontGearMax = frontGearMax;
+            this.frontGear = frontGear;
+            this.rearGearMax = rearGearMax;
+            this.rearGear = rearGear;
+
+            if (initialized) {
+                invalidate();
+                requestLayout();
+            }
+        }
     }
 
     public int getFrontGearMax() {

@@ -43,7 +43,6 @@ public class InputManager {
     }
 
     private final Context context;
-    private final InputAdapter inputAdapter;
     private final SharedPreferences preferences;
 
     /**
@@ -53,7 +52,6 @@ public class InputManager {
 
     public InputManager(Context context) {
         this.context = context;
-        this.inputAdapter = new InputAdapter(context);
         this.preferences = PreferenceManager.getDefaultSharedPreferences(context);
 
         this.preferenceMap = new HashMap<>();
@@ -125,7 +123,6 @@ public class InputManager {
     }
 
     public SwitchKeyEvent onSwitch(SwitchEvent switchEvent) {
-
         if (switchEvent == null) {
             return null;
         }
