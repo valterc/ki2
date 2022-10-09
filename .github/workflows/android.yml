@@ -42,7 +42,10 @@ jobs:
     
     - name: List
       run: |
-        ls app/release
+        echo "app/build"
+        ls app/build/
+        echo "app/build/outputs"
+        ls app/build/outputs
     
     - name: Upload artifacts
       uses: actions/upload-artifact@v3
