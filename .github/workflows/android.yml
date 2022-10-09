@@ -39,14 +39,9 @@ jobs:
       
     - name: Build with Gradle
       run: ./gradlew build
-    
-    - name: List
-      run: |
-        echo "ls app/build/outputs/apk/release"
-        ls app/build/outputs/apk/release/
-    
+        
     - name: Upload artifacts
       uses: actions/upload-artifact@v3
       with:
         name: outputs
-        path: /app/release/*.apk
+        path: app/build/outputs/apk/release/*.apk
