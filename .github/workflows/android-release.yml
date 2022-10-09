@@ -50,3 +50,4 @@ jobs:
         asset_name: ki2-${{ github.ref_name }}-release.apk
         tag: ${{ github.ref }}
         overwrite: true
+        body: "Ki2 ${{ github.ref_name }}"
