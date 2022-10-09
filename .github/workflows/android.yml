@@ -42,8 +42,7 @@ jobs:
     
     - name: List
       run: |
-        ls
-        ls app/
+        ls app/release
     
     - name: Upload artifacts
       uses: actions/upload-artifact@v3
