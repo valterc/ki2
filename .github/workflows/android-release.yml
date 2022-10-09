@@ -33,7 +33,7 @@ jobs:
         echo "RELEASE_KEY_ALIAS=${ANDROID_RELEASE_KEY_ALIAS}" >> local.properties
         echo "RELEASE_KEY_PASSWORD=${ANDROID_RELEASE_KEY_PASSWORD}" >> local.properties
         echo "VERSION_CODE=${{ github.run_number }}" >> local.properties
-        echo "VERSION_NAME=${{ github.ref }}" >> local.properties
+        echo "VERSION_NAME=${{ github.ref_name }}" >> local.properties
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
@@ -48,6 +48,4 @@ jobs:
         repo_token: ${{ secrets.GH_TOKEN }}
         file: app/build/outputs/apk/release/*.apk
         asset_name: ki2-release
-        tag: ${{ github.ref }}
-        overwrite: true
-        body: "Ki2 Release"
+        tag: ${{ github.ref_name }}
