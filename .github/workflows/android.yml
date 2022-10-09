@@ -40,6 +40,11 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew build
     
+    - name: List
+      run: |
+        ls
+        ls app/
+    
     - name: Upload artifacts
       uses: actions/upload-artifact@v3
       with:
