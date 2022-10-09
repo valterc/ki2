@@ -21,7 +21,7 @@ jobs:
         distribution: 'temurin'
         cache: gradle
 
-    - name: Inject secrets
+    - name: Inject variables and secrets
       env:
         ANDROID_RELEASE_KEY_BASE64: ${{ secrets.ANDROID_RELEASE_KEY_BASE64 }}
         ANDROID_RELEASE_KEY_ALIAS: ${{ secrets.ANDROID_RELEASE_KEY_ALIAS }}
@@ -34,6 +34,10 @@ jobs:
         echo "RELEASE_KEY_ALIAS=${ANDROID_RELEASE_KEY_ALIAS}" >> local.properties
         echo "RELEASE_KEY_PASSWORD=${ANDROID_RELEASE_KEY_PASSWORD}" >> local.properties
 
+    - name: Inject variables and secrets
+      run: |
+        ls app/build/outputs/apk/release/
+        
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
       
