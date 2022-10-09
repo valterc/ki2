@@ -42,8 +42,8 @@ jobs:
     
     - name: List
       run: |
-        echo "ls app/build/outputs/apk"
-        ls app/build/outputs/apk
+        echo "ls app/build/outputs/apk/release"
+        ls app/build/outputs/apk/release/
     
     - name: Upload artifacts
       uses: actions/upload-artifact@v3
