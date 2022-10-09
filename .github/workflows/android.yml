@@ -22,11 +22,26 @@ jobs:
         cache: gradle
 
     - name: Inject secrets
+      env:
+        ANDROID_RELEASE_KEY_BASE64: ${{ secrets.ANDROID_RELEASE_KEY_BASE64 }}
+        ANDROID_RELEASE_KEY_ALIAS: ${{ secrets.ANDROID_RELEASE_KEY_ALIAS }}
+        ANDROID_RELEASE_KEY_PASSWORD: ${{ secrets.ANDROID_RELEASE_KEY_PASSWORD }}
       run: |
         echo "<?xml version=\"1.0\" encoding=\"utf-8\"?><resources><string name=\"network_key\">${{ secrets.S_NETWORK_KEY }}</string></resources>" > app/src/main/res/values/secrets.xml
+        echo ${ANDROID_RELEASE_KEY_BASE64} | base64 -d > app/release-application-key
+        echo "RELEASE_STORE_FILE=app/release-application-key" >> app/local.properties
+        echo "RELEASE_STORE_PASSWORD=${ANDROID_REALSE_KEY_PASSWORD}" >> app/local.properties
+        echo "RELEASE_KEY_ALIAS=${ANDROID_RELEASE_KEY_ALIAS}" >> app/local.properties
+        echo "RELEASE_KEY_PASSWORD=${ANDROID_RELEASE_KEY_PASSWORD}" >> app/local.properties
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
       
     - name: Build with Gradle
       run: ./gradlew build
+    
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: outputs
+        path: /app/build/outputs/
