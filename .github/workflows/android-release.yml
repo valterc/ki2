@@ -20,7 +20,7 @@ jobs:
         distribution: 'temurin'
         cache: gradle
 
-    - name: Inject secrets
+    - name: Inject variables and secrets
       env:
         ANDROID_RELEASE_KEY_BASE64: ${{ secrets.ANDROID_RELEASE_KEY_BASE64 }}
         ANDROID_RELEASE_KEY_ALIAS: ${{ secrets.ANDROID_RELEASE_KEY_ALIAS }}
@@ -46,6 +46,7 @@ jobs:
       with:
         repo_name: valterc/ki2
         repo_token: ${{ secrets.GH_TOKEN }}
-        file: app/build/outputs/apk/release/ki2-${{ github.ref_name }}.apk
-        asset_name: ki2-${{ github.ref_name }}.apk
+        file: app/build/outputs/apk/release/ki2-${{ github.ref_name }}-release.apk
+        asset_name: ki2-${{ github.ref_name }}-release.apk
         tag: ${{ github.ref }}
+        overwrite: true
