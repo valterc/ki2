@@ -2,6 +2,16 @@ plugins {
     id 'com.android.application'
 }
 
+private def loadLocalProperties() {
+    Properties properties = new Properties()
+    def localPropertiesFile = project.rootProject.file('local.properties');
+    if(!localPropertiesFile.exists()){
+        localPropertiesFile.createNewFile();
+    }
+    properties.load(localPropertiesFile.newDataInputStream())
+    return properties
+}
+
 def properties = loadLocalProperties();
 
 android {
