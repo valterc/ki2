@@ -46,6 +46,6 @@ jobs:
       with:
         repo_name: valterc/ki2
         repo_token: ${{ secrets.GH_TOKEN }}
-        file: app/build/outputs/apk/release/*
+        file: app/build/outputs/apk/release/*.apk
         asset_name: ki2-release
         tag: ${{ github.ref }}
