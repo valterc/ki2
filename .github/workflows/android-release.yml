@@ -1,0 +1,53 @@
+name: Android CI
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up JDK 11
+      uses: actions/setup-java@v3
+      with:
+        java-version: '11'
+        distribution: 'temurin'
+        cache: gradle
+
+    - name: Inject secrets
+      env:
+        ANDROID_RELEASE_KEY_BASE64: ${{ secrets.ANDROID_RELEASE_KEY_BASE64 }}
+        ANDROID_RELEASE_KEY_ALIAS: ${{ secrets.ANDROID_RELEASE_KEY_ALIAS }}
+        ANDROID_RELEASE_KEY_PASSWORD: ${{ secrets.ANDROID_RELEASE_KEY_PASSWORD }}
+      run: |
+        echo "<?xml version=\"1.0\" encoding=\"utf-8\"?><resources><string name=\"network_key\">${{ secrets.S_NETWORK_KEY }}</string></resources>" > app/src/main/res/values/secrets.xml
+        echo ${ANDROID_RELEASE_KEY_BASE64} | base64 -d > app/release-application-key
+        echo "RELEASE_STORE_FILE=release-application-key" >> local.properties
+        echo "RELEASE_STORE_PASSWORD=${ANDROID_RELEASE_KEY_PASSWORD}" >> local.properties
+        echo "RELEASE_KEY_ALIAS=${ANDROID_RELEASE_KEY_ALIAS}" >> local.properties
+        echo "RELEASE_KEY_PASSWORD=${ANDROID_RELEASE_KEY_PASSWORD}" >> local.properties
+        echo "VERSION_CODE=${{ github.run_number }}" >> local.properties
+        echo "VERSION_NAME=${{ github.ref }}" >> local.properties
+
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+      
+    - name: Build with Gradle
+      run: ./gradlew build
+        
+    - name: Upload binaries to release
+      uses: svenstaro/upload-release-action@v2
+      with:
+        repo_name: valterc/ki2
+        repo_token: ${{ secrets.GH_TOKEN }}
+        file: app/build/outputs/apk/release/*.apk
+        asset_name: ki2-release
+        tag: ${{ github.ref }}
+        overwrite: true
+        body: "Ki2 Release"

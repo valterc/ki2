@@ -32,8 +32,10 @@ android {
         applicationId "com.valterc.ki2"
         minSdk 26
         targetSdk 32
-        versionCode 1
-        versionName "1.0"
+		
+        versionCode properties.getProperty("VERSION_CODE", "1")
+        versionName properties.getProperty("VERSION_NAME", "0.1")
+		
         archivesBaseName = "ki2-$versionName"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
