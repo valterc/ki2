@@ -34,12 +34,12 @@ jobs:
         echo "RELEASE_KEY_ALIAS=${ANDROID_RELEASE_KEY_ALIAS}" >> local.properties
         echo "RELEASE_KEY_PASSWORD=${ANDROID_RELEASE_KEY_PASSWORD}" >> local.properties
 
-    - name: Inject variables and secrets
-      run: |
-        ls app/build/outputs/apk/release/
-        
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
       
     - name: Build with Gradle
       run: ./gradlew build
+
+    - name: Inject variables and secrets
+      run: |
+        ls app/build/outputs/apk/release/
