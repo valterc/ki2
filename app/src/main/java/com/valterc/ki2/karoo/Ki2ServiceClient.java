@@ -213,6 +213,7 @@ public class Ki2ServiceClient {
         handler.post(() -> {
             shiftingInfoListeners.put(shiftingInfoConsumer, null);
             maybeStartShiftingEvents();
+            maybeStartSwitchKeyEvents();
         });
     }
 
