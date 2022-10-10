@@ -1,12 +1,8 @@
 # Ki2
 
-_**Note**: Please review the License and Notices._
-
 Ki2 is an _app_/_addon_/_plugin_ for Hammerhead Karoo 2 devices. It is a companion app for electronic shifting groupsets produced by a Japanese company.
 
 ## Screenshots
-
-_Screenshots slightly edited_
 
 ![Ki2 main application](images/image_0.png?raw=true "Ki2 main application")
 ![Ki2 settings](images/image_1.png?raw=true "Ki2 settings")
@@ -15,6 +11,8 @@ _Screenshots slightly edited_
 ![Edit Karoo profile with Ki2 items](images/image_4.png?raw=true "Edit Karoo profile with Ki2 items")
 ![Ride profile with Ki2 widgets](images/image_5.png?raw=true "Ride profile with Ki2 widgets")
 ![Ride profile with Ki2 widgets](images/image_6.png?raw=true "Ride profile with Ki2 widgets")
+
+These screenshots have been _slightly_ edited.
 
 ## How it works?
 
@@ -142,3 +140,7 @@ No! I don't work for hammerhead and I don't have access to their code. I'm just 
 ### It does not work or I have a problem
 
 Please open an issue in this github repository. Explain the problem and explain what you are trying to achieve. Keep in mind that there is no official support for this project.
+
+## License and notices
+
+Please review the LICENSE.txt and NOTICES.txt files.
