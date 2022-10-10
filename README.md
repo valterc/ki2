@@ -80,18 +80,18 @@ This is a limitation of the Karoo SDK and a restriction of Android. Unfortunatel
 
 While the implementation is fairly tidy and optimized, this app will be yet another process running on the Karoo. This means that there is _some_ battery impact. I did some non-scientific testing.
 
-| Setup  |
-|-----|
+| Setup                                                |
+| -----                                                |
 | Karoo 2 (Early 2021) Software Version: 1.297.1231.12 |
-| Garmin HR |
-| Varia Radar + Light |
-| Built-in GPS |
-| Audio alerts on (navigation + radar) |
+| Garmin HR                                            |
+| Varia Radar + Light                                  |
+| Built-in GPS                                         |
+| Audio alerts on (navigation + radar)                 |
 
-| Setup | Distance | Ride Time | Recorded Ascent | Avg Speed | Avg Temperature | Total Shifts | Battery Usage |
-|-----|-----|-----|-----|-----|-----|-----|-----|-----|
-| Karoo 2 with original widgets | 52.6km | 2:06:03 | 592m | 25.1kmh | 25C | 410 | **18%**<br> **8.5% / hour**<br> (Start: 98% - End: 80%) |
-| Karoo 2 + Ki2 | 52.6km | 1:58:21 | 585m | 26.7kmh | 21C | 368 |  **15%**<br> **7.5% / hour**<br> (Start: 97% - End: 82%) |
+| Setup                         | Distance | Ride Time | Recorded Ascent | Avg Speed | Avg Temperature | Total Shifts | Battery Usage                                           |
+| -----                         | -----    | -----     | -----           | -----     | -----           | -----        | -----                                                   |
+| Karoo 2 with original widgets | 52.6km   | 2:06:03   | 592m            | 25.1kmh   | 25C             | 410          | **18%**<br> **8.5% / hour**<br> (Start: 98% - End: 80%) |
+| Karoo 2 + Ki2                 | 52.6km   | 1:58:21   | 585m            | 26.7kmh   | 21C             | 368          | **15%**<br> **7.5% / hour**<br> (Start: 97% - End: 82%) |
 
 Tested in the same route in different days. Similar profile in Karoo with the original shifting widgets and then the equivalent ones from Ki2.
 
