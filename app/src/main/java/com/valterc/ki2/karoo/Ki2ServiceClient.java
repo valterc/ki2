@@ -1,8 +1,7 @@
 package com.valterc.ki2.karoo;
 
+import android.annotation.SuppressLint;
 import android.app.ActivityManager;
-import android.app.Instrumentation;
-import android.app.UiAutomation;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.ServiceConnection;
@@ -11,7 +10,6 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.os.RemoteException;
 import android.util.Log;
-import android.view.inputmethod.BaseInputConnection;
 import android.widget.Toast;
 
 import com.valterc.ki2.data.connection.ConnectionInfo;
@@ -32,6 +30,7 @@ import java.util.function.Consumer;
 
 import io.hammerhead.sdk.v0.SdkContext;
 
+@SuppressLint("LogNotTimber")
 public class Ki2ServiceClient {
 
     private final ServiceConnection serviceConnection = new ServiceConnection() {
@@ -102,20 +101,18 @@ public class Ki2ServiceClient {
 
     private final ISwitchKeyCallback switchKeyCallback = new ISwitchKeyCallback.Stub() {
         @Override
-        public void onSwitchKeyEvent(DeviceId deviceId, SwitchKeyEvent switchKeyEvent) throws RemoteException {
+        public void onSwitchKeyEvent(DeviceId deviceId, SwitchKeyEvent switchKeyEvent) {
             handler.post(() -> {
                 try {
-                    Log.w("KI2", "Switch event: " + switchKeyEvent.getKey() + " " + switchKeyEvent.getCommand() + " " + isForeground());
-                    Toast.makeText(context, switchKeyEvent.getKey() + " " + switchKeyEvent.getCommand()+ " " + isForeground(), Toast.LENGTH_SHORT).show();
                     inputAdapter.executeKeyEvent(switchKeyEvent);
                 } catch (Exception e) {
-                    Log.e("KI2", e.toString());
+                    Log.e("KI2", "Error during callback", e);
                 }
+                maybeStopSwitchKeyEvents();
             });
         }
     };
 
-    private final Context context;
     private final InputAdapter inputAdapter;
     private final Handler handler;
     private final WeakHashMap<Consumer<ConnectionInfo>, Boolean> connectionInfoListeners;
@@ -124,19 +121,12 @@ public class Ki2ServiceClient {
     private IKi2Service service;
 
     public Ki2ServiceClient(SdkContext context) {
-        this.context = context;
         inputAdapter = new InputAdapter(context);
         connectionInfoListeners = new WeakHashMap<>();
         batteryInfoListeners = new WeakHashMap<>();
         shiftingInfoListeners = new WeakHashMap<>();
         handler = new Handler(Looper.getMainLooper());
         context.bindService(Ki2Service.getIntent(), serviceConnection, Context.BIND_AUTO_CREATE);
-    }
-
-    private boolean isForeground() {
-        ActivityManager.RunningAppProcessInfo appProcessInfo = new ActivityManager.RunningAppProcessInfo();
-        ActivityManager.getMyMemoryState(appProcessInfo);
-        return (appProcessInfo.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND || appProcessInfo.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_VISIBLE);
     }
 
     public void registerConnectionInfoListener(Consumer<ConnectionInfo> connectionInfoConsumer) {
@@ -273,6 +263,24 @@ public class Ki2ServiceClient {
             service.registerSwitchKeyListener(switchKeyCallback);
         } catch (RemoteException e) {
             Log.e("KI2", "Unable to register listener", e);
+        }
+    }
+
+    private void maybeStopSwitchKeyEvents() {
+        if (service == null) {
+            return;
+        }
+
+        if (shiftingInfoListeners.size() != 0 ||
+                connectionInfoListeners.size() != 0 ||
+                batteryInfoListeners.size() != 0) {
+            return;
+        }
+
+        try {
+            service.unregisterSwitchKeyListener(switchKeyCallback);
+        } catch (RemoteException e) {
+            Log.e("KI2", "Unable to unregister listener", e);
         }
     }
 

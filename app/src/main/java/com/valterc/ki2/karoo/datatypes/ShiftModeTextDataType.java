@@ -50,7 +50,6 @@ public class ShiftModeTextDataType extends Ki2DataType {
         return TYPE_ID;
     }
 
-
     @Nullable
     @Override
     public List<Drawable> displayIcons() {

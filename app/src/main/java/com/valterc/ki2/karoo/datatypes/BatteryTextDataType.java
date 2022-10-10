@@ -1,6 +1,5 @@
 package com.valterc.ki2.karoo.datatypes;
 
-import android.content.Context;
 import android.graphics.drawable.Drawable;
 
 import androidx.annotation.NonNull;
@@ -11,7 +10,6 @@ import com.valterc.ki2.R;
 import com.valterc.ki2.karoo.Ki2Context;
 import com.valterc.ki2.karoo.formatters.BatteryTextFormatter;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -51,7 +49,6 @@ public class BatteryTextDataType extends Ki2DataType {
     public String getTypeId() {
         return TYPE_ID;
     }
-
 
     @Nullable
     @Override
