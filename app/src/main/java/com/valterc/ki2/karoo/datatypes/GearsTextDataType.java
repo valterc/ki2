@@ -35,7 +35,7 @@ public class GearsTextDataType extends Ki2DataType {
     @NonNull
     @Override
     public String getDescription() {
-        return "Shifting gears in format FF-RR (FF Front, RR Rear), example: 01-05 for gear 1 in front and gear 5 in rear.";
+        return "Shifting gears in format FF-RR (FF Front, RR Rear), example: 01-05.";
     }
 
     @NonNull
@@ -49,7 +49,6 @@ public class GearsTextDataType extends Ki2DataType {
     public String getTypeId() {
         return TYPE_ID;
     }
-
 
     @Nullable
     @Override

@@ -54,7 +54,8 @@ public class Ki2Module extends Module {
     @NonNull
     @Override
     protected List<SdkDataType> provideDataTypes() {
-        return Arrays.asList(new BatteryTextDataType(ki2Context),
+        return Arrays.asList(
+                new BatteryTextDataType(ki2Context),
                 new GearsTextDataType(ki2Context),
                 new ShiftModeTextDataType(ki2Context),
                 new ShiftCountTextDataType(ki2Context),
