@@ -119,20 +119,26 @@ Features might be added but there is no development plan.
 
 ## FAQ
 
-**This does not do __!?**
+### This does not do __!?
+
 While I tried to replicate the original Karoo feature set, there are several limitations in the Karoo SDK and the way Android development works. Not every feature could be faithfully replicated.
 
-**Can you add feature __?**
+### Can you add feature __?
+
 Maybe, it might or might not be possible. As previously stated there are plenty of restrictions with Karoo SDK. Open an issue and I might consider but without any promises.
 
-**I tried cloning the repo but the build fails on my machine**
+### I tried cloning the repo but the build fails on my machine
+
 Yes, this is by design. There is a particular file missing from this repo and unfortunately I cannot add it here. It is however available on public locations or through official ways.
 
-**I thought it used a proprietary ANT profile**
-All information was available publicly on the internet.
+### I thought it used a proprietary ANT profile
 
-**The UI looks similar to other Karoo applications, do you work for Hammerhead or have access to their code?**
-No! I don't work for hammerhead and I don't have access to their code. I'm just a programmer with a dusty experience in Android development and an eye for UI. I tried to replicate the Karoo interface (look and feel, colors, etc.) to make the app fit in.
+All information is publicly available on the internet.
 
-**It does not work or I have a problem**
+### The UI looks similar to other Karoo applications, do you work for Hammerhead or have access to their code?
+
+No! I don't work for hammerhead and I don't have access to their code. I'm just a programmer with a dusty experience in Android development and an eye for UI. I tried to replicate the Karoo interface (look and feel, colors, etc.) to make the app fit in. You can find the [Karoo SDK with design guidelines here](https://github.com/hammerheadnav/karoo-sdk).
+
+### It does not work or I have a problem
+
 Please open an issue in this github repository. Explain the problem and explain what you are trying to achieve. Keep in mind that there is no official support for this project.
