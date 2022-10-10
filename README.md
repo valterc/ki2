@@ -1,8 +1,20 @@
 # Ki2
 
-_**Notice**: This application is hereby available as a demonstration of technology / proof of concept and cannot in any terms be sold or offered for sale. Please refer to copyright notice._
+_**Note**: Please review the License and Notices._
 
 Ki2 is an _app_/_addon_/_plugin_ for Hammerhead Karoo 2 devices. It is a companion app for electronic shifting groupsets produced by a Japanese company.
+
+## Screenshots
+
+_Screenshots slightly edited_
+
+![Ki2 main application](images/image_0.png?raw=true "Ki2 main application")
+![Ki2 settings](images/image_1.png?raw=true "Ki2 settings")
+![Connection to device](images/image_2.png?raw=true "Connection to device")
+![Gears information](images/image_3.png?raw=true "Gears information")
+![Edit Karoo profile with Ki2 items](images/image_4.png?raw=true "Edit Karoo profile with Ki2 items")
+![Ride profile with Ki2 widgets](images/image_5.png?raw=true "Ride profile with Ki2 widgets")
+![Ride profile with Ki2 widgets](images/image_6.png?raw=true "Ride profile with Ki2 widgets")
 
 ## How it works?
 
@@ -32,7 +44,25 @@ This app utilizes the Android environment along with the ANT service and the Kar
 
 ## How can I try this app?
 
-
+1. Check and download the _APK_ file on the latest release found on the right side of the GitHub page.
+2. Install the APK file on your Karoo:
+    - (Recommended) [Follow this guide from DC Rainmaker](https://www.dcrainmaker.com/2021/02/how-to-sideload-android-apps-on-your-hammerhead-karoo-1-karoo-2.html)
+   1. Activate Karoo developer options:
+      - Open Settings > About
+      - Tap the Build Number several times until a message appears saying that "You are now a Developer!"
+   2. Go to Settings > Developer Options
+      - Make sure Developer Options is ON
+      - Enable USB Debugging
+   3. Download [Android Developer Tools](https://developer.android.com/studio/releases/platform-tools), extract to a directory after download
+   4. Open a Terminal or Command Prompt in the directory of the Android tools
+   5. Execute `adb.exe devices` (`.\adb.exe devices`)
+   6. If a prompt appears on the Karoo to authorize the request, select _Always allow from this computer_ and press _accept_.
+   7. The output from the adb command should show your Karoo device
+   8. Install the APK with the following command: `adb.exe install "APK-FILE-PATH"` (`.\adb.exe install "APK-FILE-PATH"`)
+        - Make sure to replace the `APK-FILE-PATH` with the disk location of the APK file that was downloaded.
+3. The Ki2 app should appear in the app list below Sensors, Settings, etc.
+4. Open the Ki2 app to pair and configure a wireless shifting connection
+5. Change or Add Karoo profile using the Ki2 widgets just like you would configure Karoo profiles.
 
 ## Known issues
 
@@ -52,9 +82,10 @@ While the implementation is fairly tidy and optimized, this app will be yet anot
 
 | Setup  |
 |-----|
-| Karoo 2 (Early 2021) SW: 4.106.1-47e6ad8c63 |
+| Karoo 2 (Early 2021) Software Version: 1.297.1231.12 |
 | Garmin HR |
 | Varia Radar + Light |
+| Built-in GPS |
 | Audio alerts on (navigation + radar) |
 
 | Setup | Distance | Ride Time | Recorded Ascent | Avg Speed | Avg Temperature | Total Shifts | Battery Usage |
@@ -95,10 +126,13 @@ While I tried to replicate the original Karoo feature set, there are several lim
 Maybe, it might or might not be possible. As previously stated there are plenty of restrictions with Karoo SDK. Open an issue and I might consider but without any promises.
 
 **I tried cloning the repo but the build fails on my machine**
-Yes, this is by design. There is a particular file missing from this repo and unfortunately I cannot add it here. It is however available through official ways.
+Yes, this is by design. There is a particular file missing from this repo and unfortunately I cannot add it here. It is however available on public locations or through official ways.
+
+**I thought it used a proprietary ANT profile**
+All information was available publicly on the internet.
 
 **The UI looks similar to other Karoo applications, do you work for Hammerhead or have access to their code?**
 No! I don't work for hammerhead and I don't have access to their code. I'm just a programmer with a dusty experience in Android development and an eye for UI. I tried to replicate the Karoo interface (look and feel, colors, etc.) to make the app fit in.
 
-**This does not work for me or I have a problem**
-Please open an issue in this github repository. Explain the problem and what you are trying to achieve. Keep in mind that there is no official support for this project.
+**It does not work or I have a problem**
+Please open an issue in this github repository. Explain the problem and explain what you are trying to achieve. Keep in mind that there is no official support for this project.
