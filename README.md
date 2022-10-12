@@ -109,6 +109,10 @@ Is this useful for you? [Buy me a coffee](https://www.paypal.com/donate/?busines
 - Add support for more SDK data views, for example add smaller graphical data views.
 - Add support for reading/writing data streams, for example to provide shifting data to existing Karoo widgets. Virtual/SDK sensors?
 
+**Do you do UI/art?** Feel free to create/suggest a new icon for the app.
+
+Leave comments and suggestions.
+
 ## Support + Future development
 
 This project is actively maintained but without any guarantees. It might stop working or lose functionality in newer Karoo software versions.
