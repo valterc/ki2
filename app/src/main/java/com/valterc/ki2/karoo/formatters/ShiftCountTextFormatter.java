@@ -19,11 +19,11 @@ public class ShiftCountTextFormatter extends SdkFormatter {
     private final Consumer<ShiftingInfo> shiftingInfoConsumer = shiftingInfo -> {
         if (lastShiftingInfo == null){
             lastShiftingInfo = shiftingInfo;
+            return;
         }
 
-        if (lastShiftingInfo.getFrontGear() != shiftingInfo.getFrontGear() || lastShiftingInfo.getRearGear()!= shiftingInfo.getRearGear()){
-            shiftCount++;
-        }
+        shiftCount += Math.abs(lastShiftingInfo.getFrontGear() - shiftingInfo.getFrontGear());
+        shiftCount += Math.abs(lastShiftingInfo.getRearGear() - shiftingInfo.getRearGear());
 
         lastShiftingInfo = shiftingInfo;
     };
