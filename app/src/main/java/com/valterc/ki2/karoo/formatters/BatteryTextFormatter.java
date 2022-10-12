@@ -19,10 +19,12 @@ public class BatteryTextFormatter extends SdkFormatter {
 
     private final Consumer<BatteryInfo> batteryInfoConsumer = batteryInfo -> {
         batteryValue = batteryInfo.getValue();
+        batteryValueSet = true;
     };
 
     private ConnectionStatus connectionStatus;
     private int batteryValue;
+    private boolean batteryValueSet;
 
     public BatteryTextFormatter(Ki2Context ki2Context) {
         ki2Context.getServiceClient().registerConnectionInfoListener(connectionInfoConsumer);
@@ -33,7 +35,11 @@ public class BatteryTextFormatter extends SdkFormatter {
     @Override
     public String formatValue(double value) {
         if (connectionStatus != ConnectionStatus.ESTABLISHED) {
-            return "N/A";
+            return NumericTextFormatterConstants.NOT_AVAILABLE;
+        }
+
+        if (!batteryValueSet) {
+            return NumericTextFormatterConstants.WAITING_FOR_DATA;
         }
 
         return Integer.toString(batteryValue);

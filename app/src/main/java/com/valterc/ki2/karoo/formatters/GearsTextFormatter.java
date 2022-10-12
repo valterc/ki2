@@ -37,11 +37,11 @@ public class GearsTextFormatter extends SdkFormatter {
     @Override
     public String formatValue(double value) {
         if (connectionStatus != ConnectionStatus.ESTABLISHED) {
-            return "N/A";
+            return NumericTextFormatterConstants.NOT_AVAILABLE;
         }
 
         if (shiftingInfo == null) {
-            return "...";
+            return NumericTextFormatterConstants.WAITING_FOR_DATA;
         }
 
         return DECIMAL_FORMAT.format(shiftingInfo.getFrontGear()) + "-" + DECIMAL_FORMAT.format(shiftingInfo.getRearGear());
