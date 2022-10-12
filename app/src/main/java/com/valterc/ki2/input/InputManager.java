@@ -72,12 +72,18 @@ public class InputManager {
 
         if (karooCommand.first == null) {
             Pair<KarooKey, SwitchCommandType> newKarooCommand = getKarooCommand(switchEvent.getType(), karooCommand.second);
+
             if (newKarooCommand == null) {
                 Timber.w("Unable to retranslate command, original: {switch=%s, command=%s}, target: {switch=%s, command=%s}",
                         switchEvent.getType(),
                         switchEvent.getCommand().getCommandType(),
                         switchEvent.getType(),
                         karooCommand.second);
+                return null;
+            }
+
+            if (switchEvent.getCommand() == SwitchCommand.LONG_PRESS_UP && newKarooCommand.second != SwitchCommandType.HOLD){
+                // Avoid repeating key press on LONG_PRESS_UP
                 return null;
             }
 
@@ -113,9 +119,8 @@ public class InputManager {
             return null;
         }
 
-        KarooKey karooKey = karooCommand.first;
-
         if (karooCommand.second == SwitchCommandType.HOLD) {
+            // If the commandtype is HOLD then use the original command (LONG_PRESS_DOWN, LONG_PRESS_CONTINUE, LONG_PRESS_UP)
             return new SwitchKeyEvent(karooCommand.first, switchEvent.getCommand(), switchEvent.getRepeat());
         } else {
             return new SwitchKeyEvent(karooCommand.first, karooCommand.second.getCommand(), switchEvent.getRepeat());
