@@ -21,7 +21,7 @@ import io.hammerhead.sdk.v0.datatype.view.SdkView;
 
 public class ShiftModeTextDataType extends Ki2DataType {
 
-    private static final String TYPE_ID = "ki2-shiftmode-text";
+    private static final String TYPE_ID = "ki2::shiftmode-text";
 
     private final List<Drawable> drawables;
 

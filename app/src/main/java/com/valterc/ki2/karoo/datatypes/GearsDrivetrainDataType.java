@@ -24,7 +24,7 @@ import io.hammerhead.sdk.v0.datatype.view.SdkView;
 
 public class GearsDrivetrainDataType extends Ki2DataType {
 
-    private static final String TYPE_ID = "ki2-gears-drivetrain";
+    private static final String TYPE_ID = "ki2::gears-drivetrain";
 
     private final List<Drawable> drawables;
 
