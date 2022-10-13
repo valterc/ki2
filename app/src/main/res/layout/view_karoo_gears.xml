@@ -10,7 +10,8 @@
     <com.valterc.ki2.views.GearsView
         android:id="@+id/gearsview_karoo_gears"
         android:layout_width="match_parent"
-        android:layout_height="160dp"
+        android:layout_height="match_parent"
+        tools:layout_height="160dp"
         tools:layout_editor_absoluteX="0dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -18,7 +19,9 @@
         android:textColor="@color/white_100"
         app:textEnabled="true"
         android:textSize="25sp"
-        android:paddingBottom="20dp"/>
+        android:paddingBottom="20dp"
+        android:visibility="gone"
+        tools:visibility="visible"/>
 
     <TextView
         android:id="@+id/textview_karoo_gears_waiting_for_data"

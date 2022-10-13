@@ -17,6 +17,10 @@ public class ShiftCountTextFormatter extends SdkFormatter {
     private int shiftCount;
 
     private final Consumer<ShiftingInfo> shiftingInfoConsumer = shiftingInfo -> {
+        if (shiftingInfo == null) {
+            return;
+        }
+
         if (lastShiftingInfo == null){
             lastShiftingInfo = shiftingInfo;
             return;

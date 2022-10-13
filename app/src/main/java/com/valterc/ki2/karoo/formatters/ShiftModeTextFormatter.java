@@ -36,7 +36,7 @@ public class ShiftModeTextFormatter extends SdkFormatter {
             return NumericTextFormatterConstants.NOT_AVAILABLE;
         }
 
-        if (shiftingInfo == null) {
+        if (shiftingInfo == null || shiftingInfo.getShiftingMode() == null) {
             return NumericTextFormatterConstants.WAITING_FOR_DATA;
         }
 
