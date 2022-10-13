@@ -39,7 +39,3 @@ jobs:
       
     - name: Build with Gradle
       run: ./gradlew build
-
-    - name: Inject variables and secrets
-      run: |
-        ls app/build/outputs/apk/release/
