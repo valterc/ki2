@@ -21,7 +21,7 @@ import io.hammerhead.sdk.v0.datatype.view.SdkView;
 
 public class BatteryTextDataType extends Ki2DataType {
 
-    private static final String TYPE_ID = "ki2-battery-text";
+    private static final String TYPE_ID = "ki2::battery-text";
 
     private final List<Drawable> drawables;
 
