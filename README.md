@@ -14,7 +14,7 @@ Ki2 is an _app_/_addon_/_plugin_ for Hammerhead Karoo 2 devices. It is a compani
 
 These screenshots have been _slightly_ edited.
 
-## How it works?
+## How does it work?
 
 This app utilizes the Android environment along with the ANT service and the Karoo SDK. The app contains 3 main components:
 
@@ -62,6 +62,13 @@ This app utilizes the Android environment along with the ANT service and the Kar
 4. Open the Ki2 app to pair and configure a wireless shifting connection
 5. Change or Add Karoo profile using the Ki2 widgets just like you would configure Karoo profiles.
 
+### Supported Karoo software versions
+
+| Version                   | Supported |
+| -----                     | -----     |
+| 1.297.1231 (May 19, 2022) | ✅        |
+| 1.333.1345 (Oct 06, 2022) | ✅        |
+
 ## Known issues
 
 ### Ki2 widgets don't show up in the ride profile (when Karoo boots)
@@ -80,7 +87,7 @@ While the implementation is fairly tidy and optimized, this app will be yet anot
 
 | Setup                                                |
 | -----                                                |
-| Karoo 2 (Early 2021) Software Version: 1.297.1231.12 |
+| Karoo 2 (Early 2021) Software Version: 1.297.1231    |
 | Garmin HR                                            |
 | Varia Radar + Light                                  |
 | Built-in GPS                                         |
