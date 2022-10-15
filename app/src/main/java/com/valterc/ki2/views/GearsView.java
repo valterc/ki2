@@ -12,7 +12,6 @@ import android.graphics.Picture;
 import android.graphics.Rect;
 import android.graphics.Shader;
 import android.graphics.Typeface;
-import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.View;
@@ -35,6 +34,9 @@ public class GearsView extends View  {
     private static final String STRING_REAR_PREFIX = "";
     private static final String STRING_FRONT_PREFIX = "";
     private static final String STRING_GEAR_SEPARATOR = "/";
+
+    private int selectedGearColorTop;
+    private int selectedGearColorBottom;
 
     private final boolean initialized;
     private Paint unselectedGearPaint;
@@ -63,9 +65,9 @@ public class GearsView extends View  {
             setFrontGear(array.getInt(R.styleable.GearsView_frontGear, DEFAULT_FRONT_GEAR));
             setRearGear(array.getInt(R.styleable.GearsView_rearGear, DEFAULT_REAR_GEAR));
 
-            setTextEnabled(array.getBoolean(R.styleable.DrivetrainView_textEnabled, DEFAULT_TEXT_ENABLED));
+            setTextEnabled(array.getBoolean(R.styleable.GearsView_textEnabled, DEFAULT_TEXT_ENABLED));
 
-            int textSize = array.getDimensionPixelSize(R.styleable.DrivetrainView_android_textSize, -1);
+            int textSize = array.getDimensionPixelSize(R.styleable.GearsView_android_textSize, -1);
             if (textSize != -1) {
                 textPaint.setTextSize(textSize);
             } else {
@@ -74,13 +76,39 @@ public class GearsView extends View  {
                 setTextSize(sizeValue.data);
             }
 
-            int textColor = array.getColor(R.styleable.DrivetrainView_android_textColor, -1);
+            int textColor = array.getColor(R.styleable.GearsView_android_textColor, -1);
             if (textColor != -1) {
                 setTextColor(textColor);
             } else {
                 TypedValue colorValue = new TypedValue();
                 context.getTheme().resolveAttribute(android.R.attr.textColorPrimary, colorValue, true);
                 setTextColor(colorValue.data);
+            }
+
+            int selectedGearColor = array.getColor(R.styleable.GearsView_selectedGearColor, -1);
+            if (textColor != -1) {
+                setSelectedGearColor(selectedGearColor);
+            }
+
+            int selectedGearColorTop = array.getColor(R.styleable.GearsView_selectedGearColorTop, -1);
+            if (selectedGearColorTop != -1) {
+                setSelectedGearColorTop(selectedGearColorTop);
+            } else if (selectedGearColor == -1) {
+                setSelectedGearColorTop(context.getColor(R.color.hh_gears_active_red_top));
+            }
+
+            int selectedGearColorBottom = array.getColor(R.styleable.GearsView_selectedGearColorBottom, -1);
+            if (selectedGearColorBottom != -1) {
+                setSelectedGearColorBottom(selectedGearColorBottom);
+            } else if (selectedGearColor == -1) {
+                setSelectedGearColorBottom(context.getColor(R.color.hh_gears_active_red_bottom));
+            }
+
+            int unselectedGearBorderColor = array.getColor(R.styleable.GearsView_unselectedGearBorderColor, -1);
+            if (unselectedGearBorderColor != -1) {
+                setUnselectedGearBorderColor(unselectedGearBorderColor);
+            } else {
+                setUnselectedGearBorderColor(context.getColor(R.color.hh_gears_border_white));
             }
         } finally {
             array.recycle();
@@ -99,7 +127,6 @@ public class GearsView extends View  {
     private void initPaint(){
         unselectedGearPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         unselectedGearPaint.setStyle(Paint.Style.STROKE);
-        unselectedGearPaint.setColor(getContext().getColor(R.color.hh_gears_border));
         unselectedGearPaint.setStrokeWidth(2.0f);
 
         textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -115,14 +142,14 @@ public class GearsView extends View  {
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setStyle(Paint.Style.FILL_AND_STROKE);
         paint.setStrokeWidth(2f);
-        paint.setShader(new LinearGradient(0, y0, 0, y1, getContext().getColor(R.color.hh_gears_active_top), getContext().getColor(R.color.hh_gears_active_bottom), Shader.TileMode.CLAMP));
+        paint.setShader(new LinearGradient(0, y0, 0, y1, selectedGearColorTop, selectedGearColorBottom, Shader.TileMode.CLAMP));
         return paint;
     }
 
     private int measureTextHeight(float padding) {
         textPaint.setTypeface(Typeface.DEFAULT_BOLD);
         textPaint.getTextBounds(STRING_MEASURE, 0, STRING_MEASURE.length(), tempRect);
-        return (int) (tempRect.height() + padding);
+        return (int) (tempRect.height() + padding + 0.5);
     }
 
     private void drawPicture(){
@@ -405,6 +432,55 @@ public class GearsView extends View  {
 
     public void setTextEnabled(boolean textEnabled) {
         this.textEnabled = textEnabled;
+
+        if (initialized) {
+            invalidate();
+            requestLayout();
+        }
+    }
+
+    public int getSelectedGearColorTop() {
+        return selectedGearColorTop;
+    }
+
+    public void setSelectedGearColorTop(int selectedGearColorTop) {
+        this.selectedGearColorTop = selectedGearColorTop;
+
+        if (initialized) {
+            invalidate();
+            requestLayout();
+        }
+    }
+
+    public int getSelectedGearColorBottom() {
+        return selectedGearColorBottom;
+    }
+
+    public void setSelectedGearColorBottom(int selectedGearColorBottom) {
+        this.selectedGearColorBottom = selectedGearColorBottom;
+
+        if (initialized) {
+            invalidate();
+            requestLayout();
+        }
+    }
+
+    public void setSelectedGearColor(int selectedGearColor) {
+        this.selectedGearColorTop = selectedGearColor;
+        this.selectedGearColorBottom = selectedGearColor;
+
+        if (initialized) {
+            invalidate();
+            requestLayout();
+        }
+    }
+
+    public int getUnselectedGearBorderColor() {
+        return unselectedGearPaint.getColor();
+    }
+
+    public void setUnselectedGearBorderColor(int gearBorderColor) {
+        this.unselectedGearPaint.setColor(gearBorderColor);
 
         if (initialized) {
             invalidate();

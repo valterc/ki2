@@ -17,9 +17,7 @@ import com.valterc.ki2.views.GearsView;
 
 import java.util.function.Consumer;
 
-import io.hammerhead.sdk.v0.datatype.view.SdkView;
-
-public class GearsSdkView extends SdkView {
+public class GearsSdkView extends Ki2SdkView {
 
     private final Consumer<ConnectionInfo> connectionInfoConsumer = connectionInfo -> {
         connectionStatus = connectionInfo.getConnectionStatus();
@@ -27,13 +25,17 @@ public class GearsSdkView extends SdkView {
 
     private final Consumer<ShiftingInfo> shiftingInfoConsumer = shiftingInfo -> {
         this.shiftingInfo = shiftingInfo;
+        updateGearsView();
     };
 
     private ConnectionStatus connectionStatus;
     private ShiftingInfo shiftingInfo;
 
+    private TextView textView;
+    private GearsView gearsView;
+
     public GearsSdkView(@NonNull Ki2Context context) {
-        super(context.getSdkContext());
+        super(context);
         context.getServiceClient().registerConnectionInfoListener(connectionInfoConsumer);
         context.getServiceClient().registerShiftingInfoListener(shiftingInfoConsumer);
     }
@@ -41,7 +43,19 @@ public class GearsSdkView extends SdkView {
     @NonNull
     @Override
     protected View createView(@NonNull LayoutInflater layoutInflater, @NonNull ViewGroup parent) {
-        return layoutInflater.inflate(R.layout.view_karoo_gears, parent, false);
+        View inflatedView = layoutInflater.inflate(R.layout.view_karoo_gears, parent, false);
+        textView = inflatedView.findViewById(R.id.textview_karoo_gears_waiting_for_data);
+        gearsView = inflatedView.findViewById(R.id.gearsview_karoo_gears);
+
+        KarooTheme karooTheme = getKarooTheme(parent);
+
+        if (karooTheme == KarooTheme.WHITE) {
+            textView.setTextColor(getContext().getColor(R.color.hh_black));
+            gearsView.setTextColor(getContext().getColor(R.color.hh_black));
+            gearsView.setUnselectedGearBorderColor(getContext().getColor(R.color.hh_gears_border_dark));
+        }
+
+        return inflatedView;
     }
 
     @Override
@@ -50,21 +64,25 @@ public class GearsSdkView extends SdkView {
 
     @Override
     public void onUpdate(@NonNull View view, double value, @Nullable String formattedValue) {
-        TextView textView =  view.findViewById(R.id.textview_karoo_gears_waiting_for_data);
-        GearsView gearsView =  view.findViewById(R.id.gearsview_karoo_gears);
-
         if (connectionStatus != ConnectionStatus.ESTABLISHED || shiftingInfo == null) {
             gearsView.setVisibility(View.INVISIBLE);
             textView.setVisibility(View.VISIBLE);
-            textView.setTextColor(getContext().getColor(R.color.hh_red));
         } else {
             textView.setVisibility(View.INVISIBLE);
             gearsView.setVisibility(View.VISIBLE);
-
-            gearsView.setRearGearMax(shiftingInfo.getRearGearMax());
-            gearsView.setFrontGearMax(shiftingInfo.getFrontGearMax());
-            gearsView.setRearGear(shiftingInfo.getRearGear());
-            gearsView.setFrontGear(shiftingInfo.getFrontGear());
+            updateGearsView();
         }
+    }
+
+    private void updateGearsView() {
+        if (gearsView == null || shiftingInfo == null) {
+            return;
+        }
+
+        gearsView.setGears(
+                shiftingInfo.getFrontGearMax(),
+                shiftingInfo.getFrontGear(),
+                shiftingInfo.getRearGearMax(),
+                shiftingInfo.getRearGear());
     }
 }

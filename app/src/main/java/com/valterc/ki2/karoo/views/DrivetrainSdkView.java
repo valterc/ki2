@@ -17,9 +17,7 @@ import com.valterc.ki2.views.DrivetrainView;
 
 import java.util.function.Consumer;
 
-import io.hammerhead.sdk.v0.datatype.view.SdkView;
-
-public class DrivetrainSdkView extends SdkView {
+public class DrivetrainSdkView extends Ki2SdkView {
 
     private final Consumer<ConnectionInfo> connectionInfoConsumer = connectionInfo -> {
         connectionStatus = connectionInfo.getConnectionStatus();
@@ -27,13 +25,17 @@ public class DrivetrainSdkView extends SdkView {
 
     private final Consumer<ShiftingInfo> shiftingInfoConsumer = shiftingInfo -> {
         this.shiftingInfo = shiftingInfo;
+        updateDrivetrainView();
     };
 
     private ConnectionStatus connectionStatus;
     private ShiftingInfo shiftingInfo;
 
+    private TextView textView;
+    private DrivetrainView drivetrainView;
+
     public DrivetrainSdkView(@NonNull Ki2Context context) {
-        super(context.getSdkContext());
+        super(context);
         context.getServiceClient().registerConnectionInfoListener(connectionInfoConsumer);
         context.getServiceClient().registerShiftingInfoListener(shiftingInfoConsumer);
     }
@@ -41,7 +43,19 @@ public class DrivetrainSdkView extends SdkView {
     @NonNull
     @Override
     protected View createView(@NonNull LayoutInflater layoutInflater, @NonNull ViewGroup parent) {
-        return layoutInflater.inflate(R.layout.view_karoo_drivetrain, parent, false);
+        View inflatedView = layoutInflater.inflate(R.layout.view_karoo_drivetrain, parent, false);
+        textView = inflatedView.findViewById(R.id.textview_karoo_drivetrain_waiting_for_data);
+        drivetrainView = inflatedView.findViewById(R.id.drivetrainview_karoo_drivetrain);
+
+        KarooTheme karooTheme = getKarooTheme(parent);
+
+        if (karooTheme == KarooTheme.WHITE) {
+            textView.setTextColor(getContext().getColor(R.color.hh_black));
+            drivetrainView.setTextColor(getContext().getColor(R.color.hh_black));
+            drivetrainView.setChainColor(getContext().getColor(R.color.hh_black));
+        }
+
+        return inflatedView;
     }
 
     @Override
@@ -50,21 +64,25 @@ public class DrivetrainSdkView extends SdkView {
 
     @Override
     public void onUpdate(@NonNull View view, double value, @Nullable String formattedValue) {
-        TextView textView =  view.findViewById(R.id.textview_karoo_drivetrain_waiting_for_data);
-        DrivetrainView drivetrainView =  view.findViewById(R.id.drivetrainview_karoo_drivetrain);
-
         if (connectionStatus != ConnectionStatus.ESTABLISHED || shiftingInfo == null) {
             drivetrainView.setVisibility(View.INVISIBLE);
             textView.setVisibility(View.VISIBLE);
-            textView.setTextColor(getContext().getColor(R.color.hh_red));
         } else {
             textView.setVisibility(View.INVISIBLE);
             drivetrainView.setVisibility(View.VISIBLE);
-
-            drivetrainView.setRearGearMax(shiftingInfo.getRearGearMax());
-            drivetrainView.setFrontGearMax(shiftingInfo.getFrontGearMax());
-            drivetrainView.setRearGear(shiftingInfo.getRearGear());
-            drivetrainView.setFrontGear(shiftingInfo.getFrontGear());
+            updateDrivetrainView();
         }
+    }
+
+    private void updateDrivetrainView(){
+        if (drivetrainView == null || shiftingInfo == null) {
+            return;
+        }
+
+        drivetrainView.setGears(
+                shiftingInfo.getFrontGearMax(),
+                shiftingInfo.getFrontGear(),
+                shiftingInfo.getRearGearMax(),
+                shiftingInfo.getRearGear());
     }
 }
