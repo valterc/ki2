@@ -17,9 +17,7 @@ import com.valterc.ki2.views.DrivetrainView;
 
 import java.util.function.Consumer;
 
-import io.hammerhead.sdk.v0.datatype.view.SdkView;
-
-public class DrivetrainSdkView extends SdkView {
+public class DrivetrainSdkView extends Ki2SdkView {
 
     private final Consumer<ConnectionInfo> connectionInfoConsumer = connectionInfo -> {
         connectionStatus = connectionInfo.getConnectionStatus();
@@ -37,7 +35,7 @@ public class DrivetrainSdkView extends SdkView {
     private DrivetrainView drivetrainView;
 
     public DrivetrainSdkView(@NonNull Ki2Context context) {
-        super(context.getSdkContext());
+        super(context);
         context.getServiceClient().registerConnectionInfoListener(connectionInfoConsumer);
         context.getServiceClient().registerShiftingInfoListener(shiftingInfoConsumer);
     }
@@ -48,6 +46,15 @@ public class DrivetrainSdkView extends SdkView {
         View inflatedView = layoutInflater.inflate(R.layout.view_karoo_drivetrain, parent, false);
         textView = inflatedView.findViewById(R.id.textview_karoo_drivetrain_waiting_for_data);
         drivetrainView = inflatedView.findViewById(R.id.drivetrainview_karoo_drivetrain);
+
+        KarooTheme karooTheme = getKarooTheme(parent);
+
+        if (karooTheme == KarooTheme.WHITE) {
+            textView.setTextColor(getContext().getColor(R.color.hh_black));
+            drivetrainView.setTextColor(getContext().getColor(R.color.hh_black));
+            drivetrainView.setChainColor(getContext().getColor(R.color.hh_black));
+        }
+
         return inflatedView;
     }
 

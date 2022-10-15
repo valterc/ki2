@@ -188,7 +188,7 @@ public class DrivetrainView extends View {
     private int measureTextHeight(float padding) {
         textPaint.setTypeface(Typeface.DEFAULT_BOLD);
         textPaint.getTextBounds(STRING_MEASURE, 0, STRING_MEASURE.length(), tempRect);
-        return (int) (tempRect.height() + padding);
+        return (int) (tempRect.height() + padding + 0.5);
     }
 
     @Override
