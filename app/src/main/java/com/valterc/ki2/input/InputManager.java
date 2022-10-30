@@ -8,7 +8,6 @@ import androidx.annotation.Nullable;
 import androidx.preference.PreferenceManager;
 
 import com.valterc.ki2.R;
-import com.valterc.ki2.data.command.CommandType;
 import com.valterc.ki2.data.switches.SwitchCommand;
 import com.valterc.ki2.data.switches.SwitchCommandType;
 import com.valterc.ki2.data.switches.SwitchEvent;
@@ -18,40 +17,57 @@ import com.valterc.ki2.karoo.input.KarooKey;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
 import timber.log.Timber;
 
 public class InputManager {
 
     /**
-     * This map will translate a preference value to a Karoo key action.
-     * Special cases:
-     *   - When KarooKey is null: The manager will retranslate the event using the original Karoo key and the new command type.
+     * This map translates a preference value to function able to generate a Switch Key Event from the original switch event.
      */
-    private static final Map<String, Pair<KarooKey, SwitchCommandType>> stringValueMap = new HashMap<>();
+    private static final Map<String, BiFunction<SwitchEvent, Function<SwitchEvent, SwitchKeyEvent>,  SwitchKeyEvent>> preferenceToSwitchKeyMap = new HashMap<>();
 
     static {
-        stringValueMap.put("none", new Pair<>(KarooKey.NONE, SwitchCommandType.NONE));
-        stringValueMap.put("navigate_left", new Pair<>(KarooKey.LEFT, SwitchCommandType.SINGLE_PRESS));
-        stringValueMap.put("navigate_right", new Pair<>(KarooKey.RIGHT, SwitchCommandType.SINGLE_PRESS));
-        stringValueMap.put("pause_resume_confirm", new Pair<>(KarooKey.CONFIRM, SwitchCommandType.SINGLE_PRESS));
-        stringValueMap.put("lap_map_back", new Pair<>(KarooKey.BACK, SwitchCommandType.SINGLE_PRESS));
-        stringValueMap.put("lap", new Pair<>(KarooKey.BACK, SwitchCommandType.DOUBLE_PRESS));
-        stringValueMap.put("map_graph_zoom_out", new Pair<>(KarooKey.LEFT, SwitchCommandType.HOLD));
-        stringValueMap.put("map_graph_zoom_in", new Pair<>(KarooKey.RIGHT, SwitchCommandType.HOLD));
-        stringValueMap.put("repeat_single_press", new Pair<>(null, SwitchCommandType.SINGLE_PRESS));
+
+        /*
+         * Any switch event
+         */
+        preferenceToSwitchKeyMap.put("none", (switchEvent, converter) -> null);
+
+        /*
+         *   Single / Double press events
+         */
+        preferenceToSwitchKeyMap.put("navigate_left", (switchEvent, converter) -> new SwitchKeyEvent(KarooKey.LEFT, SwitchCommand.SINGLE_CLICK, switchEvent.getRepeat()));
+        preferenceToSwitchKeyMap.put("navigate_right", (switchEvent, converter) -> new SwitchKeyEvent(KarooKey.RIGHT, SwitchCommand.SINGLE_CLICK, switchEvent.getRepeat()));
+        preferenceToSwitchKeyMap.put("pause_resume_confirm", (switchEvent, converter) -> new SwitchKeyEvent(KarooKey.CONFIRM, SwitchCommand.SINGLE_CLICK, switchEvent.getRepeat()));
+        preferenceToSwitchKeyMap.put("lap_map_back", (switchEvent, converter) -> new SwitchKeyEvent(KarooKey.BACK, SwitchCommand.SINGLE_CLICK, switchEvent.getRepeat()));
+        preferenceToSwitchKeyMap.put("lap", (switchEvent, converter) -> new SwitchKeyEvent(KarooKey.BACK, SwitchCommand.DOUBLE_CLICK, switchEvent.getRepeat()));
+
+        /*
+         *   Hold events
+         */
+        preferenceToSwitchKeyMap.put("map_graph_zoom_out", (switchEvent, converter) -> new SwitchKeyEvent(KarooKey.LEFT, switchEvent.getCommand(), switchEvent.getRepeat()));
+        preferenceToSwitchKeyMap.put("map_graph_zoom_in", (switchEvent, converter) -> new SwitchKeyEvent(KarooKey.RIGHT, switchEvent.getCommand(), switchEvent.getRepeat()));
+        preferenceToSwitchKeyMap.put("repeat_single_press", (switchEvent, converter) -> {
+            if (switchEvent.getCommand() == SwitchCommand.LONG_PRESS_UP)
+            {
+                return null;
+            }
+
+            return converter.apply(new SwitchEvent(switchEvent.getType(), SwitchCommand.SINGLE_CLICK, switchEvent.getRepeat()));
+        });
     }
 
-    private final Context context;
     private final SharedPreferences preferences;
 
     /**
-     * This map with translate the physical switch (Left, Right) commands to a preference key.
+     * This map translates physical switch (Left, Right) commands to a preference key.
      */
     private final Map<Pair<SwitchType, SwitchCommandType>, String> preferenceMap;
 
     public InputManager(Context context) {
-        this.context = context;
         this.preferences = PreferenceManager.getDefaultSharedPreferences(context);
 
         this.preferenceMap = new HashMap<>();
@@ -63,39 +79,9 @@ public class InputManager {
         this.preferenceMap.put(new Pair<>(SwitchType.RIGHT, SwitchCommandType.HOLD), context.getString(R.string.preference_right_switch_hold));
     }
 
-    private SwitchKeyEvent convertSwitchToSwitchKey(SwitchEvent switchEvent) {
-
-        Pair<KarooKey, SwitchCommandType> karooCommand = getKarooCommand(switchEvent.getType(), switchEvent.getCommand().getCommandType());
-        if (karooCommand == null) {
-            return null;
-        }
-
-        if (karooCommand.first == null) {
-            Pair<KarooKey, SwitchCommandType> newKarooCommand = getKarooCommand(switchEvent.getType(), karooCommand.second);
-
-            if (newKarooCommand == null) {
-                Timber.w("Unable to retranslate command, original: {switch=%s, command=%s}, target: {switch=%s, command=%s}",
-                        switchEvent.getType(),
-                        switchEvent.getCommand().getCommandType(),
-                        switchEvent.getType(),
-                        karooCommand.second);
-                return null;
-            }
-
-            if (switchEvent.getCommand() == SwitchCommand.LONG_PRESS_UP && newKarooCommand.second != SwitchCommandType.HOLD){
-                // Avoid repeating key press on LONG_PRESS_UP
-                return null;
-            }
-
-            karooCommand = newKarooCommand;
-        }
-
-        return getSwitchKeyEvent(switchEvent, karooCommand);
-    }
-
     @Nullable
-    private Pair<KarooKey, SwitchCommandType> getKarooCommand(SwitchType switchType, SwitchCommandType commandType) {
-        String preferenceKey = preferenceMap.get(new Pair<>(switchType, commandType));
+    private SwitchKeyEvent getSwitchKeyEvent(SwitchEvent switchEvent) {
+        String preferenceKey = preferenceMap.get(new Pair<>(switchEvent.getType(), switchEvent.getCommand().getCommandType()));
         if (preferenceKey == null) {
             return null;
         }
@@ -105,34 +91,22 @@ public class InputManager {
             return null;
         }
 
-        Pair<KarooKey, SwitchCommandType> karooCommand = stringValueMap.get(preference);
-        if (karooCommand == null) {
-            Timber.w("Invalid karoo command from combination, switch: %s, command type: %s", switchType, commandType);
+        BiFunction<SwitchEvent, Function<SwitchEvent, SwitchKeyEvent>, SwitchKeyEvent> keyFunction = preferenceToSwitchKeyMap.get(preference);
+        if (keyFunction == null) {
+            Timber.w("Invalid karoo command from combination, switch: %s, command type: %s", switchEvent.getType(), switchEvent.getCommand().getCommandType());
             return null;
         }
 
-        return karooCommand;
+        return keyFunction.apply(switchEvent, this::getSwitchKeyEvent);
     }
 
-    private SwitchKeyEvent getSwitchKeyEvent(SwitchEvent switchEvent, Pair<KarooKey, SwitchCommandType> karooCommand) {
-        if (karooCommand.first == KarooKey.NONE || karooCommand.second == SwitchCommandType.NONE) {
-            return null;
-        }
-
-        if (karooCommand.second == SwitchCommandType.HOLD) {
-            // If the commandtype is HOLD then use the original command (LONG_PRESS_DOWN, LONG_PRESS_CONTINUE, LONG_PRESS_UP)
-            return new SwitchKeyEvent(karooCommand.first, switchEvent.getCommand(), switchEvent.getRepeat());
-        } else {
-            return new SwitchKeyEvent(karooCommand.first, karooCommand.second.getCommand(), switchEvent.getRepeat());
-        }
-    }
-
+    @Nullable
     public SwitchKeyEvent onSwitch(SwitchEvent switchEvent) {
         if (switchEvent == null) {
             return null;
         }
 
-        return convertSwitchToSwitchKey(switchEvent);
+        return getSwitchKeyEvent(switchEvent);
     }
 
 }
