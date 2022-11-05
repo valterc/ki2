@@ -1,9 +1,5 @@
 package com.valterc.ki2.karoo;
 
-import android.os.Handler;
-import android.os.Looper;
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -15,9 +11,6 @@ import com.valterc.ki2.karoo.datatypes.GearsGearsDataType;
 import com.valterc.ki2.karoo.datatypes.GearsTextDataType;
 import com.valterc.ki2.karoo.datatypes.ShiftCountTextDataType;
 import com.valterc.ki2.karoo.datatypes.ShiftModeTextDataType;
-import com.valterc.ki2.karoo.hooks.KarooActivityServiceNotificationControllerHook;
-import com.valterc.ki2.karoo.hooks.KarooAudioAlertHook;
-import com.valterc.ki2.karoo.notification.LowBatteryNotification;
 import com.valterc.ki2.karoo.service.Ki2ServiceClient;
 
 import java.util.Arrays;
