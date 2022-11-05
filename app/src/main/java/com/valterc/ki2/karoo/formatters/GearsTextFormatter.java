@@ -4,14 +4,12 @@ import androidx.annotation.NonNull;
 
 import com.valterc.ki2.data.connection.ConnectionInfo;
 import com.valterc.ki2.data.connection.ConnectionStatus;
-import com.valterc.ki2.data.device.BatteryInfo;
 import com.valterc.ki2.data.device.DeviceId;
 import com.valterc.ki2.data.shifting.ShiftingInfo;
 import com.valterc.ki2.karoo.Ki2Context;
 
 import java.text.DecimalFormat;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 import io.hammerhead.sdk.v0.datatype.formatter.SdkFormatter;
 
@@ -31,8 +29,8 @@ public class GearsTextFormatter extends SdkFormatter {
     private ShiftingInfo shiftingInfo;
 
     public GearsTextFormatter(Ki2Context ki2Context) {
-        ki2Context.getServiceClient().registerConnectionInfoListener(connectionInfoConsumer);
-        ki2Context.getServiceClient().registerShiftingInfoListener(shiftingInfoConsumer);
+        ki2Context.getServiceClient().registerConnectionInfoWeakListener(connectionInfoConsumer);
+        ki2Context.getServiceClient().registerShiftingInfoWeakListener(shiftingInfoConsumer);
     }
 
     @NonNull

@@ -17,7 +17,6 @@ import com.valterc.ki2.karoo.Ki2Context;
 import com.valterc.ki2.views.DrivetrainView;
 
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 public class DrivetrainSdkView extends Ki2SdkView {
 
@@ -38,8 +37,8 @@ public class DrivetrainSdkView extends Ki2SdkView {
 
     public DrivetrainSdkView(@NonNull Ki2Context context) {
         super(context);
-        context.getServiceClient().registerConnectionInfoListener(connectionInfoConsumer);
-        context.getServiceClient().registerShiftingInfoListener(shiftingInfoConsumer);
+        context.getServiceClient().registerConnectionInfoWeakListener(connectionInfoConsumer);
+        context.getServiceClient().registerShiftingInfoWeakListener(shiftingInfoConsumer);
     }
 
     @NonNull

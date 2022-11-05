@@ -9,7 +9,6 @@ import com.valterc.ki2.data.shifting.ShiftingInfo;
 import com.valterc.ki2.karoo.Ki2Context;
 
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 import io.hammerhead.sdk.v0.datatype.formatter.SdkFormatter;
 
@@ -27,8 +26,8 @@ public class ShiftModeTextFormatter extends SdkFormatter {
     private ShiftingInfo shiftingInfo;
 
     public ShiftModeTextFormatter(Ki2Context ki2Context) {
-        ki2Context.getServiceClient().registerConnectionInfoListener(connectionInfoConsumer);
-        ki2Context.getServiceClient().registerShiftingInfoListener(shiftingInfoConsumer);
+        ki2Context.getServiceClient().registerConnectionInfoWeakListener(connectionInfoConsumer);
+        ki2Context.getServiceClient().registerShiftingInfoWeakListener(shiftingInfoConsumer);
     }
 
     @NonNull

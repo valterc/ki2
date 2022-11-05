@@ -9,7 +9,6 @@ import com.valterc.ki2.data.device.DeviceId;
 import com.valterc.ki2.karoo.Ki2Context;
 
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 import io.hammerhead.sdk.v0.datatype.formatter.SdkFormatter;
 
@@ -29,8 +28,8 @@ public class BatteryTextFormatter extends SdkFormatter {
     private boolean batteryValueSet;
 
     public BatteryTextFormatter(Ki2Context ki2Context) {
-        ki2Context.getServiceClient().registerConnectionInfoListener(connectionInfoConsumer);
-        ki2Context.getServiceClient().registerBatteryInfoListener(batteryInfoConsumer);
+        ki2Context.getServiceClient().registerConnectionInfoWeakListener(connectionInfoConsumer);
+        ki2Context.getServiceClient().registerBatteryInfoWeakListener(batteryInfoConsumer);
     }
 
     @NonNull

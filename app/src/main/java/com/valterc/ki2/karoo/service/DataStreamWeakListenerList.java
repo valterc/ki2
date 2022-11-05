@@ -7,12 +7,12 @@ import java.util.WeakHashMap;
 import java.util.function.Consumer;
 
 @SuppressLint("LogNotTimber")
-public class DataStreamListenerList<TData> {
+public class DataStreamWeakListenerList<TData> {
 
     private final WeakHashMap<Consumer<TData>, Boolean> listeners;
     private TData lastData;
 
-    public DataStreamListenerList() {
+    public DataStreamWeakListenerList() {
         this.listeners = new WeakHashMap<>();
     }
 

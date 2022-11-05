@@ -34,7 +34,7 @@ public class Ki2Context {
         this.instanceManager = new InstanceManager();
         this.rideStatus = RideStatus.NEW;
 
-        serviceClient.registerMessageListener(messageConsumer);
+        serviceClient.registerMessageWeakListener(messageConsumer);
     }
 
     public SdkContext getSdkContext() {

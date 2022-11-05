@@ -7,13 +7,13 @@ import java.util.WeakHashMap;
 import java.util.function.BiConsumer;
 
 @SuppressLint("LogNotTimber")
-public class BiDataStreamListenerList<TData1, TData2> {
+public class BiDataStreamWeakListenerList<TData1, TData2> {
 
     private final WeakHashMap<BiConsumer<TData1, TData2>, Boolean> listeners;
     private TData1 lastData1;
     private TData2 lastData2;
 
-    public BiDataStreamListenerList() {
+    public BiDataStreamWeakListenerList() {
         this.listeners = new WeakHashMap<>();
     }
 

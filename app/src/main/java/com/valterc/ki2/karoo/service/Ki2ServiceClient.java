@@ -108,23 +108,23 @@ public class Ki2ServiceClient {
 
     private final InputAdapter inputAdapter;
     private final Handler handler;
-    private final BiDataStreamListenerList<DeviceId, ConnectionInfo> connectionInfoListeners;
-    private final BiDataStreamListenerList<DeviceId, BatteryInfo> batteryInfoListeners;
-    private final BiDataStreamListenerList<DeviceId, ShiftingInfo> shiftingInfoListeners;
-    private final DataStreamListenerList<Message> messageListeners;
+    private final BiDataStreamWeakListenerList<DeviceId, ConnectionInfo> connectionInfoListeners;
+    private final BiDataStreamWeakListenerList<DeviceId, BatteryInfo> batteryInfoListeners;
+    private final BiDataStreamWeakListenerList<DeviceId, ShiftingInfo> shiftingInfoListeners;
+    private final DataStreamWeakListenerList<Message> messageListeners;
     private IKi2Service service;
 
     public Ki2ServiceClient(SdkContext context) {
         inputAdapter = new InputAdapter(context);
-        connectionInfoListeners = new BiDataStreamListenerList<>();
-        batteryInfoListeners = new BiDataStreamListenerList<>();
-        shiftingInfoListeners = new BiDataStreamListenerList<>();
-        messageListeners = new DataStreamListenerList<>();
+        connectionInfoListeners = new BiDataStreamWeakListenerList<>();
+        batteryInfoListeners = new BiDataStreamWeakListenerList<>();
+        shiftingInfoListeners = new BiDataStreamWeakListenerList<>();
+        messageListeners = new DataStreamWeakListenerList<>();
         handler = new Handler(Looper.getMainLooper());
         context.bindService(Ki2Service.getIntent(), serviceConnection, Context.BIND_AUTO_CREATE);
     }
 
-    public void registerConnectionInfoListener(BiConsumer<DeviceId, ConnectionInfo> connectionInfoConsumer) {
+    public void registerConnectionInfoWeakListener(BiConsumer<DeviceId, ConnectionInfo> connectionInfoConsumer) {
         handler.post(() -> {
             connectionInfoListeners.addListener(connectionInfoConsumer);
             maybeStartConnectionEvents();
@@ -164,7 +164,7 @@ public class Ki2ServiceClient {
         }
     }
 
-    public void registerBatteryInfoListener(BiConsumer<DeviceId, BatteryInfo> batteryInfoConsumer) {
+    public void registerBatteryInfoWeakListener(BiConsumer<DeviceId, BatteryInfo> batteryInfoConsumer) {
         handler.post(() -> {
             batteryInfoListeners.addListener(batteryInfoConsumer);
             maybeStartBatteryEvents();
@@ -204,7 +204,7 @@ public class Ki2ServiceClient {
         }
     }
 
-    public void registerShiftingInfoListener(BiConsumer<DeviceId, ShiftingInfo> shiftingInfoConsumer) {
+    public void registerShiftingInfoWeakListener(BiConsumer<DeviceId, ShiftingInfo> shiftingInfoConsumer) {
         handler.post(() -> {
             shiftingInfoListeners.addListener(shiftingInfoConsumer);
             maybeStartShiftingEvents();
@@ -280,7 +280,7 @@ public class Ki2ServiceClient {
         }
     }
 
-    public void registerMessageListener(Consumer<Message> messageConsumer) {
+    public void registerMessageWeakListener(Consumer<Message> messageConsumer) {
         handler.post(() -> {
             messageListeners.addListener(messageConsumer);
             maybeStartMessageEvents();

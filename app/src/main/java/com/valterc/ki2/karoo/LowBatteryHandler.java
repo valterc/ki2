@@ -26,7 +26,7 @@ public class LowBatteryHandler {
 
     public LowBatteryHandler(Ki2Context context) {
         this.context = context;
-        context.getServiceClient().registerBatteryInfoListener(this::onBattery);
+        context.getServiceClient().registerBatteryInfoWeakListener(this::onBattery);
     }
 
     public void onPause() {
