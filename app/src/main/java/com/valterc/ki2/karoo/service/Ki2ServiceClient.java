@@ -1,6 +1,7 @@
 package com.valterc.ki2.karoo;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.Context;
@@ -15,6 +16,7 @@ import android.widget.Toast;
 import com.valterc.ki2.data.connection.ConnectionInfo;
 import com.valterc.ki2.data.device.BatteryInfo;
 import com.valterc.ki2.data.device.DeviceId;
+import com.valterc.ki2.data.message.Message;
 import com.valterc.ki2.data.shifting.ShiftingInfo;
 import com.valterc.ki2.data.switches.SwitchKeyEvent;
 import com.valterc.ki2.input.InputAdapter;
@@ -22,10 +24,14 @@ import com.valterc.ki2.services.IKi2Service;
 import com.valterc.ki2.services.Ki2Service;
 import com.valterc.ki2.services.callbacks.IBatteryCallback;
 import com.valterc.ki2.services.callbacks.IConnectionInfoCallback;
+import com.valterc.ki2.services.callbacks.IMessageCallback;
 import com.valterc.ki2.services.callbacks.IShiftingCallback;
 import com.valterc.ki2.services.callbacks.ISwitchKeyCallback;
 
+import java.lang.reflect.Field;
+import java.util.Map;
 import java.util.WeakHashMap;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import io.hammerhead.sdk.v0.SdkContext;
@@ -38,6 +44,7 @@ public class Ki2ServiceClient {
         public void onServiceConnected(ComponentName name, IBinder binder) {
             service = IKi2Service.Stub.asInterface(binder);
             handler.post(() -> {
+                maybeStartMessageEvents();
                 maybeStartSwitchKeyEvents();
                 maybeStartBatteryEvents();
                 maybeStartConnectionEvents();
@@ -57,7 +64,7 @@ public class Ki2ServiceClient {
             handler.post(() -> {
                 connectionInfoListeners.keySet().forEach(c -> {
                     try {
-                        c.accept(connectionInfo);
+                        c.accept(deviceId, connectionInfo);
                     } catch (Exception e) {
                         Log.e("KI2", "Error during callback", e);
                     }
@@ -73,7 +80,7 @@ public class Ki2ServiceClient {
             handler.post(() -> {
                 batteryInfoListeners.keySet().forEach(c -> {
                     try {
-                        c.accept(batteryInfo);
+                        c.accept(deviceId, batteryInfo);
                     } catch (Exception e) {
                         Log.e("KI2", "Error during callback", e);
                     }
@@ -89,7 +96,7 @@ public class Ki2ServiceClient {
             handler.post(() -> {
                 shiftingInfoListeners.keySet().forEach(c -> {
                     try {
-                        c.accept(shiftingInfo);
+                        c.accept(deviceId, shiftingInfo);
                     } catch (Exception e) {
                         Log.e("KI2", "Error during callback", e);
                     }
@@ -113,11 +120,28 @@ public class Ki2ServiceClient {
         }
     };
 
+    private final IMessageCallback messageCallback = new IMessageCallback.Stub() {
+        @Override
+        public void onMessage(Message message) {
+            handler.post(() -> {
+                messageListeners.keySet().forEach(c -> {
+                    try {
+                        c.accept(message);
+                    } catch (Exception e) {
+                        Log.e("KI2", "Error during callback", e);
+                    }
+                });
+                maybeStopMessageEvents();
+            });
+        }
+    };
+
     private final InputAdapter inputAdapter;
     private final Handler handler;
-    private final WeakHashMap<Consumer<ConnectionInfo>, Boolean> connectionInfoListeners;
-    private final WeakHashMap<Consumer<BatteryInfo>, Boolean> batteryInfoListeners;
-    private final WeakHashMap<Consumer<ShiftingInfo>, Boolean> shiftingInfoListeners;
+    private final WeakHashMap<BiConsumer<DeviceId, ConnectionInfo>, Boolean> connectionInfoListeners;
+    private final WeakHashMap<BiConsumer<DeviceId, BatteryInfo>, Boolean> batteryInfoListeners;
+    private final WeakHashMap<BiConsumer<DeviceId, ShiftingInfo>, Boolean> shiftingInfoListeners;
+    private final WeakHashMap<Consumer<Message>, Boolean> messageListeners;
     private IKi2Service service;
 
     public Ki2ServiceClient(SdkContext context) {
@@ -125,11 +149,12 @@ public class Ki2ServiceClient {
         connectionInfoListeners = new WeakHashMap<>();
         batteryInfoListeners = new WeakHashMap<>();
         shiftingInfoListeners = new WeakHashMap<>();
+        messageListeners = new WeakHashMap<>();
         handler = new Handler(Looper.getMainLooper());
         context.bindService(Ki2Service.getIntent(), serviceConnection, Context.BIND_AUTO_CREATE);
     }
 
-    public void registerConnectionInfoListener(Consumer<ConnectionInfo> connectionInfoConsumer) {
+    public void registerConnectionInfoListener(BiConsumer<DeviceId, ConnectionInfo> connectionInfoConsumer) {
         handler.post(() -> {
             connectionInfoListeners.put(connectionInfoConsumer, null);
             maybeStartConnectionEvents();
@@ -169,7 +194,7 @@ public class Ki2ServiceClient {
         }
     }
 
-    public void registerBatteryInfoListener(Consumer<BatteryInfo> batteryInfoConsumer) {
+    public void registerBatteryInfoListener(BiConsumer<DeviceId, BatteryInfo> batteryInfoConsumer) {
         handler.post(() -> {
             batteryInfoListeners.put(batteryInfoConsumer, null);
             maybeStartBatteryEvents();
@@ -209,7 +234,7 @@ public class Ki2ServiceClient {
         }
     }
 
-    public void registerShiftingInfoListener(Consumer<ShiftingInfo> shiftingInfoConsumer) {
+    public void registerShiftingInfoListener(BiConsumer<DeviceId, ShiftingInfo> shiftingInfoConsumer) {
         handler.post(() -> {
             shiftingInfoListeners.put(shiftingInfoConsumer, null);
             maybeStartShiftingEvents();
@@ -281,6 +306,57 @@ public class Ki2ServiceClient {
         try {
             service.unregisterSwitchKeyListener(switchKeyCallback);
         } catch (RemoteException e) {
+            Log.e("KI2", "Unable to unregister listener", e);
+        }
+    }
+
+    public void registerMessageListener(Consumer<Message> messageConsumer) {
+        handler.post(() -> {
+            messageListeners.put(messageConsumer, null);
+            maybeStartMessageEvents();
+        });
+    }
+
+    public void sendMessage(Message message) {
+        if (service == null) {
+            return;
+        }
+
+        try {
+            service.sendMessage(message);
+        } catch (RemoteException e) {
+            Log.e("KI2", "Unable to send message");
+        }
+    }
+
+    private void maybeStartMessageEvents(){
+        if (service == null) {
+            return;
+        }
+
+        if (messageListeners.size() == 0) {
+            return;
+        }
+
+        try {
+            service.registerMessageListener(messageCallback);
+        } catch (RemoteException e) {
+            Log.e("KI2", "Unable to register listener", e);
+        }
+    }
+
+    private void maybeStopMessageEvents() {
+        if (service == null) {
+            return;
+        }
+
+        if (messageListeners.size() != 0) {
+            return;
+        }
+
+        try {
+            service.unregisterMessageListener(messageCallback);
+        } catch (Exception e) {
             Log.e("KI2", "Unable to unregister listener", e);
         }
     }

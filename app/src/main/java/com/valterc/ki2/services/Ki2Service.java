@@ -1,6 +1,5 @@
 package com.valterc.ki2.services;
 
-import android.app.NotificationManager;
 import android.app.Service;
 import android.content.ComponentName;
 import android.content.Intent;
@@ -27,6 +26,8 @@ import com.valterc.ki2.data.device.DeviceId;
 import com.valterc.ki2.data.device.DeviceStore;
 import com.valterc.ki2.data.info.DataType;
 import com.valterc.ki2.data.info.ManufacturerInfo;
+import com.valterc.ki2.data.message.Message;
+import com.valterc.ki2.data.message.MessageManager;
 import com.valterc.ki2.data.shifting.ShiftingInfo;
 import com.valterc.ki2.data.switches.SwitchEvent;
 import com.valterc.ki2.data.switches.SwitchKeyEvent;
@@ -35,6 +36,7 @@ import com.valterc.ki2.services.callbacks.IBatteryCallback;
 import com.valterc.ki2.services.callbacks.IConnectionDataInfoCallback;
 import com.valterc.ki2.services.callbacks.IConnectionInfoCallback;
 import com.valterc.ki2.services.callbacks.IManufacturerInfoCallback;
+import com.valterc.ki2.services.callbacks.IMessageCallback;
 import com.valterc.ki2.services.callbacks.IScanCallback;
 import com.valterc.ki2.services.callbacks.IShiftingCallback;
 import com.valterc.ki2.services.callbacks.ISwitchCallback;
@@ -55,8 +57,8 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
      *
      * @return Intent configured to be used to bind to this service.
      */
-    public static Intent getIntent(){
-        Intent  serviceIntent = new Intent();
+    public static Intent getIntent() {
+        Intent serviceIntent = new Intent();
         serviceIntent.setComponent(new ComponentName("com.valterc.ki2", "com.valterc.ki2.services.Ki2Service"));
         return serviceIntent;
     }
@@ -77,18 +79,20 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
             = new RemoteCallbackList<>();
     private final RemoteCallbackList<IScanCallback> callbackListScan
             = new RemoteCallbackList<>();
+    private final RemoteCallbackList<IMessageCallback> callbackListMessage
+            = new RemoteCallbackList<>();
 
     private final IKi2Service.Stub binder = new IKi2Service.Stub() {
         @Override
         public void registerConnectionDataInfoListener(IConnectionDataInfoCallback callback) {
-            if (callback != null) {
-                callbackListConnectionDataInfo.register(callback);
+            if (callback == null) {
+                return;
             }
 
+            callbackListConnectionDataInfo.register(callback);
             serviceHandler.postAction(() -> {
                 for (ConnectionDataManager connectionDataManager : connectionsDataManager.getDataManagers()) {
                     try {
-                        assert callback != null;
                         callback.onConnectionDataInfo(
                                 connectionDataManager.getDeviceId(),
                                 connectionDataManager.buildConnectionDataInfo());
@@ -111,14 +115,14 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
 
         @Override
         public void registerConnectionInfoListener(IConnectionInfoCallback callback) {
-            if (callback != null) {
-                callbackListConnectionInfo.register(callback);
+            if (callback == null) {
+                return;
             }
 
+            callbackListConnectionInfo.register(callback);
             serviceHandler.postAction(() -> {
                 for (ConnectionDataManager connectionDataManager : connectionsDataManager.getDataManagers()) {
                     try {
-                        assert callback != null;
                         Timber.d("Sending connection info after register");
                         callback.onConnectionInfo(
                                 connectionDataManager.getDeviceId(),
@@ -142,16 +146,16 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
 
         @Override
         public void registerShiftingListener(IShiftingCallback callback) {
-            if (callback != null) {
-                callbackListShifting.register(callback);
+            if (callback == null) {
+                return;
             }
 
+            callbackListShifting.register(callback);
             serviceHandler.postAction(() -> {
                 for (ConnectionDataManager connectionDataManager : connectionsDataManager.getDataManagers()) {
                     try {
                         ShiftingInfo shiftingInfo = (ShiftingInfo) connectionDataManager.getData(DataType.SHIFTING);
                         if (shiftingInfo != null) {
-                            assert callback != null;
                             callback.onShifting(
                                     connectionDataManager.getDeviceId(),
                                     shiftingInfo);
@@ -175,17 +179,17 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
 
         @Override
         public void registerBatteryListener(IBatteryCallback callback) {
-            if (callback != null) {
-                callbackListBattery.register(callback);
+            if (callback == null) {
+                return;
             }
 
+            callbackListBattery.register(callback);
             serviceHandler.postAction(() -> {
                 for (ConnectionDataManager connectionDataManager : connectionsDataManager.getDataManagers()) {
                     try {
                         BatteryInfo batteryInfo = (BatteryInfo) connectionDataManager.getData(DataType.BATTERY);
                         if (batteryInfo != null) {
                             Timber.d("Sending battery value after register");
-                            assert callback != null;
                             callback.onBattery(
                                     connectionDataManager.getDeviceId(),
                                     batteryInfo);
@@ -210,16 +214,16 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
 
         @Override
         public void registerManufacturerInfoListener(IManufacturerInfoCallback callback) {
-            if (callback != null) {
-                callbackListManufacturerInfo.register(callback);
+            if (callback == null) {
+                return;
             }
 
+            callbackListManufacturerInfo.register(callback);
             serviceHandler.postAction(() -> {
                 for (ConnectionDataManager connectionDataManager : connectionsDataManager.getDataManagers()) {
                     try {
                         ManufacturerInfo manufacturerInfo = (ManufacturerInfo) connectionDataManager.getData(DataType.MANUFACTURER_INFO);
                         if (manufacturerInfo != null) {
-                            assert callback != null;
                             callback.onManufacturerInfo(
                                     connectionDataManager.getDeviceId(),
                                     manufacturerInfo);
@@ -296,7 +300,57 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
         }
 
         @Override
-        public void restartDeviceScan() throws RemoteException {
+        public void registerMessageListener(IMessageCallback callback) throws RemoteException {
+            if (callback == null) {
+                return;
+            }
+
+            callbackListMessage.register(callback);
+            serviceHandler.postAction(() -> {
+                for (Message message : messageManager.getMessages()) {
+                    try {
+                        callback.onMessage(message);
+                    } catch (RemoteException e) {
+                        break;
+                    }
+                }
+            });
+        }
+
+        @Override
+        public void unregisterMessageListener(IMessageCallback callback) {
+            if (callback != null) {
+                callbackListMessage.unregister(callback);
+            }
+        }
+
+        @Override
+        public void sendMessage(Message message) {
+            if (message == null) {
+                return;
+            }
+
+            messageManager.messageReceived(message);
+            serviceHandler.postRetriableAction(() -> broadcastData(callbackListMessage, () -> message, IMessageCallback::onMessage));
+        }
+
+        @Override
+        public void clearMessage(String key) {
+            messageManager.clearMessage(key);
+        }
+
+        @Override
+        public void clearMessages() {
+            messageManager.clearMessages();
+        }
+
+        @Override
+        public List<Message> getMessages() {
+            return messageManager.getMessages();
+        }
+
+        @Override
+        public void restartDeviceScan() {
             serviceHandler.postRetriableAction(() -> {
                 antScanner.stopScan();
                 processScan();
@@ -304,7 +358,7 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
         }
 
         @Override
-        public void restartDeviceConnections() throws RemoteException {
+        public void restartDeviceConnections() {
             serviceHandler.postRetriableAction(() -> {
                 antConnectionManager.disconnectAll();
                 connectionsDataManager.clearConnections();
@@ -347,7 +401,7 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
         }
     };
 
-    private NotificationManager notificationManager;
+    private MessageManager messageManager;
     private AntManager antManager;
     private AntScanner antScanner;
     private AntConnectionManager antConnectionManager;
@@ -363,7 +417,7 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
 
     @Override
     public void onCreate() {
-        notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        messageManager = new MessageManager();
         antManager = new AntManager(this, this);
         antScanner = new AntScanner(antManager, this);
         antConnectionManager = new AntConnectionManager(this, antManager);
@@ -421,7 +475,7 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
         sendCommandToDevice(deviceId, CommandType.SHIFTING_MODE, null);
     }
 
-    private void sendCommandToDevice(DeviceId deviceId, CommandType commandType, Object data) throws RemoteException {
+    private void sendCommandToDevice(DeviceId deviceId, CommandType commandType, Parcelable data) throws RemoteException {
         IAntDeviceConnection antDeviceConnection = antConnectionManager.getConnection(deviceId);
 
         if (antDeviceConnection == null) {

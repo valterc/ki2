@@ -9,8 +9,10 @@ import com.valterc.ki2.services.callbacks.IManufacturerInfoCallback;
 import com.valterc.ki2.services.callbacks.ISwitchKeyCallback;
 import com.valterc.ki2.services.callbacks.ISwitchCallback;
 import com.valterc.ki2.services.callbacks.IScanCallback;
+import com.valterc.ki2.services.callbacks.IMessageCallback;
 
 import com.valterc.ki2.data.device.DeviceId;
+import com.valterc.ki2.data.message.Message;
 
 interface IKi2Service {
 
@@ -37,6 +39,14 @@ interface IKi2Service {
 
     void registerScanListener(IScanCallback callback);
     void unregisterScanListener(IScanCallback callback);
+
+    void registerMessageListener(IMessageCallback callback);
+    void unregisterMessageListener(IMessageCallback callback);
+
+    void sendMessage(in Message message);
+    void clearMessage(String key);
+    void clearMessages();
+    List<Message> getMessages();
 
     void restartDeviceScan();
     void restartDeviceConnections();
