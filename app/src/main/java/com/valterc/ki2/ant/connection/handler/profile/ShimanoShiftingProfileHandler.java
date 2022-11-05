@@ -1,5 +1,7 @@
 package com.valterc.ki2.ant.connection.handler.profile;
 
+import android.os.Parcelable;
+
 import com.dsi.ant.message.MessageUtils;
 import com.dsi.ant.message.Rssi;
 import com.dsi.ant.message.fromant.AcknowledgedDataMessage;
@@ -348,7 +350,7 @@ public class ShimanoShiftingProfileHandler implements IDeviceProfileHandler {
     }
 
     @Override
-    public void sendCommand(CommandType commandType, Object data) {
+    public void sendCommand(CommandType commandType, Parcelable data) {
         switch (commandType) {
 
             case SHIFTING_MODE:

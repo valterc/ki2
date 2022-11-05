@@ -3,7 +3,7 @@ package com.valterc.ki2.karoo.datatypes;
 import androidx.annotation.NonNull;
 
 import com.valterc.ki2.karoo.Ki2Context;
-import com.valterc.ki2.karoo.Ki2ServiceClient;
+import com.valterc.ki2.karoo.service.Ki2ServiceClient;
 
 import io.hammerhead.sdk.v0.datatype.SdkDataType;
 

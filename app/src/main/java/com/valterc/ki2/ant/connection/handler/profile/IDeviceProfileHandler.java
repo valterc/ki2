@@ -1,5 +1,7 @@
 package com.valterc.ki2.ant.connection.handler.profile;
 
+import android.os.Parcelable;
+
 import com.dsi.ant.message.Rssi;
 import com.dsi.ant.message.fromant.AcknowledgedDataMessage;
 import com.dsi.ant.message.fromant.BroadcastDataMessage;
@@ -21,6 +23,6 @@ public interface IDeviceProfileHandler {
 
     Collection<CommandType> getSupportedCommands();
 
-    void sendCommand(CommandType commandType, Object data);
+    void sendCommand(CommandType commandType, Parcelable data);
 
 }
