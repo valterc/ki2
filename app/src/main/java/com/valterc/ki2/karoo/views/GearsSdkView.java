@@ -11,19 +11,21 @@ import androidx.annotation.Nullable;
 import com.valterc.ki2.R;
 import com.valterc.ki2.data.connection.ConnectionInfo;
 import com.valterc.ki2.data.connection.ConnectionStatus;
+import com.valterc.ki2.data.device.DeviceId;
 import com.valterc.ki2.data.shifting.ShiftingInfo;
 import com.valterc.ki2.karoo.Ki2Context;
 import com.valterc.ki2.views.GearsView;
 
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 public class GearsSdkView extends Ki2SdkView {
 
-    private final Consumer<ConnectionInfo> connectionInfoConsumer = connectionInfo -> {
+    private final BiConsumer<DeviceId, ConnectionInfo> connectionInfoConsumer = (deviceId, connectionInfo) -> {
         connectionStatus = connectionInfo.getConnectionStatus();
     };
 
-    private final Consumer<ShiftingInfo> shiftingInfoConsumer = shiftingInfo -> {
+    private final BiConsumer<DeviceId, ShiftingInfo> shiftingInfoConsumer = (deviceId, shiftingInfo) -> {
         this.shiftingInfo = shiftingInfo;
         updateGearsView();
     };

@@ -5,19 +5,21 @@ import androidx.annotation.NonNull;
 import com.valterc.ki2.data.connection.ConnectionInfo;
 import com.valterc.ki2.data.connection.ConnectionStatus;
 import com.valterc.ki2.data.device.BatteryInfo;
+import com.valterc.ki2.data.device.DeviceId;
 import com.valterc.ki2.karoo.Ki2Context;
 
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import io.hammerhead.sdk.v0.datatype.formatter.SdkFormatter;
 
 public class BatteryTextFormatter extends SdkFormatter {
 
-    private final Consumer<ConnectionInfo> connectionInfoConsumer = connectionInfo -> {
+    private final BiConsumer<DeviceId, ConnectionInfo> connectionInfoConsumer = (deviceId, connectionInfo) -> {
         connectionStatus = connectionInfo.getConnectionStatus();
     };
 
-    private final Consumer<BatteryInfo> batteryInfoConsumer = batteryInfo -> {
+    private final BiConsumer<DeviceId, BatteryInfo> batteryInfoConsumer = (deviceId, batteryInfo) -> {
         batteryValue = batteryInfo.getValue();
         batteryValueSet = true;
     };

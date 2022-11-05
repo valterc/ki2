@@ -1,8 +1,6 @@
-package com.valterc.ki2.karoo;
+package com.valterc.ki2.karoo.service;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.ServiceConnection;
@@ -11,7 +9,6 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.os.RemoteException;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.valterc.ki2.data.connection.ConnectionInfo;
 import com.valterc.ki2.data.device.BatteryInfo;
@@ -28,9 +25,6 @@ import com.valterc.ki2.services.callbacks.IMessageCallback;
 import com.valterc.ki2.services.callbacks.IShiftingCallback;
 import com.valterc.ki2.services.callbacks.ISwitchKeyCallback;
 
-import java.lang.reflect.Field;
-import java.util.Map;
-import java.util.WeakHashMap;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -62,13 +56,7 @@ public class Ki2ServiceClient {
         @Override
         public void onConnectionInfo(DeviceId deviceId, ConnectionInfo connectionInfo) {
             handler.post(() -> {
-                connectionInfoListeners.keySet().forEach(c -> {
-                    try {
-                        c.accept(deviceId, connectionInfo);
-                    } catch (Exception e) {
-                        Log.e("KI2", "Error during callback", e);
-                    }
-                });
+                connectionInfoListeners.pushData(deviceId, connectionInfo);
                 maybeStopConnectionEvents();
             });
         }
@@ -78,13 +66,7 @@ public class Ki2ServiceClient {
         @Override
         public void onBattery(DeviceId deviceId, BatteryInfo batteryInfo) {
             handler.post(() -> {
-                batteryInfoListeners.keySet().forEach(c -> {
-                    try {
-                        c.accept(deviceId, batteryInfo);
-                    } catch (Exception e) {
-                        Log.e("KI2", "Error during callback", e);
-                    }
-                });
+                batteryInfoListeners.pushData(deviceId, batteryInfo);
                 maybeStopBatteryEvents();
             });
         }
@@ -94,13 +76,7 @@ public class Ki2ServiceClient {
         @Override
         public void onShifting(DeviceId deviceId, ShiftingInfo shiftingInfo) {
             handler.post(() -> {
-                shiftingInfoListeners.keySet().forEach(c -> {
-                    try {
-                        c.accept(deviceId, shiftingInfo);
-                    } catch (Exception e) {
-                        Log.e("KI2", "Error during callback", e);
-                    }
-                });
+                shiftingInfoListeners.pushData(deviceId, shiftingInfo);
                 maybeStopShiftingEvents();
             });
         }
@@ -124,13 +100,7 @@ public class Ki2ServiceClient {
         @Override
         public void onMessage(Message message) {
             handler.post(() -> {
-                messageListeners.keySet().forEach(c -> {
-                    try {
-                        c.accept(message);
-                    } catch (Exception e) {
-                        Log.e("KI2", "Error during callback", e);
-                    }
-                });
+                messageListeners.pushData(message, message.isPersistent());
                 maybeStopMessageEvents();
             });
         }
@@ -138,25 +108,25 @@ public class Ki2ServiceClient {
 
     private final InputAdapter inputAdapter;
     private final Handler handler;
-    private final WeakHashMap<BiConsumer<DeviceId, ConnectionInfo>, Boolean> connectionInfoListeners;
-    private final WeakHashMap<BiConsumer<DeviceId, BatteryInfo>, Boolean> batteryInfoListeners;
-    private final WeakHashMap<BiConsumer<DeviceId, ShiftingInfo>, Boolean> shiftingInfoListeners;
-    private final WeakHashMap<Consumer<Message>, Boolean> messageListeners;
+    private final BiDataStreamListenerList<DeviceId, ConnectionInfo> connectionInfoListeners;
+    private final BiDataStreamListenerList<DeviceId, BatteryInfo> batteryInfoListeners;
+    private final BiDataStreamListenerList<DeviceId, ShiftingInfo> shiftingInfoListeners;
+    private final DataStreamListenerList<Message> messageListeners;
     private IKi2Service service;
 
     public Ki2ServiceClient(SdkContext context) {
         inputAdapter = new InputAdapter(context);
-        connectionInfoListeners = new WeakHashMap<>();
-        batteryInfoListeners = new WeakHashMap<>();
-        shiftingInfoListeners = new WeakHashMap<>();
-        messageListeners = new WeakHashMap<>();
+        connectionInfoListeners = new BiDataStreamListenerList<>();
+        batteryInfoListeners = new BiDataStreamListenerList<>();
+        shiftingInfoListeners = new BiDataStreamListenerList<>();
+        messageListeners = new DataStreamListenerList<>();
         handler = new Handler(Looper.getMainLooper());
         context.bindService(Ki2Service.getIntent(), serviceConnection, Context.BIND_AUTO_CREATE);
     }
 
     public void registerConnectionInfoListener(BiConsumer<DeviceId, ConnectionInfo> connectionInfoConsumer) {
         handler.post(() -> {
-            connectionInfoListeners.put(connectionInfoConsumer, null);
+            connectionInfoListeners.addListener(connectionInfoConsumer);
             maybeStartConnectionEvents();
             maybeStartSwitchKeyEvents();
         });
@@ -167,7 +137,7 @@ public class Ki2ServiceClient {
             return;
         }
 
-        if (connectionInfoListeners.size() == 0) {
+        if (!connectionInfoListeners.hasListeners()) {
             return;
         }
 
@@ -183,7 +153,7 @@ public class Ki2ServiceClient {
             return;
         }
 
-        if (connectionInfoListeners.size() != 0) {
+        if (connectionInfoListeners.hasListeners()) {
             return;
         }
 
@@ -196,7 +166,7 @@ public class Ki2ServiceClient {
 
     public void registerBatteryInfoListener(BiConsumer<DeviceId, BatteryInfo> batteryInfoConsumer) {
         handler.post(() -> {
-            batteryInfoListeners.put(batteryInfoConsumer, null);
+            batteryInfoListeners.addListener(batteryInfoConsumer);
             maybeStartBatteryEvents();
             maybeStartSwitchKeyEvents();
         });
@@ -207,7 +177,7 @@ public class Ki2ServiceClient {
             return;
         }
 
-        if (batteryInfoListeners.size() == 0) {
+        if (!batteryInfoListeners.hasListeners()) {
             return;
         }
 
@@ -223,7 +193,7 @@ public class Ki2ServiceClient {
             return;
         }
 
-        if (batteryInfoListeners.size() != 0) {
+        if (batteryInfoListeners.hasListeners()) {
             return;
         }
 
@@ -236,7 +206,7 @@ public class Ki2ServiceClient {
 
     public void registerShiftingInfoListener(BiConsumer<DeviceId, ShiftingInfo> shiftingInfoConsumer) {
         handler.post(() -> {
-            shiftingInfoListeners.put(shiftingInfoConsumer, null);
+            shiftingInfoListeners.addListener(shiftingInfoConsumer);
             maybeStartShiftingEvents();
             maybeStartSwitchKeyEvents();
         });
@@ -247,7 +217,7 @@ public class Ki2ServiceClient {
             return;
         }
 
-        if (shiftingInfoListeners.size() == 0) {
+        if (!shiftingInfoListeners.hasListeners()) {
             return;
         }
 
@@ -263,7 +233,7 @@ public class Ki2ServiceClient {
             return;
         }
 
-        if (shiftingInfoListeners.size() != 0) {
+        if (shiftingInfoListeners.hasListeners()) {
             return;
         }
 
@@ -279,9 +249,9 @@ public class Ki2ServiceClient {
             return;
         }
 
-        if (shiftingInfoListeners.size() == 0 &&
-                connectionInfoListeners.size() == 0 &&
-                batteryInfoListeners.size() == 0) {
+        if (!shiftingInfoListeners.hasListeners() &&
+                !connectionInfoListeners.hasListeners() &&
+                !batteryInfoListeners.hasListeners()) {
             return;
         }
 
@@ -297,9 +267,9 @@ public class Ki2ServiceClient {
             return;
         }
 
-        if (shiftingInfoListeners.size() != 0 ||
-                connectionInfoListeners.size() != 0 ||
-                batteryInfoListeners.size() != 0) {
+        if (shiftingInfoListeners.hasListeners() ||
+                connectionInfoListeners.hasListeners() ||
+                batteryInfoListeners.hasListeners()) {
             return;
         }
 
@@ -312,7 +282,7 @@ public class Ki2ServiceClient {
 
     public void registerMessageListener(Consumer<Message> messageConsumer) {
         handler.post(() -> {
-            messageListeners.put(messageConsumer, null);
+            messageListeners.addListener(messageConsumer);
             maybeStartMessageEvents();
         });
     }
@@ -334,7 +304,7 @@ public class Ki2ServiceClient {
             return;
         }
 
-        if (messageListeners.size() == 0) {
+        if (!messageListeners.hasListeners()) {
             return;
         }
 
@@ -350,7 +320,7 @@ public class Ki2ServiceClient {
             return;
         }
 
-        if (messageListeners.size() != 0) {
+        if (messageListeners.hasListeners()) {
             return;
         }
 
