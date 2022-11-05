@@ -17,10 +17,13 @@ import com.valterc.ki2.karoo.notification.LowBatteryNotification;
 @SuppressLint("LogNotTimber")
 public class LowBatteryHandler {
 
+    private static final long TIME_NOTIFY_AFTER_PAUSE_MS = 60 * 1000;
+    private static final int BATTERY_PERCENTAGE_THRESHOLD = 20;
+
     private final Ki2Context context;
 
-    private DeviceId lastDeviceId;
-    private BatteryInfo lastBatteryInfo;
+    private DeviceId notifiedDeviceId;
+    private BatteryInfo notifiedBatteryInfo;
     private boolean notified;
     private long pauseTimestamp;
 
@@ -34,15 +37,15 @@ public class LowBatteryHandler {
     }
 
     public void onResume() {
-        if (notified && System.currentTimeMillis() - pauseTimestamp > 60 * 1000) {
-            notify(lastDeviceId, lastBatteryInfo);
+        if (notified && System.currentTimeMillis() - pauseTimestamp > TIME_NOTIFY_AFTER_PAUSE_MS) {
+            notify(notifiedDeviceId, notifiedBatteryInfo);
         }
     }
 
     private void onBattery(DeviceId deviceId, BatteryInfo batteryInfo) {
-        if (batteryInfo.getValue() != 20) {
-            this.lastDeviceId = deviceId;
-            this.lastBatteryInfo = batteryInfo;
+        if (batteryInfo.getValue() != BATTERY_PERCENTAGE_THRESHOLD) {
+            this.notifiedDeviceId = deviceId;
+            this.notifiedBatteryInfo = batteryInfo;
 
             if (notified) {
                 return;

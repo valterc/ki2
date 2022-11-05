@@ -16,8 +16,7 @@ public class LowBatteryNotification {
     private static final String EXTRA_HEADER = "io.hammerhead.notification.header";
     private static final String EXTRA_ACTION = "io.hammerhead.notification.action";
 
-    private static final String GROUP_NAME = "sensor";
-
+    private static final String CHANNEL_ID = "ki2-battery";
     private static final int NOTIFICATION_ID = 0x7700;
 
     private LowBatteryNotification() {
@@ -27,9 +26,7 @@ public class LowBatteryNotification {
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         String lowBatteryString = context.getString(R.string.text_param_di2_low_battery, deviceName, batteryPercentage);
 
-        NotificationChannel notificationChannel = new NotificationChannel("ki2-battery", context.getString(R.string.text_di2_low_battery), NotificationManager.IMPORTANCE_DEFAULT);
-        notificationChannel.enableVibration(true);
-        notificationChannel.setVibrationPattern(new long[] { 1000, 1000 });
+        NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, context.getString(R.string.text_di2_low_battery), NotificationManager.IMPORTANCE_DEFAULT);
         notificationManager.createNotificationChannel(notificationChannel);
 
         Notification.Builder notification = new Notification.Builder(context, notificationChannel.getId())
@@ -40,7 +37,7 @@ public class LowBatteryNotification {
                 .setContentTitle(lowBatteryString)
                 .setContentText(lowBatteryString)
                 .setCategory(Notification.CATEGORY_EVENT)
-                .setGroup(GROUP_NAME)
+                .setGroup(deviceName)
                 .setStyle(new Notification.BigTextStyle().bigText(lowBatteryString));
 
         notification.getExtras().putString(EXTRA_HEADER, context.getString(R.string.text_di2_low_battery));

@@ -1,5 +1,7 @@
 package com.valterc.ki2.karoo;
 
+import android.util.Log;
+
 import com.valterc.ki2.data.message.Message;
 import com.valterc.ki2.data.message.MessageType;
 import com.valterc.ki2.data.message.RideStatusMessage;
@@ -19,11 +21,13 @@ public class Ki2Context {
 
     private RideStatus rideStatus;
 
+    @SuppressWarnings("FieldCanBeLocal")
     private final Consumer<Message> messageConsumer = (message) -> {
         if (message.getMessageType() == MessageType.RIDE_STATUS) {
             RideStatusMessage rideStatusMessage = RideStatusMessage.parse(message);
             if (rideStatusMessage != null) {
                 rideStatus = rideStatusMessage.getRideStatus();
+                Log.d("KI2", "Updated ride status: " + rideStatus);
             }
         }
     };

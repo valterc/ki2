@@ -15,6 +15,7 @@ public class ShiftCountTextFormatter extends SdkFormatter {
     private ShiftingInfo lastShiftingInfo;
     private int shiftCount;
 
+    @SuppressWarnings("FieldCanBeLocal")
     private final BiConsumer<DeviceId, ShiftingInfo> shiftingInfoConsumer = (deviceId, shiftingInfo) -> {
         if (shiftingInfo == null) {
             return;

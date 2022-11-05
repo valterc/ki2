@@ -14,10 +14,12 @@ import io.hammerhead.sdk.v0.datatype.formatter.SdkFormatter;
 
 public class ShiftModeTextFormatter extends SdkFormatter {
 
+    @SuppressWarnings("FieldCanBeLocal")
     private final BiConsumer<DeviceId, ConnectionInfo> connectionInfoConsumer = (deviceId, connectionInfo) -> {
         connectionStatus = connectionInfo.getConnectionStatus();
     };
 
+    @SuppressWarnings("FieldCanBeLocal")
     private final BiConsumer<DeviceId, ShiftingInfo> shiftingInfoConsumer = (deviceId, shiftingInfo) -> {
         this.shiftingInfo = shiftingInfo;
     };

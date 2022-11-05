@@ -1,5 +1,6 @@
 package com.valterc.ki2.input;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.hardware.input.InputManager;
 import android.os.SystemClock;
@@ -7,13 +8,13 @@ import android.util.Log;
 import android.view.InputEvent;
 import android.view.KeyEvent;
 
-import com.valterc.ki2.data.switches.SwitchEvent;
 import com.valterc.ki2.data.switches.SwitchKeyEvent;
 import com.valterc.ki2.karoo.input.KarooKey;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
 
+@SuppressLint("LogNotTimber")
 public class InputAdapter {
 
     private final Context context;
@@ -27,6 +28,7 @@ public class InputAdapter {
         initInputManager();
     }
 
+    @SuppressWarnings({"rawtypes", "JavaReflectionMemberAccess"})
     private void initInputManager(){
         Object systemService = context.getSystemService(Context.INPUT_SERVICE);
         if (systemService != null) {

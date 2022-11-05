@@ -17,10 +17,12 @@ public class GearsTextFormatter extends SdkFormatter {
 
     private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("00");
 
+    @SuppressWarnings("FieldCanBeLocal")
     private final BiConsumer<DeviceId, ConnectionInfo> connectionInfoConsumer = (deviceId, connectionInfo) -> {
         connectionStatus = connectionInfo.getConnectionStatus();
     };
 
+    @SuppressWarnings("FieldCanBeLocal")
     private final BiConsumer<DeviceId, ShiftingInfo> shiftingInfoConsumer = (deviceId, shiftingInfo) -> {
         this.shiftingInfo = shiftingInfo;
     };
