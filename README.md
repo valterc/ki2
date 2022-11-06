@@ -68,6 +68,7 @@ This app utilizes the Android environment along with the ANT service and the Kar
 | -----                     | -----     |
 | 1.297.1231 (May 19, 2022) | ✅        |
 | 1.333.1345 (Oct 06, 2022) | ✅        |
+| 1.335.1353 (Oct 20, 2022) | ✅        |
 
 ## Known issues
 
