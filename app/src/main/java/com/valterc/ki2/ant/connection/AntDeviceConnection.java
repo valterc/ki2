@@ -139,7 +139,7 @@ public class AntDeviceConnection implements IAntDeviceConnection, IDeviceConnect
     }
 
     @Override
-    public void sendCommand(CommandType commandType, Object data) {
+    public void sendCommand(CommandType commandType, Parcelable data) {
         ITransportHandler transportHandler = this.transportHandler;
 
         if (transportHandler == null){

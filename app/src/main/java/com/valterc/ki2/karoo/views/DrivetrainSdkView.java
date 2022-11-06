@@ -11,19 +11,22 @@ import androidx.annotation.Nullable;
 import com.valterc.ki2.R;
 import com.valterc.ki2.data.connection.ConnectionInfo;
 import com.valterc.ki2.data.connection.ConnectionStatus;
+import com.valterc.ki2.data.device.DeviceId;
 import com.valterc.ki2.data.shifting.ShiftingInfo;
 import com.valterc.ki2.karoo.Ki2Context;
 import com.valterc.ki2.views.DrivetrainView;
 
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 
 public class DrivetrainSdkView extends Ki2SdkView {
 
-    private final Consumer<ConnectionInfo> connectionInfoConsumer = connectionInfo -> {
+    @SuppressWarnings("FieldCanBeLocal")
+    private final BiConsumer<DeviceId, ConnectionInfo> connectionInfoConsumer = (deviceId, connectionInfo) -> {
         connectionStatus = connectionInfo.getConnectionStatus();
     };
 
-    private final Consumer<ShiftingInfo> shiftingInfoConsumer = shiftingInfo -> {
+    @SuppressWarnings("FieldCanBeLocal")
+    private final BiConsumer<DeviceId, ShiftingInfo> shiftingInfoConsumer = (deviceId, shiftingInfo) -> {
         this.shiftingInfo = shiftingInfo;
         updateDrivetrainView();
     };
@@ -36,8 +39,8 @@ public class DrivetrainSdkView extends Ki2SdkView {
 
     public DrivetrainSdkView(@NonNull Ki2Context context) {
         super(context);
-        context.getServiceClient().registerConnectionInfoListener(connectionInfoConsumer);
-        context.getServiceClient().registerShiftingInfoListener(shiftingInfoConsumer);
+        context.getServiceClient().registerConnectionInfoWeakListener(connectionInfoConsumer);
+        context.getServiceClient().registerShiftingInfoWeakListener(shiftingInfoConsumer);
     }
 
     @NonNull

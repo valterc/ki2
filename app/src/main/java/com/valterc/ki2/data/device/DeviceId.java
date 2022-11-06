@@ -1,8 +1,9 @@
 package com.valterc.ki2.data.device;
 
-import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import androidx.annotation.NonNull;
 
 import java.util.Objects;
 
@@ -56,7 +57,10 @@ public class DeviceId implements Parcelable {
 
     public Integer getAntDeviceId() {
         if (this.uid.contains("-")) {
-            return Integer.parseInt(uid.substring(0, uid.indexOf('-')));
+            try {
+                return Integer.parseInt(uid.substring(0, uid.indexOf('-')));
+            } catch (Exception ignored) {
+            }
         }
 
         return null;
@@ -89,6 +93,7 @@ public class DeviceId implements Parcelable {
         return result;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "DeviceId{" +
