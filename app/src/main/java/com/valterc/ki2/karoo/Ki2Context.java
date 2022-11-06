@@ -53,7 +53,7 @@ public class Ki2Context {
         return instanceManager;
     }
 
-    public RideStatus getRideStatus(){
+    public RideStatus getRideStatus() {
         return rideStatus;
     }
 
