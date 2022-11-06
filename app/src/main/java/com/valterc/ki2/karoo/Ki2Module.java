@@ -80,14 +80,20 @@ public class Ki2Module extends Module {
 
     @Override
     public boolean onPause() {
-        lowBatteryHandler.onPause();
+        if (lowBatteryHandler != null) {
+            lowBatteryHandler.onPause();
+        }
+
         ki2Context.getServiceClient().sendMessage(new RideStatusMessage(RideStatus.PAUSED));
         return super.onPause();
     }
 
     @Override
     public boolean onResume() {
-        lowBatteryHandler.onResume();
+        if (lowBatteryHandler != null) {
+            lowBatteryHandler.onResume();
+        }
+
         ki2Context.getServiceClient().sendMessage(new RideStatusMessage(RideStatus.ONGOING));
         return super.onResume();
     }
