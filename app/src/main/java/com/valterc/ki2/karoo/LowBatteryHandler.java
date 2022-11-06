@@ -12,18 +12,21 @@ import com.valterc.ki2.data.device.BatteryInfo;
 import com.valterc.ki2.data.device.DeviceId;
 import com.valterc.ki2.karoo.hooks.KarooActivityServiceNotificationControllerHook;
 import com.valterc.ki2.karoo.hooks.KarooAudioAlertHook;
+import com.valterc.ki2.karoo.notification.LowBatteryCategory;
 import com.valterc.ki2.karoo.notification.LowBatteryNotification;
 
 @SuppressLint("LogNotTimber")
 public class LowBatteryHandler {
 
-    private static final long TIME_NOTIFY_AFTER_PAUSE_MS = 60 * 1000;
-    private static final int BATTERY_PERCENTAGE_THRESHOLD = 20;
+    private static final long TIME_NOTIFY_AFTER_PAUSE_MS = 2 * 60 * 1000;
+    private static final int BATTERY_PERCENTAGE_THRESHOLD_LOW = 20;
+    private static final int BATTERY_PERCENTAGE_THRESHOLD_CRITICAL = 10;
 
     private final Ki2Context context;
 
     private DeviceId notifiedDeviceId;
     private BatteryInfo notifiedBatteryInfo;
+    private LowBatteryCategory notifiedCategory;
     private boolean notified;
     private long pauseTimestamp;
 
@@ -38,26 +41,35 @@ public class LowBatteryHandler {
 
     public void onResume() {
         if (notified && System.currentTimeMillis() - pauseTimestamp > TIME_NOTIFY_AFTER_PAUSE_MS) {
-            notify(notifiedDeviceId, notifiedBatteryInfo);
+            notify(notifiedDeviceId, notifiedBatteryInfo, notifiedCategory);
         }
     }
 
+    private LowBatteryCategory getCategory(BatteryInfo batteryInfo) {
+        if (batteryInfo.getValue() <= BATTERY_PERCENTAGE_THRESHOLD_CRITICAL) {
+            return LowBatteryCategory.CRITICAL;
+        } else if (batteryInfo.getValue() <= BATTERY_PERCENTAGE_THRESHOLD_LOW) {
+            return LowBatteryCategory.LOW;
+        }
+
+        return null;
+    }
+
     private void onBattery(DeviceId deviceId, BatteryInfo batteryInfo) {
-        if (batteryInfo.getValue() != BATTERY_PERCENTAGE_THRESHOLD) {
+        LowBatteryCategory category = getCategory(batteryInfo);
+
+        if (category != null && !category.equals(notifiedCategory)) {
             this.notifiedDeviceId = deviceId;
             this.notifiedBatteryInfo = batteryInfo;
+            this.notifiedCategory = category;
 
-            if (notified) {
-                return;
-            }
-
-            notify(deviceId, batteryInfo);
+            notify(deviceId, batteryInfo, category);
             notified = true;
         }
     }
 
-    private void notify(DeviceId deviceId, BatteryInfo batteryInfo) {
-        if (deviceId == null || batteryInfo == null) {
+    private void notify(DeviceId deviceId, BatteryInfo batteryInfo, LowBatteryCategory category) {
+        if (deviceId == null || batteryInfo == null || category == null) {
             return;
         }
 
@@ -67,7 +79,7 @@ public class LowBatteryHandler {
 
             boolean karooNotificationResult = KarooActivityServiceNotificationControllerHook.showSensorLowBatteryNotification(context.getSdkContext(), deviceId.getName());
             KarooAudioAlertHook.triggerLowBatteryAudioAlert(context.getSdkContext());
-            LowBatteryNotification.showLowBatteryNotification(context.getSdkContext(), deviceId.getName(), batteryInfo.getValue());
+            LowBatteryNotification.showLowBatteryNotification(context.getSdkContext(), deviceId.getName(), category, batteryInfo.getValue());
 
             if (!karooNotificationResult) {
                 Toast toast = Toast.makeText(context.getSdkContext(), context.getSdkContext().getString(R.string.text_param_di2_low_battery, deviceId.getName(), batteryInfo.getValue()), Toast.LENGTH_LONG);

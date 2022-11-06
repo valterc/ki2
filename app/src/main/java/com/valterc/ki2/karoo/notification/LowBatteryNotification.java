@@ -15,14 +15,12 @@ public class LowBatteryNotification {
 
     private static final String EXTRA_HEADER = "io.hammerhead.notification.header";
     private static final String EXTRA_ACTION = "io.hammerhead.notification.action";
-
     private static final String CHANNEL_ID = "ki2-battery";
-    private static final int NOTIFICATION_ID = 0x7700;
 
     private LowBatteryNotification() {
     }
 
-    public static void showLowBatteryNotification(Context context, String deviceName, int batteryPercentage) {
+    public static void showLowBatteryNotification(Context context, String deviceName, LowBatteryCategory category, int batteryPercentage) {
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         String lowBatteryString = context.getString(R.string.text_param_di2_low_battery, deviceName, batteryPercentage);
 
@@ -36,14 +34,14 @@ public class LowBatteryNotification {
                 .setWhen(System.currentTimeMillis())
                 .setContentTitle(lowBatteryString)
                 .setContentText(lowBatteryString)
-                .setCategory(Notification.CATEGORY_EVENT)
+                .setCategory(category.getNotificationCategory())
                 .setGroup(deviceName)
                 .setStyle(new Notification.BigTextStyle().bigText(lowBatteryString));
 
         notification.getExtras().putString(EXTRA_HEADER, context.getString(R.string.text_di2_low_battery));
         notification.getExtras().putString(EXTRA_ACTION, context.getString(R.string.text_dismiss));
 
-        notificationManager.notify(NOTIFICATION_ID, notification.build());
+        notificationManager.notify(deviceName.hashCode(), notification.build());
     }
 
 }
