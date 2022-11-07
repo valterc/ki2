@@ -1,65 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/hh_yellow"
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/textview_main_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-medium"
-                android:padding="0dp"
                 android:includeFontPadding="false"
+                android:padding="0dp"
                 android:text="@string/app_name"
                 android:textAlignment="center"
                 android:textColor="@color/black"
-                android:textSize="50sp" />
+                android:textSize="50sp"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/textview_main_message"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingBottom="5dp"
-                android:text="Di2 back to Karoo"
+                android:text="@string/text_main_message"
                 android:textAlignment="center"
-                android:textColor="@color/black" />
+                android:textColor="@color/black"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/textview_main_title" />
 
-        </LinearLayout>
+            <TextView
+                android:id="@+id/textview_main_version"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="2dp"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="DEV" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:tabMode="scrollable"
             app:tabIndicatorColor="@color/hh_black"
-            app:tabTextColor="@color/grey"
+            app:tabInlineLabel="true"
+            app:tabMode="scrollable"
             app:tabSelectedTextColor="@color/hh_black"
-            app:tabInlineLabel="true">
+            app:tabTextColor="@color/grey">
 
             <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/text_devices"
-                android:icon="@drawable/ic_di2" />
+                android:icon="@drawable/ic_di2"
+                android:text="@string/text_devices" />
 
             <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/text_settings"
-                android:icon="@drawable/ic_gear" />
+                android:icon="@drawable/ic_gear"
+                android:text="@string/text_settings" />
 
         </com.google.android.material.tabs.TabLayout>
     </com.google.android.material.appbar.AppBarLayout>
@@ -67,26 +79,26 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
-        android:fillViewport="true">
+        android:fillViewport="true"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/viewpager2_main"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent" />
 
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             android:id="@+id/button_back"
-            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlayLeftSide"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:clickable="true"
-            app:icon="@drawable/ic_back"
+            android:contentDescription="Back"
             app:collapsedSize="50dp"
+            app:icon="@drawable/ic_back"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:contentDescription="Back" />
+            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlayLeftSide" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
