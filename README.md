@@ -14,14 +14,6 @@ Ki2 is an _app_/_addon_/_plugin_ for Hammerhead Karoo 2 devices. It is a compani
 
 These screenshots have been _slightly_ edited.
 
-## How does it work?
-
-This app utilizes the Android environment along with the ANT service and the Karoo SDK. It contains 3 main components:
-
-- Device management + settings activity
-- Background service that integrates with ANT and communicates with the shifting device wirelessly
-- Integration with Karoo profiles via the Karoo SDK
-
 ## Features
 
 - Pair and connect to electronic shifting groupsets
@@ -40,6 +32,14 @@ This app utilizes the Android environment along with the ANT service and the Kar
   - Mark lap
   - Zoom map
 - Receive notifications when shifting battery is low
+
+## How does it work?
+
+This app utilizes the Android environment along with the ANT service and the Karoo SDK. It contains 3 main components:
+
+- Device management + settings activity
+- Background service that integrates with ANT and communicates with the shifting device wirelessly
+- Integration with Karoo profiles via the Karoo SDK
 
 ## How can I try this app?
 
@@ -154,7 +154,7 @@ No! I don't work for hammerhead and I don't have access to their code. I'm just 
 
 ### Hood buttons are inverted or don't work as expected?
 
-It might be because your shifting configuration has a different action assigned to the hood buttons. Ki2 expects Channel 1 for left button and Channel 2 for right button. If your shifting configuration is different, you might experience weird behavior. Please double check the configuration via the official shifting app available on smartphones. Channel 3 and Channel 4 are currently not supported.
+It might be because your shifting configuration has a different action assigned to the hood buttons. Ki2 expects _Channel 1_ for left button and _Channel 2_ for right button. If your shifting configuration is different, you might experience weird behavior. Please double check the configuration via the official shifting app available on smartphones. _Channel 3_ and _Channel 4_ are currently not supported.
 
 ### It does not work or I have a problem
 
