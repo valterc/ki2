@@ -1,4 +1,4 @@
-package com.valterc.ki2.karoo.input;
+package com.valterc.ki2.data.input;
 
 import android.view.KeyEvent;
 

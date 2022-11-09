@@ -12,9 +12,8 @@ import com.google.android.material.floatingactionbutton.ExtendedFloatingActionBu
 import com.valterc.ki2.R;
 import com.valterc.ki2.data.device.DeviceId;
 import com.valterc.ki2.fragments.IKarooKeyListener;
-import com.valterc.ki2.fragments.devices.add.AddDeviceFragment;
 import com.valterc.ki2.fragments.devices.details.DeviceDetailsFragment;
-import com.valterc.ki2.karoo.input.KarooKey;
+import com.valterc.ki2.data.input.KarooKey;
 
 public class DeviceDetailsActivity extends AppCompatActivity {
 
