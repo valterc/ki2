@@ -16,10 +16,10 @@ These screenshots have been _slightly_ edited.
 
 ## How does it work?
 
-This app utilizes the Android environment along with the ANT service and the Karoo SDK. The app contains 3 main components:
+This app utilizes the Android environment along with the ANT service and the Karoo SDK. It contains 3 main components:
 
 - Device management + settings activity
-- Background service that integrates with ANT and communicates with the  shifting device wirelessly
+- Background service that integrates with ANT and communicates with the shifting device wirelessly
 - Integration with Karoo profiles via the Karoo SDK
 
 ## Features
@@ -39,7 +39,7 @@ This app utilizes the Android environment along with the ANT service and the Kar
   - Pause/Resume ride
   - Mark lap
   - Zoom map
-- Notifications when shifting battery is low
+- Receive notifications when shifting battery is low
 
 ## How can I try this app?
 
@@ -61,7 +61,7 @@ This app utilizes the Android environment along with the ANT service and the Kar
         - Make sure to replace the `APK-FILE-PATH` with the disk location of the APK file that was downloaded
 3. The Ki2 app should appear in the app list below Sensors, Settings, etc
 4. Open the Ki2 app to pair and configure a wireless shifting connection
-5. Add Ki2 data elements to existing or new Karoo profiles from the Karoo profile editor
+5. Add Ki2 data elements to Karoo profiles from the Karoo profile editor, choose the Ki2 elements when modifying a profile
 
 ### Supported Karoo software versions
 
@@ -75,13 +75,13 @@ This app utilizes the Android environment along with the ANT service and the Kar
 
 ### Ki2 data elements don't show up in the ride profile (when Karoo boots)
 
-Unfortunately this is a problem with the Karoo software itself. I've tried different ways to solve this issues but nothing works so far.
+Unfortunately this is a problem with the Karoo software itself. I've tried different ways to solve this issue but nothing works so far.
 
-**Workaround:** Open the ride app with a profile with any Ki2 data elements, before starting the ride, back out from the ride app and return to the dashboard via the back button. The next time the ride app is opened from dashboard or from a route, all Ki2 data elements should appear.
+**Workaround:** Open the ride app with a profile with any Ki2 data elements, before starting the ride, back out from the ride app and return to the dashboard via the back button. The next time the ride app is opened from the dashboard or from a route, all Ki2 data elements should appear.
 
-### Hood buttons don't work when the notification overlay is displayed or outside the ride app (or in the ride app without any Ki2 data elements added)
+### Hood buttons don't work in the control center or outside the ride app (or in a ride profile without any Ki2 data elements)
 
-This is a limitation of the Karoo SDK and a restriction of Android. Unfortunately the Karoo SDK does not provide any ways of performing input, so the implementation has to perform restricted Android operations that are not allowed when Ki2 app is on the background.
+This is a limitation of the Karoo SDK and a restriction of Android. Unfortunately the Karoo SDK does not provide any wcommands, so the implementation has to perform restricted Android operations that are not allowed when Ki2 app is on the background.
 
 **Workaround:** There is no known workaround, hood buttons only work in the ride app when a Ki2 data element is present on any page.
 
@@ -97,14 +97,14 @@ While the implementation is fairly tidy and optimized, this app will be yet anot
 | Built-in GPS                                         |
 | Audio alerts on (navigation + radar)                 |
 
-| Setup                         | Distance | Ride Time | Recorded Ascent | Avg Speed | Avg Temperature | Total Shifts | Battery Usage                                           |
-| -----                         | -----    | -----     | -----           | -----     | -----           | -----        | -----                                                   |
-| Karoo 2                       | 52.6km   | 2:06:03   | 592m            | 25.1km/h  | 25C             | 410          | **18%**<br> **8.5% / hour**<br> (Start: 98% - End: 80%) |
-| Karoo 2 + Ki2                 | 52.6km   | 1:58:21   | 585m            | 26.7km/h  | 21C             | 368          | **15%**<br> **7.5% / hour**<br> (Start: 97% - End: 82%) |
+| Setup                         | Distance | Ride Duration | Recorded Ascent | Avg Speed | Avg Temperature | Total Shifts | Battery Usage                                           |
+| -----                         | -----    | -----         | -----           | -----     | -----           | -----        | -----                                                   |
+| Karoo 2                       | 52.6km   | 2:06:03       | 592m            | 25.1km/h  | 25C             | 410          | **18%**<br> **8.5% / hour**<br> (Start: 98% - End: 80%) |
+| Karoo 2 + Ki2                 | 52.6km   | 1:58:21       | 585m            | 26.7km/h  | 21C             | 368          | **15%**<br> **7.5% / hour**<br> (Start: 97% - End: 82%) |
 
 Tested in the same route in different days. Similar profile in Karoo with the original shifting data elements and then the equivalent ones from Ki2.
 
-While it may seem that the battery consumption actually got a little bit better, I would say that battery gain/loss is marginal and negligible for this particular test given the differences in temperature, ride time,  radar alerts and the number of shifts. It is encouraging that the battery consumption did not _vastly_ increase, that was what I looking for :)
+While it may seem that the battery consumption actually got a little bit better, I would say that battery gain/loss is marginal and negligible for this particular test given the differences in temperature, ride duration, radar alerts and the number of shifts. It is encouraging that the battery consumption did not _vastly_ increase, that was what I looking for :)
 
 ## How can I help?
 
@@ -118,7 +118,7 @@ Is this useful for you? [Buy me a coffee](https://www.paypal.com/donate/?busines
 - Add support to send custom input Keys from SDK module.
 - Allow to control the Numeric data view when for example there is no data available. At the moment it is only possible to set the Text, not the size, style, color, etc.
 - Add support for more SDK data views, for example add smaller graphical data views.
-- Add support for reading/writing data streams, for example to provide shifting data to existing Karoo data elements. Virtual/SDK sensors?
+- Add support for reading/writing data streams, for example to provide shifting data to existing Karoo data elements. Maybe add virtual/SDK sensors.
 
 **Do you do UI/art?** Feel free to create/suggest a new icon for the app.
 
@@ -151,6 +151,10 @@ All information is publicly available on the internet.
 ### The UI looks similar to other Karoo applications, do you work for Hammerhead or have access to their code?
 
 No! I don't work for hammerhead and I don't have access to their code. I'm just a programmer with a dusty experience in Android development and an eye for UI. I tried to replicate the Karoo interface (look and feel, colors, etc.) to make the app fit in. You can find the [Karoo SDK with design guidelines here](https://github.com/hammerheadnav/karoo-sdk).
+
+### Hood buttons are inverted or don't work as expected?
+
+It might be because your shifting configuration has a different action assigned to the hood buttons. Ki2 expects Channel 1 for left button and Channel 2 for right button. If your shifting configuration is different, you might experience weird behavior. Please double check the configuration via the official shifting app available on smartphones. Channel 3 and Channel 4 are currently not supported.
 
 ### It does not work or I have a problem
 
