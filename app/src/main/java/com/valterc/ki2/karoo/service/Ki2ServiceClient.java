@@ -87,7 +87,6 @@ public class Ki2ServiceClient {
         public void onKeyEvent(DeviceId deviceId, KarooKeyEvent keyEvent) {
             handler.post(() -> {
                 try {
-                    Log.d("KI2", "Received key event");
                     inputAdapter.executeKeyEvent(keyEvent);
                 } catch (Exception e) {
                     Log.e("KI2", "Error during callback", e);
@@ -257,7 +256,6 @@ public class Ki2ServiceClient {
         }
 
         try {
-            Log.d("KI2", "Register key listener");
             service.registerKeyListener(keyCallback);
         } catch (RemoteException e) {
             Log.e("KI2", "Unable to register listener", e);
@@ -276,7 +274,6 @@ public class Ki2ServiceClient {
         }
 
         try {
-            Log.d("KI2", "Unregister key listener");
             service.unregisterKeyListener(keyCallback);
         } catch (RemoteException e) {
             Log.e("KI2", "Unable to unregister listener", e);
