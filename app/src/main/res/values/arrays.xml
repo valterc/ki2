@@ -1,20 +1,48 @@
 <resources>
-    <string-array name="preference_titles_switch_press_action">
+    <string-array name="preference_titles_switch_single_press_action">
         <item>None</item>
         <item>Navigate Left</item>
         <item>Navigate Right</item>
         <item>Pause/Resume Ride/Confirm</item>
         <item>Mark Lap/Cycle Map Zoom/Back</item>
         <item>Mark Lap</item>
+        <item>Map/Graph Zoom Out</item>
+        <item>Map/Graph Zoom In</item>
     </string-array>
 
-    <string-array name="preference_values_switch_press_action">
+    <string-array name="preference_values_switch_single_press_action">
         <item>none</item>
         <item>navigate_left</item>
         <item>navigate_right</item>
         <item>pause_resume_confirm</item>
         <item>lap_map_back</item>
         <item>lap</item>
+        <item>press_map_graph_zoom_out</item>
+        <item>press_map_graph_zoom_in</item>
+    </string-array>
+
+    <string-array name="preference_titles_switch_double_press_action">
+        <item>None</item>
+        <item>Navigate Left</item>
+        <item>Navigate Right</item>
+        <item>Pause/Resume Ride/Confirm</item>
+        <item>Mark Lap/Cycle Map Zoom/Back</item>
+        <item>Mark Lap</item>
+        <item>Map/Graph Zoom Out</item>
+        <item>Map/Graph Zoom In</item>
+        <item>Duplicate Single Press</item>
+    </string-array>
+
+    <string-array name="preference_values_switch_double_press_action">
+        <item>none</item>
+        <item>navigate_left</item>
+        <item>navigate_right</item>
+        <item>pause_resume_confirm</item>
+        <item>lap_map_back</item>
+        <item>lap</item>
+        <item>press_map_graph_zoom_out</item>
+        <item>press_map_graph_zoom_in</item>
+        <item>double_press_duplicate_single_press</item>
     </string-array>
 
     <string-array name="preference_titles_switch_hold_action">

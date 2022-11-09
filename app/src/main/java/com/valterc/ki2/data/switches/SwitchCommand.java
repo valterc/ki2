@@ -1,5 +1,7 @@
 package com.valterc.ki2.data.switches;
 
+import com.valterc.ki2.data.input.KeyAction;
+
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -28,6 +30,29 @@ public enum SwitchCommand {
 
     public final int getCommandNumber() {
         return this.commandNumber;
+    }
+
+    public final KeyAction getKeyAction() {
+        switch (this) {
+
+            case SINGLE_CLICK:
+                return KeyAction.SINGLE_PRESS;
+
+            case DOUBLE_CLICK:
+                return KeyAction.DOUBLE_PRESS;
+
+            case LONG_PRESS_DOWN:
+                return KeyAction.LONG_PRESS_DOWN;
+
+            case LONG_PRESS_CONTINUE:
+                return KeyAction.LONG_PRESS_CONTINUE;
+
+            case LONG_PRESS_UP:
+                return KeyAction.LONG_PRESS_UP;
+
+        }
+
+        return KeyAction.NO_ACTION;
     }
 
     public final SwitchCommandType getCommandType() {

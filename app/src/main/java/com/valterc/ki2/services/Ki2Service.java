@@ -24,23 +24,26 @@ import com.valterc.ki2.data.connection.ConnectionsDataManager;
 import com.valterc.ki2.data.device.BatteryInfo;
 import com.valterc.ki2.data.device.DeviceId;
 import com.valterc.ki2.data.device.DeviceStore;
+import com.valterc.ki2.data.device.DeviceType;
 import com.valterc.ki2.data.info.DataType;
 import com.valterc.ki2.data.info.ManufacturerInfo;
+import com.valterc.ki2.data.input.KarooKey;
+import com.valterc.ki2.data.input.KarooKeyEvent;
+import com.valterc.ki2.data.input.KeyAction;
 import com.valterc.ki2.data.message.Message;
 import com.valterc.ki2.data.message.MessageManager;
 import com.valterc.ki2.data.shifting.ShiftingInfo;
 import com.valterc.ki2.data.switches.SwitchEvent;
-import com.valterc.ki2.data.switches.SwitchKeyEvent;
 import com.valterc.ki2.input.InputManager;
 import com.valterc.ki2.services.callbacks.IBatteryCallback;
 import com.valterc.ki2.services.callbacks.IConnectionDataInfoCallback;
 import com.valterc.ki2.services.callbacks.IConnectionInfoCallback;
+import com.valterc.ki2.services.callbacks.IKeyCallback;
 import com.valterc.ki2.services.callbacks.IManufacturerInfoCallback;
 import com.valterc.ki2.services.callbacks.IMessageCallback;
 import com.valterc.ki2.services.callbacks.IScanCallback;
 import com.valterc.ki2.services.callbacks.IShiftingCallback;
 import com.valterc.ki2.services.callbacks.ISwitchCallback;
-import com.valterc.ki2.services.callbacks.ISwitchKeyCallback;
 import com.valterc.ki2.services.handler.ServiceHandler;
 
 import java.util.ArrayList;
@@ -75,7 +78,7 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
             = new RemoteCallbackList<>();
     private final RemoteCallbackList<ISwitchCallback> callbackListSwitch
             = new RemoteCallbackList<>();
-    private final RemoteCallbackList<ISwitchKeyCallback> callbackListSwitchKey
+    private final RemoteCallbackList<IKeyCallback> callbackListKey
             = new RemoteCallbackList<>();
     private final RemoteCallbackList<IScanCallback> callbackListScan
             = new RemoteCallbackList<>();
@@ -246,18 +249,18 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
         }
 
         @Override
-        public void registerSwitchKeyListener(ISwitchKeyCallback callback) {
+        public void registerKeyListener(IKeyCallback callback) {
             if (callback != null) {
-                callbackListSwitchKey.register(callback);
+                callbackListKey.register(callback);
             }
 
             serviceHandler.postRetriableAction(Ki2Service.this::processConnections);
         }
 
         @Override
-        public void unregisterSwitchKeyListener(ISwitchKeyCallback callback) {
+        public void unregisterKeyListener(IKeyCallback callback) {
             if (callback != null) {
-                callbackListSwitchKey.unregister(callback);
+                callbackListKey.unregister(callback);
             }
 
             serviceHandler.postRetriableAction(Ki2Service.this::processConnections);
@@ -300,7 +303,7 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
         }
 
         @Override
-        public void registerMessageListener(IMessageCallback callback) throws RemoteException {
+        public void registerMessageListener(IMessageCallback callback) {
             if (callback == null) {
                 return;
             }
@@ -459,7 +462,7 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
                 || callbackListConnectionDataInfo.getRegisteredCallbackCount() != 0
                 || callbackListManufacturerInfo.getRegisteredCallbackCount() != 0
                 || callbackListShifting.getRegisteredCallbackCount() != 0
-                || callbackListSwitchKey.getRegisteredCallbackCount() != 0) {
+                || callbackListKey.getRegisteredCallbackCount() != 0) {
             if (antManager.isReady()) {
                 Collection<DeviceId> devices = deviceStore.getDevices();
                 connectionsDataManager.setConnections(devices);
@@ -565,18 +568,18 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
                                     (callback, se) -> callback.onSwitchEvent(deviceId, se));
                         }
 
-                        SwitchKeyEvent switchKeyEvent = inputManager.onSwitch(switchEvent);
-                        if (switchKeyEvent != null) {
-                            broadcastData(callbackListSwitchKey,
-                                    () -> switchKeyEvent,
-                                    (callback, ske) -> callback.onSwitchKeyEvent(deviceId, ske));
+                        KarooKeyEvent keyEvent = inputManager.onSwitch(switchEvent);
+                        if (keyEvent != null) {
+                            broadcastData(callbackListKey,
+                                    () -> keyEvent,
+                                    (callback, ke) -> callback.onKeyEvent(deviceId, ke));
                         }
                         break;
 
-                    case SWITCH_KEY:
-                        broadcastData(callbackListSwitchKey,
-                                () -> (SwitchKeyEvent) connectionsDataManager.getData(deviceId, dataType),
-                                (callback, ske) -> callback.onSwitchKeyEvent(deviceId, ske));
+                    case KEY:
+                        broadcastData(callbackListKey,
+                                () -> (KarooKeyEvent) connectionsDataManager.getData(deviceId, dataType),
+                                (callback, ke) -> callback.onKeyEvent(deviceId, ke));
                         break;
 
                     case MANUFACTURER_INFO:

@@ -9,16 +9,16 @@
                 <ListPreference
                     app:key="@string/preference_left_switch_single_press"
                     app:title="@string/title_preference_left_single_press"
-                    app:entries="@array/preference_titles_switch_press_action"
-                    app:entryValues="@array/preference_values_switch_press_action"
+                    app:entries="@array/preference_titles_switch_single_press_action"
+                    app:entryValues="@array/preference_values_switch_single_press_action"
                     app:defaultValue="navigate_left"
                     app:useSimpleSummaryProvider="true"/>
 
                 <ListPreference
                     app:key="@string/preference_left_switch_double_press"
                     app:title="@string/title_preference_left_double_press"
-                    app:entries="@array/preference_titles_switch_press_action"
-                    app:entryValues="@array/preference_values_switch_press_action"
+                    app:entries="@array/preference_titles_switch_double_press_action"
+                    app:entryValues="@array/preference_values_switch_double_press_action"
                     app:defaultValue="lap_map_back"
                     app:useSimpleSummaryProvider="true"/>
 
@@ -37,16 +37,16 @@
             <ListPreference
                 app:key="@string/preference_right_switch_single_press"
                 app:title="@string/title_preference_right_single_press"
-                app:entries="@array/preference_titles_switch_press_action"
-                app:entryValues="@array/preference_values_switch_press_action"
+                app:entries="@array/preference_titles_switch_single_press_action"
+                app:entryValues="@array/preference_values_switch_single_press_action"
                 app:defaultValue="navigate_right"
                 app:useSimpleSummaryProvider="true"/>
 
             <ListPreference
                 app:key="@string/preference_right_switch_double_press"
                 app:title="@string/title_preference_right_double_press"
-                app:entries="@array/preference_titles_switch_press_action"
-                app:entryValues="@array/preference_values_switch_press_action"
+                app:entries="@array/preference_titles_switch_double_press_action"
+                app:entryValues="@array/preference_values_switch_double_press_action"
                 app:defaultValue="pause_resume_confirm"
                 app:useSimpleSummaryProvider="true"/>
 

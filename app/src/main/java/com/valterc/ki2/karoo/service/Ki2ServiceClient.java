@@ -13,17 +13,17 @@ import android.util.Log;
 import com.valterc.ki2.data.connection.ConnectionInfo;
 import com.valterc.ki2.data.device.BatteryInfo;
 import com.valterc.ki2.data.device.DeviceId;
+import com.valterc.ki2.data.input.KarooKeyEvent;
 import com.valterc.ki2.data.message.Message;
 import com.valterc.ki2.data.shifting.ShiftingInfo;
-import com.valterc.ki2.data.switches.SwitchKeyEvent;
 import com.valterc.ki2.input.InputAdapter;
 import com.valterc.ki2.services.IKi2Service;
 import com.valterc.ki2.services.Ki2Service;
 import com.valterc.ki2.services.callbacks.IBatteryCallback;
 import com.valterc.ki2.services.callbacks.IConnectionInfoCallback;
+import com.valterc.ki2.services.callbacks.IKeyCallback;
 import com.valterc.ki2.services.callbacks.IMessageCallback;
 import com.valterc.ki2.services.callbacks.IShiftingCallback;
-import com.valterc.ki2.services.callbacks.ISwitchKeyCallback;
 
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -39,7 +39,7 @@ public class Ki2ServiceClient {
             service = IKi2Service.Stub.asInterface(binder);
             handler.post(() -> {
                 maybeStartMessageEvents();
-                maybeStartSwitchKeyEvents();
+                maybeStartKeyEvents();
                 maybeStartBatteryEvents();
                 maybeStartConnectionEvents();
                 maybeStartShiftingEvents();
@@ -82,16 +82,16 @@ public class Ki2ServiceClient {
         }
     };
 
-    private final ISwitchKeyCallback switchKeyCallback = new ISwitchKeyCallback.Stub() {
+    private final IKeyCallback keyCallback = new IKeyCallback.Stub() {
         @Override
-        public void onSwitchKeyEvent(DeviceId deviceId, SwitchKeyEvent switchKeyEvent) {
+        public void onKeyEvent(DeviceId deviceId, KarooKeyEvent keyEvent) {
             handler.post(() -> {
                 try {
-                    inputAdapter.executeKeyEvent(switchKeyEvent);
+                    inputAdapter.executeKeyEvent(keyEvent);
                 } catch (Exception e) {
                     Log.e("KI2", "Error during callback", e);
                 }
-                maybeStopSwitchKeyEvents();
+                maybeStopKeyEvents();
             });
         }
     };
@@ -128,7 +128,7 @@ public class Ki2ServiceClient {
         handler.post(() -> {
             connectionInfoListeners.addListener(connectionInfoConsumer);
             maybeStartConnectionEvents();
-            maybeStartSwitchKeyEvents();
+            maybeStartKeyEvents();
         });
     }
 
@@ -168,7 +168,7 @@ public class Ki2ServiceClient {
         handler.post(() -> {
             batteryInfoListeners.addListener(batteryInfoConsumer);
             maybeStartBatteryEvents();
-            maybeStartSwitchKeyEvents();
+            maybeStartKeyEvents();
         });
     }
 
@@ -208,7 +208,7 @@ public class Ki2ServiceClient {
         handler.post(() -> {
             shiftingInfoListeners.addListener(shiftingInfoConsumer);
             maybeStartShiftingEvents();
-            maybeStartSwitchKeyEvents();
+            maybeStartKeyEvents();
         });
     }
 
@@ -244,7 +244,7 @@ public class Ki2ServiceClient {
         }
     }
 
-    private void maybeStartSwitchKeyEvents() {
+    private void maybeStartKeyEvents() {
         if (service == null) {
             return;
         }
@@ -256,13 +256,13 @@ public class Ki2ServiceClient {
         }
 
         try {
-            service.registerSwitchKeyListener(switchKeyCallback);
+            service.registerKeyListener(keyCallback);
         } catch (RemoteException e) {
             Log.e("KI2", "Unable to register listener", e);
         }
     }
 
-    private void maybeStopSwitchKeyEvents() {
+    private void maybeStopKeyEvents() {
         if (service == null) {
             return;
         }
@@ -274,7 +274,7 @@ public class Ki2ServiceClient {
         }
 
         try {
-            service.unregisterSwitchKeyListener(switchKeyCallback);
+            service.unregisterKeyListener(keyCallback);
         } catch (RemoteException e) {
             Log.e("KI2", "Unable to unregister listener", e);
         }

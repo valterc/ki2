@@ -7,9 +7,10 @@ import android.os.SystemClock;
 import android.util.Log;
 import android.view.InputEvent;
 import android.view.KeyEvent;
+import android.view.ViewConfiguration;
 
-import com.valterc.ki2.data.switches.SwitchKeyEvent;
-import com.valterc.ki2.karoo.input.KarooKey;
+import com.valterc.ki2.data.input.KarooKeyEvent;
+import com.valterc.ki2.data.input.KarooKey;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -22,14 +23,14 @@ public class InputAdapter {
     private InputManager inputManager;
     private Method injectInputMethod;
 
-    public InputAdapter(Context context){
+    public InputAdapter(Context context) {
         this.context = context;
         this.keyDownTimeMap = new HashMap<>();
         initInputManager();
     }
 
     @SuppressWarnings({"rawtypes", "JavaReflectionMemberAccess"})
-    private void initInputManager(){
+    private void initInputManager() {
         Object systemService = context.getSystemService(Context.INPUT_SERVICE);
         if (systemService != null) {
             inputManager = (InputManager) systemService;
@@ -46,7 +47,7 @@ public class InputAdapter {
         }
     }
 
-    private void injectKeyDown(int keyCode, long eventTime, int repeat){
+    private void injectKeyDown(int keyCode, long eventTime, int repeat) {
         try {
             Object[] params = new Object[2];
             params[0] = new KeyEvent(eventTime, eventTime, KeyEvent.ACTION_DOWN, keyCode, repeat);
@@ -58,7 +59,7 @@ public class InputAdapter {
         }
     }
 
-    private void injectKeyUp(int keyCode, long keyDownTime){
+    private void injectKeyUp(int keyCode, long keyDownTime) {
         try {
             Object[] params = new Object[2];
             params[0] = new KeyEvent(keyDownTime, SystemClock.uptimeMillis(), KeyEvent.ACTION_UP, keyCode, 0);
@@ -70,15 +71,10 @@ public class InputAdapter {
         }
     }
 
-    private void injectKeyPress(int keyCode){
+    private void injectKeyUp(int keyCode, long keyDownTime, long eventTime) {
         try {
             Object[] params = new Object[2];
-            params[0] = new KeyEvent(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), KeyEvent.ACTION_DOWN, keyCode, 0);
-            params[1] = 0;
-
-            injectInputMethod.invoke(inputManager, params);
-
-            params[0] = new KeyEvent(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), KeyEvent.ACTION_UP, keyCode, 0);
+            params[0] = new KeyEvent(keyDownTime, eventTime, KeyEvent.ACTION_UP, keyCode, 0);
             params[1] = 0;
 
             injectInputMethod.invoke(inputManager, params);
@@ -87,8 +83,24 @@ public class InputAdapter {
         }
     }
 
-    private void setKeyDown(KarooKey key, int repeat)
-    {
+    private void injectKeyPress(int keyCode, long eventTime) {
+        try {
+            Object[] params = new Object[2];
+            params[0] = new KeyEvent(eventTime, eventTime, KeyEvent.ACTION_DOWN, keyCode, 0);
+            params[1] = 0;
+
+            injectInputMethod.invoke(inputManager, params);
+
+            params[0] = new KeyEvent(eventTime, eventTime, KeyEvent.ACTION_UP, keyCode, 0);
+            params[1] = 0;
+
+            injectInputMethod.invoke(inputManager, params);
+        } catch (Exception e) {
+            Log.e("KI2", e.toString());
+        }
+    }
+
+    private void setKeyDown(KarooKey key, int repeat) {
         Long time = keyDownTimeMap.get(key);
 
         if (time == null || repeat == 0) {
@@ -99,45 +111,55 @@ public class InputAdapter {
         injectKeyDown(key.getKeyCode(), time, repeat);
     }
 
-    private void setKeyUp(KarooKey key)
-    {
+    private void setKeyUp(KarooKey key) {
         long time = System.currentTimeMillis();
 
         Long keyDownTime = keyDownTimeMap.remove(key);
-        if (keyDownTime != null)
-        {
+        if (keyDownTime != null) {
             time = keyDownTime;
         }
 
         injectKeyUp(key.getKeyCode(), time);
-
     }
 
-    private void keyPressed(KarooKey key)
-    {
-        injectKeyPress(key.getKeyCode());
+    private void keyPressed(KarooKey key, long eventTime) {
+        injectKeyPress(key.getKeyCode(), eventTime);
     }
 
-    public void executeKeyEvent(SwitchKeyEvent switchKeyEvent) {
-        switch (switchKeyEvent.getCommand())
-        {
-            case SINGLE_CLICK:
-                keyPressed(switchKeyEvent.getKey());
-                break;
+    private void simulateLongKeyPress(KarooKey key, long eventTime) {
+        injectKeyDown(key.getKeyCode(), eventTime, 0);
+        injectKeyDown(key.getKeyCode(), eventTime + ViewConfiguration.getLongPressTimeout(), 1);
+        injectKeyUp(key.getKeyCode(), eventTime, eventTime + ViewConfiguration.getLongPressTimeout() * 2L);
+    }
 
-            case DOUBLE_CLICK:
-                keyPressed(switchKeyEvent.getKey());
-                keyPressed(switchKeyEvent.getKey());
-                break;
+    public void executeKeyEvent(KarooKeyEvent keyEvent) {
+        for (int i = 0; i < keyEvent.getReplicate(); i++) {
+            long eventTime = SystemClock.uptimeMillis() + (long) ViewConfiguration.getKeyRepeatTimeout() * i;
+            switch (keyEvent.getAction()) {
+                case SINGLE_PRESS:
+                    keyPressed(keyEvent.getKey(), eventTime);
+                    break;
 
-            case LONG_PRESS_DOWN:
-            case LONG_PRESS_CONTINUE:
-                setKeyDown(switchKeyEvent.getKey(), switchKeyEvent.getRepeat());
-                break;
+                case DOUBLE_PRESS:
+                    keyPressed(keyEvent.getKey(), eventTime);
+                    keyPressed(keyEvent.getKey(), eventTime);
+                    break;
 
-            case LONG_PRESS_UP:
-                setKeyUp(switchKeyEvent.getKey());
-                break;
+                case LONG_PRESS_DOWN:
+                case LONG_PRESS_CONTINUE:
+                    setKeyDown(keyEvent.getKey(), keyEvent.getRepeat());
+                    break;
+
+                case LONG_PRESS_UP:
+                    setKeyUp(keyEvent.getKey());
+                    break;
+
+                case SIMULATE_LONG_PRESS:
+                    simulateLongKeyPress(keyEvent.getKey(), eventTime);
+                    break;
+
+            }
         }
     }
+
 }

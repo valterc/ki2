@@ -1,6 +1,6 @@
 package com.valterc.ki2.fragments;
 
-import com.valterc.ki2.karoo.input.KarooKey;
+import com.valterc.ki2.data.input.KarooKey;
 
 /**
  * Interface for an object (typically a Fragment or View) that can receive Karoo key events.

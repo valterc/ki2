@@ -9,7 +9,7 @@ public enum DataType {
     BATTERY(1, false),
     SHIFTING(2, false),
     SWITCH(3, true),
-    SWITCH_KEY(4, true),
+    KEY(4, true),
     MANUFACTURER_INFO(5, false),
     SIGNAL(6, true),
     OTHER(255, false);

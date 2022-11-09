@@ -6,7 +6,7 @@ import com.valterc.ki2.services.callbacks.IConnectionInfoCallback;
 import com.valterc.ki2.services.callbacks.IShiftingCallback;
 import com.valterc.ki2.services.callbacks.IBatteryCallback;
 import com.valterc.ki2.services.callbacks.IManufacturerInfoCallback;
-import com.valterc.ki2.services.callbacks.ISwitchKeyCallback;
+import com.valterc.ki2.services.callbacks.IKeyCallback;
 import com.valterc.ki2.services.callbacks.ISwitchCallback;
 import com.valterc.ki2.services.callbacks.IScanCallback;
 import com.valterc.ki2.services.callbacks.IMessageCallback;
@@ -31,8 +31,8 @@ interface IKi2Service {
     void registerManufacturerInfoListener(IManufacturerInfoCallback callback);
     void unregisterManufacturerInfoListener(IManufacturerInfoCallback callback);
 
-    void registerSwitchKeyListener(ISwitchKeyCallback callback);
-    void unregisterSwitchKeyListener(ISwitchKeyCallback callback);
+    void registerKeyListener(IKeyCallback callback);
+    void unregisterKeyListener(IKeyCallback callback);
 
     void registerSwitchListener(ISwitchCallback callback);
     void unregisterSwitchListener(ISwitchCallback callback);

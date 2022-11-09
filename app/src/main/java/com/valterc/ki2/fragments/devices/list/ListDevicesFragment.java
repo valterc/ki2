@@ -11,7 +11,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,7 +21,7 @@ import com.valterc.ki2.activities.devices.add.AddDeviceActivity;
 import com.valterc.ki2.activities.devices.details.DeviceDetailsActivity;
 import com.valterc.ki2.data.device.DeviceId;
 import com.valterc.ki2.fragments.IKarooKeyListener;
-import com.valterc.ki2.karoo.input.KarooKey;
+import com.valterc.ki2.data.input.KarooKey;
 import com.valterc.ki2.services.Ki2Service;
 
 import java.util.List;

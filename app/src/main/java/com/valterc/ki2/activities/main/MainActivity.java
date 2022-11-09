@@ -17,7 +17,7 @@ import com.google.android.material.tabs.TabLayout;
 import com.valterc.ki2.BuildConfig;
 import com.valterc.ki2.R;
 import com.valterc.ki2.fragments.IKarooKeyListener;
-import com.valterc.ki2.karoo.input.KarooKey;
+import com.valterc.ki2.data.input.KarooKey;
 
 public class MainActivity extends AppCompatActivity {
 
