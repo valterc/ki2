@@ -1,62 +1,60 @@
-<PreferenceScreen
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory
-        app:title="@string/category_preference_switches">
+    <PreferenceCategory app:title="@string/category_preference_switches">
 
-            <PreferenceCategory app:title="@string/category_preference_left_switch">
+        <PreferenceCategory app:title="@string/category_preference_left_switch">
 
-                <ListPreference
-                    app:key="@string/preference_left_switch_single_press"
-                    app:title="@string/title_preference_left_single_press"
-                    app:entries="@array/preference_titles_switch_single_press_action"
-                    app:entryValues="@array/preference_values_switch_single_press_action"
-                    app:defaultValue="navigate_left"
-                    app:useSimpleSummaryProvider="true"/>
+            <ListPreference
+                app:defaultValue="navigate_left"
+                app:entries="@array/preference_titles_switch_single_press_action"
+                app:entryValues="@array/preference_values_switch_single_press_action"
+                app:key="@string/preference_left_switch_single_press"
+                app:title="@string/title_preference_left_single_press"
+                app:useSimpleSummaryProvider="true" />
 
-                <ListPreference
-                    app:key="@string/preference_left_switch_double_press"
-                    app:title="@string/title_preference_left_double_press"
-                    app:entries="@array/preference_titles_switch_double_press_action"
-                    app:entryValues="@array/preference_values_switch_double_press_action"
-                    app:defaultValue="lap_map_back"
-                    app:useSimpleSummaryProvider="true"/>
+            <ListPreference
+                app:defaultValue="lap_map_back"
+                app:entries="@array/preference_titles_switch_double_press_action"
+                app:entryValues="@array/preference_values_switch_double_press_action"
+                app:key="@string/preference_left_switch_double_press"
+                app:title="@string/title_preference_left_double_press"
+                app:useSimpleSummaryProvider="true" />
 
-                <ListPreference
-                    app:key="@string/preference_left_switch_hold"
-                    app:title="@string/title_preference_left_hold"
-                    app:entries="@array/preference_titles_switch_hold_action"
-                    app:entryValues="@array/preference_values_switch_hold_action"
-                    app:defaultValue="map_graph_zoom_out"
-                    app:useSimpleSummaryProvider="true"/>
+            <ListPreference
+                app:defaultValue="map_graph_zoom_out"
+                app:entries="@array/preference_titles_switch_hold_action"
+                app:entryValues="@array/preference_values_switch_hold_action"
+                app:key="@string/preference_left_switch_hold"
+                app:title="@string/title_preference_left_hold"
+                app:useSimpleSummaryProvider="true" />
 
-            </PreferenceCategory>
+        </PreferenceCategory>
 
         <PreferenceCategory app:title="@string/category_preference_right_switch">
 
             <ListPreference
-                app:key="@string/preference_right_switch_single_press"
-                app:title="@string/title_preference_right_single_press"
+                app:defaultValue="navigate_right"
                 app:entries="@array/preference_titles_switch_single_press_action"
                 app:entryValues="@array/preference_values_switch_single_press_action"
-                app:defaultValue="navigate_right"
-                app:useSimpleSummaryProvider="true"/>
+                app:key="@string/preference_right_switch_single_press"
+                app:title="@string/title_preference_right_single_press"
+                app:useSimpleSummaryProvider="true" />
 
             <ListPreference
-                app:key="@string/preference_right_switch_double_press"
-                app:title="@string/title_preference_right_double_press"
+                app:defaultValue="pause_resume_confirm"
                 app:entries="@array/preference_titles_switch_double_press_action"
                 app:entryValues="@array/preference_values_switch_double_press_action"
-                app:defaultValue="pause_resume_confirm"
-                app:useSimpleSummaryProvider="true"/>
+                app:key="@string/preference_right_switch_double_press"
+                app:title="@string/title_preference_right_double_press"
+                app:useSimpleSummaryProvider="true" />
 
             <ListPreference
-                app:key="@string/preference_right_switch_hold"
-                app:title="@string/title_preference_right_hold"
+                app:defaultValue="map_graph_zoom_in"
                 app:entries="@array/preference_titles_switch_hold_action"
                 app:entryValues="@array/preference_values_switch_hold_action"
-                app:defaultValue="map_graph_zoom_in"
-                app:useSimpleSummaryProvider="true"/>
+                app:key="@string/preference_right_switch_hold"
+                app:title="@string/title_preference_right_hold"
+                app:useSimpleSummaryProvider="true" />
 
         </PreferenceCategory>
 
