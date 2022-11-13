@@ -24,12 +24,9 @@ import com.valterc.ki2.data.connection.ConnectionsDataManager;
 import com.valterc.ki2.data.device.BatteryInfo;
 import com.valterc.ki2.data.device.DeviceId;
 import com.valterc.ki2.data.device.DeviceStore;
-import com.valterc.ki2.data.device.DeviceType;
 import com.valterc.ki2.data.info.DataType;
 import com.valterc.ki2.data.info.ManufacturerInfo;
-import com.valterc.ki2.data.input.KarooKey;
 import com.valterc.ki2.data.input.KarooKeyEvent;
-import com.valterc.ki2.data.input.KeyAction;
 import com.valterc.ki2.data.message.Message;
 import com.valterc.ki2.data.message.MessageManager;
 import com.valterc.ki2.data.shifting.ShiftingInfo;
@@ -192,7 +189,6 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
                     try {
                         BatteryInfo batteryInfo = (BatteryInfo) connectionDataManager.getData(DataType.BATTERY);
                         if (batteryInfo != null) {
-                            Timber.d("Sending battery value after register");
                             callback.onBattery(
                                     connectionDataManager.getDeviceId(),
                                     batteryInfo);
