@@ -1,24 +1,15 @@
 package com.valterc.ki2.karoo;
 
 import android.annotation.SuppressLint;
-import android.app.Application;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.util.Log;
 
 import androidx.preference.PreferenceManager;
 
 import com.valterc.ki2.R;
-
-import java.net.URI;
-import java.util.Objects;
-
-import io.hammerhead.sdk.v0.SdkContext;
-import timber.log.Timber;
 
 public class Ki2BroadcastReceiver extends BroadcastReceiver {
 
