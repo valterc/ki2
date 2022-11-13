@@ -77,11 +77,11 @@ This app utilizes the Android environment along with the ANT service and the Kar
 
 Unfortunately this is a problem with the Karoo software itself. I've tried different ways to solve this issue but nothing works so far.
 
-**Workaround:** Open the ride app with a profile with any Ki2 data elements, before starting the ride, back out from the ride app and return to the dashboard via the back button. The next time the ride app is opened from the dashboard or from a route, all Ki2 data elements should appear.
+**Workaround:** Open the ride app with a profile with any Ki2 data elements, before starting the ride, back out from the ride app and return to the dashboard via the back button. The next time the ride app is opened from the dashboard or from a route, all Ki2 data elements should appear. This workaround is applied automatically if the "Pre load ride application" setting is enabled.
 
 ### Hood buttons don't work in the control center or outside the ride app (or in a ride profile without any Ki2 data elements)
 
-This is a limitation of the Karoo SDK and a restriction of Android. Unfortunately the Karoo SDK does not provide any wcommands, so the implementation has to perform restricted Android operations that are not allowed when Ki2 app is on the background.
+This is a limitation of the Karoo SDK and a restriction of Android. Unfortunately the Karoo SDK does not provide any way to send commands, so the implementation has to perform restricted Android operations that are not allowed when Ki2 app is on the background.
 
 **Workaround:** There is no known workaround, hood buttons only work in the ride app when a Ki2 data element is present on any page.
 
