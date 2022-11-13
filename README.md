@@ -154,7 +154,7 @@ No! I don't work for hammerhead and I don't have access to their code. I'm just 
 
 ### Hood buttons are inverted or don't work as expected?
 
-It might be because your shifting configuration has a different action assigned to the hood buttons. Ki2 expects _Channel 1_ for left button and _Channel 2_ for right button. If your shifting configuration is different, you might experience weird behavior. Please double check the configuration via the official shifting app available on smartphones. _Channel 3_ and _Channel 4_ are currently not supported.
+It might be because your shifting configuration has a different action assigned to the hood buttons. Ki2 expects _Channel 1_ for left button and _Channel 2_ for right button. If your shifting configuration is different, you might experience weird behavior. Please double check the configuration via the manufacturer's official shifting app available on smartphones. _Channel 3_ and _Channel 4_ are currently not supported.
 
 ### It does not work or I have a problem
 
