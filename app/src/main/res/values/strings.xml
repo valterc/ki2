@@ -6,6 +6,7 @@
     <string name="category_preference_switches">Switches</string>
     <string name="category_preference_left_switch">Left Switch</string>
     <string name="category_preference_right_switch">Right Switch</string>
+    <string name="category_preference_pre_load">Pre load</string>
 
     <string name="title_preference_left_single_press">Left Single Press</string>
     <string name="title_preference_left_double_press">Left Double Press</string>
@@ -15,12 +16,16 @@
     <string name="title_preference_right_double_press">Right Double Press</string>
     <string name="title_preference_right_hold">Right Hold</string>
 
+    <string name="title_preference_pre_load">Pre load ride application</string>
+    <string name="summary_preference_pre_load">Pre load the ride application to avoid data elements not showing after startup</string>
+
     <string name="preference_left_switch_single_press">LEFT_SWITCH_SINGLE_PRESS</string>
     <string name="preference_left_switch_double_press">LEFT_SWITCH_DOUBLE_PRESS</string>
     <string name="preference_left_switch_hold">LEFT_SWITCH_HOLD</string>
     <string name="preference_right_switch_single_press">RIGHT_SWITCH_SINGLE_PRESS</string>
     <string name="preference_right_switch_double_press">RIGHT_SWITCH_DOUBLE_PRESS</string>
     <string name="preference_right_switch_hold">RIGHT_SWITCH_HOLD</string>
+    <string name="preference_pre_load">PRE_LOAD</string>
 
     <!-- General -->
 
