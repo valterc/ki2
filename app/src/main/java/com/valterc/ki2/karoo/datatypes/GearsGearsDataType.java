@@ -9,6 +9,7 @@ import androidx.appcompat.content.res.AppCompatResources;
 import com.valterc.ki2.R;
 import com.valterc.ki2.karoo.Ki2Context;
 import com.valterc.ki2.karoo.views.GearsSdkView;
+import com.valterc.ki2.utils.CallerUtils;
 
 import java.util.Collections;
 import java.util.List;
@@ -28,8 +29,8 @@ public class GearsGearsDataType extends Ki2DataType {
     public GearsGearsDataType(@NonNull Ki2Context context) {
         super(context);
 
-        this.drawables = Collections.singletonList(
-                AppCompatResources.getDrawable(getContext(), R.drawable.ic_gear));
+        this.drawables = CallerUtils.safeWrap(() -> Collections.singletonList(
+                AppCompatResources.getDrawable(getContext(), R.drawable.ic_hh_gear)));
     }
 
     @NonNull

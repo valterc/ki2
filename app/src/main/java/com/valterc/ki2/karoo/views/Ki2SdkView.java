@@ -9,9 +9,9 @@ import android.view.View;
 import android.view.ViewParent;
 
 import androidx.annotation.NonNull;
-import androidx.core.graphics.ColorUtils;
 
 import com.valterc.ki2.karoo.Ki2Context;
+import com.valterc.ki2.utils.ColorUtils;
 
 import io.hammerhead.sdk.v0.datatype.view.SdkView;
 

@@ -10,6 +10,7 @@ import android.util.Log;
 import androidx.preference.PreferenceManager;
 
 import com.valterc.ki2.R;
+import com.valterc.ki2.karoo.hooks.RideActivityHook;
 
 public class Ki2BroadcastReceiver extends BroadcastReceiver {
 
@@ -27,12 +28,8 @@ public class Ki2BroadcastReceiver extends BroadcastReceiver {
                 SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
                 boolean preload = preferences.getBoolean(context.getString(R.string.preference_pre_load), false);
                 if (preload) {
-                    Log.i(TAG, "Pre-load enabled, starting ride application");
-
-                    Intent intentRideActivity = new Intent(Intent.ACTION_MAIN);
-                    intentRideActivity.setClassName("io.hammerhead.rideapp", "io.hammerhead.rideapp.views.ride.RideActivity");
-                    intentRideActivity.putExtra("ki2.preload", true);
-                    context.startActivity(intentRideActivity);
+                    Log.i(TAG, "Pre-load enabled, preloading ride application");
+                    RideActivityHook.preload(context);
                 }
 
                 break;
