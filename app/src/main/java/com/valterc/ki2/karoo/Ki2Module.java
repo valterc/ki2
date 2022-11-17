@@ -1,8 +1,6 @@
 package com.valterc.ki2.karoo;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,7 +15,6 @@ import com.valterc.ki2.karoo.datatypes.ShiftCountTextDataType;
 import com.valterc.ki2.karoo.datatypes.ShiftModeTextDataType;
 import com.valterc.ki2.karoo.hooks.RideActivityHook;
 import com.valterc.ki2.karoo.service.Ki2ServiceClient;
-import com.valterc.ki2.utils.ActivityUtils;
 
 import java.util.Arrays;
 import java.util.List;
@@ -45,23 +42,9 @@ public class Ki2Module extends Module {
     public Ki2Module(@NonNull SdkContext context) {
         super(context);
 
-        handlePreload();
+        RideActivityHook.tryHandlePreload(getContext());
         serviceClient = new Ki2ServiceClient(context);
         ki2Context = new Ki2Context(context, serviceClient);
-    }
-
-    private void handlePreload() {
-        if (RideActivityHook.isRideActivityProcess()) {
-            Activity activity = ActivityUtils.getRunningActivity();
-            if (activity != null) {
-                boolean preload = activity.getIntent().getBooleanExtra("ki2.preload", false);
-                Log.d("KI2", "Ride activity preload extra: " + preload);
-                if (preload) {
-                    Log.d("KI2", "Finish activity");
-                    activity.finish();
-                }
-            }
-        }
     }
 
     @NonNull
