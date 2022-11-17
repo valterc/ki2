@@ -11,11 +11,11 @@ public final class CallerUtils {
     private CallerUtils() {
     }
 
-    public static <T> T safeWrap(Supplier<T> supplier) {
+    public static <TReturn> TReturn safeWrap(Supplier<TReturn> supplier) {
         try {
             return supplier.get();
         } catch (Exception e) {
-            Log.w("KI2", "Exception from supplied: " + e);
+            Log.w("KI2", "Exception from supplier: " + e);
             return null;
         }
     }
