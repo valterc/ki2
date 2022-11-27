@@ -4,13 +4,13 @@ Ki2 is an _app_/_addon_/_plugin_ for Hammerhead Karoo 2 devices. It is a compani
 
 ## Screenshots
 
-![Ki2 main application](images/image_0.png?raw=true "Ki2 main application")
-![Ki2 settings](images/image_1.png?raw=true "Ki2 settings")
-![Connection to device](images/image_2.png?raw=true "Connection to device")
-![Gears information](images/image_3.png?raw=true "Gears information")
-![Edit Karoo profile with Ki2 items](images/image_4.png?raw=true "Edit Karoo profile with Ki2 items")
-![Ride profile with Ki2 data elements](images/image_5.png?raw=true "Ride profile with Ki2 data elements")
-![Ride profile with Ki2 data elements](images/image_6.png?raw=true "Ride profile with Ki2 data elements")
+![Ki2 main application](media/image_0.png?raw=true "Ki2 main application")
+![Ki2 settings](media/image_1.png?raw=true "Ki2 settings")
+![Connection to device](media/image_2.png?raw=true "Connection to device")
+![Gears information](media/image_3.png?raw=true "Gears information")
+![Edit Karoo profile with Ki2 items](media/image_4.png?raw=true "Edit Karoo profile with Ki2 items")
+![Ride profile with Ki2 data elements](media/image_5.png?raw=true "Ride profile with Ki2 data elements")
+![Ride profile with Ki2 data elements](media/image_6.png?raw=true "Ride profile with Ki2 data elements")
 
 These screenshots have been _slightly_ edited.
 
@@ -61,7 +61,9 @@ This app utilizes the Android environment along with the ANT service and the Kar
         - Make sure to replace the `APK-FILE-PATH` with the disk location of the APK file that was downloaded
 3. The Ki2 app should appear in the app list below Sensors, Settings, etc
 4. Open the Ki2 app to pair and configure a wireless shifting connection
+  media/ki2-1-connect?raw=true
 5. Add Ki2 data elements to Karoo profiles from the Karoo profile editor, choose the Ki2 elements when modifying a profile
+  media/ki2-2-profile?raw=true
 
 ### Supported Karoo software versions
 
