@@ -63,7 +63,7 @@ This app utilizes the Android environment along with the ANT service and the Kar
 4. Open the Ki2 app to pair and configure a wireless shifting connection
   media/ki2-1-connect?raw=true
 5. Add Ki2 data elements to Karoo profiles from the Karoo profile editor, choose the Ki2 elements when modifying a profile
-  media/ki2-2-profile?raw=true
+  https://github.com/valterc/ki2/blob/update-readme/media/ki2-2-profile.mp4?raw=true
 
 ### Supported Karoo software versions
 
