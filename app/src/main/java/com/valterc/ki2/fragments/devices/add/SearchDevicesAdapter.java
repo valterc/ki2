@@ -28,8 +28,7 @@ public class SearchDevicesAdapter extends RecyclerView.Adapter<SearchDevicesView
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    public void setDevices(Collection<DeviceId> devices)
-    {
+    public void setDevices(Collection<DeviceId> devices) {
         this.devices.clear();
         if (devices != null && devices.size() > 0){
             this.devices.addAll(devices);
