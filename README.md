@@ -66,7 +66,7 @@ This app utilizes the Android environment along with the ANT service and the Kar
    7. The output from the adb command should show your Karoo device
    8. Install the APK with the following command: `adb.exe install "APK-FILE-PATH"` (`.\adb.exe install "APK-FILE-PATH"`)
         - Make sure to replace the `APK-FILE-PATH` with the disk location of the APK file that was downloaded
-        - If you are updating the Ki2 app, you should use the following command variation: `adb.exe install -r "APK-FILE-PATH"` to avoid having to uninstall Ki2 before installing the app update.
+        - **(for updates)** If you are updating the Ki2 app, you should use the following command variation: `adb.exe install -r "APK-FILE-PATH"` (with the **-r** argument) to avoid having to uninstall Ki2 before installing the app update.
 3. The Ki2 app should appear in the app list below Sensors, Settings, etc
 4. Open the Ki2 app to pair and configure a wireless shifting connection ([Video](https://user-images.githubusercontent.com/1299179/204136334-c8a5a395-c6b5-4d16-a8d5-ff1fa2dd726d.mp4))
    - Make sure you don't have the shifting system paired with Karoo (if you are on an old Karoo software version that still supports it)
