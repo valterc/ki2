@@ -4,13 +4,13 @@ Ki2 is an _app_/_addon_/_plugin_ for Hammerhead Karoo 2 devices. It is a compani
 
 ## Screenshots
 
-![Ki2 main application](images/image_0.png?raw=true "Ki2 main application")
-![Ki2 settings](images/image_1.png?raw=true "Ki2 settings")
-![Connection to device](images/image_2.png?raw=true "Connection to device")
-![Gears information](images/image_3.png?raw=true "Gears information")
-![Edit Karoo profile with Ki2 items](images/image_4.png?raw=true "Edit Karoo profile with Ki2 items")
-![Ride profile with Ki2 data elements](images/image_5.png?raw=true "Ride profile with Ki2 data elements")
-![Ride profile with Ki2 data elements](images/image_6.png?raw=true "Ride profile with Ki2 data elements")
+![Ki2 main application](media/image_0.png?raw=true "Ki2 main application")
+![Ki2 settings](media/image_1.png?raw=true "Ki2 settings")
+![Connection to device](media/image_2.png?raw=true "Connection to device")
+![Gears information](media/image_3.png?raw=true "Gears information")
+![Edit Karoo profile with Ki2 items](media/image_4.png?raw=true "Edit Karoo profile with Ki2 items")
+![Ride profile with Ki2 data elements](media/image_5.png?raw=true "Ride profile with Ki2 data elements")
+![Ride profile with Ki2 data elements](media/image_6.png?raw=true "Ride profile with Ki2 data elements")
 
 These screenshots have been _slightly_ edited.
 
@@ -43,8 +43,15 @@ This app utilizes the Android environment along with the ANT service and the Kar
 
 ## How can I try this app?
 
+1. Download Ki2 APK file from Github release page
+2. Sideload Ki2 into Karoo
+3. Connect to shifting devices from Ki2 and use Ki2 data elements in Karoo profiles
+
+<details>
+<summary>Full Instructions</summary>
+
 1. Check and download the _APK_ file on the latest release found on the right side of the GitHub page
-2. Install the APK file on your Karoo:
+2. Install/Update the APK file on your Karoo:
     - (Recommended) [Follow this guide from DC Rainmaker](https://www.dcrainmaker.com/2021/02/how-to-sideload-android-apps-on-your-hammerhead-karoo-1-karoo-2.html)
    1. Activate Karoo developer options:
       - Open Settings > About
@@ -59,9 +66,17 @@ This app utilizes the Android environment along with the ANT service and the Kar
    7. The output from the adb command should show your Karoo device
    8. Install the APK with the following command: `adb.exe install "APK-FILE-PATH"` (`.\adb.exe install "APK-FILE-PATH"`)
         - Make sure to replace the `APK-FILE-PATH` with the disk location of the APK file that was downloaded
+        - **(for updates)** If you are updating the Ki2 app, you should use the following command variation: `adb.exe install -r "APK-FILE-PATH"` (with the **-r** argument) to avoid having to uninstall Ki2 before installing the app update.
 3. The Ki2 app should appear in the app list below Sensors, Settings, etc
-4. Open the Ki2 app to pair and configure a wireless shifting connection
-5. Add Ki2 data elements to Karoo profiles from the Karoo profile editor, choose the Ki2 elements when modifying a profile
+4. Open the Ki2 app to pair and configure a wireless shifting connection ([Video](https://user-images.githubusercontent.com/1299179/204136334-c8a5a395-c6b5-4d16-a8d5-ff1fa2dd726d.mp4))
+   - Make sure you don't have the shifting system paired with Karoo (if you are on an old Karoo software version that still supports it)
+   - Make sure you have less than 14 ANT devices added/paired in Karoo
+   - Open Ki2 and press the + button, searching for shifting devices will start
+   - On your shifting system, you need to enable connection/pairing mode. This is usually done by holding the function button for a second or so. (The green and red lights in will flash in alternating order - if your version has those.)
+   - The shifting device should appear in Ki2 search results list.
+5. Add Ki2 data elements to Karoo profiles from the Karoo profile editor, choose the Ki2 elements when modifying a profile ([Video](https://user-images.githubusercontent.com/1299179/204136325-69bcbf7a-b69f-45ed-96c4-3d9a52112089.mp4))
+
+</details>
 
 ### Supported Karoo software versions
 
