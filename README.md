@@ -43,11 +43,12 @@ This app utilizes the Android environment along with the ANT service and the Kar
 
 ## How can I try this app?
 
-1. Download Ki2 APK file from Github release
+1. Download Ki2 APK file from Github release page
 2. Sideload Ki2 into Karoo
 3. Connect to shifting devices from Ki2 and use Ki2 data elements in Karoo profiles
 
-<details><summary>Full Instructions</summary>
+<details>
+<summary>Full Instructions</summary>
 
 1. Check and download the _APK_ file on the latest release found on the right side of the GitHub page
 2. Install/Update the APK file on your Karoo:
