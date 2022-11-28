@@ -13,6 +13,7 @@ import com.valterc.ki2.services.callbacks.IMessageCallback;
 
 import com.valterc.ki2.data.device.DeviceId;
 import com.valterc.ki2.data.message.Message;
+import com.valterc.ki2.data.preferences.PreferencesView;
 
 interface IKi2Service {
 
@@ -47,6 +48,8 @@ interface IKi2Service {
     void clearMessage(String key);
     void clearMessages();
     List<Message> getMessages();
+
+    PreferencesView getPreferences();
 
     void restartDeviceScan();
     void restartDeviceConnections();

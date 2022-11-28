@@ -29,6 +29,7 @@ import com.valterc.ki2.data.info.ManufacturerInfo;
 import com.valterc.ki2.data.input.KarooKeyEvent;
 import com.valterc.ki2.data.message.Message;
 import com.valterc.ki2.data.message.MessageManager;
+import com.valterc.ki2.data.preferences.PreferencesView;
 import com.valterc.ki2.data.shifting.ShiftingInfo;
 import com.valterc.ki2.data.switches.SwitchEvent;
 import com.valterc.ki2.input.InputManager;
@@ -349,6 +350,11 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
         }
 
         @Override
+        public PreferencesView getPreferences() {
+            return new PreferencesView(Ki2Service.this);
+        }
+
+        @Override
         public void restartDeviceScan() {
             serviceHandler.postRetriableAction(() -> {
                 antScanner.stopScan();
@@ -474,6 +480,7 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
         sendCommandToDevice(deviceId, CommandType.SHIFTING_MODE, null);
     }
 
+    @SuppressWarnings("SameParameterValue")
     private void sendCommandToDevice(DeviceId deviceId, CommandType commandType, Parcelable data) throws RemoteException {
         IAntDeviceConnection antDeviceConnection = antConnectionManager.getConnection(deviceId);
 

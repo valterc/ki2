@@ -10,6 +10,7 @@ import android.widget.Toast;
 import com.valterc.ki2.R;
 import com.valterc.ki2.data.device.BatteryInfo;
 import com.valterc.ki2.data.device.DeviceId;
+import com.valterc.ki2.data.preferences.PreferencesView;
 import com.valterc.ki2.karoo.hooks.KarooActivityServiceNotificationControllerHook;
 import com.valterc.ki2.karoo.hooks.KarooAudioAlertHook;
 import com.valterc.ki2.karoo.notification.LowBatteryCategory;
@@ -19,11 +20,10 @@ import com.valterc.ki2.karoo.notification.LowBatteryNotification;
 public class LowBatteryHandler {
 
     private static final long TIME_NOTIFY_AFTER_PAUSE_MS = 2 * 60 * 1000;
-    private static final int BATTERY_PERCENTAGE_THRESHOLD_LOW = 20;
-    private static final int BATTERY_PERCENTAGE_THRESHOLD_CRITICAL = 10;
 
     private final Ki2Context context;
-
+    private final Integer batteryLevelLow;
+    private final Integer batteryLevelCritical;
     private DeviceId notifiedDeviceId;
     private BatteryInfo notifiedBatteryInfo;
     private LowBatteryCategory notifiedCategory;
@@ -33,6 +33,10 @@ public class LowBatteryHandler {
     public LowBatteryHandler(Ki2Context context) {
         this.context = context;
         context.getServiceClient().registerBatteryInfoWeakListener(this::onBattery);
+
+        PreferencesView preferences = context.getServiceClient().getPreferences();
+        batteryLevelLow = preferences.getBatteryLevelLow(context.getSdkContext());
+        batteryLevelCritical = preferences.getBatteryLevelCritical(context.getSdkContext());
     }
 
     public void onPause() {
@@ -46,9 +50,9 @@ public class LowBatteryHandler {
     }
 
     private LowBatteryCategory getCategory(BatteryInfo batteryInfo) {
-        if (batteryInfo.getValue() <= BATTERY_PERCENTAGE_THRESHOLD_CRITICAL) {
+        if (batteryLevelCritical != null && batteryInfo.getValue() <= batteryLevelCritical) {
             return LowBatteryCategory.CRITICAL;
-        } else if (batteryInfo.getValue() <= BATTERY_PERCENTAGE_THRESHOLD_LOW) {
+        } else if (batteryLevelLow != null && batteryInfo.getValue() <= batteryLevelLow) {
             return LowBatteryCategory.LOW;
         }
 
@@ -74,7 +78,7 @@ public class LowBatteryHandler {
         }
 
         Handler handler = new Handler(Looper.getMainLooper());
-        handler.postDelayed((Runnable) () -> {
+        handler.postDelayed(() -> {
             Log.d("KI2", "Low battery notification");
 
             boolean karooNotificationResult = KarooActivityServiceNotificationControllerHook.showSensorLowBatteryNotification(context.getSdkContext(), deviceId.getName());
