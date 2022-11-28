@@ -1,14 +1,10 @@
 package com.valterc.ki2.karoo;
 
 import android.annotation.SuppressLint;
-import android.content.SharedPreferences;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.preference.PreferenceManager;
 
-import com.valterc.ki2.R;
 import com.valterc.ki2.data.message.RideStatusMessage;
 import com.valterc.ki2.data.ride.RideStatus;
 import com.valterc.ki2.karoo.datatypes.BatteryTextDataType;
