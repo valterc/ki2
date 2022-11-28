@@ -45,6 +45,9 @@ public class PreferencesView implements Parcelable {
         preferenceMap = preferences.getAll();
     }
 
+    /**
+     * Generate a new empty preference view with no preferences set.
+     */
     public PreferencesView() {
         preferenceMap = new HashMap<>();
     }
