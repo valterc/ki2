@@ -60,6 +60,7 @@
     </string-array>
 
     <string-array name="preference_titles_battery_level_low">
+        <item>60%</item>
         <item>50%</item>
         <item>40%</item>
         <item>30%</item>
@@ -68,6 +69,7 @@
     </string-array>
 
     <string-array name="preference_values_battery_level_low">
+        <item>60</item>
         <item>50</item>
         <item>40</item>
         <item>30</item>
