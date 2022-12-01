@@ -58,4 +58,35 @@
         <item>map_graph_zoom_in</item>
         <item>repeat_single_press</item>
     </string-array>
+
+    <string-array name="preference_titles_battery_level_low">
+        <item>60%</item>
+        <item>50%</item>
+        <item>40%</item>
+        <item>30%</item>
+        <item>20%</item>
+        <item>Off</item>
+    </string-array>
+
+    <string-array name="preference_values_battery_level_low">
+        <item>60</item>
+        <item>50</item>
+        <item>40</item>
+        <item>30</item>
+        <item>20</item>
+        <item>off</item>
+    </string-array>
+
+    <string-array name="preference_titles_battery_level_critical">
+        <item>20%</item>
+        <item>10%</item>
+        <item>Off</item>
+    </string-array>
+
+    <string-array name="preference_values_battery_level_critical">
+        <item>20</item>
+        <item>10</item>
+        <item>off</item>
+    </string-array>
+
 </resources>

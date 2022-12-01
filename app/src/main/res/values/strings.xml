@@ -7,6 +7,7 @@
     <string name="category_preference_left_switch">Left Switch</string>
     <string name="category_preference_right_switch">Right Switch</string>
     <string name="category_preference_pre_load">Pre load</string>
+    <string name="category_preference_battery_notification">Battery Notification</string>
 
     <string name="title_preference_left_single_press">Left Single Press</string>
     <string name="title_preference_left_double_press">Left Double Press</string>
@@ -17,7 +18,15 @@
     <string name="title_preference_right_hold">Right Hold</string>
 
     <string name="title_preference_pre_load">Pre load ride application</string>
+
+    <string name="title_preference_battery_level_low">Battery low</string>
+    <string name="title_preference_battery_level_critical">Battery critical</string>
+
     <string name="summary_preference_pre_load">Pre load the ride application to avoid data elements not showing after startup</string>
+    <string name="summary_preference_battery_notification">Show notifications when the shifting battery level drop to a certain value</string>
+
+    <string name="default_preference_battery_level_low">20</string>
+    <string name="default_preference_battery_level_critical">10</string>
 
     <string name="preference_left_switch_single_press">LEFT_SWITCH_SINGLE_PRESS</string>
     <string name="preference_left_switch_double_press">LEFT_SWITCH_DOUBLE_PRESS</string>
@@ -26,6 +35,8 @@
     <string name="preference_right_switch_double_press">RIGHT_SWITCH_DOUBLE_PRESS</string>
     <string name="preference_right_switch_hold">RIGHT_SWITCH_HOLD</string>
     <string name="preference_pre_load">PRE_LOAD</string>
+    <string name="preference_battery_level_low">BATTERY_LEVEL_LOW</string>
+    <string name="preference_battery_level_critical">BATTERY_LEVEL_CRITICAL</string>
 
     <!-- General -->
 

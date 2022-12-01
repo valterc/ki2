@@ -1,4 +1,5 @@
-<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory app:title="@string/category_preference_switches">
 
@@ -59,6 +60,27 @@
         </PreferenceCategory>
 
     </PreferenceCategory>
+
+    <com.valterc.ki2.views.MultiLinePreferenceCategory app:title="@string/category_preference_battery_notification"
+            app:summary="@string/summary_preference_battery_notification">
+
+        <ListPreference
+            app:defaultValue="@string/default_preference_battery_level_low"
+            app:entries="@array/preference_titles_battery_level_low"
+            app:entryValues="@array/preference_values_battery_level_low"
+            app:key="@string/preference_battery_level_low"
+            app:title="@string/title_preference_battery_level_low"
+            app:useSimpleSummaryProvider="true" />
+
+        <ListPreference
+            app:defaultValue="@string/default_preference_battery_level_critical"
+            app:entries="@array/preference_titles_battery_level_critical"
+            app:entryValues="@array/preference_values_battery_level_critical"
+            app:key="@string/preference_battery_level_critical"
+            app:title="@string/title_preference_battery_level_critical"
+            app:useSimpleSummaryProvider="true" />
+
+    </com.valterc.ki2.views.MultiLinePreferenceCategory>
 
     <PreferenceCategory app:title="@string/category_preference_pre_load">
 

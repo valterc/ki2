@@ -15,6 +15,7 @@ import com.valterc.ki2.data.device.BatteryInfo;
 import com.valterc.ki2.data.device.DeviceId;
 import com.valterc.ki2.data.input.KarooKeyEvent;
 import com.valterc.ki2.data.message.Message;
+import com.valterc.ki2.data.preferences.PreferencesView;
 import com.valterc.ki2.data.shifting.ShiftingInfo;
 import com.valterc.ki2.input.InputAdapter;
 import com.valterc.ki2.services.IKi2Service;
@@ -33,6 +34,7 @@ import io.hammerhead.sdk.v0.SdkContext;
 @SuppressLint("LogNotTimber")
 public class Ki2ServiceClient {
 
+    @SuppressWarnings("FieldCanBeLocal")
     private final ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder binder) {
@@ -329,6 +331,20 @@ public class Ki2ServiceClient {
         } catch (Exception e) {
             Log.e("KI2", "Unable to unregister listener", e);
         }
+    }
+
+    public PreferencesView getPreferences() {
+        if (service == null) {
+            return new PreferencesView();
+        }
+
+        try {
+            return service.getPreferences();
+        } catch (Exception e) {
+            Log.e("KI2", "Unable to get preferences", e);
+        }
+
+        return new PreferencesView();
     }
 
 }
