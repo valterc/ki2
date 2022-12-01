@@ -23,7 +23,7 @@
     <string name="title_preference_battery_level_critical">Battery critical</string>
 
     <string name="summary_preference_pre_load">Pre load the ride application to avoid data elements not showing after startup</string>
-    <string name="summary_preference_battery_notification">Show notifications when the shifting battery level drop to a certain value</string>
+    <string name="summary_preference_battery_notification">Show notifications when the shifting battery level is at or below a certain value</string>
 
     <string name="default_preference_battery_level_low">20</string>
     <string name="default_preference_battery_level_critical">10</string>
