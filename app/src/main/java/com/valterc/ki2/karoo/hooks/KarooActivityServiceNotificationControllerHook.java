@@ -81,7 +81,7 @@ public class KarooActivityServiceNotificationControllerHook {
                     for (Field fieldNotificationSubject: fieldsInNotificationController) {
 
                         if (fieldNotificationSubject.getType().getTypeParameters().length == 1 &&
-                                fieldNotificationSubject.getGenericType().getTypeName().contains("Notification")) {
+                                fieldNotificationSubject.getGenericType().toString().contains("Notification")) {
 
                             fieldNotificationSubject.setAccessible(true);
                             Object notificationSubject = fieldNotificationSubject.get(notificationController);
