@@ -29,10 +29,18 @@ public class KarooAudioAlertHook {
             Class<? extends Enum> audioAlertClass = (Class<? extends Enum>) Class.forName("io.hammerhead.datamodels.profiles.AudioAlert");
             Enum audioAlertSensorBatteryLow = Enum.valueOf(audioAlertClass, "SENSOR_BATTERY_LOW");
 
-            Method handleAlertMethod = audioAlertClass.getMethod("broadcast", Context.class, String.class);
-            handleAlertMethod.invoke(audioAlertSensorBatteryLow, context.getBaseContext(), null);
+            Method[] methodsAudioAlert = audioAlertClass.getMethods();
+
+            for (Method methodBroadcast: methodsAudioAlert) {
+                if (methodBroadcast.getParameterCount() == 2) {
+                    Class<?>[] parameterTypes = methodBroadcast.getParameterTypes();
+                    if (parameterTypes[0] == Context.class && parameterTypes[1] == String.class) {
+                        methodBroadcast.invoke(audioAlertSensorBatteryLow, context.getBaseContext(), null);
+                    }
+                }
+            }
         } catch (Exception e) {
-            Log.e("KI2", "Unable to trigger audio alert: " + e);
+            Log.e("KI2", "Unable to trigger audio alert using method 1: " + e);
             return false;
         }
 
