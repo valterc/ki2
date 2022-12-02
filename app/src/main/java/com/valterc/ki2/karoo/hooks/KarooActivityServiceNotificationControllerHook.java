@@ -19,12 +19,7 @@ public class KarooActivityServiceNotificationControllerHook {
 
     public static boolean showSensorLowBatteryNotification(SdkContext context, String deviceName) {
         boolean result = showSensorLowBatteryNotification_1(context, deviceName);
-
-        if (result) {
-            return true;
-        }
-
-        return showSensorLowBatteryNotification_2(context, deviceName);
+        return result || showSensorLowBatteryNotification_2(context, deviceName);
     }
 
     private static boolean showSensorLowBatteryNotification_1(SdkContext context, String deviceName) {
