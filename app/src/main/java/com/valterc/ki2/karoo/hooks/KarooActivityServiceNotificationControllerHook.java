@@ -18,6 +18,16 @@ public class KarooActivityServiceNotificationControllerHook {
     }
 
     public static boolean showSensorLowBatteryNotification(SdkContext context, String deviceName) {
+        boolean result = showSensorLowBatteryNotification_1(context, deviceName);
+
+        if (result) {
+            return true;
+        }
+
+        return showSensorLowBatteryNotification_2(context, deviceName);
+    }
+
+    private static boolean showSensorLowBatteryNotification_1(SdkContext context, String deviceName) {
         try {
             Class<?> classActivityServiceApplication = Class.forName("io.hammerhead.activityservice.ActivityServiceApplication");
             Method methodGetActivityComponent = classActivityServiceApplication.getMethod("getActivityComponent");
@@ -45,7 +55,63 @@ public class KarooActivityServiceNotificationControllerHook {
 
             throw new Exception("Unable to hook into notification publisher");
         } catch (Exception e) {
-            Log.e("KI2", "Unable to publish notification: " + e);
+            Log.w("KI2", "Unable to publish notification using method 1: " + e);
+        }
+
+        return false;
+    }
+
+    private static boolean showSensorLowBatteryNotification_2(SdkContext context, String deviceName) {
+        try {
+            Class<?> classActivityServiceApplication = Class.forName("io.hammerhead.activityservice.ActivityServiceApplication");
+            Field[] fieldsInActivityServiceApplication = classActivityServiceApplication.getDeclaredFields();
+
+            for (Field fieldActivityComponent: fieldsInActivityServiceApplication) {
+                fieldActivityComponent.setAccessible(true);
+                Object activityComponent = fieldActivityComponent.get(context.getBaseContext());
+
+                if (activityComponent == null) {
+                    continue;
+                }
+
+                Method[] methodsInActivityComponent = activityComponent.getClass().getDeclaredMethods();
+                for (Method method: methodsInActivityComponent) {
+                    Field[] fieldsInNotificationController = method.getReturnType().getDeclaredFields();
+
+                    if (fieldsInNotificationController.length == 0) {
+                        continue;
+                    }
+
+                    Object notificationController = method.invoke(activityComponent);
+                    for (Field fieldNotificationSubject: fieldsInNotificationController) {
+
+                        if (fieldNotificationSubject.getType().getTypeParameters().length == 1 &&
+                                fieldNotificationSubject.getGenericType().getTypeName().contains("Notification")) {
+
+                            fieldNotificationSubject.setAccessible(true);
+                            Object notificationSubject = fieldNotificationSubject.get(notificationController);
+
+                            if (notificationSubject == null) {
+                                continue;
+                            }
+
+                            Method[] methodsInPublishSubject = notificationSubject.getClass().getDeclaredMethods();
+
+                            for (Method methodOnNext: methodsInPublishSubject) {
+                                Type[] types = methodOnNext.getGenericParameterTypes();
+                                if (types.length == 1 && types[0].toString().equals("T")) {
+                                    methodOnNext.invoke(notificationSubject, KarooNotificationHook.buildSensorLowBatteryNotification(context.getString(R.string.text_param_di2_name, deviceName)));
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            throw new Exception("Unable to hook into notification publisher");
+        } catch (Exception e) {
+            Log.w("KI2", "Unable to publish notification using method 2: " + e);
         }
 
         return false;
