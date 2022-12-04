@@ -106,7 +106,6 @@ public class DeviceDetailsFragment extends Fragment implements IKarooKeyListener
             try {
                 viewModel.reconnect();
                 buttonReconnect.setVisibility(ViewGroup.GONE);
-                buttonReconnect.setVisibility(ViewGroup.GONE);
                 textViewConnectionStatus.setText(R.string.text_connecting);
                 textViewConnectionStatus.setTextColor(requireContext().getColor(R.color.hh_black));
             } catch (Exception e) {
