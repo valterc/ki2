@@ -98,5 +98,22 @@
     <string name="text_dismiss">Dismiss</string>
     <string name="text_param_di2_low_battery">Battery of Di2 %s at %d%%</string>
     <string name="text_di2_low_battery">Di2 low battery</string>
+    <string name="text_update_complete">Update complete</string>
+    <string name="text_report_problems">Report problems at:\nhttps://github.com/valterc/ki2</string>
+    <string name="text_check_for_updates">Check for updates</string>
+    <string name="text_on_latest_version">You have the latest version available.</string>
+    <string name="text_unable_to_update">Unable to update.</string>
+    <string name="text_header_error_prefix">Error:</string>
+    <string name="text_updating">Updating…</string>
+    <string name="text_update_accept_prompts">Please <b>accept the permissions and package install</b> when prompted by the system.</string>
+    <string name="text_update_available">Update available</string>
+    <string name="text_update_ki2">Update Ki2</string>
+    <string name="text_header_new_version">New version:</string>
+    <string name="text_header_details">Details:</string>
+    <string name="text_header_release_date">Release date:</string>
+    <string name="text_checking_for_updates">Checking for updates…</string>
+    <string name="text_header_current_version">Current version:</string>
+    <string name="text_update">Update</string>
+    <string name="text_update_error_permissions">Permission not granted. You need to allow Ki2 to install unknown apps.</string>
 
 </resources>
