@@ -54,6 +54,7 @@ public class ListDevicesFragment extends Fragment implements IKarooKeyListener {
     public void onStop() {
         super.onStop();
         if (serviceBound) {
+            serviceBound = false;
             viewModel.stopReceivingData();
             requireContext().unbindService(viewModel.getServiceConnection());
         }
