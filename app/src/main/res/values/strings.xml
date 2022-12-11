@@ -8,6 +8,7 @@
     <string name="category_preference_right_switch">Right Switch</string>
     <string name="category_preference_pre_load">Pre load</string>
     <string name="category_preference_battery_notification">Battery Notification</string>
+    <string name="category_preference_update">Update</string>
 
     <string name="title_preference_left_single_press">Left Single Press</string>
     <string name="title_preference_left_double_press">Left Double Press</string>
@@ -105,7 +106,7 @@
     <string name="text_unable_to_update">Unable to update.</string>
     <string name="text_header_error_prefix">Error:</string>
     <string name="text_updating">Updating…</string>
-    <string name="text_update_accept_prompts">Please <b>accept the permissions and package install</b> when prompted by the system.</string>
+    <string name="text_update_accept_prompts">Please <b>accept the permissions and package install</b> when prompted by the system.\n\nDuring the update <b>the app will close and restart a few seconds later</b>.</string>
     <string name="text_update_available">Update available</string>
     <string name="text_update_ki2">Update Ki2</string>
     <string name="text_header_new_version">New version:</string>
@@ -115,5 +116,14 @@
     <string name="text_header_current_version">Current version:</string>
     <string name="text_update">Update</string>
     <string name="text_update_error_permissions">Permission not granted. You need to allow Ki2 to install unknown apps.</string>
+    <string name="text_param_update_available_version">Update available for Ki2, version %s.</string>
+    <string name="text_update_tutorial_2">Enable <b>Allow from this source</b> for Ki2 to be able to install the update.</string>
+    <string name="text_update_tutorial_1">When prompted by the system, press <b>Settings</b> and enable app installation. This is required for the app update.</string>
+    <string name="text_update_tutorial_3">After enabling <b>Allow from this source</b>, press the left bottom Karoo button to return to the update installation.</string>
+    <string name="text_update_tutorial_4">Press the <b>Install</b> button, the app will close and Ki2 will start after a few seconds.</string>
+    <string name="text_update_tutorial">Update tutorial</string>
+    <string name="text_cancel">Cancel</string>
+    <string name="text_next">Next</string>
+    <string name="text_start_update">Start update</string>
 
 </resources>
