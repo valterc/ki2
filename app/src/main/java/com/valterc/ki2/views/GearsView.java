@@ -20,6 +20,7 @@ import androidx.annotation.Nullable;
 
 import com.valterc.ki2.R;
 
+@SuppressWarnings({"UnnecessaryLocalVariable","unused"})
 public class GearsView extends View  {
 
     private static final int DEFAULT_FRONT_GEAR_MAX = 2;
@@ -220,7 +221,7 @@ public class GearsView extends View  {
 
     private void drawFrontGears(Canvas canvas, float availableHeight, float positionX, float positionY, float gearWidth, float spaceBetweenGears) {
         float minGearHeight = 0.7f;
-        float gearBumpSize = ((1 - minGearHeight) * availableHeight) / (frontGearMax - 1);
+        float gearBumpSize = frontGearMax == 1 ? 0 : ((1 - minGearHeight) * availableHeight) / (frontGearMax - 1);
 
         for (int i = 1; i <= frontGearMax; i++) {
             float positionYStart = positionY + (gearBumpSize * (frontGearMax - i));
@@ -233,7 +234,7 @@ public class GearsView extends View  {
 
     private void drawRearGears(Canvas canvas, float availableHeight, float positionX, float positionY, float gearWidth, float spaceBetweenGears) {
         float minGearHeight = 0.5f;
-        float gearBumpSize = (availableHeight * minGearHeight) / (rearGearMax - 1);
+        float gearBumpSize = rearGearMax == 1 ? 0 : (availableHeight * minGearHeight) / (rearGearMax - 1);
 
         for (int i = 1; i <= rearGearMax; i++) {
             float positionYStart = positionY + (gearBumpSize * (i - 1));
