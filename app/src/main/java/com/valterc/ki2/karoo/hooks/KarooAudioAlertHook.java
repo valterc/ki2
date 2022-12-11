@@ -15,12 +15,8 @@ public class KarooAudioAlertHook {
     private KarooAudioAlertHook() {
     }
 
-    public static void triggerLowBatteryAudioAlert(SdkContext context) {
-        boolean result = triggerLowBatteryAudioAlert_1(context);
-
-        if (!result) {
-            triggerLowBatteryAudioAlert_2(context);
-        }
+    public static boolean triggerLowBatteryAudioAlert(SdkContext context) {
+        return triggerLowBatteryAudioAlert_1(context) || triggerLowBatteryAudioAlert_2(context);
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
@@ -36,22 +32,23 @@ public class KarooAudioAlertHook {
                     Class<?>[] parameterTypes = methodBroadcast.getParameterTypes();
                     if (parameterTypes[0] == Context.class && parameterTypes[1] == String.class) {
                         methodBroadcast.invoke(audioAlertSensorBatteryLow, context.getBaseContext(), null);
+                        return true;
                     }
                 }
             }
         } catch (Exception e) {
             Log.e("KI2", "Unable to trigger audio alert using method 1: " + e);
-            return false;
         }
 
-        return true;
+        return false;
     }
 
-    private static void triggerLowBatteryAudioAlert_2(SdkContext context) {
+    private static boolean triggerLowBatteryAudioAlert_2(SdkContext context) {
         Intent intent = new Intent();
         intent.setAction("io.hammerhead.action.AUDIO_ALERT");
         intent.putExtra("type", 3);
         context.sendBroadcast(intent);
+        return true;
     }
 
 }

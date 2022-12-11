@@ -17,12 +17,7 @@ public class KarooActivityServiceNotificationControllerHook {
     private KarooActivityServiceNotificationControllerHook() {
     }
 
-    public static boolean showSensorLowBatteryNotification(SdkContext context, String deviceName) {
-        boolean result = showSensorLowBatteryNotification_1(context, deviceName);
-        return result || showSensorLowBatteryNotification_2(context, deviceName);
-    }
-
-    private static boolean showSensorLowBatteryNotification_1(SdkContext context, String deviceName) {
+    private static boolean showNotification_1(SdkContext context, Object notification) {
         try {
             Class<?> classActivityServiceApplication = Class.forName("io.hammerhead.activityservice.ActivityServiceApplication");
             Method methodGetActivityComponent = classActivityServiceApplication.getMethod("getActivityComponent");
@@ -43,7 +38,7 @@ public class KarooActivityServiceNotificationControllerHook {
             for (Method method: allMethods) {
                 Type[] types = method.getGenericParameterTypes();
                 if (types.length == 1 && types[0].toString().equals("T")) {
-                    method.invoke(notificationSubject, KarooNotificationHook.buildSensorLowBatteryNotification(context.getString(R.string.text_param_di2_name, deviceName)));
+                    method.invoke(notificationSubject, notification);
                     return true;
                 }
             }
@@ -56,7 +51,7 @@ public class KarooActivityServiceNotificationControllerHook {
         return false;
     }
 
-    private static boolean showSensorLowBatteryNotification_2(SdkContext context, String deviceName) {
+    private static boolean showNotification_2(SdkContext context, Object notification) {
         try {
             Class<?> classActivityServiceApplication = Class.forName("io.hammerhead.activityservice.ActivityServiceApplication");
             Field[] fieldsInActivityServiceApplication = classActivityServiceApplication.getDeclaredFields();
@@ -95,7 +90,7 @@ public class KarooActivityServiceNotificationControllerHook {
                             for (Method methodOnNext: methodsInPublishSubject) {
                                 Type[] types = methodOnNext.getGenericParameterTypes();
                                 if (types.length == 1 && types[0].toString().equals("T")) {
-                                    methodOnNext.invoke(notificationSubject, KarooNotificationHook.buildSensorLowBatteryNotification(context.getString(R.string.text_param_di2_name, deviceName)));
+                                    methodOnNext.invoke(notificationSubject, notification);
                                     return true;
                                 }
                             }
@@ -110,6 +105,12 @@ public class KarooActivityServiceNotificationControllerHook {
         }
 
         return false;
+    }
+
+    public static boolean showSensorLowBatteryNotification(SdkContext context, String deviceName) {
+        Object notification = KarooNotificationHook.buildSensorLowBatteryNotification(context.getString(R.string.text_param_di2_name, deviceName));
+        return showNotification_1(context, notification)
+                || showNotification_2(context, notification);
     }
 
 }
