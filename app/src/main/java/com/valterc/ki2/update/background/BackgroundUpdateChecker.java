@@ -52,7 +52,7 @@ public class BackgroundUpdateChecker {
             } catch (Exception e) {
                 Timber.w(e, "Unable to check for updates");
 
-                if (checkAttempts < MAX_CHECK_ATTEMPS) {
+                if (++checkAttempts < MAX_CHECK_ATTEMPS) {
                     this.executor.schedule(this::checkForUpdates, TIME_S_WAIT_BEFORE_CHECK + (int) (Math.random() * TIME_S_WAIT_BEFORE_CHECK), TimeUnit.SECONDS);
                 }
             }
@@ -61,7 +61,7 @@ public class BackgroundUpdateChecker {
 
     public void tryCheckForUpdates() {
         if (UpdateStateStore.shouldAutomaticallyCheckForUpdatesInBackground(context)) {
-            checkAttempts = 0;
+            checkAttempts = -10; // give more attempts
             this.executor.schedule(this::checkForUpdates, TIME_S_WAIT_BEFORE_CHECK, TimeUnit.SECONDS);
         }
     }
