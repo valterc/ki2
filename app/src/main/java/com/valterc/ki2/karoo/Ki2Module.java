@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.valterc.ki2.BuildConfig;
 import com.valterc.ki2.data.message.RideStatusMessage;
 import com.valterc.ki2.data.ride.RideStatus;
 import com.valterc.ki2.karoo.battery.LowBatteryHandler;
@@ -14,7 +15,6 @@ import com.valterc.ki2.karoo.datatypes.GearsGearsDataType;
 import com.valterc.ki2.karoo.datatypes.GearsTextDataType;
 import com.valterc.ki2.karoo.datatypes.ShiftCountTextDataType;
 import com.valterc.ki2.karoo.datatypes.ShiftModeTextDataType;
-import com.valterc.ki2.karoo.hooks.KarooActivityServiceHook;
 import com.valterc.ki2.karoo.hooks.RideActivityHook;
 import com.valterc.ki2.karoo.service.Ki2ServiceClient;
 import com.valterc.ki2.karoo.update.UpdateAvailableNotification;
@@ -36,8 +36,8 @@ public class Ki2Module extends Module {
     public static ModuleFactoryI factory = Ki2Module::new;
 
     private static final String NAME = "Ki2";
-    private static final String VERSION = "0.1";
 
+    @SuppressWarnings("FieldCanBeLocal")
     private final Ki2ServiceClient serviceClient;
     private final Ki2Context ki2Context;
     private LowBatteryHandler lowBatteryHandler;
@@ -60,7 +60,7 @@ public class Ki2Module extends Module {
     @NonNull
     @Override
     public String getVersion() {
-        return VERSION;
+        return BuildConfig.VERSION_NAME;
     }
 
     @NonNull
