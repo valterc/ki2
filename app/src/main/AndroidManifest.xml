@@ -64,11 +64,14 @@
         <activity
             android:name=".activities.update.UpdateActivity"
             android:exported="true"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.Ki2.NoActionBar.Blue">
             <intent-filter>
-                <action android:exported="true"
-                    android:name="com.valterc.ki2.action.UPDATE" />
                 <action android:name="com.valterc.ki2.action.update.UPDATE_STATUS" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.valterc.ki2.action.UPDATE" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
 
