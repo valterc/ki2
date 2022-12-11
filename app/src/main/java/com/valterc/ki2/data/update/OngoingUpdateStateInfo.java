@@ -5,29 +5,29 @@ import android.os.Parcelable;
 
 import java.time.Instant;
 
-public class UpdateStateInfo implements Parcelable {
+public class OngoingUpdateStateInfo implements Parcelable {
 
     private final String previousVersion;
     private final String newVersion;
     private final Instant updateInstant;
 
-    public static final Parcelable.Creator<UpdateStateInfo> CREATOR = new Parcelable.Creator<UpdateStateInfo>() {
-        public UpdateStateInfo createFromParcel(Parcel in) {
-            return new UpdateStateInfo(in);
+    public static final Parcelable.Creator<OngoingUpdateStateInfo> CREATOR = new Parcelable.Creator<OngoingUpdateStateInfo>() {
+        public OngoingUpdateStateInfo createFromParcel(Parcel in) {
+            return new OngoingUpdateStateInfo(in);
         }
 
-        public UpdateStateInfo[] newArray(int size) {
-            return new UpdateStateInfo[size];
+        public OngoingUpdateStateInfo[] newArray(int size) {
+            return new OngoingUpdateStateInfo[size];
         }
     };
 
-    public UpdateStateInfo(String previousVersion, String newVersion, Instant updateInstant) {
+    public OngoingUpdateStateInfo(String previousVersion, String newVersion, Instant updateInstant) {
         this.previousVersion = previousVersion;
         this.newVersion = newVersion;
         this.updateInstant = updateInstant;
     }
 
-    private UpdateStateInfo(Parcel in) {
+    private OngoingUpdateStateInfo(Parcel in) {
         this.previousVersion = in.readString();
         this.newVersion = in.readString();
         this.updateInstant = Instant.ofEpochMilli(in.readLong());
