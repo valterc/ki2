@@ -34,6 +34,8 @@ import io.hammerhead.sdk.v0.SdkContext;
 @SuppressLint("LogNotTimber")
 public class Ki2ServiceClient {
 
+    private static final int TIME_MS_ATTEMPT_BIND = 2500;
+
     @SuppressWarnings("FieldCanBeLocal")
     private final ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
@@ -51,6 +53,7 @@ public class Ki2ServiceClient {
         @Override
         public void onServiceDisconnected(ComponentName name) {
             service = null;
+            handler.postDelayed(Ki2ServiceClient.this::attemptBindToService, TIME_MS_ATTEMPT_BIND);
         }
     };
 
@@ -108,6 +111,7 @@ public class Ki2ServiceClient {
         }
     };
 
+    private final Context context;
     private final InputAdapter inputAdapter;
     private final Handler handler;
     private final BiDataStreamWeakListenerList<DeviceId, ConnectionInfo> connectionInfoListeners;
@@ -117,13 +121,21 @@ public class Ki2ServiceClient {
     private IKi2Service service;
 
     public Ki2ServiceClient(SdkContext context) {
+        this.context = context;
         inputAdapter = new InputAdapter(context);
         connectionInfoListeners = new BiDataStreamWeakListenerList<>();
         batteryInfoListeners = new BiDataStreamWeakListenerList<>();
         shiftingInfoListeners = new BiDataStreamWeakListenerList<>();
         messageListeners = new DataStreamWeakListenerList<>();
         handler = new Handler(Looper.getMainLooper());
-        context.bindService(Ki2Service.getIntent(), serviceConnection, Context.BIND_AUTO_CREATE);
+        attemptBindToService();
+    }
+
+    private void attemptBindToService() {
+        boolean result = context.bindService(Ki2Service.getIntent(), serviceConnection, Context.BIND_AUTO_CREATE);
+        if (!result) {
+            handler.postDelayed(this::attemptBindToService, (int) (TIME_MS_ATTEMPT_BIND * (1 + 2 * Math.random())));
+        }
     }
 
     public void registerConnectionInfoWeakListener(BiConsumer<DeviceId, ConnectionInfo> connectionInfoConsumer) {
@@ -301,7 +313,7 @@ public class Ki2ServiceClient {
         }
     }
 
-    private void maybeStartMessageEvents(){
+    private void maybeStartMessageEvents() {
         if (service == null) {
             return;
         }

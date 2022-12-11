@@ -1,4 +1,4 @@
-package com.valterc.ki2.karoo;
+package com.valterc.ki2.karoo.battery;
 
 import android.annotation.SuppressLint;
 import android.os.Handler;
@@ -11,10 +11,9 @@ import com.valterc.ki2.R;
 import com.valterc.ki2.data.device.BatteryInfo;
 import com.valterc.ki2.data.device.DeviceId;
 import com.valterc.ki2.data.preferences.PreferencesView;
+import com.valterc.ki2.karoo.Ki2Context;
 import com.valterc.ki2.karoo.hooks.KarooActivityServiceNotificationControllerHook;
 import com.valterc.ki2.karoo.hooks.KarooAudioAlertHook;
-import com.valterc.ki2.karoo.notification.LowBatteryCategory;
-import com.valterc.ki2.karoo.notification.LowBatteryNotification;
 
 @SuppressLint("LogNotTimber")
 public class LowBatteryHandler {

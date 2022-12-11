@@ -20,7 +20,9 @@
         android:maxSdkVersion="30" />
     <uses-permission
         android:name="android.permission.BLUETOOTH_SCAN"
-        android:usesPermissionFlags="neverForLocation" />
+        android:usesPermissionFlags="neverForLocation"
+        tools:ignore="UnusedAttribute" />
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
@@ -37,25 +39,41 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Ki2.NoActionBar"
         tools:targetApi="32" >
+
         <activity
             android:name=".activities.devices.details.DeviceDetailsActivity"
-            android:exported="false" >
-        </activity>
+            android:exported="false" />
+
         <activity
             android:name=".activities.devices.add.AddDeviceActivity"
-            android:exported="false" >
-        </activity>
+            android:exported="false" />
+
         <activity
             android:name=".activities.main.MainActivity"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".activities.settings.SettingsActivity"
             android:exported="true" />
+
+        <activity
+            android:name=".activities.update.UpdateActivity"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.Ki2.NoActionBar.Blue">
+            <intent-filter>
+                <action android:name="com.valterc.ki2.action.update.UPDATE_STATUS" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.valterc.ki2.action.UPDATE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
 
         <meta-data
             android:name="io.hammerhead.sdk.v0.SDK_MODULE"
@@ -63,7 +81,8 @@
 
         <receiver
             android:name="com.valterc.ki2.karoo.Ki2BroadcastReceiver"
-            android:exported="true" >
+            android:exported="true"
+            tools:ignore="ExportedReceiver">
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
                 <action android:name="io.hammerhead.sdk.INITIALIZE" />
@@ -73,7 +92,9 @@
 
         <service
             android:name="com.valterc.ki2.services.Ki2Service"
-            android:exported="true" />
+            android:exported="true"
+            tools:ignore="ExportedService" />
+
     </application>
 
 </manifest>

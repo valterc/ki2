@@ -8,6 +8,7 @@
     <string name="category_preference_right_switch">Right Switch</string>
     <string name="category_preference_pre_load">Pre load</string>
     <string name="category_preference_battery_notification">Battery Notification</string>
+    <string name="category_preference_update">Update</string>
 
     <string name="title_preference_left_single_press">Left Single Press</string>
     <string name="title_preference_left_double_press">Left Double Press</string>
@@ -18,15 +19,17 @@
     <string name="title_preference_right_hold">Right Hold</string>
 
     <string name="title_preference_pre_load">Pre load ride application</string>
-
     <string name="title_preference_battery_level_low">Battery low</string>
     <string name="title_preference_battery_level_critical">Battery critical</string>
+    <string name="title_preference_auto_update">Auto update</string>
 
     <string name="summary_preference_pre_load">Pre load the ride application to avoid data elements not showing after startup</string>
     <string name="summary_preference_battery_notification">Show notifications when the shifting battery level is at or below a certain value</string>
+    <string name="summary_preference_auto_update">Automatically check for application updates</string>
 
     <string name="default_preference_battery_level_low">20</string>
     <string name="default_preference_battery_level_critical">10</string>
+    <string name="default_preference_auto_update">true</string>
 
     <string name="preference_left_switch_single_press">LEFT_SWITCH_SINGLE_PRESS</string>
     <string name="preference_left_switch_double_press">LEFT_SWITCH_DOUBLE_PRESS</string>
@@ -37,6 +40,7 @@
     <string name="preference_pre_load">PRE_LOAD</string>
     <string name="preference_battery_level_low">BATTERY_LEVEL_LOW</string>
     <string name="preference_battery_level_critical">BATTERY_LEVEL_CRITICAL</string>
+    <string name="preference_auto_update">AUTO_UPDATE</string>
 
     <!-- General -->
 
@@ -95,5 +99,31 @@
     <string name="text_dismiss">Dismiss</string>
     <string name="text_param_di2_low_battery">Battery of Di2 %s at %d%%</string>
     <string name="text_di2_low_battery">Di2 low battery</string>
+    <string name="text_update_complete">Update complete</string>
+    <string name="text_report_problems">Report problems at:\nhttps://github.com/valterc/ki2</string>
+    <string name="text_check_for_updates">Check for updates</string>
+    <string name="text_on_latest_version">You have the latest version available.</string>
+    <string name="text_unable_to_update">Unable to update.</string>
+    <string name="text_header_error_prefix">Error:</string>
+    <string name="text_updating">Updating…</string>
+    <string name="text_update_accept_prompts">Please <b>accept the permissions and package install</b> when prompted by the system.\n\nDuring the update <b>the app will close and restart a few seconds later</b>.</string>
+    <string name="text_update_available">Update available</string>
+    <string name="text_update_ki2">Update Ki2</string>
+    <string name="text_header_new_version">New version:</string>
+    <string name="text_header_details">Details:</string>
+    <string name="text_header_release_date">Release date:</string>
+    <string name="text_checking_for_updates">Checking for updates…</string>
+    <string name="text_header_current_version">Current version:</string>
+    <string name="text_update">Update</string>
+    <string name="text_update_error_permissions">Permission not granted. You need to allow Ki2 to install unknown apps.</string>
+    <string name="text_param_update_available_version">Update available for Ki2, version %s.</string>
+    <string name="text_update_tutorial_2">Enable <b>Allow from this source</b> for Ki2 to be able to install the update.</string>
+    <string name="text_update_tutorial_1">When prompted by the system, press <b>Settings</b> and enable app installation. This is required for the app update.</string>
+    <string name="text_update_tutorial_3">After enabling <b>Allow from this source</b>, press the left bottom Karoo button to return to the update installation.</string>
+    <string name="text_update_tutorial_4">Press the <b>Install</b> button, the app will close and Ki2 will start after a few seconds.</string>
+    <string name="text_update_tutorial">Update tutorial</string>
+    <string name="text_cancel">Cancel</string>
+    <string name="text_next">Next</string>
+    <string name="text_start_update">Start update</string>
 
 </resources>

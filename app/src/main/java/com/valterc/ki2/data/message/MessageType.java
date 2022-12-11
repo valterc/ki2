@@ -8,6 +8,7 @@ public enum MessageType {
     UNKNOWN(0),
     LOW_BATTERY(1),
     RIDE_STATUS(2),
+    UPDATE_AVAILABLE(3),
 
     OTHER(255);
 
