@@ -1,16 +1,8 @@
 package com.valterc.ki2.fragments.update;
 
-import androidx.lifecycle.ViewModelProvider;
-
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
-import android.os.Environment;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.StyleSpan;
@@ -20,11 +12,16 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.valterc.ki2.BuildConfig;
 import com.valterc.ki2.R;
+import com.valterc.ki2.data.update.OngoingUpdateStateInfo;
 import com.valterc.ki2.data.update.ReleaseInfo;
-import com.valterc.ki2.data.update.UpdateStateInfo;
 import com.valterc.ki2.data.update.UpdateStateStore;
 
 import java.time.ZoneId;
@@ -55,11 +52,11 @@ public class UpdateFragment extends Fragment {
         return updateFragment;
     }
 
-    public static UpdateFragment newInstance(UpdateStateInfo updateStateInfo) {
+    public static UpdateFragment newInstance(OngoingUpdateStateInfo ongoingUpdateStateInfo) {
         UpdateFragment updateFragment = new UpdateFragment();
 
         Bundle bundle = new Bundle();
-        bundle.putParcelable(UpdateStateInfo.class.getSimpleName(), updateStateInfo);
+        bundle.putParcelable(OngoingUpdateStateInfo.class.getSimpleName(), ongoingUpdateStateInfo);
         updateFragment.setArguments(bundle);
 
         return updateFragment;
@@ -77,9 +74,9 @@ public class UpdateFragment extends Fragment {
                 viewModel.setReleaseInfo(releaseInfo);
             }
 
-            UpdateStateInfo updateStateInfo = bundle.getParcelable(UpdateStateInfo.class.getSimpleName());
-            if (updateStateInfo != null) {
-                viewModel.setUpdateState(updateStateInfo);
+            OngoingUpdateStateInfo ongoingUpdateStateInfo = bundle.getParcelable(OngoingUpdateStateInfo.class.getSimpleName());
+            if (ongoingUpdateStateInfo != null) {
+                viewModel.setUpdateState(ongoingUpdateStateInfo);
             }
         }
     }
@@ -140,7 +137,13 @@ public class UpdateFragment extends Fragment {
         Button buttonUpdate = view.findViewById(R.id.button_update);
 
         buttonCheckForUpdates.setOnClickListener((event) -> viewModel.checkForUpdates());
-        buttonUpdate.setOnClickListener((event) -> viewModel.performUpdate(requireActivity()));
+        buttonUpdate.setOnClickListener((event) -> {
+            if (UpdateStateStore.isFirstUpdate(requireContext())) {
+                new UpdateTutorialDialog(requireContext(), null, () -> viewModel.performUpdate(requireActivity())).show();
+            } else {
+                viewModel.performUpdate(requireActivity());
+            }
+        });
 
         viewModel.getErrorMessage().observe(getViewLifecycleOwner(), textViewError::setText);
 
@@ -167,10 +170,15 @@ public class UpdateFragment extends Fragment {
 
                 case UPDATE_AVAILABLE:
                     linearLayoutUpdateAvailable.setVisibility(View.VISIBLE);
+                    ReleaseInfo releaseInfo = viewModel.getReleaseInfo().getValue();
+                    if (releaseInfo != null) {
+                        UpdateStateStore.checkedForUpdates(requireContext(), true, releaseInfo.getName());
+                    }
                     break;
 
                 case NO_UPDATE_AVAILABLE:
                     linearLayoutUpdateNotAvailable.setVisibility(View.VISIBLE);
+                    UpdateStateStore.checkedForUpdates(requireContext(), false, null);
                     break;
 
                 case UPDATING:
@@ -195,7 +203,6 @@ public class UpdateFragment extends Fragment {
             textViewProgress.setText(getString(R.string.text_param_percentage, (int) (progress * 100)));
             linearProgressIndicatorProgress.setProgress((int) (progress * 100));
         });
-
     }
 
     private SpannableStringBuilder formatMarkdown(String original) {
@@ -242,12 +249,29 @@ public class UpdateFragment extends Fragment {
         return spannableStringBuilder;
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        UpdateStatus updateStatus = viewModel.getUpdateStatus().getValue();
+        if (updateStatus == UpdateStatus.UPDATING) {
+            viewModel.cancelUpdate();
+        }
+    }
+
     public boolean isUpdateIntent(Intent intent) {
         return viewModel.isUpdateIntent(intent);
     }
 
     public void onUpdateIntent(Intent intent) {
         viewModel.onUpdateIntent(getContext(), intent);
+    }
+
+    public void checkForUpdates() {
+        if (viewModel != null &&
+                (viewModel.getUpdateStatus().getValue() == null ||
+                        viewModel.getUpdateStatus().getValue() == UpdateStatus.START)) {
+            viewModel.checkForUpdates();
+        }
     }
 
 }

@@ -17,8 +17,8 @@ import androidx.lifecycle.ViewModel;
 import com.valterc.ki2.BuildConfig;
 import com.valterc.ki2.R;
 import com.valterc.ki2.data.update.DownloadedPackageInfo;
+import com.valterc.ki2.data.update.OngoingUpdateStateInfo;
 import com.valterc.ki2.data.update.ReleaseInfo;
-import com.valterc.ki2.data.update.UpdateStateInfo;
 import com.valterc.ki2.data.update.UpdateStateStore;
 import com.valterc.ki2.update.DownloadPackageTask;
 import com.valterc.ki2.update.GetLatestReleaseInfoTask;
@@ -28,6 +28,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.concurrent.ExecutorService;
@@ -38,18 +39,21 @@ import timber.log.Timber;
 public class UpdateViewModel extends ViewModel {
 
     private static final String ACTION_UPDATE_STATUS = BuildConfig.APPLICATION_ID + ".action.update.UPDATE_STATUS";
+    private static final int TIME_MS_WAIT_BEFORE_UPDATE = 4000;
 
     private final MutableLiveData<ReleaseInfo> releaseInfo;
     private final MutableLiveData<UpdateStatus> updateStatus;
     private final MutableLiveData<String> errorMessage;
     private final MutableLiveData<Float> updateProgress;
-    private final MutableLiveData<UpdateStateInfo> updateState;
+    private final MutableLiveData<OngoingUpdateStateInfo> updateState;
 
     private final ExecutorService executor;
 
+    private boolean cancelUpdate;
+
     public UpdateViewModel() {
         releaseInfo = new MutableLiveData<>();
-        updateStatus = new MutableLiveData<>();
+        updateStatus = new MutableLiveData<>(UpdateStatus.START);
         errorMessage = new MutableLiveData<>();
         updateProgress = new MutableLiveData<>();
         updateState = new MutableLiveData<>();
@@ -77,10 +81,10 @@ public class UpdateViewModel extends ViewModel {
         return updateStatus;
     }
 
-    public void setUpdateState(UpdateStateInfo updateStateInfo) {
-        this.updateState.postValue(updateStateInfo);
+    public void setUpdateState(OngoingUpdateStateInfo ongoingUpdateStateInfo) {
+        this.updateState.postValue(ongoingUpdateStateInfo);
 
-        if (updateStateInfo != null) {
+        if (ongoingUpdateStateInfo != null) {
             this.updateStatus.postValue(UpdateStatus.UPDATE_COMPLETE);
         }
     }
@@ -109,10 +113,12 @@ public class UpdateViewModel extends ViewModel {
     public void performUpdate(@NonNull Activity context) {
         updateProgress.postValue(0f);
         updateStatus.postValue(UpdateStatus.UPDATING);
+        cancelUpdate = false;
 
         ReleaseInfo releaseInfo = this.releaseInfo.getValue();
         executor.submit(() -> {
             try {
+                Thread.sleep(TIME_MS_WAIT_BEFORE_UPDATE);
                 DownloadedPackageInfo downloadedPackageInfo = new DownloadPackageTask(context, releaseInfo, updateProgress::postValue).call();
                 install(context, downloadedPackageInfo);
             } catch (Exception e) {
@@ -120,6 +126,10 @@ public class UpdateViewModel extends ViewModel {
                 updateStatus.postValue(UpdateStatus.ERROR);
             }
         });
+    }
+
+    public void cancelUpdate(){
+        cancelUpdate = true;
     }
 
     public void updateFailUserRejectedPermissions(Context context) {
@@ -139,11 +149,8 @@ public class UpdateViewModel extends ViewModel {
         PackageInstaller.Session session = packageInstaller.openSession(sessionId);
 
         try {
-            File fileDownloadsDirectory = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
-            Path pathPackageFile = Paths.get(fileDownloadsDirectory.getPath(), "ki2-0.1-debug.apk");
-
             OutputStream outputStream = session.openWrite(downloadedPackageInfo.getReleaseInfo().getPackageName(), 0, -1);
-            InputStream inputStream = new FileInputStream(pathPackageFile.toString() /*downloadedPackageInfo.getPackagePath()*/);
+            InputStream inputStream = new FileInputStream(downloadedPackageInfo.getPackagePath());
             byte[] buffer = new byte[1024];
 
             while (true) {
@@ -158,6 +165,8 @@ public class UpdateViewModel extends ViewModel {
             session.fsync(outputStream);
             outputStream.close();
 
+            Files.deleteIfExists(Paths.get(downloadedPackageInfo.getPackagePath()));
+
             Intent intent = new Intent(context, context.getClass());
             intent.setAction(ACTION_UPDATE_STATUS);
             intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -166,6 +175,13 @@ public class UpdateViewModel extends ViewModel {
                     intent,
                     android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S ? PendingIntent.FLAG_MUTABLE : 0);
             IntentSender statusReceiver = pendingIntent.getIntentSender();
+
+            if (cancelUpdate) {
+                Timber.i("Update cancelled");
+                session.abandon();
+                updateStatus.postValue(UpdateStatus.START);
+                return;
+            }
 
             UpdateStateStore.willUpdate(context, BuildConfig.VERSION_NAME, downloadedPackageInfo.getReleaseInfo().getName());
             session.commit(statusReceiver);

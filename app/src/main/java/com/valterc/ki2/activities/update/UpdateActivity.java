@@ -1,5 +1,6 @@
 package com.valterc.ki2.activities.update;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageInstaller;
 import android.os.Bundle;
@@ -12,9 +13,10 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.valterc.ki2.R;
+import com.valterc.ki2.activities.main.MainActivity;
 import com.valterc.ki2.data.input.KarooKey;
+import com.valterc.ki2.data.update.OngoingUpdateStateInfo;
 import com.valterc.ki2.data.update.ReleaseInfo;
-import com.valterc.ki2.data.update.UpdateStateInfo;
 import com.valterc.ki2.fragments.IKarooKeyListener;
 import com.valterc.ki2.fragments.update.UpdateFragment;
 
@@ -26,12 +28,14 @@ public class UpdateActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (getIntent().getExtras()!= null &&
-                getIntent().getExtras().containsKey(PackageInstaller.EXTRA_SESSION_ID)) {
+        if (getIntent().getExtras() != null &&
+                getIntent().getExtras().containsKey(PackageInstaller.EXTRA_SESSION_ID) &&
+                !UpdateActivity.class.getSimpleName().equals(getIntent().getExtras().getString(Activity.class.getSimpleName()))) {
 
             finish();
             Intent intentReturnFromPackageInstaller = getIntent();
             intentReturnFromPackageInstaller.addFlags(Intent.FLAG_ACTIVITY_PREVIOUS_IS_TOP);
+            intentReturnFromPackageInstaller.putExtra(Activity.class.getSimpleName(), UpdateActivity.class.getSimpleName());
             startActivity(intentReturnFromPackageInstaller);
 
             return;
@@ -39,12 +43,12 @@ public class UpdateActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_update);
         ReleaseInfo releaseInfo = getIntent().getParcelableExtra(ReleaseInfo.class.getSimpleName());
-        UpdateStateInfo updateStateInfo = getIntent().getParcelableExtra(UpdateStateInfo.class.getSimpleName());
+        OngoingUpdateStateInfo ongoingUpdateStateInfo = getIntent().getParcelableExtra(OngoingUpdateStateInfo.class.getSimpleName());
 
         if (releaseInfo != null) {
             updateFragment = UpdateFragment.newInstance(releaseInfo);
-        } else if (updateStateInfo != null) {
-            updateFragment = UpdateFragment.newInstance(updateStateInfo);
+        } else if (ongoingUpdateStateInfo != null) {
+            updateFragment = UpdateFragment.newInstance(ongoingUpdateStateInfo);
         } else {
             updateFragment = UpdateFragment.newInstance();
         }
@@ -57,10 +61,34 @@ public class UpdateActivity extends AppCompatActivity {
         buttonBack.setOnClickListener((view) -> {
             finish();
 
-            if (updateStateInfo != null) {
-                startActivity(new Intent(Intent.ACTION_MAIN));
+            if (ongoingUpdateStateInfo != null) {
+                Intent intent = new Intent(this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent);
             }
         });
+
+        if (getIntent().getExtras() != null &&
+                getIntent().getExtras().containsKey(PackageInstaller.EXTRA_SESSION_ID) &&
+                updateFragment.isUpdateIntent(getIntent())) {
+            updateFragment.onUpdateIntent(getIntent());
+        } else if (ongoingUpdateStateInfo == null) {
+            updateFragment.checkForUpdates();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (getIntent() != null &&
+                getIntent().getExtras() != null &&
+                getIntent().getExtras().containsKey(OngoingUpdateStateInfo.class.getSimpleName())) {
+            finish();
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(intent);
+        } else {
+            super.onBackPressed();
+        }
     }
 
     @Override
