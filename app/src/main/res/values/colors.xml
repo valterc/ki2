@@ -20,8 +20,9 @@
     <color name="hh_green">#209f13</color>
     <color name="hh_orange">#fd7919</color>
     <color name="hh_orange_dark">#db6216</color>
-    <color name="hh_yellow">#FFE900</color>
+    <color name="hh_yellow">#F8E400</color>
     <color name="hh_yellow_dark">#cbba00</color>
+    <color name="hh_yellow_darker">#baa900</color>
     <color name="hh_black">#1b2d2d</color>
     <color name="hh_dark_grey">#636363</color>
     <color name="hh_divider_color">#dddddd</color>
