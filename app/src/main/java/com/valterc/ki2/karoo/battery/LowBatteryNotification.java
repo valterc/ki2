@@ -1,4 +1,4 @@
-package com.valterc.ki2.karoo.notification;
+package com.valterc.ki2.karoo.battery;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
