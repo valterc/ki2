@@ -16,6 +16,8 @@ import timber.log.Timber;
 public class BackgroundUpdateChecker {
 
     private static final int MAX_CHECK_ATTEMPS = 10;
+    private static final int TIME_S_WAIT_STARTUP_BEFORE_CHECK = 10;
+    private static final int TIME_S_WAIT_BEFORE_CHECK = 5;
 
     private final Context context;
     private final IUpdateCheckerListener listener;
@@ -26,7 +28,7 @@ public class BackgroundUpdateChecker {
         this.context = context;
         this.listener = updateCheckerListener;
         this.executor = Executors.newSingleThreadScheduledExecutor();
-        this.executor.schedule(this::checkForUpdates, 10, TimeUnit.SECONDS);
+        this.executor.schedule(this::checkForUpdates, TIME_S_WAIT_STARTUP_BEFORE_CHECK, TimeUnit.SECONDS);
     }
 
     private void checkForUpdates() {
@@ -51,7 +53,7 @@ public class BackgroundUpdateChecker {
                 Timber.w(e, "Unable to check for updates");
 
                 if (checkAttempts < MAX_CHECK_ATTEMPS) {
-                    this.executor.schedule(this::checkForUpdates, 5 + (int) (Math.random() * 5), TimeUnit.SECONDS);
+                    this.executor.schedule(this::checkForUpdates, TIME_S_WAIT_BEFORE_CHECK + (int) (Math.random() * TIME_S_WAIT_BEFORE_CHECK), TimeUnit.SECONDS);
                 }
             }
         }
@@ -60,7 +62,7 @@ public class BackgroundUpdateChecker {
     public void tryCheckForUpdates() {
         if (UpdateStateStore.shouldAutomaticallyCheckForUpdatesInBackground(context)) {
             checkAttempts = 0;
-            this.executor.schedule(this::checkForUpdates, 5, TimeUnit.SECONDS);
+            this.executor.schedule(this::checkForUpdates, TIME_S_WAIT_BEFORE_CHECK, TimeUnit.SECONDS);
         }
     }
 
