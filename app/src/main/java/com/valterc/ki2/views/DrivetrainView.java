@@ -18,6 +18,7 @@ import androidx.annotation.Nullable;
 
 import com.valterc.ki2.R;
 
+@SuppressWarnings({"UnnecessaryLocalVariable", "unused"})
 public class DrivetrainView extends View {
 
     private static final int DEFAULT_FRONT_GEAR_MAX = 2;
@@ -205,9 +206,10 @@ public class DrivetrainView extends View {
         int drivetrainBoxWidth = internalWidth;
         int drivetrainBoxHeight = internalHeight;
 
+        final Resources resources = getResources();
+        float textVerticalPadding = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 3, resources.getDisplayMetrics());
+
         if (textEnabled) {
-            final Resources resources = getResources();
-            float textVerticalPadding = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, resources.getDisplayMetrics());
             drivetrainBoxHeight -= measureTextHeight(textVerticalPadding);
             textPositionYOffset = drivetrainBoxHeight;
         }
@@ -240,7 +242,7 @@ public class DrivetrainView extends View {
 
         initChainPath();
         if (textEnabled) {
-            textPositionYOffset = Math.max(rearBottomDerailleurPositionY + rearDerailleurRadius, frontGearPositionY + frontGearRadius) + (internalHeight - drivetrainBoxHeight);
+            textPositionYOffset = Math.max(rearBottomDerailleurPositionY + rearDerailleurRadius, frontGearPositionY + frontGearRadius) + textVerticalPadding;
             initTextPath();
         }
     }
@@ -434,7 +436,7 @@ public class DrivetrainView extends View {
     }
 
     public void setDrivetrainColor(Color drivetrainColor) {
-        setDrivetrainColor(drivetrainColor);
+        setDrivetrainColor(drivetrainColor.toArgb());
     }
 
     public int getSelectedGearColor() {
