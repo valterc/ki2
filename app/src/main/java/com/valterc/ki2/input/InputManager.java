@@ -28,7 +28,7 @@ public class InputManager {
     /**
      * This map translates a preference value to function able to generate a Switch Key Event from the original switch event.
      */
-    private static final Map<String, BiFunction<SwitchEvent, Function<SwitchEvent, KarooKeyEvent>,  KarooKeyEvent>> preferenceToSwitchKeyMap = new HashMap<>();
+    private static final Map<String, BiFunction<SwitchEvent, Function<SwitchEvent, KarooKeyEvent>, KarooKeyEvent>> preferenceToSwitchKeyMap = new HashMap<>();
 
     static {
 
@@ -60,12 +60,22 @@ public class InputManager {
         preferenceToSwitchKeyMap.put("map_graph_zoom_out", (switchEvent, converter) -> new KarooKeyEvent(KarooKey.LEFT, switchEvent.getCommand().getKeyAction(), switchEvent.getRepeat()));
         preferenceToSwitchKeyMap.put("map_graph_zoom_in", (switchEvent, converter) -> new KarooKeyEvent(KarooKey.RIGHT, switchEvent.getCommand().getKeyAction(), switchEvent.getRepeat()));
         preferenceToSwitchKeyMap.put("repeat_single_press", (switchEvent, converter) -> {
-            if (switchEvent.getCommand() == SwitchCommand.LONG_PRESS_UP)
-            {
+            if (switchEvent.getCommand() == SwitchCommand.LONG_PRESS_UP) {
                 return null;
             }
-
             return converter.apply(new SwitchEvent(switchEvent.getType(), SwitchCommand.SINGLE_CLICK, switchEvent.getRepeat()));
+        });
+        preferenceToSwitchKeyMap.put("hold_short_single_pause_resume_confirm", (switchEvent, converter) -> {
+            if (switchEvent.getCommand() != SwitchCommand.LONG_PRESS_DOWN) {
+                return null;
+            }
+            return new KarooKeyEvent(KarooKey.CONFIRM, KeyAction.SINGLE_PRESS, switchEvent.getRepeat());
+        });
+        preferenceToSwitchKeyMap.put("hold_short_single_lap", (switchEvent, converter) -> {
+            if (switchEvent.getCommand() != SwitchCommand.LONG_PRESS_DOWN) {
+                return null;
+            }
+            return new KarooKeyEvent(KarooKey.BACK, KeyAction.DOUBLE_PRESS, switchEvent.getRepeat());
         });
     }
 
