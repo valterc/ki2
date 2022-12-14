@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (!Build.DEVICE.equals(DEVICE_KAROO_1)) {
+        if (!BuildConfig.DEBUG && !Build.DEVICE.equals(DEVICE_KAROO_1)) {
             new Karoo2Dialog(this).show();
             return;
         }
