@@ -3,8 +3,9 @@ package com.valterc.ki2.karoo.service;
 import android.annotation.SuppressLint;
 import android.util.Log;
 
+import androidx.core.util.Consumer;
+
 import java.util.WeakHashMap;
-import java.util.function.Consumer;
 
 @SuppressLint("LogNotTimber")
 public class DataStreamWeakListenerList<TData> {
@@ -41,12 +42,12 @@ public class DataStreamWeakListenerList<TData> {
             lastData = data;
         }
 
-        listeners.keySet().forEach(c -> {
+        for (Consumer<TData> c : listeners.keySet()) {
             try {
                 c.accept(data);
             } catch (Exception e) {
                 Log.e("KI2", "Error during callback", e);
             }
-        });
+        }
     }
 }

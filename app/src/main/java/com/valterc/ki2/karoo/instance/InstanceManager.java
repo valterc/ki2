@@ -3,9 +3,12 @@ package com.valterc.ki2.karoo.instance;
 import android.os.Handler;
 import android.os.Looper;
 
+import androidx.core.util.Supplier;
+
+import java.util.Iterator;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import java.util.function.Supplier;
 
 public class InstanceManager {
 
@@ -23,7 +26,7 @@ public class InstanceManager {
     }
 
     public Object getInstance(String key){
-        InstanceRecord instanceRecord = instanceMap.getOrDefault(key, null);
+        InstanceRecord instanceRecord = instanceMap.get(key);
         if (instanceRecord == null) {
             return null;
         }
@@ -32,11 +35,19 @@ public class InstanceManager {
     }
 
     public Object getOrComputeInstance(String key, Supplier<?> instanceSupplier) {
-        return instanceMap.computeIfAbsent(key, k -> new InstanceRecord(instanceSupplier.get())).getInstance();
+        InstanceRecord instanceRecord = instanceMap.get(key);
+        if (instanceRecord != null)
+        {
+            return instanceRecord.getInstance();
+        }
+
+        instanceRecord = new InstanceRecord(instanceSupplier.get());
+        instanceMap.put(key, instanceRecord);
+        return instanceRecord.getInstance();
     }
 
     public <T> T getInstance(String key, Class<T> clazz){
-        InstanceRecord instanceRecord = instanceMap.getOrDefault(key, null);
+        InstanceRecord instanceRecord = instanceMap.get(key);
         if (instanceRecord == null) {
             return null;
         }
@@ -45,7 +56,15 @@ public class InstanceManager {
     }
 
     public <T> T getOrComputeInstance(String key, Class<T> clazz, Supplier<T> instanceSupplier){
-        return instanceMap.computeIfAbsent(key,k -> new InstanceRecord(instanceSupplier.get())).getInstance(clazz);
+        InstanceRecord instanceRecord = instanceMap.get(key);
+        if (instanceRecord != null)
+        {
+            return instanceRecord.getInstance(clazz);
+        }
+
+        instanceRecord = new InstanceRecord(instanceSupplier.get());
+        instanceMap.put(key, instanceRecord);
+        return instanceRecord.getInstance(clazz);
     }
 
     public void putInstance(String key, Object instance) {
@@ -55,7 +74,13 @@ public class InstanceManager {
     private void cleanInstances() {
         try {
             long currentTime = System.currentTimeMillis();
-            instanceMap.entrySet().removeIf(entry -> currentTime - entry.getValue().getLastAccessTimestamp() > INSTANCE_CLEAN_MS);
+            Iterator<Map.Entry<String, InstanceRecord>> iterator = instanceMap.entrySet().iterator();
+            while (iterator.hasNext()) {
+                Map.Entry<String, InstanceRecord> entry = iterator.next();
+                if (currentTime - entry.getValue().getLastAccessTimestamp() > INSTANCE_CLEAN_MS) {
+                    iterator.remove();
+                }
+            }
         } finally {
             this.handler.postDelayed(this::cleanInstances, HANDLER_DELAY_MS);
         }

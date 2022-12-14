@@ -1,8 +1,5 @@
 package com.valterc.ki2.data.device;
 
-import java.util.Arrays;
-import java.util.Optional;
-
 public enum StatusIndicator {
 
     NONE(0),
@@ -23,11 +20,13 @@ public enum StatusIndicator {
     SWITCH_COMMAND_NUMBER(65536);
 
     public static StatusIndicator fromFlag(int flag) {
-        Optional<StatusIndicator> element =
-                Arrays.stream(StatusIndicator.values()).filter(s -> s.flag == flag)
-                        .findFirst();
+        for (StatusIndicator s : StatusIndicator.values()) {
+            if (s.flag == flag) {
+                return s;
+            }
+        }
 
-        return element.orElse(NONE);
+        return NONE;
     }
 
     private final int flag;

@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.core.util.Consumer;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.valterc.ki2.R;
@@ -20,7 +21,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 
 public class ListDevicesAdapter extends RecyclerView.Adapter<ListDevicesViewHolder> {
 

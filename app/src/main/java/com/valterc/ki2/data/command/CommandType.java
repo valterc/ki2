@@ -9,11 +9,13 @@ public enum CommandType {
     UNKNOWN(255);
 
     public static CommandType fromValue(int commandValue) {
-        Optional<CommandType> element =
-                Arrays.stream(CommandType.values()).filter(s -> s.commandValue == commandValue)
-                        .findFirst();
+        for (CommandType s : CommandType.values()) {
+            if (s.commandValue == commandValue) {
+                return s;
+            }
+        }
 
-        return element.orElse(UNKNOWN);
+        return UNKNOWN;
     }
 
     private final int commandValue;

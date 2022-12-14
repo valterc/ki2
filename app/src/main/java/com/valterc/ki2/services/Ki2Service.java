@@ -9,6 +9,8 @@ import android.os.Parcelable;
 import android.os.RemoteCallbackList;
 import android.os.RemoteException;
 
+import androidx.core.util.Supplier;
+
 import com.valterc.ki2.ant.AntManager;
 import com.valterc.ki2.ant.IAntStateListener;
 import com.valterc.ki2.ant.connection.AntConnectionManager;
@@ -29,14 +31,9 @@ import com.valterc.ki2.data.info.ManufacturerInfo;
 import com.valterc.ki2.data.input.KarooKeyEvent;
 import com.valterc.ki2.data.message.Message;
 import com.valterc.ki2.data.message.MessageManager;
-import com.valterc.ki2.data.message.MessageType;
-import com.valterc.ki2.data.message.RideStatusMessage;
-import com.valterc.ki2.data.message.UpdateAvailableMessage;
 import com.valterc.ki2.data.preferences.PreferencesView;
-import com.valterc.ki2.data.ride.RideStatus;
 import com.valterc.ki2.data.shifting.ShiftingInfo;
 import com.valterc.ki2.data.switches.SwitchEvent;
-import com.valterc.ki2.data.update.ReleaseInfo;
 import com.valterc.ki2.input.InputManager;
 import com.valterc.ki2.services.callbacks.IBatteryCallback;
 import com.valterc.ki2.services.callbacks.IConnectionDataInfoCallback;
@@ -48,17 +45,14 @@ import com.valterc.ki2.services.callbacks.IScanCallback;
 import com.valterc.ki2.services.callbacks.IShiftingCallback;
 import com.valterc.ki2.services.callbacks.ISwitchCallback;
 import com.valterc.ki2.services.handler.ServiceHandler;
-import com.valterc.ki2.update.background.BackgroundUpdateChecker;
-import com.valterc.ki2.update.background.IUpdateCheckerListener;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.function.Supplier;
 
 import timber.log.Timber;
 
-public class Ki2Service extends Service implements IAntStateListener, IAntScanListener, IDeviceConnectionListener, IUpdateCheckerListener {
+public class Ki2Service extends Service implements IAntStateListener, IAntScanListener, IDeviceConnectionListener {
 
     /**
      * Get intent to bind to this service.
@@ -416,7 +410,6 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
     private DeviceStore deviceStore;
     private ConnectionsDataManager connectionsDataManager;
     private InputManager inputManager;
-    private BackgroundUpdateChecker backgroundUpdateChecker;
 
     @Override
     public IBinder onBind(Intent arg0) {
@@ -433,7 +426,6 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
         deviceStore = new DeviceStore(this);
         connectionsDataManager = new ConnectionsDataManager();
         inputManager = new InputManager(this);
-        backgroundUpdateChecker = new BackgroundUpdateChecker(this, this);
 
         Timber.i("Service created");
     }
@@ -452,7 +444,6 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
         callbackListConnectionInfo.kill();
         callbackListKey.kill();
         callbackListMessage.kill();
-        backgroundUpdateChecker.dispose();
 
         serviceHandler.dispose();
         super.onDestroy();
@@ -663,23 +654,6 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
 
         messageManager.messageReceived(message);
         serviceHandler.postRetriableAction(() -> broadcastData(callbackListMessage, () -> message, IMessageCallback::onMessage));
-
-        if (message.getMessageType() == MessageType.RIDE_STATUS) {
-            RideStatusMessage rideStatusMessage = RideStatusMessage.parse(message);
-            if (rideStatusMessage != null) {
-                if (rideStatusMessage.getRideStatus() == RideStatus.FINISHED) {
-                    backgroundUpdateChecker.tryCheckForUpdates();
-                }
-            }
-        }
-    }
-
-    @Override
-    public void onNewUpdateAvailable(ReleaseInfo releaseInfo) {
-        serviceHandler.postAction(() -> {
-            Message updateAvailableMessage = new UpdateAvailableMessage(releaseInfo);
-            onMessage(updateAvailableMessage);
-        });
     }
 
 }

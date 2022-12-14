@@ -57,8 +57,10 @@ public class AddDeviceViewModel extends ViewModel {
 
     public AddDeviceViewModel() {
         this.service = new MutableLiveData<>();
-        this.devices = new MutableLiveData<>(new HashSet<>());
-        this.scanning = new MutableLiveData<>(false);
+        this.devices = new MutableLiveData<>();
+        this.devices.setValue(new HashSet<>());
+        this.scanning = new MutableLiveData<>();
+        this.scanning.setValue(false);
     }
 
     public ServiceConnection getServiceConnection() {

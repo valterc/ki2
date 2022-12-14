@@ -30,15 +30,14 @@ android {
 
     defaultConfig {
         applicationId "com.valterc.ki2"
-        minSdk 26
+        minSdk 23
         targetSdk 32
 		
         versionCode properties.getProperty("VERSION_CODE", "1") as int
         versionName properties.getProperty("VERSION_NAME", "0.1")
 		
         archivesBaseName = "ki2-$versionName"
-
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
     }
 
     buildTypes {

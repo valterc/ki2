@@ -17,7 +17,6 @@ import com.valterc.ki2.karoo.datatypes.ShiftCountTextDataType;
 import com.valterc.ki2.karoo.datatypes.ShiftModeTextDataType;
 import com.valterc.ki2.karoo.hooks.RideActivityHook;
 import com.valterc.ki2.karoo.service.Ki2ServiceClient;
-import com.valterc.ki2.karoo.update.UpdateAvailableNotification;
 
 import java.util.Arrays;
 import java.util.List;
@@ -48,7 +47,6 @@ public class Ki2Module extends Module {
         RideActivityHook.tryHandlePreload(context);
         serviceClient = new Ki2ServiceClient(context);
         ki2Context = new Ki2Context(context, serviceClient);
-        UpdateAvailableNotification.clearUpdateAvailableNotification(context);
     }
 
     @NonNull

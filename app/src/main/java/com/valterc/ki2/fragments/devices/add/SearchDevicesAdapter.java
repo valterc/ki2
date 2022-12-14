@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.core.util.Consumer;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.valterc.ki2.R;
@@ -15,7 +16,6 @@ import com.valterc.ki2.data.device.DeviceType;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.function.Consumer;
 
 public class SearchDevicesAdapter extends RecyclerView.Adapter<SearchDevicesViewHolder> {
 

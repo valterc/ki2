@@ -15,11 +15,11 @@ import com.valterc.ki2.data.switches.SwitchCommandType;
 import com.valterc.ki2.data.switches.SwitchEvent;
 import com.valterc.ki2.data.switches.SwitchType;
 import com.valterc.ki2.data.input.KarooKey;
+import com.valterc.ki2.retro.BiFunction;
+import com.valterc.ki2.retro.Function;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.BiFunction;
-import java.util.function.Function;
 
 import timber.log.Timber;
 

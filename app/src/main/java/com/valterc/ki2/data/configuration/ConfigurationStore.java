@@ -1,6 +1,7 @@
 package com.valterc.ki2.data.configuration;
 
 import android.content.Context;
+import android.util.Base64;
 
 import com.dsi.ant.channel.NetworkKey;
 import com.dsi.ant.message.ChannelId;
@@ -9,8 +10,6 @@ import com.dsi.ant.message.LowPrioritySearchTimeout;
 import com.valterc.ki2.R;
 import com.valterc.ki2.ant.channel.ChannelConfiguration;
 import com.valterc.ki2.ant.channel.ScanChannelConfiguration;
-
-import java.util.Base64;
 
 public final class ConfigurationStore {
 
@@ -24,7 +23,7 @@ public final class ConfigurationStore {
      * @return Scan channel configuration.
      */
     public static ScanChannelConfiguration getScanChannelConfiguration(Context context) {
-        byte[] networkKey = Base64.getDecoder().decode(context.getString(R.string.network_key));
+        byte[] networkKey = Base64.decode(context.getString(R.string.network_key), Base64.DEFAULT);
         return new ScanChannelConfiguration(new NetworkKey(networkKey), 8198, 57);
     }
 
@@ -36,7 +35,7 @@ public final class ConfigurationStore {
      * @return Channel configuration.
      */
     public static ChannelConfiguration getChannelConfiguration(Context context, int antDeviceId) {
-        byte[] networkKey = Base64.getDecoder().decode(context.getString(R.string.network_key));
+        byte[] networkKey = Base64.decode(context.getString(R.string.network_key), Base64.DEFAULT);
         return new ChannelConfiguration(
                 new ChannelId(antDeviceId, 1, 5),
                 ChannelType.BIDIRECTIONAL_SLAVE,

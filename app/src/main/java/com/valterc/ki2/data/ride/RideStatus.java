@@ -11,12 +11,13 @@ public enum RideStatus {
     FINISHED(3);
 
     public static RideStatus fromValue(int value) {
-        Optional<RideStatus> optionalValue =
-                Arrays.stream(values())
-                        .filter(d -> d.value == value)
-                        .findFirst();
+        for (RideStatus d : values()) {
+            if (d.value == value) {
+                return d;
+            }
+        }
 
-        return optionalValue.orElse(NEW);
+        return NEW;
     }
 
     private final int value;

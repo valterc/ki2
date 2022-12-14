@@ -1,8 +1,5 @@
 package com.valterc.ki2.data.shifting;
 
-import java.util.Arrays;
-import java.util.Optional;
-
 public enum ShiftingMode {
 
     NORMAL(0, "M"),
@@ -13,11 +10,13 @@ public enum ShiftingMode {
     INVALID(255, "");
 
     public static ShiftingMode fromValue(int value) {
-        Optional<ShiftingMode> element =
-                Arrays.stream(ShiftingMode.values()).filter(s -> s.value == value)
-                .findFirst();
+        for (ShiftingMode s : ShiftingMode.values()) {
+            if (s.value == value) {
+                return s;
+            }
+        }
 
-        return element.orElse(INVALID);
+        return INVALID;
     }
 
     private final int value;

@@ -30,17 +30,24 @@ public class AntConnectionManager {
     }
 
     public void connectOnly(Collection<DeviceId> devices, IDeviceConnectionListener deviceConnectionListener) throws Exception {
-        Collection<DeviceId> devicesToDisconnect = connectionMap.keySet()
-                .stream()
-                .filter(d -> !devices.contains(d))
-                .collect(Collectors.toCollection(ArrayList::new));
+        Collection<DeviceId> devicesToDisconnect = new ArrayList<>();
+        for (DeviceId d : connectionMap.keySet()) {
+            if (!devices.contains(d)) {
+                devicesToDisconnect.add(d);
+            }
+        }
         disconnect(devicesToDisconnect);
 
         connect(devices, deviceConnectionListener);
     }
 
     public void connect(Collection<DeviceId> devices, IDeviceConnectionListener deviceConnectionListener) throws Exception {
-        int newDeviceCount = (int) devices.stream().filter(d -> !connectionMap.containsKey(d)).count();
+        int newDeviceCount = 0;
+        for (DeviceId d : devices) {
+            if (!connectionMap.containsKey(d)) {
+                newDeviceCount++;
+            }
+        }
         int availableAntChannels = antManager.getAvailableChannelCount();
 
         if (newDeviceCount > availableAntChannels) {

@@ -3,17 +3,13 @@ package com.valterc.ki2.karoo;
 import android.annotation.SuppressLint;
 import android.util.Log;
 
+import androidx.core.util.Consumer;
+
 import com.valterc.ki2.data.message.Message;
-import com.valterc.ki2.data.message.MessageType;
 import com.valterc.ki2.data.message.RideStatusMessage;
-import com.valterc.ki2.data.message.UpdateAvailableMessage;
 import com.valterc.ki2.data.ride.RideStatus;
-import com.valterc.ki2.karoo.hooks.KarooActivityServiceHook;
 import com.valterc.ki2.karoo.instance.InstanceManager;
 import com.valterc.ki2.karoo.service.Ki2ServiceClient;
-import com.valterc.ki2.karoo.update.UpdateAvailableNotification;
-
-import java.util.function.Consumer;
 
 import io.hammerhead.sdk.v0.SdkContext;
 
@@ -34,16 +30,6 @@ public class Ki2Context {
                 if (rideStatusMessage != null) {
                     rideStatus = rideStatusMessage.getRideStatus();
                     Log.d("KI2", "Updated ride status: " + rideStatus);
-                }
-                break;
-
-            case UPDATE_AVAILABLE:
-                if (KarooActivityServiceHook.isInActivityService()) {
-                    UpdateAvailableMessage updateAvailableMessage = UpdateAvailableMessage.parse(message);
-                    if (updateAvailableMessage != null) {
-                        Log.d("KI2", "Update available, showing notification");
-                        UpdateAvailableNotification.showUpdateAvailableNotification(getSdkContext(), updateAvailableMessage.getReleaseInfo());
-                    }
                 }
                 break;
         }

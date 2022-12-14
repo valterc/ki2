@@ -3,8 +3,9 @@ package com.valterc.ki2.karoo.service;
 import android.annotation.SuppressLint;
 import android.util.Log;
 
+import com.valterc.ki2.retro.BiConsumer;
+
 import java.util.WeakHashMap;
-import java.util.function.BiConsumer;
 
 @SuppressLint("LogNotTimber")
 public class BiDataStreamWeakListenerList<TData1, TData2> {
@@ -43,12 +44,12 @@ public class BiDataStreamWeakListenerList<TData1, TData2> {
             lastData2 = data2;
         }
 
-        listeners.keySet().forEach(c -> {
+        for (BiConsumer<TData1, TData2> c : listeners.keySet()) {
             try {
                 c.accept(data1, data2);
             } catch (Exception e) {
                 Log.e("KI2", "Error during callback", e);
             }
-        });
+        }
     }
 }

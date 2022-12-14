@@ -2,9 +2,6 @@ package com.valterc.ki2.data.switches;
 
 import com.valterc.ki2.data.input.KeyAction;
 
-import java.util.Arrays;
-import java.util.Optional;
-
 public enum SwitchCommand {
 
     SINGLE_CLICK(16),
@@ -15,11 +12,13 @@ public enum SwitchCommand {
     NO_SWITCH(240);
 
     public static SwitchCommand fromCommandNumber(int commandNumber) {
-        Optional<SwitchCommand> element =
-                Arrays.stream(SwitchCommand.values()).filter(s -> s.commandNumber == commandNumber)
-                        .findFirst();
+        for (SwitchCommand s : SwitchCommand.values()) {
+            if (s.commandNumber == commandNumber) {
+                return s;
+            }
+        }
 
-        return element.orElse(NO_SWITCH);
+        return NO_SWITCH;
     }
 
     private final int commandNumber;

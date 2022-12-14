@@ -61,7 +61,7 @@ public class DeviceDetailsFragment extends Fragment implements IKarooKeyListener
             throw new IllegalStateException(DeviceId.class.getSimpleName() + " not present in fragment arguments");
         }
 
-        viewModel = new ViewModelProvider(this).get(DeviceDetailsViewModel.class);
+        viewModel = new ViewModelProvider(getViewModelStore(), new ViewModelProvider.NewInstanceFactory()).get(DeviceDetailsViewModel.class);
         viewModel.setDeviceId(deviceId);
     }
 

@@ -42,17 +42,19 @@
                 android:id="@+id/textview_main_version"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintRight_toRightOf="@id/textview_karoo1"
+                app:layout_constraintTop_toBottomOf="@id/textview_karoo1"
                 android:padding="2dp"
                 tools:text="DEV" />
 
-            <androidx.fragment.app.FragmentContainerView
-                android:id="@+id/container_update_overlay"
-                android:layout_width="match_parent"
-                android:layout_height="58dp"
-                tools:layout="@layout/fragment_update_overlay"
-                app:layout_constraintTop_toTopOf="parent" />
+            <TextView
+                android:id="@+id/textview_karoo1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:padding="2dp"
+                android:text="@string/text_karoo_1" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

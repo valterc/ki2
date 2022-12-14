@@ -125,5 +125,6 @@
     <string name="text_cancel">Cancel</string>
     <string name="text_next">Next</string>
     <string name="text_start_update">Start update</string>
+    <string name="text_karoo_1">KAROO 1</string>
 
 </resources>

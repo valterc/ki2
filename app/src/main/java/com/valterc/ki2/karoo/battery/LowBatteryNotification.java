@@ -1,12 +1,11 @@
 package com.valterc.ki2.karoo.battery;
 
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.content.Context;
-import android.graphics.drawable.Icon;
 
 import androidx.appcompat.content.res.AppCompatResources;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+import androidx.core.graphics.drawable.IconCompat;
 
 import com.valterc.ki2.R;
 import com.valterc.ki2.utils.DrawableUtils;
@@ -21,14 +20,18 @@ public class LowBatteryNotification {
     }
 
     public static void showLowBatteryNotification(Context context, String deviceName, LowBatteryCategory category, int batteryPercentage) {
-        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
         String lowBatteryString = context.getString(R.string.text_param_di2_low_battery, deviceName, batteryPercentage);
 
-        NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, context.getString(R.string.text_di2_low_battery), NotificationManager.IMPORTANCE_DEFAULT);
-        notificationManager.createNotificationChannel(notificationChannel);
+        //notificationManager.create
+        //NotificationChannelCompat.Builder channelBuilder = new NotificationChannelCompat.Builder(CHANNEL_ID, NotificationManagerCompat.IMPORTANCE_DEFAULT);
+        //channelBuilder.setName(context.getString(R.string.text_di2_low_battery));
 
-        Notification.Builder notification = new Notification.Builder(context, notificationChannel.getId())
-                .setSmallIcon(Icon.createWithBitmap(DrawableUtils.drawableToBitmap(AppCompatResources.getDrawable(context, R.drawable.ic_battery_0))))
+        //NotificationChannelCompat notificationChannel = channelBuilder.build();
+        //notificationManager.createNotificationChannel(notificationChannel);
+
+        NotificationCompat.Builder notification = new NotificationCompat.Builder(context, "notificationChannel.getId()")
+                .setSmallIcon(R.drawable.ic_battery_0)
                 .setOngoing(false)
                 .setAutoCancel(true)
                 .setWhen(System.currentTimeMillis())
@@ -36,7 +39,7 @@ public class LowBatteryNotification {
                 .setContentText(lowBatteryString)
                 .setCategory(category.getNotificationCategory())
                 .setGroup(deviceName)
-                .setStyle(new Notification.BigTextStyle().bigText(lowBatteryString));
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(lowBatteryString));
 
         notification.getExtras().putString(EXTRA_HEADER, context.getString(R.string.text_di2_low_battery));
         notification.getExtras().putString(EXTRA_ACTION, context.getString(R.string.text_dismiss));

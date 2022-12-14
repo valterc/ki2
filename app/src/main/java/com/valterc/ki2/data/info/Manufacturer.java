@@ -1,8 +1,5 @@
 package com.valterc.ki2.data.info;
 
-import java.util.Arrays;
-import java.util.Optional;
-
 public enum Manufacturer {
 
     GARMIN(1, "Garmin"),
@@ -11,11 +8,13 @@ public enum Manufacturer {
     UNKNOWN(-1, "Unknown");
 
     public static Manufacturer fromId(int id) {
-        Optional<Manufacturer> element =
-                Arrays.stream(Manufacturer.values()).filter(s -> s.id == id)
-                        .findFirst();
+        for (Manufacturer s : Manufacturer.values()) {
+            if (s.id == id) {
+                return s;
+            }
+        }
 
-        return element.orElse(UNKNOWN);
+        return UNKNOWN;
     }
 
     private final int id;

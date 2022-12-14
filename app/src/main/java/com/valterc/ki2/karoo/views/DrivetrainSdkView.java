@@ -14,9 +14,8 @@ import com.valterc.ki2.data.connection.ConnectionStatus;
 import com.valterc.ki2.data.device.DeviceId;
 import com.valterc.ki2.data.shifting.ShiftingInfo;
 import com.valterc.ki2.karoo.Ki2Context;
+import com.valterc.ki2.retro.BiConsumer;
 import com.valterc.ki2.views.DrivetrainView;
-
-import java.util.function.BiConsumer;
 
 public class DrivetrainSdkView extends Ki2SdkView {
 

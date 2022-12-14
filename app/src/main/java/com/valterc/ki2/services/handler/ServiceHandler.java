@@ -5,8 +5,7 @@ import android.os.Looper;
 import android.os.Message;
 
 import androidx.annotation.NonNull;
-
-import java.util.function.Consumer;
+import androidx.core.util.Consumer;
 
 import timber.log.Timber;
 

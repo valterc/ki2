@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Path;
@@ -412,10 +411,6 @@ public class GearsView extends View  {
 
     public int getTextColor() {
         return textPaint.getColor();
-    }
-
-    public void setTextColor(Color textColor) {
-        setTextColor(textColor.toArgb());
     }
 
     public void setTextColor(int textColor) {

@@ -1,6 +1,5 @@
 package com.valterc.ki2.karoo.views;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,9 +14,8 @@ import com.valterc.ki2.data.connection.ConnectionStatus;
 import com.valterc.ki2.data.device.DeviceId;
 import com.valterc.ki2.data.shifting.ShiftingInfo;
 import com.valterc.ki2.karoo.Ki2Context;
+import com.valterc.ki2.retro.BiConsumer;
 import com.valterc.ki2.views.GearsView;
-
-import java.util.function.BiConsumer;
 
 public class GearsSdkView extends Ki2SdkView {
 

@@ -2,9 +2,6 @@ package com.valterc.ki2.data.input;
 
 import android.view.KeyEvent;
 
-import java.util.Arrays;
-import java.util.Optional;
-
 /**
  * Represents a Karoo hardware key and the corresponding KeyEvent keycode.
  */
@@ -36,11 +33,13 @@ public enum KarooKey{
     NONE(KeyEvent.KEYCODE_UNKNOWN);
 
     public static KarooKey fromKeyCode(int keyCode) {
-        Optional<KarooKey> element =
-                Arrays.stream(KarooKey.values()).filter(s -> s.keyCode == keyCode)
-                        .findFirst();
+        for (KarooKey s : KarooKey.values()) {
+            if (s.keyCode == keyCode) {
+                return s;
+            }
+        }
 
-        return element.orElse(NONE);
+        return NONE;
     }
 
     private final int keyCode;

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Picture;
@@ -435,10 +434,6 @@ public class DrivetrainView extends View {
         }
     }
 
-    public void setDrivetrainColor(Color drivetrainColor) {
-        setDrivetrainColor(drivetrainColor.toArgb());
-    }
-
     public int getSelectedGearColor() {
         return selectedGearPaint.getColor();
     }
@@ -452,10 +447,6 @@ public class DrivetrainView extends View {
         }
     }
 
-    public void setSelectedGearColor(Color selectedGearColor) {
-        setSelectedGearColor(selectedGearColor.toArgb());
-    }
-
     public int getChainColor() {
         return chainPaint.getColor();
     }
@@ -467,10 +458,6 @@ public class DrivetrainView extends View {
             invalidate();
             requestLayout();
         }
-    }
-
-    public void setChainColor(Color chainColor) {
-        setChainColor(chainColor.toArgb());
     }
 
     public void setGears(int frontGearMax, int frontGear, int rearGearMax, int rearGear) {
@@ -602,10 +589,6 @@ public class DrivetrainView extends View {
 
     public int getTextColor() {
         return textPaint.getColor();
-    }
-
-    public void setTextColor(Color textColor) {
-        setTextColor(textColor.toArgb());
     }
 
     public void setTextColor(int textColor) {

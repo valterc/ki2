@@ -1,8 +1,5 @@
 package com.valterc.ki2.data.connection;
 
-import java.util.Arrays;
-import java.util.Optional;
-
 public enum ConnectionStatus {
 
     INVALID(0),
@@ -12,12 +9,13 @@ public enum ConnectionStatus {
     CLOSED(4);
 
     public static ConnectionStatus fromValue(int value) {
-        Optional<ConnectionStatus> connectionStatus =
-                Arrays.stream(values())
-                        .filter(d -> d.value == value)
-                        .findFirst();
+        for (ConnectionStatus d : values()) {
+            if (d.value == value) {
+                return d;
+            }
+        }
 
-        return connectionStatus.orElse(INVALID);
+        return INVALID;
     }
 
     private final int value;

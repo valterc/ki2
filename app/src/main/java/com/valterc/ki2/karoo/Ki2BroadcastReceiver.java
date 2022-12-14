@@ -10,9 +10,6 @@ import android.util.Log;
 import androidx.preference.PreferenceManager;
 
 import com.valterc.ki2.R;
-import com.valterc.ki2.activities.update.UpdateActivity;
-import com.valterc.ki2.data.update.OngoingUpdateStateInfo;
-import com.valterc.ki2.data.update.UpdateStateStore;
 import com.valterc.ki2.karoo.hooks.RideActivityHook;
 
 public class Ki2BroadcastReceiver extends BroadcastReceiver {
@@ -39,16 +36,6 @@ public class Ki2BroadcastReceiver extends BroadcastReceiver {
 
             case "io.hammerhead.sdk.INITIALIZE":
                 Log.i(TAG, "Module loaded");
-
-                OngoingUpdateStateInfo ongoingUpdateStateInfo = UpdateStateStore.getAndClearOngoingUpdateState(context);
-                if (ongoingUpdateStateInfo != null) {
-                    Log.i(TAG, "Starting update activity after update complete");
-                    Intent intentUpdateActivity = new Intent(context, UpdateActivity.class);
-                    intentUpdateActivity.putExtra(OngoingUpdateStateInfo.class.getSimpleName(), ongoingUpdateStateInfo);
-                    intentUpdateActivity.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    context.startActivity(intentUpdateActivity);
-                }
-
                 break;
 
             default:

@@ -1,5 +1,7 @@
 package com.valterc.ki2.karoo.formatters;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import com.valterc.ki2.data.connection.ConnectionInfo;
@@ -7,8 +9,7 @@ import com.valterc.ki2.data.connection.ConnectionStatus;
 import com.valterc.ki2.data.device.DeviceId;
 import com.valterc.ki2.data.shifting.ShiftingInfo;
 import com.valterc.ki2.karoo.Ki2Context;
-
-import java.util.function.BiConsumer;
+import com.valterc.ki2.retro.BiConsumer;
 
 import io.hammerhead.sdk.v0.datatype.formatter.SdkFormatter;
 

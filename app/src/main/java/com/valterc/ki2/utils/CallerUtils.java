@@ -3,7 +3,7 @@ package com.valterc.ki2.utils;
 import android.annotation.SuppressLint;
 import android.util.Log;
 
-import java.util.function.Supplier;
+import androidx.core.util.Supplier;
 
 @SuppressLint("LogNotTimber")
 public final class CallerUtils {

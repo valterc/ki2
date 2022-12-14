@@ -8,6 +8,7 @@ import com.valterc.ki2.data.info.DataInfoBuilder;
 import com.valterc.ki2.data.info.DataType;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -51,7 +52,11 @@ public class ConnectionDataManager {
     }
 
     public ConnectionDataInfo buildConnectionDataInfo(){
-        return new ConnectionDataInfo(deviceId, status, dataMap.values().stream().collect(Collectors.toMap(DataInfoBuilder::getType, DataInfoBuilder::buildDataInfo)));
+        Map<DataType, DataInfo> map = new HashMap<>();
+        for (DataInfoBuilder dataInfoBuilder : dataMap.values()) {
+            map.put(dataInfoBuilder.getType(), dataInfoBuilder.buildDataInfo());
+        }
+        return new ConnectionDataInfo(deviceId, status, map);
     }
 
     public DataInfo buildDataInfo(DataType dataType) {
@@ -80,6 +85,12 @@ public class ConnectionDataManager {
     }
 
     public void clearEvents() {
-        dataMap.entrySet().removeIf(dataTypeDataInfoBuilderEntry -> dataTypeDataInfoBuilderEntry.getKey().isEvent());
+        Iterator<Map.Entry<DataType, DataInfoBuilder>> iterator = dataMap.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<DataType, DataInfoBuilder> next = iterator.next();
+            if (next.getKey().isEvent()) {
+                iterator.remove();
+            }
+        }
     }
 }

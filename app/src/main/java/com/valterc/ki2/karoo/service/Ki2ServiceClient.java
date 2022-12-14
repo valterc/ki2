@@ -10,6 +10,8 @@ import android.os.Looper;
 import android.os.RemoteException;
 import android.util.Log;
 
+import androidx.core.util.Consumer;
+
 import com.valterc.ki2.data.connection.ConnectionInfo;
 import com.valterc.ki2.data.device.BatteryInfo;
 import com.valterc.ki2.data.device.DeviceId;
@@ -18,6 +20,7 @@ import com.valterc.ki2.data.message.Message;
 import com.valterc.ki2.data.preferences.PreferencesView;
 import com.valterc.ki2.data.shifting.ShiftingInfo;
 import com.valterc.ki2.input.InputAdapter;
+import com.valterc.ki2.retro.BiConsumer;
 import com.valterc.ki2.services.IKi2Service;
 import com.valterc.ki2.services.Ki2Service;
 import com.valterc.ki2.services.callbacks.IBatteryCallback;
@@ -25,9 +28,6 @@ import com.valterc.ki2.services.callbacks.IConnectionInfoCallback;
 import com.valterc.ki2.services.callbacks.IKeyCallback;
 import com.valterc.ki2.services.callbacks.IMessageCallback;
 import com.valterc.ki2.services.callbacks.IShiftingCallback;
-
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 import io.hammerhead.sdk.v0.SdkContext;
 

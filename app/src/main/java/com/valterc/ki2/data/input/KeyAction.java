@@ -1,8 +1,5 @@
 package com.valterc.ki2.data.input;
 
-import java.util.Arrays;
-import java.util.Optional;
-
 public enum KeyAction {
 
     SINGLE_PRESS(0),
@@ -14,11 +11,13 @@ public enum KeyAction {
     NO_ACTION(255);
 
     public static KeyAction fromActionNumber(int actionNumber) {
-        Optional<KeyAction> element =
-                Arrays.stream(KeyAction.values()).filter(s -> s.actionNumber == actionNumber)
-                        .findFirst();
+        for (KeyAction s : KeyAction.values()) {
+            if (s.actionNumber == actionNumber) {
+                return s;
+            }
+        }
 
-        return element.orElse(NO_ACTION);
+        return NO_ACTION;
     }
 
     private final int actionNumber;

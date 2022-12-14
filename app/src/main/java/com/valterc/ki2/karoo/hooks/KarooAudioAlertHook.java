@@ -28,7 +28,7 @@ public class KarooAudioAlertHook {
             Method[] methodsAudioAlert = audioAlertClass.getMethods();
 
             for (Method methodBroadcast: methodsAudioAlert) {
-                if (methodBroadcast.getParameterCount() == 2) {
+                if (methodBroadcast.getParameterTypes().length == 2) {
                     Class<?>[] parameterTypes = methodBroadcast.getParameterTypes();
                     if (parameterTypes[0] == Context.class && parameterTypes[1] == String.class) {
                         methodBroadcast.invoke(audioAlertSensorBatteryLow, context.getBaseContext(), null);

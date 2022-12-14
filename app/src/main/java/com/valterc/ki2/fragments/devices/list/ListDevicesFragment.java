@@ -38,7 +38,7 @@ public class ListDevicesFragment extends Fragment implements IKarooKeyListener {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewModel = new ViewModelProvider(this).get(ListDevicesViewModel.class);
+        viewModel = new ViewModelProvider(getViewModelStore(), new ViewModelProvider.NewInstanceFactory()).get(ListDevicesViewModel.class);
     }
 
     @Override
