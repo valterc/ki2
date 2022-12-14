@@ -1,9 +1,5 @@
 package com.valterc.ki2.update;
 
-import android.text.SpannableString;
-import android.text.SpannableStringBuilder;
-import android.text.SpannedString;
-
 import androidx.annotation.NonNull;
 
 import com.google.gson.JsonArray;
