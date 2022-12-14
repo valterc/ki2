@@ -18,7 +18,8 @@
         app:selectedGearStrokeWidth="4dp"
         app:chainStrokeWidth="4dp"
         android:visibility="invisible"
-        tools:visibility="visible" />
+        tools:visibility="visible"
+        tools:layout_height="160dp" />
 
     <TextView
         android:id="@+id/textview_karoo_drivetrain_waiting_for_data"
