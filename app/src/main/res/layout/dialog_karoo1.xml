@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:text="Ki2 was originally designed for Karoo 2. Based on community requests I made the effort to adapt the app for the original Karoo, which uses an older Android version." />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="15dp"
+                android:textColor="@color/black"
+                android:text="If this app is useful, buy me a coffee at:\n- github.com/valterc/ki2\n- paypal.me/valtercc" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Support for this version is limited to bug fixes, as official Hammerhead support for the original Karoo is also ending." />
+
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

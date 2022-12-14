@@ -1,8 +1,12 @@
 package com.valterc.ki2.activities.main;
 
+import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
+import android.preference.PreferenceManager;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -19,15 +23,25 @@ import com.valterc.ki2.BuildConfig;
 import com.valterc.ki2.R;
 import com.valterc.ki2.data.input.KarooKey;
 import com.valterc.ki2.fragments.IKarooKeyListener;
+import com.valterc.ki2.karoo.dialog.Karoo1Dialog;
+import com.valterc.ki2.karoo.dialog.Karoo2Dialog;
 
 public class MainActivity extends AppCompatActivity {
 
-    private final Handler handler = new Handler(Looper.getMainLooper());
+    private static final String PREFERENCE_KEY_FIRST_RUN = "FirstRun";
+    private static final String DEVICE_KAROO_1 = "hx";
+
     private ViewPager2 viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (!Build.DEVICE.equals(DEVICE_KAROO_1)) {
+            new Karoo2Dialog(this).show();
+            return;
+        }
+
         setContentView(R.layout.activity_main);
 
         TextView textViewVersion = findViewById(R.id.textview_main_version);
@@ -66,12 +80,21 @@ public class MainActivity extends AppCompatActivity {
 
         ExtendedFloatingActionButton buttonBack = findViewById(R.id.button_back);
         buttonBack.setOnClickListener((view) -> finish());
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        boolean firstRun = sharedPreferences.getBoolean(PREFERENCE_KEY_FIRST_RUN, true);
+
+        if (firstRun) {
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putBoolean(PREFERENCE_KEY_FIRST_RUN, false);
+            editor.apply();
+            new Karoo1Dialog(this).show();
+        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        handler.removeCallbacksAndMessages(null);
     }
 
     @Override
