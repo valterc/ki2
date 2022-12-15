@@ -1,8 +1,5 @@
 package com.valterc.ki2.data.ride;
 
-import java.util.Arrays;
-import java.util.Optional;
-
 public enum RideStatus {
 
     NEW(0),
@@ -11,12 +8,13 @@ public enum RideStatus {
     FINISHED(3);
 
     public static RideStatus fromValue(int value) {
-        Optional<RideStatus> optionalValue =
-                Arrays.stream(values())
-                        .filter(d -> d.value == value)
-                        .findFirst();
+        for (RideStatus rideStatus : values()) {
+            if (rideStatus.value == value) {
+                return rideStatus;
+            }
+        }
 
-        return optionalValue.orElse(NEW);
+        return NEW;
     }
 
     private final int value;

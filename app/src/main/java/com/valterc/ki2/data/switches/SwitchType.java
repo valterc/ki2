@@ -1,8 +1,5 @@
 package com.valterc.ki2.data.switches;
 
-import java.util.Arrays;
-import java.util.Optional;
-
 public enum SwitchType {
 
     LEFT(1),
@@ -10,11 +7,13 @@ public enum SwitchType {
     UNKNOWN(255);
 
     public static SwitchType fromValue(int value) {
-        Optional<SwitchType> element =
-                Arrays.stream(SwitchType.values()).filter(s -> s.value == value)
-                        .findFirst();
+        for (SwitchType switchType : values()) {
+            if (switchType.value == value) {
+                return switchType;
+            }
+        }
 
-        return element.orElse(UNKNOWN);
+        return UNKNOWN;
     }
 
     private final int value;

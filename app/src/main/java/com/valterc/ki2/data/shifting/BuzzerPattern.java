@@ -1,8 +1,5 @@
 package com.valterc.ki2.data.shifting;
 
-import java.util.Arrays;
-import java.util.Optional;
-
 public enum BuzzerPattern {
 
     DEFAULT(0),
@@ -12,11 +9,13 @@ public enum BuzzerPattern {
     UNKNOWN(255);
 
     public static BuzzerPattern fromCommandNumber(int commandNumber) {
-        Optional<BuzzerPattern> element =
-                Arrays.stream(BuzzerPattern.values()).filter(s -> s.commandNumber == commandNumber)
-                        .findFirst();
+        for (BuzzerPattern s : values()) {
+            if (s.commandNumber == commandNumber) {
+                return s;
+            }
+        }
 
-        return element.orElse(UNKNOWN);
+        return UNKNOWN;
     }
 
     private final long commandNumber;
