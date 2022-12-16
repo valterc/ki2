@@ -1,19 +1,18 @@
 package com.valterc.ki2.data.command;
 
-import java.util.Arrays;
-import java.util.Optional;
-
 public enum CommandType {
 
     SHIFTING_MODE(1),
     UNKNOWN(255);
 
     public static CommandType fromValue(int commandValue) {
-        Optional<CommandType> element =
-                Arrays.stream(CommandType.values()).filter(s -> s.commandValue == commandValue)
-                        .findFirst();
+        for (CommandType commandType : values()) {
+            if (commandType.commandValue == commandValue) {
+                return commandType;
+            }
+        }
 
-        return element.orElse(UNKNOWN);
+        return UNKNOWN;
     }
 
     private final int commandValue;

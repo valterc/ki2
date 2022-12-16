@@ -1,8 +1,5 @@
 package com.valterc.ki2.data.message;
 
-import java.util.Arrays;
-import java.util.Optional;
-
 public enum MessageType {
 
     UNKNOWN(0),
@@ -13,12 +10,13 @@ public enum MessageType {
     OTHER(255);
 
     public static MessageType fromValue(int value) {
-        Optional<MessageType> optionalValue =
-                Arrays.stream(values())
-                        .filter(d -> d.value == value)
-                        .findFirst();
+        for (MessageType messageType : values()) {
+            if (messageType.value == value) {
+                return messageType;
+            }
+        }
 
-        return optionalValue.orElse(UNKNOWN);
+        return UNKNOWN;
     }
 
     private final int value;

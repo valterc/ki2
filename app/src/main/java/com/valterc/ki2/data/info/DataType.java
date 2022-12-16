@@ -1,8 +1,5 @@
 package com.valterc.ki2.data.info;
 
-import java.util.Arrays;
-import java.util.Optional;
-
 public enum DataType {
 
     UNKNOWN(0, false),
@@ -15,11 +12,13 @@ public enum DataType {
     OTHER(255, false);
 
     public static DataType fromFlag(int flag) {
-        Optional<DataType> element =
-                Arrays.stream(DataType.values()).filter(s -> s.flag == flag)
-                        .findFirst();
+        for (DataType dataType : values()) {
+            if (dataType.flag == flag) {
+                return dataType;
+            }
+        }
 
-        return element.orElse(UNKNOWN);
+        return UNKNOWN;
     }
 
     private final int flag;

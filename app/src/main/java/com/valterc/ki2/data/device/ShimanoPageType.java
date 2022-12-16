@@ -1,10 +1,5 @@
 package com.valterc.ki2.data.device;
 
-import com.valterc.ki2.data.info.DataType;
-
-import java.util.Arrays;
-import java.util.Optional;
-
 public enum ShimanoPageType {
 
     BATTERY_LEVEL_AND_NUMBER_OF_SPEEDS(0),
@@ -28,11 +23,13 @@ public enum ShimanoPageType {
     UNKNOWN(65535);
 
     public static ShimanoPageType fromPageNumber(int pageNumber) {
-        Optional<ShimanoPageType> element =
-                Arrays.stream(ShimanoPageType.values()).filter(s -> s.pageNumber == pageNumber)
-                        .findFirst();
+        for (ShimanoPageType shimanoPageType : values()) {
+            if (shimanoPageType.pageNumber == pageNumber) {
+                return shimanoPageType;
+            }
+        }
 
-        return element.orElse(UNKNOWN);
+        return UNKNOWN;
     }
 
     private final int pageNumber;
