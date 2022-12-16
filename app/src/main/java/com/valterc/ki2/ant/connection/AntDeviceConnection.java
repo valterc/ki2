@@ -31,13 +31,13 @@ public class AntDeviceConnection implements IAntDeviceConnection, IDeviceConnect
 
     private static final int MAX_RECONNECT_ATTEMPTS = 10;
     private static final int TIME_MS_MESSAGE_TIMEOUT = 30_000;
-    private static final ScheduledExecutorService EXECUTOR_SERVICE = Executors.newSingleThreadScheduledExecutor();
 
     private final AntManager antManager;
     private final DeviceId deviceId;
     private final ChannelConfiguration channelConfiguration;
     private final IDeviceConnectionListener deviceConnectionListener;
     private final Queue<Pair<MessageFromAntType, AntMessageParcel>> messageQueue;
+    private final ScheduledExecutorService executorService;
 
     private ConnectionStatus connectionStatus;
     private AntChannelWrapper antChannelWrapper;
@@ -52,9 +52,10 @@ public class AntDeviceConnection implements IAntDeviceConnection, IDeviceConnect
         this.channelConfiguration = channelConfiguration;
         this.deviceConnectionListener = deviceConnectionListener;
         this.messageQueue = new LinkedList<>();
+        this.executorService = Executors.newSingleThreadScheduledExecutor();
 
         postConnectionStatus(deviceId, ConnectionStatus.NEW);
-        EXECUTOR_SERVICE.schedule(this::connectionTracker, 1, TimeUnit.MINUTES);
+        executorService.schedule(this::connectionTracker, 1, TimeUnit.MINUTES);
         connect();
     }
 
@@ -96,8 +97,10 @@ public class AntDeviceConnection implements IAntDeviceConnection, IDeviceConnect
 
             if (reconnectAttempts < MAX_RECONNECT_ATTEMPTS) {
                 reconnectAttempts++;
-                Timber.d("[%s] Retrying connection, attempt %d...", deviceId, reconnectAttempts);
-                EXECUTOR_SERVICE.schedule(this::attemptConnect, 2, TimeUnit.SECONDS);
+                if (!disconnected && !executorService.isShutdown()) {
+                    Timber.d("[%s] Retrying connection, attempt %d...", deviceId, reconnectAttempts);
+                    executorService.schedule(this::attemptConnect, 2, TimeUnit.SECONDS);
+                }
             } else {
                 postConnectionStatus(deviceId, ConnectionStatus.CLOSED);
             }
@@ -110,7 +113,10 @@ public class AntDeviceConnection implements IAntDeviceConnection, IDeviceConnect
         }
 
         postConnectionStatus(deviceId, ConnectionStatus.CONNECTING);
-        EXECUTOR_SERVICE.execute(this::attemptConnect);
+
+        if (!disconnected && !executorService.isShutdown()) {
+            executorService.execute(this::attemptConnect);
+        }
     }
 
     private void connectionTracker() {
@@ -127,7 +133,9 @@ public class AntDeviceConnection implements IAntDeviceConnection, IDeviceConnect
             }
         }
 
-        EXECUTOR_SERVICE.schedule(this::connectionTracker, 1, TimeUnit.MINUTES);
+        if (!disconnected && !executorService.isShutdown()) {
+            executorService.schedule(this::connectionTracker, 1, TimeUnit.MINUTES);
+        }
     }
 
     private void forwardMessage(MessageFromAntType messageFromAntType, AntMessageParcel antMessageParcel) {
@@ -179,6 +187,7 @@ public class AntDeviceConnection implements IAntDeviceConnection, IDeviceConnect
     @Override
     public void disconnect() {
         disconnected = true;
+        executorService.shutdownNow();
         disconnectInternal();
         reconnectAttempts = MAX_RECONNECT_ATTEMPTS;
         if (this.connectionStatus != ConnectionStatus.CLOSED) {
