@@ -57,7 +57,7 @@ public class AntManager {
         public void onServiceDisconnected(ComponentName componentName) {
             antService = null;
             antChannelProvider = null;
-            Timber.i("ANT service disconnected");
+            Timber.w("ANT service disconnected");
             triggerStateChange();
         }
     };
@@ -78,11 +78,15 @@ public class AntManager {
         this.stateListener = stateListener;
 
         antServiceBound = AntService.bindService(context, antServiceConnection);
-        Timber.i("ANT service bind: %s", antServiceBound);
+        Timber.i("ANT service bound: %s", antServiceBound);
+
+        if (!antServiceBound) {
+            throw new RuntimeException("Unable to bound to ANT service");
+        }
     }
 
     private void triggerStateChange() {
-        if (stateListener != null){
+        if (stateListener != null) {
             stateListener.onAntStateChange(isReady());
         }
     }
@@ -110,9 +114,8 @@ public class AntManager {
      * @return Number of available channels from this provider.
      * @throws Exception If the ANT service becomes unavailable.
      */
-    public int getAvailableChannelCount() throws Exception{
-        if (!isReady())
-        {
+    public int getAvailableChannelCount() throws Exception {
+        if (!isReady()) {
             throw new RuntimeException("ANT channel provider is not available");
         }
 
@@ -123,8 +126,8 @@ public class AntManager {
      * Get an ANT channel. The channel will be open.
      *
      * @param channelConfiguration Channel configuration.
-     * @param channelEventHandler Optional channel event handler.
-     * @param adapterEventHandler Optional adapter event handler.
+     * @param channelEventHandler  Optional channel event handler.
+     * @param adapterEventHandler  Optional adapter event handler.
      * @return ANT channel wrapper.
      * @throws Exception If the ANT service becomes unavailable.
      */
@@ -132,8 +135,7 @@ public class AntManager {
             ChannelConfiguration channelConfiguration,
             IAntChannelEventHandler channelEventHandler,
             IAntAdapterEventHandler adapterEventHandler) throws Exception {
-        if (!isReady())
-        {
+        if (!isReady()) {
             throw new RuntimeException("ANT channel provider is not available");
         }
 
@@ -143,7 +145,7 @@ public class AntManager {
             NetworkKey networkKey = channelConfiguration.getNetworkKey();
             if (networkKey != null) {
                 antChannel = antChannelProvider.acquireChannelOnPrivateNetwork(context, networkKey);
-            }else {
+            } else {
                 antChannel = antChannelProvider.acquireChannel(this.context, PredefinedNetwork.ANT_PLUS);
             }
         } catch (Exception e) {
@@ -188,18 +190,16 @@ public class AntManager {
      * Get an ANT scan channel. The channel will be open.
      *
      * @param scanChannelConfiguration Scan channel configuration.
-     * @param channelEventHandler Optional channel event handler.
-     * @param adapterEventHandler Optional adapter event handler.
+     * @param channelEventHandler      Optional channel event handler.
+     * @param adapterEventHandler      Optional adapter event handler.
      * @return ANT channel wrapper.
      * @throws Exception If the ANT service becomes unavailable.
      */
     public AntChannelWrapper getScanAntChannel(
             ScanChannelConfiguration scanChannelConfiguration,
             IAntChannelEventHandler channelEventHandler,
-            IAntAdapterEventHandler adapterEventHandler) throws Exception
-    {
-        if (!isReady())
-        {
+            IAntAdapterEventHandler adapterEventHandler) throws Exception {
+        if (!isReady()) {
             throw new RuntimeException("ANT channel provider is not available");
         }
 
@@ -214,7 +214,7 @@ public class AntManager {
             NetworkKey networkKey = scanChannelConfiguration.getNetworkKey();
             if (networkKey != null) {
                 antChannel = antChannelProvider.acquireChannelOnPrivateNetwork(context, networkKey, capabilities);
-            }else {
+            } else {
                 antChannel = antChannelProvider.acquireChannel(this.context, PredefinedNetwork.ANT_PLUS, capabilities);
             }
         } catch (Exception e) {
@@ -255,7 +255,7 @@ public class AntManager {
      *
      * @return True if ANT is ready, False otherwise.
      */
-    public boolean isReady(){
+    public boolean isReady() {
         return antChannelProvider != null;
     }
 
