@@ -21,60 +21,121 @@ import com.valterc.ki2.data.info.DataType;
 
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import timber.log.Timber;
 
 public class AntDeviceConnection implements IAntDeviceConnection, IDeviceConnectionListener {
 
     private static final int MAX_RECONNECT_ATTEMPTS = 10;
+    private static final int TIME_MS_MESSAGE_TIMEOUT = 30_000;
 
     private final AntManager antManager;
     private final DeviceId deviceId;
     private final ChannelConfiguration channelConfiguration;
     private final IDeviceConnectionListener deviceConnectionListener;
     private final Queue<Pair<MessageFromAntType, AntMessageParcel>> messageQueue;
+    private final ScheduledExecutorService executorService;
 
     private ConnectionStatus connectionStatus;
     private AntChannelWrapper antChannelWrapper;
     private ITransportHandler transportHandler;
-    private int searchReconnectAttempts;
+    private long timestampLastMessage;
+    private int reconnectAttempts;
+    private boolean disconnected;
 
-    public AntDeviceConnection(AntManager antManager, DeviceId deviceId, ChannelConfiguration channelConfiguration, IDeviceConnectionListener deviceConnectionListener) throws Exception {
+    public AntDeviceConnection(AntManager antManager, DeviceId deviceId, ChannelConfiguration channelConfiguration, IDeviceConnectionListener deviceConnectionListener) {
         this.antManager = antManager;
         this.deviceId = deviceId;
         this.channelConfiguration = channelConfiguration;
         this.deviceConnectionListener = deviceConnectionListener;
         this.messageQueue = new LinkedList<>();
-        onConnectionStatus(deviceId, ConnectionStatus.NEW);
-        connect(antManager);
+        this.executorService = Executors.newSingleThreadScheduledExecutor();
+
+        postConnectionStatus(deviceId, ConnectionStatus.NEW);
+        executorService.schedule(this::connectionTracker, 1, TimeUnit.MINUTES);
+        connect();
     }
 
-    private void connect(AntManager antManager) throws Exception {
+    private void connectInternal() throws Exception {
         antChannelWrapper = antManager.getAntChannel(channelConfiguration, new IAntChannelEventHandler() {
             @Override
             public void onReceiveMessage(MessageFromAntType messageFromAntType, AntMessageParcel antMessageParcel) {
+                if (disconnected) {
+                    disconnectInternal();
+                    return;
+                }
+
+                timestampLastMessage = System.currentTimeMillis();
                 forwardMessage(messageFromAntType, antMessageParcel);
             }
 
             @Override
             public void onChannelDeath() {
-                Timber.d("Channel died for device %s", deviceId);
-
-                disconnect();
-
-                if (antManager.isReady()) {
-                    try {
-                        connect(antManager);
-                    } catch (Exception e) {
-                        Timber.e(e, "Unable to restart connection for deviceId %s", deviceId);
-                    }
-                }
+                Timber.w("[%s] Channel died", deviceId);
+                disconnectInternal();
+                connect();
             }
         }, null);
 
-        onConnectionStatus(deviceId, ConnectionStatus.CONNECTING);
         transportHandler = new TransportHandler(deviceId, this, this);
         pushQueuedMessages();
+    }
+
+    private void attemptConnect() {
+        if (disconnected || connectionStatus == ConnectionStatus.CLOSED) {
+            return;
+        }
+
+        try {
+            Timber.d("[%s] Starting connect procedure", deviceId);
+            connectInternal();
+        } catch (Exception e) {
+            Timber.w(e, "[%s] Unable to start connect procedure", deviceId);
+
+            if (reconnectAttempts < MAX_RECONNECT_ATTEMPTS) {
+                reconnectAttempts++;
+                if (!disconnected && !executorService.isShutdown()) {
+                    Timber.d("[%s] Retrying connection, attempt %d...", deviceId, reconnectAttempts);
+                    executorService.schedule(this::attemptConnect, 2, TimeUnit.SECONDS);
+                }
+            } else {
+                postConnectionStatus(deviceId, ConnectionStatus.CLOSED);
+            }
+        }
+    }
+
+    private void connect() {
+        if (disconnected || connectionStatus == ConnectionStatus.CLOSED) {
+            return;
+        }
+
+        postConnectionStatus(deviceId, ConnectionStatus.CONNECTING);
+
+        if (!disconnected && !executorService.isShutdown()) {
+            executorService.execute(this::attemptConnect);
+        }
+    }
+
+    private void connectionTracker() {
+        if (disconnected || connectionStatus == ConnectionStatus.CLOSED) {
+            return;
+        }
+
+        if (connectionStatus == ConnectionStatus.ESTABLISHED) {
+            if (System.currentTimeMillis() - timestampLastMessage > TIME_MS_MESSAGE_TIMEOUT) {
+                timestampLastMessage = System.currentTimeMillis();
+                Timber.w("[%s] No ANT messages in last 30 seconds, restarting connection...", deviceId);
+                disconnectInternal();
+                connect();
+            }
+        }
+
+        if (!disconnected && !executorService.isShutdown()) {
+            executorService.schedule(this::connectionTracker, 1, TimeUnit.MINUTES);
+        }
     }
 
     private void forwardMessage(MessageFromAntType messageFromAntType, AntMessageParcel antMessageParcel) {
@@ -88,7 +149,6 @@ public class AntDeviceConnection implements IAntDeviceConnection, IDeviceConnect
 
     private synchronized void pushQueuedMessages() {
         ITransportHandler transportHandler = this.transportHandler;
-
         if (transportHandler == null) {
             return;
         }
@@ -101,7 +161,7 @@ public class AntDeviceConnection implements IAntDeviceConnection, IDeviceConnect
         }
     }
 
-    private void disconnectInternal(){
+    private void disconnectInternal() {
         messageQueue.clear();
         AntChannelWrapper antChannelWrapper = this.antChannelWrapper;
         this.antChannelWrapper = null;
@@ -126,29 +186,29 @@ public class AntDeviceConnection implements IAntDeviceConnection, IDeviceConnect
 
     @Override
     public void disconnect() {
+        disconnected = true;
+        executorService.shutdownNow();
         disconnectInternal();
-        searchReconnectAttempts = MAX_RECONNECT_ATTEMPTS;
+        reconnectAttempts = MAX_RECONNECT_ATTEMPTS;
         if (this.connectionStatus != ConnectionStatus.CLOSED) {
             postConnectionStatus(deviceId, ConnectionStatus.CLOSED);
         }
     }
 
     @Override
-    public ConnectionStatus getConnectionStatus(){
+    public ConnectionStatus getConnectionStatus() {
         return connectionStatus;
     }
 
     @Override
     public void sendCommand(CommandType commandType, Parcelable data) {
         ITransportHandler transportHandler = this.transportHandler;
-
-        if (transportHandler == null){
+        if (transportHandler == null) {
             return;
         }
 
         IDeviceProfileHandler deviceProfileHandler = transportHandler.getDeviceProfileHandler();
-
-        if (deviceProfileHandler == null){
+        if (deviceProfileHandler == null) {
             return;
         }
 
@@ -156,14 +216,14 @@ public class AntDeviceConnection implements IAntDeviceConnection, IDeviceConnect
     }
 
     public void sendAcknowledgedData(byte[] payload) throws RemoteException, AntCommandFailedException {
-        AntChannelWrapper antChannelWrapper =  this.antChannelWrapper;
+        AntChannelWrapper antChannelWrapper = this.antChannelWrapper;
         if (antChannelWrapper != null) {
             antChannelWrapper.sendAcknowledgedData(payload);
         }
     }
 
     public void setBroadcastData(byte[] payload) throws RemoteException {
-        AntChannelWrapper antChannelWrapper =  this.antChannelWrapper;
+        AntChannelWrapper antChannelWrapper = this.antChannelWrapper;
         if (antChannelWrapper != null) {
             antChannelWrapper.setBroadcastData(payload);
         }
@@ -171,22 +231,16 @@ public class AntDeviceConnection implements IAntDeviceConnection, IDeviceConnect
 
     @Override
     public void onConnectionStatus(DeviceId deviceId, ConnectionStatus connectionStatus) {
-
         if (connectionStatus == ConnectionStatus.ESTABLISHED) {
-            searchReconnectAttempts = 0;
-        } else if (connectionStatus == ConnectionStatus.CLOSED && searchReconnectAttempts < MAX_RECONNECT_ATTEMPTS) {
-            searchReconnectAttempts++;
-            connectionStatus = ConnectionStatus.CONNECTING;
+            reconnectAttempts = 0;
+        }
 
-            try {
-                Timber.d("[%s] Retrying connection, attempt %d...", deviceId, searchReconnectAttempts);
-                disconnectInternal();
-                connect(antManager);
-            } catch (Exception e) {
-                Timber.e(e, "Unable to connect");
-                disconnectInternal();
-                connectionStatus = ConnectionStatus.CLOSED;
-            }
+        if (connectionStatus == ConnectionStatus.CLOSED && reconnectAttempts < MAX_RECONNECT_ATTEMPTS) {
+            reconnectAttempts++;
+            Timber.d("[%s] Retrying connection to device, attempt %d...", deviceId, reconnectAttempts);
+            disconnectInternal();
+            connect();
+            return;
         }
 
         postConnectionStatus(deviceId, connectionStatus);
@@ -198,4 +252,5 @@ public class AntDeviceConnection implements IAntDeviceConnection, IDeviceConnect
             deviceConnectionListener.onData(deviceId, dataType, data);
         }
     }
+
 }

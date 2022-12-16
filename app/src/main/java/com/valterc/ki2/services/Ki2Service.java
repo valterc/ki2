@@ -432,6 +432,8 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
 
     @Override
     public void onDestroy() {
+        antConnectionManager.disconnectAll();
+
         antManager.dispose();
         antManager = null;
 
