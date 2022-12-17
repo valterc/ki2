@@ -174,7 +174,7 @@ public final class RideActivityHook {
             Field[] fieldsPagerAdapter = viewPagerAdapter.getClass().getFields();
             for (Field field : fieldsPagerAdapter) {
                 if (Collection.class.isAssignableFrom(field.getType()) &&
-                        field.getGenericType().getTypeName().contains("io.hammerhead.datamodels.profiles.Page")) {
+                        field.getGenericType().toString().contains("io.hammerhead.datamodels.profiles.Page")) {
                     FIELD_PAGE_LIST = field;
                 }
             }
