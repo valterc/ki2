@@ -8,6 +8,7 @@
         <item>Mark Lap</item>
         <item>Map/Graph Zoom Out</item>
         <item>Map/Graph Zoom In</item>
+        <item>Switch to map page</item>
     </string-array>
 
     <string-array name="preference_values_switch_single_press_action">
@@ -19,6 +20,7 @@
         <item>lap</item>
         <item>press_map_graph_zoom_out</item>
         <item>press_map_graph_zoom_in</item>
+        <item>press_switch_to_map_page</item>
     </string-array>
 
     <string-array name="preference_titles_switch_double_press_action">
@@ -30,6 +32,7 @@
         <item>Mark Lap</item>
         <item>Map/Graph Zoom Out</item>
         <item>Map/Graph Zoom In</item>
+        <item>Switch to map page</item>
         <item>Duplicate Single Press</item>
     </string-array>
 
@@ -42,6 +45,7 @@
         <item>lap</item>
         <item>press_map_graph_zoom_out</item>
         <item>press_map_graph_zoom_in</item>
+        <item>press_switch_to_map_page</item>
         <item>double_press_duplicate_single_press</item>
     </string-array>
 
@@ -52,6 +56,7 @@
         <item>Repeat Single Press</item>
         <item>Pause/Resume Ride/Confirm</item>
         <item>Mark Lap</item>
+        <item>Switch to map page</item>
     </string-array>
 
     <string-array name="preference_values_switch_hold_action">
@@ -61,6 +66,7 @@
         <item>repeat_single_press</item>
         <item>hold_short_single_pause_resume_confirm</item>
         <item>hold_short_single_lap</item>
+        <item>hold_short_single_switch_to_map_page</item>
     </string-array>
 
     <string-array name="preference_titles_battery_level_low">
