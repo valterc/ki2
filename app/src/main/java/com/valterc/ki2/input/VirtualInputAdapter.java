@@ -34,6 +34,5 @@ public class VirtualInputAdapter {
         if (keyEventConsumer != null) {
             keyEventConsumer.accept(keyEvent);
         }
-
     }
 }
