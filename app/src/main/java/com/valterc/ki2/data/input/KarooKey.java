@@ -3,9 +3,9 @@ package com.valterc.ki2.data.input;
 import android.view.KeyEvent;
 
 /**
- * Represents a Karoo hardware key and the corresponding KeyEvent keycode.
+ * Represents a Karoo hardware or virtual key and the corresponding KeyEvent keycode.
  */
-public enum KarooKey{
+public enum KarooKey {
 
     /**
      * Left top key.
@@ -30,12 +30,22 @@ public enum KarooKey{
     /**
      * None, unknown or unassigned key.
      */
-    NONE(KeyEvent.KEYCODE_UNKNOWN);
+    NONE(KeyEvent.KEYCODE_UNKNOWN),
+
+    /**
+     * Virtual key representing no action.
+     */
+    VIRTUAL_NONE(10_000),
+
+    /**
+     * Virtual key to switch the ride activity to the map page.
+     */
+    VIRTUAL_SWITCH_TO_MAP_PAGE(VIRTUAL_NONE.keyCode + 1);
 
     public static KarooKey fromKeyCode(int keyCode) {
-        for (KarooKey s : values()) {
-            if (s.keyCode == keyCode) {
-                return s;
+        for (KarooKey karooKey : values()) {
+            if (karooKey.keyCode == keyCode) {
+                return karooKey;
             }
         }
 
@@ -46,6 +56,10 @@ public enum KarooKey{
 
     KarooKey(int keyCode) {
         this.keyCode = keyCode;
+    }
+
+    public final boolean isVirtual() {
+        return keyCode >= VIRTUAL_NONE.keyCode;
     }
 
     public final int getKeyCode() {

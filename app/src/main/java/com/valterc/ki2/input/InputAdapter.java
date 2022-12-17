@@ -20,12 +20,14 @@ public class InputAdapter {
 
     private final Context context;
     private final HashMap<KarooKey, Long> keyDownTimeMap;
+    private final VirtualInputAdapter virtualInputAdapter;
     private InputManager inputManager;
     private Method injectInputMethod;
 
     public InputAdapter(Context context) {
         this.context = context;
         this.keyDownTimeMap = new HashMap<>();
+        this.virtualInputAdapter = new VirtualInputAdapter();
         initInputManager();
     }
 
@@ -133,6 +135,11 @@ public class InputAdapter {
     }
 
     public void executeKeyEvent(KarooKeyEvent keyEvent) {
+        if (keyEvent.getKey().isVirtual()) {
+            virtualInputAdapter.handleVirtualKeyEvent(keyEvent);
+            return;
+        }
+
         for (int i = 0; i < keyEvent.getReplicate(); i++) {
             long eventTime = SystemClock.uptimeMillis() + (long) ViewConfiguration.getKeyRepeatTimeout() * i;
             switch (keyEvent.getAction()) {
