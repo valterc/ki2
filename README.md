@@ -2,6 +2,8 @@
 
 Ki2 is an _app_/_addon_/_plugin_ for Hammerhead Karoo 2 devices. It is a companion app for electronic shifting groupsets produced by a Japanese company.
 
+![Validate workflow](https://github.com/valterc/ki2/actions/workflows/android-validate.yml/badge.svg) [![Latest Release](https://img.shields.io/github/v/release/valterc/ki2?label=Latest%20Release)](https://github.com/valterc/ki2/releases/latest/)
+
 ## Screenshots
 
 ![Ki2 main application](media/image_0.png?raw=true "Ki2 main application")
@@ -31,6 +33,7 @@ These screenshots have been _slightly_ edited.
   - Pause/Resume ride
   - Mark lap
   - Zoom map
+  - Switch to map page
 - Receive notifications when shifting battery is low
 
 ## How does it work?
@@ -43,14 +46,15 @@ This app utilizes the Android environment along with the ANT service and the Kar
 
 ## How can I try this app?
 
-1. Download Ki2 APK file from Github release page
+1. Download Ki2 APK file from the lastest [release page](https://github.com/valterc/ki2/releases/latest/) (or [here](https://github.com/valterc/ki2/releases/tag/0.8-karoo1) for Karoo 1)
 2. Sideload Ki2 into Karoo
 3. Connect to shifting devices from Ki2 and use Ki2 data elements in Karoo profiles
 
 <details>
 <summary>Full Instructions</summary>
 
-1. Check and download the _APK_ file on the latest release found on the right side of the GitHub page
+1. Check and download the _APK_ file on the latest release found on the [release page](https://github.com/valterc/ki2/releases/latest/)
+   - **Karoo 1 users:** The lastest release is supported by Karoo 2, for Karoo 1 use [this release](https://github.com/valterc/ki2/releases/tag/0.8-karoo1)
 2. Install/Update the APK file on your Karoo:
     - (Recommended) [Follow this guide from DC Rainmaker](https://www.dcrainmaker.com/2021/02/how-to-sideload-android-apps-on-your-hammerhead-karoo-1-karoo-2.html)
    1. Activate Karoo developer options:
@@ -66,7 +70,7 @@ This app utilizes the Android environment along with the ANT service and the Kar
    7. The output from the adb command should show your Karoo device
    8. Install the APK with the following command: `adb.exe install "APK-FILE-PATH"` (`.\adb.exe install "APK-FILE-PATH"`)
         - Make sure to replace the `APK-FILE-PATH` with the disk location of the APK file that was downloaded
-        - **(for updates)** If you are updating the Ki2 app, you should use the following command variation: `adb.exe install -r "APK-FILE-PATH"` (with the **-r** argument) to avoid having to uninstall Ki2 before installing the app update.
+        - **For updates:** If you are updating the Ki2 app, you should use the following command variation: `adb.exe install -r "APK-FILE-PATH"` (with the **-r** argument) to avoid having to uninstall Ki2 before installing the app update.
 3. The Ki2 app should appear in the app list below Sensors, Settings, etc
 4. Open the Ki2 app to pair and configure a wireless shifting connection ([Video](https://user-images.githubusercontent.com/1299179/204136334-c8a5a395-c6b5-4d16-a8d5-ff1fa2dd726d.mp4))
    - Make sure you don't have the shifting system paired with Karoo (if you are on an old Karoo software version that still supports it)
@@ -90,6 +94,7 @@ Karoo software may change with new updates, for best experience please use the l
 | 1.342.1374 (Nov 17, 2022) | ✅        | 0.6                |
 | 1.344.1384 (Nov 18, 2022) | ✅        | 0.6                |
 | 1.346.1384 (Dec 01, 2022) | ✅        | 0.7                |
+| 1.349.1396 (Dec 15, 2022) | ✅        | 0.7 / 0.8          |
 
 ## Known issues
 
