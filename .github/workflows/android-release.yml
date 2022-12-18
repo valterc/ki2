@@ -3,7 +3,7 @@ name: Android Release
 on:
   push:
     tags:
-      - '*'
+      - '*-karoo1'
 
 jobs:
   build:
@@ -33,7 +33,7 @@ jobs:
         echo "RELEASE_KEY_ALIAS=${ANDROID_RELEASE_KEY_ALIAS}" >> local.properties
         echo "RELEASE_KEY_PASSWORD=${ANDROID_RELEASE_KEY_PASSWORD}" >> local.properties
         echo "VERSION_CODE=${{ github.run_number }}" >> local.properties
-        echo "VERSION_NAME=${{ github.ref_name }}" >> local.properties
+        echo "VERSION_NAME=${{ github.ref_name }}" | cut -d'-' -f 1 >> local.properties
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
@@ -46,8 +46,7 @@ jobs:
       with:
         repo_name: valterc/ki2
         repo_token: ${{ secrets.GH_TOKEN }}
+        target_commit: karoo1
         file: app/build/outputs/apk/release/ki2-${{ github.ref_name }}-release.apk
         asset_name: ki2-${{ github.ref_name }}-release.apk
         tag: ${{ github.ref }}
-        overwrite: true
-        body: "Ki2 ${{ github.ref_name }}"
