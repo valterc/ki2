@@ -7,12 +7,12 @@ import java.util.Objects;
 
 public final class ShiftingInfo implements Parcelable {
 
-    private boolean buzzerOn;
-    private int frontGear;
-    private int frontGearMax;
-    private int rearGear;
-    private int rearGearMax;
-    private ShiftingMode shiftingMode;
+    private final boolean buzzerOn;
+    private final int frontGear;
+    private final int frontGearMax;
+    private final int rearGear;
+    private final int rearGearMax;
+    private final ShiftingMode shiftingMode;
 
     public static final Parcelable.Creator<ShiftingInfo> CREATOR = new Parcelable.Creator<ShiftingInfo>() {
         public ShiftingInfo createFromParcel(Parcel in) {
@@ -25,7 +25,12 @@ public final class ShiftingInfo implements Parcelable {
     };
 
     private ShiftingInfo(Parcel in) {
-        readFromParcel(in);
+        buzzerOn = in.readByte() == 1;
+        frontGear = in.readInt();
+        frontGearMax = in.readInt();
+        rearGear = in.readInt();
+        rearGearMax = in.readInt();
+        shiftingMode = ShiftingMode.fromValue(in.readInt());
     }
 
     public ShiftingInfo(boolean buzzerOn, int frontGear, int frontGearMax, int rearGear, int rearGearMax, ShiftingMode shiftingMode)
@@ -40,21 +45,12 @@ public final class ShiftingInfo implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel out, int flags) {
-        out.writeByte(buzzerOn == true ? (byte) 1 : (byte) 0);
+        out.writeByte(buzzerOn ? (byte) 1 : (byte) 0);
         out.writeInt(frontGear);
         out.writeInt(frontGearMax);
         out.writeInt(rearGear);
         out.writeInt(rearGearMax);
         out.writeInt(shiftingMode.getValue());
-    }
-
-    public void readFromParcel(Parcel in) {
-        buzzerOn = in.readByte() == 1;
-        frontGear = in.readInt();
-        frontGearMax = in.readInt();
-        rearGear = in.readInt();
-        rearGearMax = in.readInt();
-        shiftingMode = ShiftingMode.fromValue(in.readInt());
     }
 
     @Override

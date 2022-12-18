@@ -204,7 +204,7 @@ public final class RideActivityHook {
             try {
                 Object pageType = FIELD_PAGER_PAGE_TYPE.getValue().get(page);
                 if (pageType == ENUM_PAGE_TYPE_MAP.getValue()) {
-                    viewPager.setCurrentItem(index);
+                    viewPager.setCurrentItem(index, false);
                     return true;
                 }
             } catch (Exception e) {
