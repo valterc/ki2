@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 public class ConnectionInfo implements Parcelable {
 
-    private ConnectionStatus status;
+    private final ConnectionStatus status;
 
     public static final Parcelable.Creator<ConnectionInfo> CREATOR = new Parcelable.Creator<ConnectionInfo>() {
         public ConnectionInfo createFromParcel(Parcel in) {
@@ -18,7 +18,7 @@ public class ConnectionInfo implements Parcelable {
     };
 
     private ConnectionInfo(Parcel in) {
-        readFromParcel(in);
+        status = ConnectionStatus.fromValue(in.readInt());
     }
 
     public ConnectionInfo(ConnectionStatus status) {
@@ -28,10 +28,6 @@ public class ConnectionInfo implements Parcelable {
     @Override
     public void writeToParcel(Parcel out, int flags) {
         out.writeInt(status.getValue());
-    }
-
-    public void readFromParcel(Parcel in) {
-        status = ConnectionStatus.fromValue(in.readInt());
     }
 
     @Override

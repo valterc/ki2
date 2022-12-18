@@ -12,9 +12,9 @@ public enum SwitchCommand {
     NO_SWITCH(240);
 
     public static SwitchCommand fromCommandNumber(int commandNumber) {
-        for (SwitchCommand s : SwitchCommand.values()) {
-            if (s.commandNumber == commandNumber) {
-                return s;
+        for (SwitchCommand switchCommand : SwitchCommand.values()) {
+            if (switchCommand.commandNumber == commandNumber) {
+                return switchCommand;
             }
         }
 
