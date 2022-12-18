@@ -47,6 +47,7 @@ public class InputManager {
         preferenceToSwitchKeyMap.put("lap", (switchEvent, converter) -> new KarooKeyEvent(KarooKey.BACK, KeyAction.DOUBLE_PRESS, switchEvent.getRepeat()));
         preferenceToSwitchKeyMap.put("press_map_graph_zoom_out", (switchEvent, converter) -> new KarooKeyEvent(KarooKey.LEFT, KeyAction.SIMULATE_LONG_PRESS, switchEvent.getRepeat()));
         preferenceToSwitchKeyMap.put("press_map_graph_zoom_in", (switchEvent, converter) -> new KarooKeyEvent(KarooKey.RIGHT, KeyAction.SIMULATE_LONG_PRESS, switchEvent.getRepeat()));
+        preferenceToSwitchKeyMap.put("press_switch_to_map_page", (switchEvent, converter) -> new KarooKeyEvent(KarooKey.VIRTUAL_SWITCH_TO_MAP_PAGE, KeyAction.SINGLE_PRESS, switchEvent.getRepeat()));
 
         /*
          * Double press events
@@ -76,6 +77,12 @@ public class InputManager {
                 return null;
             }
             return new KarooKeyEvent(KarooKey.BACK, KeyAction.DOUBLE_PRESS, switchEvent.getRepeat());
+        });
+        preferenceToSwitchKeyMap.put("hold_short_single_switch_to_map_page", (switchEvent, converter) -> {
+            if (switchEvent.getCommand() != SwitchCommand.LONG_PRESS_DOWN) {
+                return null;
+            }
+            return new KarooKeyEvent(KarooKey.VIRTUAL_SWITCH_TO_MAP_PAGE, KeyAction.SINGLE_PRESS, switchEvent.getRepeat());
         });
     }
 
