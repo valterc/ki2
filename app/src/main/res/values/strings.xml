@@ -125,5 +125,6 @@
     <string name="text_cancel">Cancel</string>
     <string name="text_next">Next</string>
     <string name="text_start_update">Start update</string>
+    <string name="text_update_restart">Please <b>restart Karoo</b> before riding.</string>
 
 </resources>
