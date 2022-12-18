@@ -3,12 +3,13 @@ package com.valterc.ki2.input;
 import android.annotation.SuppressLint;
 import android.util.Log;
 
+import androidx.core.util.Consumer;
+
 import com.valterc.ki2.data.input.KarooKey;
 import com.valterc.ki2.data.input.KarooKeyEvent;
 import com.valterc.ki2.karoo.hooks.RideActivityHook;
 
 import java.util.HashMap;
-import java.util.function.Consumer;
 
 @SuppressLint("LogNotTimber")
 public class VirtualInputAdapter {
