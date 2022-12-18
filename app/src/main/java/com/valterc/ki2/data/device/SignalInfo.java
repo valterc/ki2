@@ -3,9 +3,11 @@ package com.valterc.ki2.data.device;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.annotation.NonNull;
+
 public class SignalInfo implements Parcelable {
 
-    private int value;
+    private final int value;
 
     public static final Creator<SignalInfo> CREATOR = new Creator<SignalInfo>() {
         public SignalInfo createFromParcel(Parcel in) {
@@ -18,7 +20,7 @@ public class SignalInfo implements Parcelable {
     };
 
     private SignalInfo(Parcel in) {
-        readFromParcel(in);
+        value = in.readInt();
     }
 
     public SignalInfo(int value) {
@@ -28,10 +30,6 @@ public class SignalInfo implements Parcelable {
     @Override
     public void writeToParcel(Parcel out, int flags) {
         out.writeInt(value);
-    }
-
-    public void readFromParcel(Parcel in) {
-        value = in.readInt();
     }
 
     @Override
@@ -68,5 +66,14 @@ public class SignalInfo implements Parcelable {
     @Override
     public int hashCode() {
         return value;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "SignalInfo{" +
+                "value=" + value +
+                ", strength=" + getSignalStrength() +
+                '}';
     }
 }

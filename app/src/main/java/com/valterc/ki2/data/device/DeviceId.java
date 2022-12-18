@@ -9,8 +9,8 @@ import java.util.Objects;
 
 public class DeviceId implements Parcelable {
 
-    private String uid;
-    private DeviceType deviceType;
+    private final String uid;
+    private final DeviceType deviceType;
 
     public static final Parcelable.Creator<DeviceId> CREATOR = new Parcelable.Creator<DeviceId>() {
         public DeviceId createFromParcel(Parcel in) {
@@ -23,7 +23,8 @@ public class DeviceId implements Parcelable {
     };
 
     private DeviceId(Parcel in) {
-        readFromParcel(in);
+        uid = in.readString();
+        deviceType = DeviceType.fromDeviceTypeValue(in.readInt());
     }
 
     public DeviceId(String uid, DeviceType deviceType) {
@@ -35,11 +36,6 @@ public class DeviceId implements Parcelable {
     public void writeToParcel(Parcel out, int flags) {
         out.writeString(uid);
         out.writeInt(deviceType.getDeviceTypeValue());
-    }
-
-    public void readFromParcel(Parcel in) {
-        uid = in.readString();
-        deviceType = DeviceType.fromDeviceTypeValue(in.readInt());
     }
 
     @Override

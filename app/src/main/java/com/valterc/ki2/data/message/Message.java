@@ -6,11 +6,11 @@ import android.os.Parcelable;
 
 public class Message implements Parcelable {
 
-    private String key;
-    private Bundle bundle;
-    private MessageType messageType;
-    private boolean persistent;
-    private String classType;
+    private final String key;
+    private final Bundle bundle;
+    private final MessageType messageType;
+    private final boolean persistent;
+    private final String classType;
 
     public static Message createEvent(String key, MessageType messageType) {
         return new Message(key, null, messageType, false);
@@ -55,7 +55,11 @@ public class Message implements Parcelable {
     }
 
     private Message(Parcel in) {
-        readFromParcel(in);
+        key = in.readString();
+        bundle = in.readBundle(getClass().getClassLoader());
+        messageType = MessageType.fromValue(in.readInt());
+        persistent = in.readByte() == 1;
+        classType = in.readString();
     }
 
     public String getKey() {
@@ -89,14 +93,6 @@ public class Message implements Parcelable {
         out.writeInt(messageType.getValue());
         out.writeByte((byte) (persistent ? 1 : 0));
         out.writeString(classType);
-    }
-
-    public void readFromParcel(Parcel in) {
-        key = in.readString();
-        bundle = in.readBundle(getClass().getClassLoader());
-        messageType = MessageType.fromValue(in.readInt());
-        persistent = in.readByte() == 1;
-        classType = in.readString();
     }
 
     @Override

@@ -5,9 +5,9 @@ import android.os.Parcelable;
 
 public class SwitchEvent implements Parcelable {
 
-    private SwitchType type;
-    private SwitchCommand command;
-    private int repeat;
+    private final SwitchType type;
+    private final SwitchCommand command;
+    private final int repeat;
 
     public static final Parcelable.Creator<SwitchEvent> CREATOR = new Parcelable.Creator<SwitchEvent>() {
         public SwitchEvent createFromParcel(Parcel in) {
@@ -20,7 +20,9 @@ public class SwitchEvent implements Parcelable {
     };
 
     private SwitchEvent(Parcel in) {
-        readFromParcel(in);
+        type = SwitchType.fromValue(in.readInt());
+        command = SwitchCommand.fromCommandNumber(in.readInt());
+        repeat = in.readInt();
     }
 
     public SwitchEvent(SwitchType type, SwitchCommand command, int repeat) {
@@ -34,12 +36,6 @@ public class SwitchEvent implements Parcelable {
         out.writeInt(type.getValue());
         out.writeInt(command.getCommandNumber());
         out.writeInt(repeat);
-    }
-
-    public void readFromParcel(Parcel in) {
-        type = SwitchType.fromValue(in.readInt());
-        command = SwitchCommand.fromCommandNumber(in.readInt());
-        repeat = in.readInt();
     }
 
     @Override

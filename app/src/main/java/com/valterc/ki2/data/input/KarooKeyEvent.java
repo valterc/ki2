@@ -3,12 +3,14 @@ package com.valterc.ki2.data.input;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.annotation.NonNull;
+
 public class KarooKeyEvent implements Parcelable {
 
-    private KarooKey key;
-    private KeyAction action;
-    private int repeat;
-    private int replicate;
+    private final KarooKey key;
+    private final KeyAction action;
+    private final int repeat;
+    private final int replicate;
 
     public static final Parcelable.Creator<KarooKeyEvent> CREATOR = new Parcelable.Creator<KarooKeyEvent>() {
         public KarooKeyEvent createFromParcel(Parcel in) {
@@ -21,12 +23,10 @@ public class KarooKeyEvent implements Parcelable {
     };
 
     private KarooKeyEvent(Parcel in) {
-        readFromParcel(in);
-    }
-
-    public KarooKeyEvent(KarooKey key, KeyAction action)
-    {
-        this(key, action, 0);
+        key = KarooKey.fromKeyCode(in.readInt());
+        action = KeyAction.fromActionNumber(in.readInt());
+        repeat = in.readInt();
+        replicate = in.readInt();
     }
 
     public KarooKeyEvent(KarooKeyEvent keyEvent, int replicate)
@@ -53,13 +53,6 @@ public class KarooKeyEvent implements Parcelable {
         out.writeInt(action.getActionNumber());
         out.writeInt(repeat);
         out.writeInt(replicate);
-    }
-
-    public void readFromParcel(Parcel in) {
-        key = KarooKey.fromKeyCode(in.readInt());
-        action = KeyAction.fromActionNumber(in.readInt());
-        repeat = in.readInt();
-        replicate = in.readInt();
     }
 
     @Override
@@ -103,5 +96,16 @@ public class KarooKeyEvent implements Parcelable {
         result = 31 * result + repeat;
         result = 31 * result + replicate;
         return result;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "KarooKeyEvent{" +
+                "key=" + key +
+                ", action=" + action +
+                ", repeat=" + repeat +
+                ", replicate=" + replicate +
+                '}';
     }
 }

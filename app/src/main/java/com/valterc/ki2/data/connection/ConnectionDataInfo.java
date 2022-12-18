@@ -13,9 +13,9 @@ import java.util.Objects;
 
 public class ConnectionDataInfo implements Parcelable {
 
-    private DeviceId deviceId;
-    private ConnectionStatus status;
-    private Map<DataType, DataInfo> dataMap;
+    private final DeviceId deviceId;
+    private final ConnectionStatus status;
+    private final Map<DataType, DataInfo> dataMap;
 
     public static final Parcelable.Creator<ConnectionDataInfo> CREATOR = new Parcelable.Creator<ConnectionDataInfo>() {
         public ConnectionDataInfo createFromParcel(Parcel in) {
@@ -34,11 +34,16 @@ public class ConnectionDataInfo implements Parcelable {
     }
 
     private ConnectionDataInfo(Parcel in) {
-        readFromParcel(in);
-    }
+        deviceId = in.readParcelable(DeviceId.class.getClassLoader());
+        status = ConnectionStatus.fromValue(in.readInt());
 
-    public ConnectionDataInfo(ConnectionStatus status) {
-        this.status = status;
+        int size = in.readInt();
+        dataMap = new HashMap<>(size);
+        for (int i = 0; i < size; i++) {
+            DataType dataType = DataType.fromFlag(in.readInt());
+            DataInfo value = in.readParcelable(DataInfo.class.getClassLoader());
+            dataMap.put(dataType, value);
+        }
     }
 
     @Override
@@ -50,19 +55,6 @@ public class ConnectionDataInfo implements Parcelable {
         for(Map.Entry<DataType, DataInfo> e : dataMap.entrySet()){
             out.writeInt(e.getKey().getFlag());
             out.writeParcelable(e.getValue(), flags);
-        }
-    }
-
-    public void readFromParcel(Parcel in) {
-        deviceId = in.readParcelable(DeviceId.class.getClassLoader());
-        status = ConnectionStatus.fromValue(in.readInt());
-
-        int size = in.readInt();
-        dataMap = new HashMap<>(size);
-        for (int i = 0; i < size; i++) {
-            DataType dataType = DataType.fromFlag(in.readInt());
-            DataInfo value = in.readParcelable(DataInfo.class.getClassLoader());
-            dataMap.put(dataType, value);
         }
     }
 
