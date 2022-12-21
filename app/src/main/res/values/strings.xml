@@ -126,5 +126,11 @@
     <string name="text_next">Next</string>
     <string name="text_start_update">Start update</string>
     <string name="text_update_restart">Please <b>restart Karoo</b> before riding.</string>
+    <string name="default_preference_left_switch_single_press">navigate_left</string>
+    <string name="default_preference_left_switch_double_press">lap_map_back</string>
+    <string name="default_preference_left_switch_hold">map_graph_zoom_out</string>
+    <string name="default_preference_right_switch_single_press">navigate_right</string>
+    <string name="default_preference_right_switch_double_press">pause_resume_confirm</string>
+    <string name="default_preference_right_switch_hold">map_graph_zoom_in</string>
 
 </resources>

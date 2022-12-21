@@ -91,28 +91,34 @@ public class InputManager {
     /**
      * This map translates physical switch (Left, Right) commands to a preference key.
      */
-    private final Map<Pair<SwitchType, SwitchCommandType>, String> preferenceMap;
+    private final Map<Pair<SwitchType, SwitchCommandType>, Pair<String, String>> preferenceMap;
 
     public InputManager(Context context) {
         this.preferences = PreferenceManager.getDefaultSharedPreferences(context);
 
         this.preferenceMap = new HashMap<>();
-        this.preferenceMap.put(new Pair<>(SwitchType.LEFT, SwitchCommandType.SINGLE_PRESS), context.getString(R.string.preference_left_switch_single_press));
-        this.preferenceMap.put(new Pair<>(SwitchType.LEFT, SwitchCommandType.DOUBLE_PRESS), context.getString(R.string.preference_left_switch_double_press));
-        this.preferenceMap.put(new Pair<>(SwitchType.LEFT, SwitchCommandType.HOLD), context.getString(R.string.preference_left_switch_hold));
-        this.preferenceMap.put(new Pair<>(SwitchType.RIGHT, SwitchCommandType.SINGLE_PRESS), context.getString(R.string.preference_right_switch_single_press));
-        this.preferenceMap.put(new Pair<>(SwitchType.RIGHT, SwitchCommandType.DOUBLE_PRESS), context.getString(R.string.preference_right_switch_double_press));
-        this.preferenceMap.put(new Pair<>(SwitchType.RIGHT, SwitchCommandType.HOLD), context.getString(R.string.preference_right_switch_hold));
+        this.preferenceMap.put(new Pair<>(SwitchType.LEFT, SwitchCommandType.SINGLE_PRESS),
+                new Pair<>(context.getString(R.string.preference_left_switch_single_press), context.getString(R.string.default_preference_left_switch_single_press)));
+        this.preferenceMap.put(new Pair<>(SwitchType.LEFT, SwitchCommandType.DOUBLE_PRESS),
+                new Pair<>(context.getString(R.string.preference_left_switch_double_press), context.getString(R.string.default_preference_left_switch_double_press)));
+        this.preferenceMap.put(new Pair<>(SwitchType.LEFT, SwitchCommandType.HOLD),
+                new Pair<>(context.getString(R.string.preference_left_switch_hold), context.getString(R.string.default_preference_left_switch_hold)));
+        this.preferenceMap.put(new Pair<>(SwitchType.RIGHT, SwitchCommandType.SINGLE_PRESS),
+                new Pair<>(context.getString(R.string.preference_right_switch_single_press), context.getString(R.string.default_preference_right_switch_single_press)));
+        this.preferenceMap.put(new Pair<>(SwitchType.RIGHT, SwitchCommandType.DOUBLE_PRESS),
+                new Pair<>(context.getString(R.string.preference_right_switch_double_press), context.getString(R.string.default_preference_right_switch_double_press)));
+        this.preferenceMap.put(new Pair<>(SwitchType.RIGHT, SwitchCommandType.HOLD),
+                new Pair<>(context.getString(R.string.preference_right_switch_hold), context.getString(R.string.default_preference_right_switch_hold)));
     }
 
     @Nullable
     private KarooKeyEvent getKarooKeyEvent(SwitchEvent switchEvent) {
-        String preferenceKey = preferenceMap.get(new Pair<>(switchEvent.getType(), switchEvent.getCommand().getCommandType()));
-        if (preferenceKey == null) {
+        Pair<String, String> preferencePair = preferenceMap.get(new Pair<>(switchEvent.getType(), switchEvent.getCommand().getCommandType()));
+        if (preferencePair == null) {
             return null;
         }
 
-        String preference = preferences.getString(preferenceKey, null);
+        String preference = preferences.getString(preferencePair.first, preferencePair.second);
         if (preference == null) {
             return null;
         }
