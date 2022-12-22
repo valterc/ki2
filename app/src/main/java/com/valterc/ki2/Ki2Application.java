@@ -134,7 +134,7 @@ public class Ki2Application extends Application {
     @Override
     public void onTerminate() {
         unregisterConnectionInfoListener();
-        if (serviceBound){
+        if (serviceBound) {
             unbindService(serviceConnection);
         }
 
@@ -142,7 +142,7 @@ public class Ki2Application extends Application {
         super.onTerminate();
     }
 
-    private void registerConnectionInfoListener(){
+    private void registerConnectionInfoListener() {
         if (service == null || registeredWithService) {
             return;
         }
