@@ -480,12 +480,13 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
                 || callbackListKey.getRegisteredCallbackCount() != 0) {
             if (antManager.isReady()) {
                 Collection<DeviceId> devices = deviceStore.getDevices();
-                connectionsDataManager.setConnections(devices);
+                connectionsDataManager.addConnections(devices);
                 antConnectionManager.connectOnly(devices, this);
+                connectionsDataManager.setConnections(devices);
             }
         } else {
-            connectionsDataManager.clearConnections();
             antConnectionManager.disconnectAll();
+            connectionsDataManager.clearConnections();
         }
     }
 
@@ -577,7 +578,6 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
 
                     case SWITCH:
                         SwitchEvent switchEvent = (SwitchEvent) connectionsDataManager.getData(deviceId, dataType);
-
                         if (switchEvent != null) {
                             broadcastData(callbackListSwitch,
                                     () -> switchEvent,

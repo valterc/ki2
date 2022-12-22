@@ -55,7 +55,9 @@ public class AntConnectionManager {
     public void connect(DeviceId deviceId, IDeviceConnectionListener deviceConnectionListener, boolean forceReconnect) {
         IAntDeviceConnection existingConnection = connectionMap.get(deviceId);
         if (existingConnection != null) {
-            if (forceReconnect || existingConnection.getConnectionStatus() == ConnectionStatus.INVALID) {
+            if (forceReconnect ||
+                    existingConnection.getConnectionStatus() == ConnectionStatus.INVALID ||
+                    existingConnection.getConnectionStatus() == ConnectionStatus.CLOSED) {
                 existingConnection.disconnect();
             } else {
                 return;
