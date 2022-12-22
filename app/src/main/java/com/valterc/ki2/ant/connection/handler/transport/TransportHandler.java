@@ -39,7 +39,6 @@ public class TransportHandler implements ITransportHandler {
     }
 
     public final void processAntMessage(MessageFromAntType messageFromAntType, AntMessageParcel antMessageParcel) {
-
         if (messageFromAntType == null || antMessageParcel == null) {
             return;
         }
@@ -60,13 +59,13 @@ public class TransportHandler implements ITransportHandler {
 
                 ExtendedData extendedData = broadcastDataMessage.getExtendedData();
                 if (extendedData.hasRssi()) {
-
                     Rssi rssi = extendedData.getRssi();
                     profileHandler.onRssi(rssi);
                 }
 
                 profileHandler.onBroadcastData(broadcastDataMessage);
                 break;
+
             case ACKNOWLEDGED_DATA:
                 profileHandler.onAcknowledgedData(new AcknowledgedDataMessage(antMessageParcel));
                 break;
@@ -99,6 +98,7 @@ public class TransportHandler implements ITransportHandler {
         switch (channelEventMessage.getEventCode()) {
             case RX_SEARCH_TIMEOUT:
             case CHANNEL_CLOSED:
+                this.connectionEstablished = false;
                 this.antBroadcasting = false;
                 this.acknowledgedDataSent = null;
                 deviceConnectionListener.onConnectionStatus(deviceId, ConnectionStatus.CLOSED);
@@ -169,7 +169,7 @@ public class TransportHandler implements ITransportHandler {
         }
     }
 
-    public IDeviceProfileHandler getDeviceProfileHandler(){
+    public IDeviceProfileHandler getDeviceProfileHandler() {
         return profileHandler;
     }
 
