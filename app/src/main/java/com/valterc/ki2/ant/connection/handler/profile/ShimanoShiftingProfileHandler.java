@@ -55,7 +55,6 @@ public class ShimanoShiftingProfileHandler implements IDeviceProfileHandler {
     private final BuzzerData buzzerData;
 
     public ShimanoShiftingProfileHandler(DeviceId deviceId, ITransportHandler transportHandler, IDeviceConnectionListener deviceConnectionListener) {
-
         if (deviceId.getDeviceType() != DeviceType.SHIMANO_SHIFTING) {
             throw new RuntimeException("Invalid profile handler for device type " + deviceId.getDeviceType());
         }
@@ -83,11 +82,9 @@ public class ShimanoShiftingProfileHandler implements IDeviceProfileHandler {
     }
 
     private void handleData(byte[] payload) {
-
         ShimanoPageType pageType = ShimanoPageType.fromPageNumber(payload[0]);
 
         switch (pageType) {
-
             case BATTERY_LEVEL_AND_NUMBER_OF_SPEEDS:
                 handleBatterySpeedsPage(payload);
                 break;
@@ -133,7 +130,7 @@ public class ShimanoShiftingProfileHandler implements IDeviceProfileHandler {
 
         if (serialNumber != 0xFFFFFFFF) {
             manufacturerInfoBuilder.setSerialNumber(Long.toString(serialNumber));
-        }else {
+        } else {
             manufacturerInfoBuilder.setSerialNumber(null);
         }
 
@@ -146,10 +143,10 @@ public class ShimanoShiftingProfileHandler implements IDeviceProfileHandler {
 
     public final String softwareVersionFromRevisions(int majorRevision, int minorRevision) {
         if (minorRevision == 255) {
-            return String.valueOf((float)majorRevision / 10);
+            return String.valueOf((float) majorRevision / 10);
         }
 
-        return String.valueOf((float)((majorRevision * 100) + minorRevision) / 1000);
+        return String.valueOf((float) ((majorRevision * 100) + minorRevision) / 1000);
     }
 
 
@@ -171,7 +168,7 @@ public class ShimanoShiftingProfileHandler implements IDeviceProfileHandler {
 
     private void handleBuzzerNotificationPage(byte[] payload) {
         int sequenceNumber = (int) (MessageUtils.numberFromBytes(payload, 2, 1) & 15);
-        BuzzerPattern buzzerPattern = BuzzerPattern.fromCommandNumber((int)MessageUtils.numberFromBytes(payload, 1, 1));
+        BuzzerPattern buzzerPattern = BuzzerPattern.fromCommandNumber((int) MessageUtils.numberFromBytes(payload, 1, 1));
 
         if (sequenceNumber != buzzerData.getSequenceNumber()) {
             buzzerData.setSequenceNumber(sequenceNumber);
@@ -180,7 +177,7 @@ public class ShimanoShiftingProfileHandler implements IDeviceProfileHandler {
             buzzerData.setTime(buzzerOn ? System.currentTimeMillis() : 0L);
             shiftingInfoBuilder.setBuzzerOn(buzzerOn);
 
-            if (shiftingInfoBuilder.allSet()){
+            if (shiftingInfoBuilder.allSet()) {
                 deviceConnectionListener.onData(deviceId, DataType.SHIFTING, shiftingInfoBuilder.build());
             }
         }
@@ -190,11 +187,11 @@ public class ShimanoShiftingProfileHandler implements IDeviceProfileHandler {
         this.missingIndicators.remove(StatusIndicator.SWITCH_COMMAND_NUMBER);
 
         int sequenceNumberRight = (int) (MessageUtils.numberFromBytes(payload, 1, 1) & 15);
-        SwitchCommand switchCommandRight = SwitchCommand.fromCommandNumber((int)MessageUtils.numberFromBytes(payload, 1, 1) & 240);
+        SwitchCommand switchCommandRight = SwitchCommand.fromCommandNumber((int) MessageUtils.numberFromBytes(payload, 1, 1) & 240);
         handleSwitch(switchCommandRight, switchDataRight, sequenceNumberRight, SwitchType.RIGHT);
 
         int sequenceNumberLeft = (int) (MessageUtils.numberFromBytes(payload, 2, 1) & 15);
-        SwitchCommand switchCommandLeft = SwitchCommand.fromCommandNumber((int)MessageUtils.numberFromBytes(payload, 2, 1) & 240);
+        SwitchCommand switchCommandLeft = SwitchCommand.fromCommandNumber((int) MessageUtils.numberFromBytes(payload, 2, 1) & 240);
         handleSwitch(switchCommandLeft, switchDataLeft, sequenceNumberLeft, SwitchType.LEFT);
 
         Timber.d("[%s] Received switch info: {left={command=%s, sequence=%s}, right={command=%s, sequence=%s}}",
@@ -239,7 +236,7 @@ public class ShimanoShiftingProfileHandler implements IDeviceProfileHandler {
         shiftingInfoBuilder.setFrontGearMax(frontGearMax);
         shiftingInfoBuilder.setRearGearMax(rearGearMax);
 
-        if (shiftingInfoBuilder.allSet()){
+        if (shiftingInfoBuilder.allSet()) {
             deviceConnectionListener.onData(deviceId, DataType.SHIFTING, shiftingInfoBuilder.build());
         }
     }
@@ -264,8 +261,7 @@ public class ShimanoShiftingProfileHandler implements IDeviceProfileHandler {
                 rearGear = 1;
             }
 
-            if (buzzerData.isExpired())
-            {
+            if (buzzerData.isExpired()) {
                 buzzerData.resetTime();
                 shiftingInfoBuilder.setBuzzerOn(false);
             }
@@ -279,7 +275,7 @@ public class ShimanoShiftingProfileHandler implements IDeviceProfileHandler {
 
         Timber.d("[%s] Received battery: %s", deviceId, batteryPercentage);
 
-        ShiftingMode shiftingMode = ShiftingMode.fromValue((int)MessageUtils.numberFromBytes(payload, 5, 1));
+        ShiftingMode shiftingMode = ShiftingMode.fromValue((int) MessageUtils.numberFromBytes(payload, 5, 1));
         shiftingInfoBuilder.setShiftingMode(shiftingMode);
 
         Timber.d("[%s] Received shifting mode: %s", deviceId, shiftingMode);
@@ -306,7 +302,6 @@ public class ShimanoShiftingProfileHandler implements IDeviceProfileHandler {
         broadcastData[7] = (byte) 255;
 
         return broadcastData;
-
     }
 
     @Override
