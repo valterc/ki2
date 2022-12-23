@@ -42,10 +42,10 @@ public class Ki2ServiceClient {
         public void onServiceConnected(ComponentName name, IBinder binder) {
             service = IKi2Service.Stub.asInterface(binder);
             handler.post(() -> {
+                maybeStartConnectionEvents();
                 maybeStartMessageEvents();
                 maybeStartKeyEvents();
                 maybeStartBatteryEvents();
-                maybeStartConnectionEvents();
                 maybeStartShiftingEvents();
             });
         }
@@ -53,7 +53,7 @@ public class Ki2ServiceClient {
         @Override
         public void onServiceDisconnected(ComponentName name) {
             service = null;
-            handler.postDelayed(Ki2ServiceClient.this::attemptBindToService, TIME_MS_ATTEMPT_BIND);
+            connectionFilter.reset();
         }
     };
 
@@ -61,7 +61,13 @@ public class Ki2ServiceClient {
         @Override
         public void onConnectionInfo(DeviceId deviceId, ConnectionInfo connectionInfo) {
             handler.post(() -> {
-                connectionInfoListeners.pushData(deviceId, connectionInfo);
+                if (connectionFilter.onConnectionStatusReceived(deviceId, connectionInfo.getConnectionStatus())) {
+                    connectionInfoListeners.pushData(deviceId, connectionInfo);
+
+                    if (connectionFilter.shouldEmitEstablishedEvent()) {
+                        connectionFilter.emitEstablishedEvent(connectionInfoListeners::pushData);
+                    }
+                }
                 maybeStopConnectionEvents();
             });
         }
@@ -71,7 +77,9 @@ public class Ki2ServiceClient {
         @Override
         public void onBattery(DeviceId deviceId, BatteryInfo batteryInfo) {
             handler.post(() -> {
-                batteryInfoListeners.pushData(deviceId, batteryInfo);
+                if (connectionFilter.onDataReceived(deviceId)) {
+                    batteryInfoListeners.pushData(deviceId, batteryInfo);
+                }
                 maybeStopBatteryEvents();
             });
         }
@@ -81,7 +89,9 @@ public class Ki2ServiceClient {
         @Override
         public void onShifting(DeviceId deviceId, ShiftingInfo shiftingInfo) {
             handler.post(() -> {
-                shiftingInfoListeners.pushData(deviceId, shiftingInfo);
+                if (connectionFilter.onDataReceived(deviceId)) {
+                    shiftingInfoListeners.pushData(deviceId, shiftingInfo);
+                }
                 maybeStopShiftingEvents();
             });
         }
@@ -91,10 +101,12 @@ public class Ki2ServiceClient {
         @Override
         public void onKeyEvent(DeviceId deviceId, KarooKeyEvent keyEvent) {
             handler.post(() -> {
-                try {
-                    inputAdapter.executeKeyEvent(keyEvent);
-                } catch (Exception e) {
-                    Log.e("KI2", "Error during callback", e);
+                if (connectionFilter.onDataReceived(deviceId)) {
+                    try {
+                        inputAdapter.executeKeyEvent(keyEvent);
+                    } catch (Exception e) {
+                        Log.e("KI2", "Error handling input", e);
+                    }
                 }
                 maybeStopKeyEvents();
             });
@@ -114,6 +126,7 @@ public class Ki2ServiceClient {
     private final Context context;
     private final InputAdapter inputAdapter;
     private final Handler handler;
+    private final ConnectionFilter connectionFilter;
     private final BiDataStreamWeakListenerList<DeviceId, ConnectionInfo> connectionInfoListeners;
     private final BiDataStreamWeakListenerList<DeviceId, BatteryInfo> batteryInfoListeners;
     private final BiDataStreamWeakListenerList<DeviceId, ShiftingInfo> shiftingInfoListeners;
@@ -128,6 +141,7 @@ public class Ki2ServiceClient {
         shiftingInfoListeners = new BiDataStreamWeakListenerList<>();
         messageListeners = new DataStreamWeakListenerList<>();
         handler = new Handler(Looper.getMainLooper());
+        connectionFilter = new ConnectionFilter();
         attemptBindToService();
     }
 
