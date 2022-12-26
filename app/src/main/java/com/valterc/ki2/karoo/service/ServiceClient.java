@@ -18,6 +18,7 @@ import com.valterc.ki2.data.message.Message;
 import com.valterc.ki2.data.preferences.PreferencesView;
 import com.valterc.ki2.data.shifting.ShiftingInfo;
 import com.valterc.ki2.input.InputAdapter;
+import com.valterc.ki2.karoo.service.messages.CustomMessageClient;
 import com.valterc.ki2.services.IKi2Service;
 import com.valterc.ki2.services.Ki2Service;
 import com.valterc.ki2.services.callbacks.IBatteryCallback;
@@ -33,7 +34,7 @@ import java.util.function.Consumer;
 import io.hammerhead.sdk.v0.SdkContext;
 
 @SuppressLint("LogNotTimber")
-public class Ki2ServiceClient {
+public class ServiceClient {
 
     private static final int TIME_MS_ATTEMPT_BIND = 2500;
 
@@ -135,11 +136,11 @@ public class Ki2ServiceClient {
         }
     };
 
-
     private final Context context;
     private final InputAdapter inputAdapter;
     private final Handler handler;
     private final ConnectionFilter connectionFilter;
+    private final CustomMessageClient customMessageClient;
     private final BiDataStreamWeakListenerList<DeviceId, ConnectionInfo> connectionInfoListeners;
     private final BiDataStreamWeakListenerList<DeviceId, BatteryInfo> batteryInfoListeners;
     private final BiDataStreamWeakListenerList<DeviceId, ShiftingInfo> shiftingInfoListeners;
@@ -147,7 +148,7 @@ public class Ki2ServiceClient {
     private final DataStreamWeakListenerList<PreferencesView> preferencesListeners;
     private IKi2Service service;
 
-    public Ki2ServiceClient(SdkContext context) {
+    public ServiceClient(SdkContext context) {
         this.context = context;
         inputAdapter = new InputAdapter(context);
         connectionInfoListeners = new BiDataStreamWeakListenerList<>();
@@ -157,6 +158,7 @@ public class Ki2ServiceClient {
         preferencesListeners = new DataStreamWeakListenerList<>();
         handler = new Handler(Looper.getMainLooper());
         connectionFilter = new ConnectionFilter();
+        customMessageClient = new CustomMessageClient(this, handler);
         attemptBindToService();
     }
 
@@ -340,6 +342,10 @@ public class Ki2ServiceClient {
         } catch (RemoteException e) {
             Log.e("KI2", "Unable to send message");
         }
+    }
+
+    public CustomMessageClient getCustomMessageClient() {
+        return customMessageClient;
     }
 
     private void maybeStartMessageEvents() {

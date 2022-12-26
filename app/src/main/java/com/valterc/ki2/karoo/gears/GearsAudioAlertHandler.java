@@ -4,17 +4,19 @@ import com.valterc.ki2.data.device.DeviceId;
 import com.valterc.ki2.data.preferences.PreferencesView;
 import com.valterc.ki2.data.shifting.ShiftingInfo;
 import com.valterc.ki2.karoo.Ki2Context;
+import com.valterc.ki2.karoo.handlers.IRideHandler;
 import com.valterc.ki2.karoo.hooks.AudioAlertHook;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class GearsAudioAlertHandler {
+public class GearsAudioAlertHandler implements IRideHandler {
 
     private final Ki2Context context;
     private final Map<DeviceId, ShiftingInfo> deviceShiftingMap;
     private boolean alertEnabledLowestGear;
     private boolean alertEnabledHighestGear;
+    private boolean riding;
 
     public GearsAudioAlertHandler(Ki2Context context) {
         this.context = context;
@@ -37,7 +39,7 @@ public class GearsAudioAlertHandler {
         ShiftingInfo lastShiftingInfo = deviceShiftingMap.get(deviceId);
         deviceShiftingMap.put(deviceId, shiftingInfo);
 
-        if (lastShiftingInfo == null) {
+        if (lastShiftingInfo == null || shiftingInfo == null || !riding) {
             return;
         }
 
@@ -54,5 +56,13 @@ public class GearsAudioAlertHandler {
         }
     }
 
+    @Override
+    public void onRideStart() {
+        riding = true;
+    }
 
+    @Override
+    public void onRideEnd() {
+        riding = false;
+    }
 }

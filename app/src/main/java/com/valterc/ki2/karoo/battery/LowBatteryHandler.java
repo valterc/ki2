@@ -12,40 +12,63 @@ import com.valterc.ki2.data.device.BatteryInfo;
 import com.valterc.ki2.data.device.DeviceId;
 import com.valterc.ki2.data.preferences.PreferencesView;
 import com.valterc.ki2.karoo.Ki2Context;
+import com.valterc.ki2.karoo.handlers.IRideHandler;
 import com.valterc.ki2.karoo.hooks.ActivityServiceNotificationControllerHook;
 import com.valterc.ki2.karoo.hooks.AudioAlertHook;
 
-@SuppressLint("LogNotTimber")
-public class LowBatteryHandler {
+import java.util.HashMap;
+import java.util.Map;
 
-    private static final long TIME_NOTIFY_AFTER_PAUSE_MS = 2 * 60 * 1000;
+@SuppressLint("LogNotTimber")
+public class LowBatteryHandler implements IRideHandler {
+
+    private static final long TIME_MS_NOTIFY_AFTER_PAUSE = 5 * 60 * 1000;
 
     private final Ki2Context context;
+    private final Handler handler;
     private final Integer batteryLevelLow;
     private final Integer batteryLevelCritical;
-    private DeviceId notifiedDeviceId;
-    private BatteryInfo notifiedBatteryInfo;
-    private LowBatteryCategory notifiedCategory;
-    private boolean notified;
+    private final Map<DeviceId, LowBatteryRecord> deviceNotificationMap;
+    private boolean riding;
     private long pauseTimestamp;
 
     public LowBatteryHandler(Ki2Context context) {
         this.context = context;
-        context.getServiceClient().registerBatteryInfoWeakListener(this::onBattery);
+        this.deviceNotificationMap = new HashMap<>();
+        this.handler = new Handler(Looper.getMainLooper());
 
         PreferencesView preferences = context.getServiceClient().getPreferences();
         batteryLevelLow = preferences.getBatteryLevelLow(context.getSdkContext());
         batteryLevelCritical = preferences.getBatteryLevelCritical(context.getSdkContext());
+
+        context.getServiceClient().registerBatteryInfoWeakListener(this::onBattery);
     }
 
-    public void onPause() {
+    @Override
+    public void onRideStart() {
+        riding = true;
+        deviceNotificationMap.forEach((deviceId, record) -> {
+            if (record.shouldNotifyInRide()) {
+                notify(record);
+            }
+        });
+    }
+
+    @Override
+    public void onRidePause() {
         pauseTimestamp = System.currentTimeMillis();
     }
 
-    public void onResume() {
-        if (notified && System.currentTimeMillis() - pauseTimestamp > TIME_NOTIFY_AFTER_PAUSE_MS) {
-            notify(notifiedDeviceId, notifiedBatteryInfo, notifiedCategory);
+    @Override
+    public void onRideResume() {
+        if (System.currentTimeMillis() - pauseTimestamp > TIME_MS_NOTIFY_AFTER_PAUSE) {
+            deviceNotificationMap.forEach((deviceId, record) -> notify(record));
         }
+    }
+
+    @Override
+    public void onRideEnd() {
+        riding = false;
     }
 
     private LowBatteryCategory getCategory(BatteryInfo batteryInfo) {
@@ -60,35 +83,49 @@ public class LowBatteryHandler {
 
     private void onBattery(DeviceId deviceId, BatteryInfo batteryInfo) {
         LowBatteryCategory category = getCategory(batteryInfo);
-
-        if (category != null && !category.equals(notifiedCategory)) {
-            this.notifiedDeviceId = deviceId;
-            this.notifiedBatteryInfo = batteryInfo;
-            this.notifiedCategory = category;
-
-            notify(deviceId, batteryInfo, category);
-            notified = true;
-        }
-    }
-
-    private void notify(DeviceId deviceId, BatteryInfo batteryInfo, LowBatteryCategory category) {
-        if (deviceId == null || batteryInfo == null || category == null) {
+        if (category == null) {
             return;
         }
 
-        Handler handler = new Handler(Looper.getMainLooper());
+        LowBatteryRecord record = deviceNotificationMap.get(deviceId);
+
+        if (record == null) {
+            record = new LowBatteryRecord(deviceId, batteryInfo, category);
+            deviceNotificationMap.put(deviceId, record);
+        } else if (category == record.getCategory()) {
+            return;
+        } else {
+            record.setCategory(category);
+        }
+
+        notify(record);
+    }
+
+    private void notify(LowBatteryRecord record) {
+        if (record == null || !record.shouldNotify()) {
+            return;
+        }
+
+        DeviceId deviceId = record.getDeviceId();
+        BatteryInfo batteryInfo = record.getBatteryInfo();
+        LowBatteryCategory category = record.getCategory();
+
         handler.postDelayed(() -> {
             Log.d("KI2", "Low battery notification");
+            record.markNotified();
 
-            boolean karooNotificationResult = ActivityServiceNotificationControllerHook.showSensorLowBatteryNotification(context.getSdkContext(), deviceId.getName());
-            AudioAlertHook.triggerLowBatteryAudioAlert(context.getSdkContext());
-            LowBatteryNotification.showLowBatteryNotification(context.getSdkContext(), deviceId.getName(), category, batteryInfo.getValue());
-
-            if (!karooNotificationResult) {
-                Toast toast = Toast.makeText(context.getSdkContext(), context.getSdkContext().getString(R.string.text_param_di2_low_battery, deviceId.getName(), batteryInfo.getValue()), Toast.LENGTH_LONG);
-                toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
-                toast.show();
+            if (riding) {
+                record.markNotifiedInRide();
+                boolean karooNotificationResult = ActivityServiceNotificationControllerHook.showSensorLowBatteryNotification(context.getSdkContext(), deviceId.getName());
+                if (!karooNotificationResult) {
+                    Toast toast = Toast.makeText(context.getSdkContext(), context.getSdkContext().getString(R.string.text_param_di2_low_battery, deviceId.getName(), batteryInfo.getValue()), Toast.LENGTH_LONG);
+                    toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
+                    toast.show();
+                }
+                AudioAlertHook.triggerLowBatteryAudioAlert(context.getSdkContext());
             }
+
+            LowBatteryNotification.showLowBatteryNotification(context.getSdkContext(), deviceId.getName(), category, batteryInfo.getValue());
         }, 500);
     }
 

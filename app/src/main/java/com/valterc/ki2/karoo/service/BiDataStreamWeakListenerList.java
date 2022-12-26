@@ -5,6 +5,7 @@ import android.util.Log;
 
 import java.util.WeakHashMap;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 @SuppressLint("LogNotTimber")
 public class BiDataStreamWeakListenerList<TData1, TData2> {
@@ -31,6 +32,14 @@ public class BiDataStreamWeakListenerList<TData1, TData2> {
         if (lastData1 != null || lastData2 != null) {
             consumer.accept(lastData1, lastData2);
         }
+    }
+
+    public void removeListener(BiConsumer<TData1, TData2> consumer) {
+        if (consumer == null) {
+            return;
+        }
+
+        listeners.remove(consumer);
     }
 
     public void pushData(TData1 data1, TData2 data2) {

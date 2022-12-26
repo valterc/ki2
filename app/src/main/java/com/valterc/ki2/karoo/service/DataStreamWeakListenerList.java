@@ -32,6 +32,14 @@ public class DataStreamWeakListenerList<TData> {
         }
     }
 
+    public void removeListener(Consumer<TData> consumer) {
+        if (consumer == null) {
+            return;
+        }
+
+        listeners.remove(consumer);
+    }
+
     public void pushData(TData data) {
         pushData(data, true);
     }
