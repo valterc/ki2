@@ -24,6 +24,7 @@ import com.valterc.ki2.services.callbacks.IBatteryCallback;
 import com.valterc.ki2.services.callbacks.IConnectionInfoCallback;
 import com.valterc.ki2.services.callbacks.IKeyCallback;
 import com.valterc.ki2.services.callbacks.IMessageCallback;
+import com.valterc.ki2.services.callbacks.IPreferencesCallback;
 import com.valterc.ki2.services.callbacks.IShiftingCallback;
 
 import java.util.function.BiConsumer;
@@ -43,6 +44,7 @@ public class Ki2ServiceClient {
             service = IKi2Service.Stub.asInterface(binder);
             handler.post(() -> {
                 maybeStartConnectionEvents();
+                maybeStartPreferencesEvents();
                 maybeStartMessageEvents();
                 maybeStartKeyEvents();
                 maybeStartBatteryEvents();
@@ -123,6 +125,17 @@ public class Ki2ServiceClient {
         }
     };
 
+    private final IPreferencesCallback preferencesCallback = new IPreferencesCallback.Stub() {
+        @Override
+        public void onPreferences(PreferencesView preferences) {
+            handler.post(() -> {
+                preferencesListeners.pushData(preferences);
+                maybeStopPreferencesEvents();
+            });
+        }
+    };
+
+
     private final Context context;
     private final InputAdapter inputAdapter;
     private final Handler handler;
@@ -131,6 +144,7 @@ public class Ki2ServiceClient {
     private final BiDataStreamWeakListenerList<DeviceId, BatteryInfo> batteryInfoListeners;
     private final BiDataStreamWeakListenerList<DeviceId, ShiftingInfo> shiftingInfoListeners;
     private final DataStreamWeakListenerList<Message> messageListeners;
+    private final DataStreamWeakListenerList<PreferencesView> preferencesListeners;
     private IKi2Service service;
 
     public Ki2ServiceClient(SdkContext context) {
@@ -140,6 +154,7 @@ public class Ki2ServiceClient {
         batteryInfoListeners = new BiDataStreamWeakListenerList<>();
         shiftingInfoListeners = new BiDataStreamWeakListenerList<>();
         messageListeners = new DataStreamWeakListenerList<>();
+        preferencesListeners = new DataStreamWeakListenerList<>();
         handler = new Handler(Looper.getMainLooper());
         connectionFilter = new ConnectionFilter();
         attemptBindToService();
@@ -371,6 +386,45 @@ public class Ki2ServiceClient {
         }
 
         return new PreferencesView();
+    }
+
+    public void registerPreferencesWeakListener(Consumer<PreferencesView> preferencesConsumer) {
+        handler.post(() -> {
+            preferencesListeners.addListener(preferencesConsumer);
+            maybeStartPreferencesEvents();
+        });
+    }
+
+    private void maybeStartPreferencesEvents() {
+        if (service == null) {
+            return;
+        }
+
+        if (!preferencesListeners.hasListeners()) {
+            return;
+        }
+
+        try {
+            service.registerPreferencesListener(preferencesCallback);
+        } catch (RemoteException e) {
+            Log.e("KI2", "Unable to register listener", e);
+        }
+    }
+
+    private void maybeStopPreferencesEvents() {
+        if (service == null) {
+            return;
+        }
+
+        if (preferencesListeners.hasListeners()) {
+            return;
+        }
+
+        try {
+            service.unregisterPreferencesListener(preferencesCallback);
+        } catch (Exception e) {
+            Log.e("KI2", "Unable to unregister listener", e);
+        }
     }
 
 }
