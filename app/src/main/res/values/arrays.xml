@@ -84,7 +84,7 @@
         <item>40</item>
         <item>30</item>
         <item>20</item>
-        <item>off</item>
+        <item>@string/value_preference_battery_level_off</item>
     </string-array>
 
     <string-array name="preference_titles_battery_level_critical">
@@ -96,7 +96,7 @@
     <string-array name="preference_values_battery_level_critical">
         <item>20</item>
         <item>10</item>
-        <item>off</item>
+        <item>@string/value_preference_battery_level_off</item>
     </string-array>
 
 </resources>
