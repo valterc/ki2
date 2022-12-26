@@ -23,9 +23,8 @@ public class ConnectionDataManager {
         status = ConnectionStatus.INVALID;
     }
 
-    public boolean onConnectionStatus(ConnectionStatus connectionStatus){
-        if (connectionStatus != status)
-        {
+    public boolean onConnectionStatus(ConnectionStatus connectionStatus) {
+        if (connectionStatus != status) {
             status = connectionStatus;
             return true;
         }
@@ -46,17 +45,17 @@ public class ConnectionDataManager {
         return false;
     }
 
-    public ConnectionInfo buildConnectionInfo(){
+    public ConnectionInfo buildConnectionInfo() {
         return new ConnectionInfo(status);
     }
 
-    public ConnectionDataInfo buildConnectionDataInfo(){
+    public ConnectionDataInfo buildConnectionDataInfo() {
         return new ConnectionDataInfo(deviceId, status, dataMap.values().stream().collect(Collectors.toMap(DataInfoBuilder::getType, DataInfoBuilder::buildDataInfo)));
     }
 
     public DataInfo buildDataInfo(DataType dataType) {
         DataInfoBuilder dataInfoBuilder = dataMap.get(dataType);
-        if (dataInfoBuilder != null){
+        if (dataInfoBuilder != null) {
             return dataInfoBuilder.buildDataInfo();
         }
 
@@ -73,7 +72,7 @@ public class ConnectionDataManager {
 
     public Parcelable getData(DataType dataType) {
         DataInfoBuilder dataInfoBuilder = dataMap.get(dataType);
-        if (dataInfoBuilder != null){
+        if (dataInfoBuilder != null) {
             return dataInfoBuilder.getValue();
         }
         return null;

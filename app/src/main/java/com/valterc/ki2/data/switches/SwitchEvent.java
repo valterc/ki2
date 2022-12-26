@@ -3,6 +3,8 @@ package com.valterc.ki2.data.switches;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.annotation.NonNull;
+
 public class SwitchEvent implements Parcelable {
 
     private final SwitchType type;
@@ -73,5 +75,15 @@ public class SwitchEvent implements Parcelable {
         result = 31 * result + (command != null ? command.hashCode() : 0);
         result = 31 * result + repeat;
         return result;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "SwitchEvent{" +
+                "type=" + type +
+                ", command=" + command +
+                ", repeat=" + repeat +
+                '}';
     }
 }
