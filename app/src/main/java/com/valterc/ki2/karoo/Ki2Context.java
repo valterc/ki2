@@ -4,11 +4,10 @@ import android.annotation.SuppressLint;
 import android.util.Log;
 
 import com.valterc.ki2.data.message.Message;
-import com.valterc.ki2.data.message.MessageType;
 import com.valterc.ki2.data.message.RideStatusMessage;
 import com.valterc.ki2.data.message.UpdateAvailableMessage;
 import com.valterc.ki2.data.ride.RideStatus;
-import com.valterc.ki2.karoo.hooks.KarooActivityServiceHook;
+import com.valterc.ki2.karoo.hooks.ActivityServiceHook;
 import com.valterc.ki2.karoo.instance.InstanceManager;
 import com.valterc.ki2.karoo.service.Ki2ServiceClient;
 import com.valterc.ki2.karoo.update.UpdateAvailableNotification;
@@ -38,7 +37,7 @@ public class Ki2Context {
                 break;
 
             case UPDATE_AVAILABLE:
-                if (KarooActivityServiceHook.isInActivityService()) {
+                if (ActivityServiceHook.isInActivityService()) {
                     UpdateAvailableMessage updateAvailableMessage = UpdateAvailableMessage.parse(message);
                     if (updateAvailableMessage != null) {
                         Log.d("KI2", "Update available, showing notification");

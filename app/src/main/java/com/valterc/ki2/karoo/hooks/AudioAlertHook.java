@@ -13,7 +13,7 @@ import kotlin.LazyKt;
 
 @SuppressWarnings({"UnusedReturnValue", "unchecked", "rawtypes"})
 @SuppressLint("LogNotTimber")
-public class KarooAudioAlertHook {
+public class AudioAlertHook {
 
     private static final Lazy<Class<? extends Enum>> ENUM_AUDIO_ALERT = LazyKt.lazy(() -> {
         try {
@@ -25,7 +25,7 @@ public class KarooAudioAlertHook {
         return null;
     });
 
-    private KarooAudioAlertHook() {
+    private AudioAlertHook() {
     }
 
     private static boolean triggerAudioAlert_1(SdkContext context, String enumName) {

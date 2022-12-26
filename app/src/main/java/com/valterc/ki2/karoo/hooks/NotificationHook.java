@@ -7,7 +7,7 @@ import android.util.Log;
 import java.lang.reflect.Constructor;
 
 @SuppressLint("LogNotTimber")
-public class KarooNotificationHook {
+public class NotificationHook {
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     public static Object buildSensorLowBatteryNotification(String deviceName) {

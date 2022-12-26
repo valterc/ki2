@@ -12,8 +12,8 @@ import com.valterc.ki2.data.device.BatteryInfo;
 import com.valterc.ki2.data.device.DeviceId;
 import com.valterc.ki2.data.preferences.PreferencesView;
 import com.valterc.ki2.karoo.Ki2Context;
-import com.valterc.ki2.karoo.hooks.KarooActivityServiceNotificationControllerHook;
-import com.valterc.ki2.karoo.hooks.KarooAudioAlertHook;
+import com.valterc.ki2.karoo.hooks.ActivityServiceNotificationControllerHook;
+import com.valterc.ki2.karoo.hooks.AudioAlertHook;
 
 @SuppressLint("LogNotTimber")
 public class LowBatteryHandler {
@@ -80,8 +80,8 @@ public class LowBatteryHandler {
         handler.postDelayed(() -> {
             Log.d("KI2", "Low battery notification");
 
-            boolean karooNotificationResult = KarooActivityServiceNotificationControllerHook.showSensorLowBatteryNotification(context.getSdkContext(), deviceId.getName());
-            KarooAudioAlertHook.triggerLowBatteryAudioAlert(context.getSdkContext());
+            boolean karooNotificationResult = ActivityServiceNotificationControllerHook.showSensorLowBatteryNotification(context.getSdkContext(), deviceId.getName());
+            AudioAlertHook.triggerLowBatteryAudioAlert(context.getSdkContext());
             LowBatteryNotification.showLowBatteryNotification(context.getSdkContext(), deviceId.getName(), category, batteryInfo.getValue());
 
             if (!karooNotificationResult) {

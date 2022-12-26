@@ -1,24 +1,14 @@
 package com.valterc.ki2.karoo.hooks;
 
 import android.annotation.SuppressLint;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
-import android.util.Log;
 
-import com.valterc.ki2.R;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Type;
-
-import io.hammerhead.sdk.v0.SdkContext;
 import kotlin.Lazy;
 import kotlin.LazyKt;
 
 @SuppressLint("LogNotTimber")
-public class KarooActivityServiceHook {
+public class ActivityServiceHook {
 
-    private KarooActivityServiceHook() {
+    private ActivityServiceHook() {
     }
 
     private static final Lazy<Boolean> IN_ACTIVITY_SERVICE =
