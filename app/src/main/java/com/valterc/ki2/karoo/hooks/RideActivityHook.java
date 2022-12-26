@@ -76,7 +76,7 @@ public final class RideActivityHook {
     /**
      * Indicates if the running code is inside the Ride activity process.
      *
-     * @return True if the running process is dedicated from the Ride activity, False otherwise.
+     * @return True if the running process is dedicated to the Ride activity, False otherwise.
      */
     public static boolean isRideActivityProcess() {
         return "io.hammerhead.rideapp:io.hammerhead.rideapp.rideActivityProcess".equals(ProcessUtils.getProcessName());

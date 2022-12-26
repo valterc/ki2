@@ -8,22 +8,34 @@ import android.util.Log;
 import java.lang.reflect.Method;
 
 import io.hammerhead.sdk.v0.SdkContext;
+import kotlin.Lazy;
+import kotlin.LazyKt;
 
+@SuppressWarnings({"UnusedReturnValue", "unchecked", "rawtypes"})
 @SuppressLint("LogNotTimber")
 public class KarooAudioAlertHook {
+
+    private static final Lazy<Class<? extends Enum>> ENUM_AUDIO_ALERT = LazyKt.lazy(() -> {
+        try {
+            return (Class<? extends Enum>) Class.forName("io.hammerhead.datamodels.profiles.AudioAlert");
+        } catch (Exception e) {
+            Log.w("KI2", "Unable to get Audio Alert enum", e);
+        }
+
+        return null;
+    });
 
     private KarooAudioAlertHook() {
     }
 
-    public static boolean triggerLowBatteryAudioAlert(SdkContext context) {
-        return triggerLowBatteryAudioAlert_1(context) || triggerLowBatteryAudioAlert_2(context);
-    }
-
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    private static boolean triggerLowBatteryAudioAlert_1(SdkContext context) {
+    private static boolean triggerAudioAlert_1(SdkContext context, String enumName) {
         try {
-            Class<? extends Enum> audioAlertClass = (Class<? extends Enum>) Class.forName("io.hammerhead.datamodels.profiles.AudioAlert");
-            Enum audioAlertSensorBatteryLow = Enum.valueOf(audioAlertClass, "SENSOR_BATTERY_LOW");
+            Class<? extends Enum> audioAlertClass = ENUM_AUDIO_ALERT.getValue();
+            if (audioAlertClass == null) {
+                return false;
+            }
+
+            Enum audioAlertSensorBatteryLow = Enum.valueOf(audioAlertClass, enumName);
 
             Method[] methodsAudioAlert = audioAlertClass.getMethods();
 
@@ -43,12 +55,57 @@ public class KarooAudioAlertHook {
         return false;
     }
 
-    private static boolean triggerLowBatteryAudioAlert_2(SdkContext context) {
+    private static boolean triggerAudioAlert_2(SdkContext context, String enumName) {
+        try {
+            Class<? extends Enum> audioAlertClass = ENUM_AUDIO_ALERT.getValue();
+            if (audioAlertClass == null) {
+                return false;
+            }
+
+            Enum audioAlertSensorBatteryLow = Enum.valueOf(audioAlertClass, enumName);
+
+            Intent intent = new Intent();
+            intent.setAction("io.hammerhead.action.AUDIO_ALERT");
+            intent.putExtra("type", audioAlertSensorBatteryLow.ordinal());
+            context.sendBroadcast(intent);
+            return true;
+        } catch (Exception e) {
+            Log.e("KI2", "Unable to trigger audio alert using method 2: " + e);
+        }
+
+        return false;
+    }
+
+    private static boolean triggerAudioAlert_3(SdkContext context, int enumValue) {
         Intent intent = new Intent();
         intent.setAction("io.hammerhead.action.AUDIO_ALERT");
-        intent.putExtra("type", 3);
+        intent.putExtra("type", enumValue);
         context.sendBroadcast(intent);
         return true;
+    }
+
+    /**
+     * Trigger a low battery audio alert.
+     *
+     * @param context Sdk context.
+     * @return True if the alert was triggered, False otherwise.
+     */
+    public static boolean triggerLowBatteryAudioAlert(SdkContext context) {
+        return triggerAudioAlert_1(context, "SENSOR_BATTERY_LOW") ||
+                triggerAudioAlert_2(context, "SENSOR_BATTERY_LOW") ||
+                triggerAudioAlert_3(context, 3);
+    }
+
+    /**
+     * Trigger a low battery audio alert.
+     *
+     * @param context Sdk context.
+     * @return True if the alert was triggered, False otherwise.
+     */
+    public static boolean triggerGearAudioAlert(SdkContext context) {
+        return triggerAudioAlert_1(context, "AUTO_LAP") ||
+                triggerAudioAlert_2(context, "AUTO_LAP") ||
+                triggerAudioAlert_3(context, 17);
     }
 
 }

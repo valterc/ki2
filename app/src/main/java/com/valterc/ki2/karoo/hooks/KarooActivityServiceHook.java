@@ -24,10 +24,6 @@ public class KarooActivityServiceHook {
     private static final Lazy<Boolean> IN_ACTIVITY_SERVICE =
             LazyKt.lazy(() -> isInActivityService_1() || isInActivityService_2());
 
-    public static boolean isInActivityService() {
-        return IN_ACTIVITY_SERVICE.getValue();
-    }
-
     private static boolean isInActivityService_1(){
         try {
             Class.forName("io.hammerhead.activityservice.ActivityServiceApplication");
@@ -44,6 +40,15 @@ public class KarooActivityServiceHook {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    /**
+     * Indicates if the running code is inside the Activity service application.
+     *
+     * @return True if the running process is the Activity service application, False otherwise.
+     */
+    public static boolean isInActivityService() {
+        return IN_ACTIVITY_SERVICE.getValue();
     }
 
 }
