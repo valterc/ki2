@@ -7,7 +7,7 @@ import java.util.Objects;
 
 public final class ShiftingInfo implements Parcelable {
 
-    private final boolean buzzerOn;
+    private final BuzzerType buzzerType;
     private final int frontGear;
     private final int frontGearMax;
     private final int rearGear;
@@ -25,7 +25,7 @@ public final class ShiftingInfo implements Parcelable {
     };
 
     private ShiftingInfo(Parcel in) {
-        buzzerOn = in.readByte() == 1;
+        buzzerType = BuzzerType.fromCommandNumber(in.readInt());
         frontGear = in.readInt();
         frontGearMax = in.readInt();
         rearGear = in.readInt();
@@ -33,9 +33,9 @@ public final class ShiftingInfo implements Parcelable {
         shiftingMode = ShiftingMode.fromValue(in.readInt());
     }
 
-    public ShiftingInfo(boolean buzzerOn, int frontGear, int frontGearMax, int rearGear, int rearGearMax, ShiftingMode shiftingMode)
+    public ShiftingInfo(BuzzerType buzzerType, int frontGear, int frontGearMax, int rearGear, int rearGearMax, ShiftingMode shiftingMode)
     {
-        this.buzzerOn = buzzerOn;
+        this.buzzerType = buzzerType;
         this.frontGear = frontGear;
         this.frontGearMax = frontGearMax;
         this.rearGear = rearGear;
@@ -45,7 +45,7 @@ public final class ShiftingInfo implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel out, int flags) {
-        out.writeByte(buzzerOn ? (byte) 1 : (byte) 0);
+        out.writeInt(buzzerType.getCommandNumber());
         out.writeInt(frontGear);
         out.writeInt(frontGearMax);
         out.writeInt(rearGear);
@@ -58,8 +58,8 @@ public final class ShiftingInfo implements Parcelable {
         return 0;
     }
 
-    public boolean isBuzzerOn() {
-        return buzzerOn;
+    public BuzzerType getBuzzerType() {
+        return buzzerType;
     }
 
     public int getFrontGear() {
@@ -87,11 +87,23 @@ public final class ShiftingInfo implements Parcelable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ShiftingInfo that = (ShiftingInfo) o;
-        return buzzerOn == that.buzzerOn && frontGear == that.frontGear && frontGearMax == that.frontGearMax && rearGear == that.rearGear && rearGearMax == that.rearGearMax && shiftingMode == that.shiftingMode;
+        return buzzerType == that.buzzerType && frontGear == that.frontGear && frontGearMax == that.frontGearMax && rearGear == that.rearGear && rearGearMax == that.rearGearMax && shiftingMode == that.shiftingMode;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(buzzerOn, frontGear, frontGearMax, rearGear, rearGearMax, shiftingMode);
+        return Objects.hash(buzzerType, frontGear, frontGearMax, rearGear, rearGearMax, shiftingMode);
+    }
+
+    @Override
+    public String toString() {
+        return "ShiftingInfo{" +
+                "buzzerType=" + buzzerType +
+                ", frontGear=" + frontGear +
+                ", frontGearMax=" + frontGearMax +
+                ", rearGear=" + rearGear +
+                ", rearGearMax=" + rearGearMax +
+                ", shiftingMode=" + shiftingMode +
+                '}';
     }
 }

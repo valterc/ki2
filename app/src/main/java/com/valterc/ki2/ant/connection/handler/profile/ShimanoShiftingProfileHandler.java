@@ -19,7 +19,7 @@ import com.valterc.ki2.data.info.DataType;
 import com.valterc.ki2.data.info.Manufacturer;
 import com.valterc.ki2.data.info.ManufacturerInfoBuilder;
 import com.valterc.ki2.data.shifting.BuzzerData;
-import com.valterc.ki2.data.shifting.BuzzerPattern;
+import com.valterc.ki2.data.shifting.BuzzerType;
 import com.valterc.ki2.data.shifting.ShiftingInfoBuilder;
 import com.valterc.ki2.data.shifting.ShiftingMode;
 import com.valterc.ki2.data.switches.SwitchCommand;
@@ -35,6 +35,7 @@ import java.util.Set;
 
 import timber.log.Timber;
 
+@SuppressWarnings({"FieldCanBeLocal", "unused"})
 public class ShimanoShiftingProfileHandler implements IDeviceProfileHandler {
 
     private static final Collection<CommandType> SUPPORTED_COMMANDS = Collections.singletonList(CommandType.SHIFTING_MODE);
@@ -72,7 +73,7 @@ public class ShimanoShiftingProfileHandler implements IDeviceProfileHandler {
         this.broadcastData = new byte[8];
 
         this.shiftingInfoBuilder = new ShiftingInfoBuilder();
-        this.shiftingInfoBuilder.setBuzzerOn(false);
+        this.shiftingInfoBuilder.setBuzzerType(BuzzerType.DEFAULT);
         this.manufacturerInfoBuilder = new ManufacturerInfoBuilder();
         this.manufacturerInfoBuilder.setComponentId(null);
 
@@ -149,7 +150,6 @@ public class ShimanoShiftingProfileHandler implements IDeviceProfileHandler {
         return String.valueOf((float) ((majorRevision * 100) + minorRevision) / 1000);
     }
 
-
     private void handleManufacturerInformation(byte[] payload) {
         String hardwareVersion = String.valueOf(MessageUtils.numberFromBytes(payload, 3, 1));
         int manufacturerId = (int) MessageUtils.numberFromBytes(payload, 4, 2);
@@ -168,18 +168,11 @@ public class ShimanoShiftingProfileHandler implements IDeviceProfileHandler {
 
     private void handleBuzzerNotificationPage(byte[] payload) {
         int sequenceNumber = (int) (MessageUtils.numberFromBytes(payload, 2, 1) & 15);
-        BuzzerPattern buzzerPattern = BuzzerPattern.fromCommandNumber((int) MessageUtils.numberFromBytes(payload, 1, 1));
+        BuzzerType buzzerType = BuzzerType.fromCommandNumber((int) MessageUtils.numberFromBytes(payload, 1, 1));
 
         if (sequenceNumber != buzzerData.getSequenceNumber()) {
             buzzerData.setSequenceNumber(sequenceNumber);
-            boolean buzzerOn = buzzerPattern == BuzzerPattern.OVERLIMIT_PROTECTION;
-
-            buzzerData.setTime(buzzerOn ? System.currentTimeMillis() : 0L);
-            shiftingInfoBuilder.setBuzzerOn(buzzerOn);
-
-            if (shiftingInfoBuilder.allSet()) {
-                deviceConnectionListener.onData(deviceId, DataType.SHIFTING, shiftingInfoBuilder.build());
-            }
+            shiftingInfoBuilder.setBuzzerType(buzzerType);
         }
     }
 
@@ -263,7 +256,7 @@ public class ShimanoShiftingProfileHandler implements IDeviceProfileHandler {
 
             if (buzzerData.isExpired()) {
                 buzzerData.resetTime();
-                shiftingInfoBuilder.setBuzzerOn(false);
+                shiftingInfoBuilder.setBuzzerType(BuzzerType.DEFAULT);
             }
 
             shiftingInfoBuilder.setFrontGear(frontGear);
@@ -273,12 +266,8 @@ public class ShimanoShiftingProfileHandler implements IDeviceProfileHandler {
         int batteryPercentage = (int) MessageUtils.numberFromBytes(payload, 4, 1);
         deviceConnectionListener.onData(deviceId, DataType.BATTERY, new BatteryInfo(batteryPercentage));
 
-        Timber.d("[%s] Received battery: %s", deviceId, batteryPercentage);
-
         ShiftingMode shiftingMode = ShiftingMode.fromValue((int) MessageUtils.numberFromBytes(payload, 5, 1));
         shiftingInfoBuilder.setShiftingMode(shiftingMode);
-
-        Timber.d("[%s] Received shifting mode: %s", deviceId, shiftingMode);
 
         if (shiftingInfoBuilder.allSet()) {
             deviceConnectionListener.onData(deviceId, DataType.SHIFTING, shiftingInfoBuilder.build());
@@ -347,7 +336,6 @@ public class ShimanoShiftingProfileHandler implements IDeviceProfileHandler {
     @Override
     public void sendCommand(CommandType commandType, Parcelable data) {
         switch (commandType) {
-
             case SHIFTING_MODE:
                 changeShiftMode();
                 break;

@@ -17,7 +17,13 @@ public enum StatusIndicator {
     FRONT_ADJUSTMENT_MIN(4096),
     REAR_ADJUSTMENT_MIN(8192),
     SUSPENSION_POSITION(32768),
-    SWITCH_COMMAND_NUMBER(65536);
+    SWITCH_COMMAND_NUMBER(65536),
+    SWITCH_DFLY_CH1(131072),
+    SWITCH_DFLY_CH2(262144),
+    SWITCH_DFLY_CH3(524288),
+    SWITCH_DFLY_CH4(1048576),
+    SYSTEM_FUNCTIONS(2097152),
+    CHAINRINGS(4194304);
 
     public static StatusIndicator fromFlag(int flag) {
         for (StatusIndicator statusIndicator : values()) {
