@@ -53,6 +53,10 @@ public class DeviceDetailsViewModel extends ViewModel {
     private final IConnectionDataInfoCallback connectionDataInfoCallback = new IConnectionDataInfoCallback.Stub() {
         @Override
         public void onConnectionDataInfo(DeviceId deviceId, ConnectionDataInfo connectionDataInfo) {
+            if (deviceId == null || !deviceId.equals(getDeviceId())) {
+                return;
+            }
+
             connectionStatus.postValue(connectionDataInfo.getConnectionStatus());
             Map<DataType, DataInfo> dataMap = connectionDataInfo.getDataMap();
             if (dataMap != null) {
@@ -141,7 +145,6 @@ public class DeviceDetailsViewModel extends ViewModel {
 
         service.reconnectDevice(deviceId);
     }
-
 
     public void stopDataFlow() {
         IKi2Service service = this.service.getValue();
