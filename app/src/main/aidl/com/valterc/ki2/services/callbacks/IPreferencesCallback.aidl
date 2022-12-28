@@ -5,6 +5,6 @@ import com.valterc.ki2.data.preferences.PreferencesView;
 
 interface IPreferencesCallback {
 
-    void onPreferences(in PreferencesView preferenceView);
+    void onPreferences(in PreferencesView preferencesView);
 
 }
