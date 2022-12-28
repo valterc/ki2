@@ -25,14 +25,8 @@ public class ShiftingAudioAlertHandler implements IRideHandler {
         this.context = context;
         this.deviceShiftingMap = new HashMap<>();
 
-        PreferencesView preferences = context.getServiceClient().getPreferences();
-        alertEnabledLowestGear = preferences.isAudioAlertLowestGearEnabled(context.getSdkContext());
-        alertEnabledHighestGear = preferences.isAudioAlertHighestGearEnabled(context.getSdkContext());
-        alertEnabledShiftingLimit = preferences.isAudioAlertShiftingLimit(context.getSdkContext());
-        alertEnabledUpcomingSynchroShift = preferences.isAudioAlertUpcomingSynchroShift(context.getSdkContext());
-
-        context.getServiceClient().registerShiftingInfoWeakListener(this::onShifting);
         context.getServiceClient().registerPreferencesWeakListener(this::onPreferences);
+        context.getServiceClient().registerShiftingInfoWeakListener(this::onShifting);
     }
 
     private void onPreferences(PreferencesView preferences) {

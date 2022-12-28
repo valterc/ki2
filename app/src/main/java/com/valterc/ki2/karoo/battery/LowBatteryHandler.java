@@ -26,9 +26,9 @@ public class LowBatteryHandler implements IRideHandler {
 
     private final Ki2Context context;
     private final Handler handler;
-    private final Integer batteryLevelLow;
-    private final Integer batteryLevelCritical;
     private final Map<DeviceId, LowBatteryRecord> deviceNotificationMap;
+    private Integer batteryLevelLow;
+    private Integer batteryLevelCritical;
     private boolean riding;
     private long pauseTimestamp;
 
@@ -37,11 +37,17 @@ public class LowBatteryHandler implements IRideHandler {
         this.deviceNotificationMap = new HashMap<>();
         this.handler = new Handler(Looper.getMainLooper());
 
-        PreferencesView preferences = context.getServiceClient().getPreferences();
-        batteryLevelLow = preferences.getBatteryLevelLow(context.getSdkContext());
-        batteryLevelCritical = preferences.getBatteryLevelCritical(context.getSdkContext());
-
+        context.getServiceClient().registerPreferencesWeakListener(this::onPreferences);
         context.getServiceClient().registerBatteryInfoWeakListener(this::onBattery);
+    }
+
+    private void onPreferences(PreferencesView preferencesView) {
+        batteryLevelLow = preferencesView.getBatteryLevelLow(context.getSdkContext());
+        batteryLevelCritical = preferencesView.getBatteryLevelCritical(context.getSdkContext());
+
+        deviceNotificationMap.forEach((deviceId, record) -> {
+            performBatteryCheck(deviceId, record.getBatteryInfo());
+        });
     }
 
     @Override
@@ -82,6 +88,10 @@ public class LowBatteryHandler implements IRideHandler {
     }
 
     private void onBattery(DeviceId deviceId, BatteryInfo batteryInfo) {
+        performBatteryCheck(deviceId, batteryInfo);
+    }
+
+    private void performBatteryCheck(DeviceId deviceId, BatteryInfo batteryInfo) {
         LowBatteryCategory category = getCategory(batteryInfo);
         if (category == null) {
             return;

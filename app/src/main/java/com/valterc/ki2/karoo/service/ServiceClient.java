@@ -36,7 +36,7 @@ import io.hammerhead.sdk.v0.SdkContext;
 @SuppressLint("LogNotTimber")
 public class ServiceClient {
 
-    private static final int TIME_MS_ATTEMPT_BIND = 2500;
+    private static final int TIME_MS_ATTEMPT_BIND = 500;
 
     @SuppressWarnings("FieldCanBeLocal")
     private final ServiceConnection serviceConnection = new ServiceConnection() {
@@ -382,7 +382,7 @@ public class ServiceClient {
 
     public PreferencesView getPreferences() {
         if (service == null) {
-            return new PreferencesView();
+            return null;
         }
 
         try {
@@ -391,7 +391,7 @@ public class ServiceClient {
             Log.e("KI2", "Unable to get preferences", e);
         }
 
-        return new PreferencesView();
+        return null;
     }
 
     public void registerPreferencesWeakListener(Consumer<PreferencesView> preferencesConsumer) {
