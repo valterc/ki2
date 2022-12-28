@@ -20,7 +20,7 @@ public class CustomMessageHandler<TMessage> {
     }
 
     public void handleMessage(Message message) {
-        if (message.getMessageType() != messageType){
+        if (message.getMessageType() != messageType) {
             return;
         }
 
