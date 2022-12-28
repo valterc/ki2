@@ -35,7 +35,7 @@ public class AudioAlertHook {
                 return false;
             }
 
-            Enum audioAlertSensorBatteryLow = Enum.valueOf(audioAlertClass, enumName);
+            Enum audioAlertEnum = Enum.valueOf(audioAlertClass, enumName);
 
             Method[] methodsAudioAlert = audioAlertClass.getMethods();
 
@@ -43,7 +43,7 @@ public class AudioAlertHook {
                 if (methodBroadcast.getParameterCount() == 2) {
                     Class<?>[] parameterTypes = methodBroadcast.getParameterTypes();
                     if (parameterTypes[0] == Context.class && parameterTypes[1] == String.class) {
-                        methodBroadcast.invoke(audioAlertSensorBatteryLow, context.getBaseContext(), null);
+                        methodBroadcast.invoke(audioAlertEnum, context.getBaseContext(), null);
                         return true;
                     }
                 }
@@ -62,11 +62,11 @@ public class AudioAlertHook {
                 return false;
             }
 
-            Enum audioAlertSensorBatteryLow = Enum.valueOf(audioAlertClass, enumName);
+            Enum audioAlertEnum = Enum.valueOf(audioAlertClass, enumName);
 
             Intent intent = new Intent();
             intent.setAction("io.hammerhead.action.AUDIO_ALERT");
-            intent.putExtra("type", audioAlertSensorBatteryLow.ordinal());
+            intent.putExtra("type", audioAlertEnum.ordinal());
             context.sendBroadcast(intent);
             return true;
         } catch (Exception e) {
@@ -97,15 +97,27 @@ public class AudioAlertHook {
     }
 
     /**
-     * Trigger a low battery audio alert.
+     * Trigger a gear limit audio alert.
      *
      * @param context Sdk context.
      * @return True if the alert was triggered, False otherwise.
      */
-    public static boolean triggerGearAudioAlert(SdkContext context) {
+    public static boolean triggerGearLimitAudioAlert(SdkContext context) {
         return triggerAudioAlert_1(context, "AUTO_LAP") ||
                 triggerAudioAlert_2(context, "AUTO_LAP") ||
                 triggerAudioAlert_3(context, 17);
+    }
+
+    /**
+     * Trigger a synchronized shift audio alert.
+     *
+     * @param context Sdk context.
+     * @return True if the alert was triggered, False otherwise.
+     */
+    public static boolean triggerSynchroShiftAudioAlert(SdkContext context) {
+        return triggerAudioAlert_1(context, "WORKOUT_NEW_INTERVAL") ||
+                triggerAudioAlert_2(context, "WORKOUT_NEW_INTERVAL") ||
+                triggerAudioAlert_3(context, 12);
     }
 
 }
