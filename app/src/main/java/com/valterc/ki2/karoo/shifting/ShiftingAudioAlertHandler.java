@@ -1,4 +1,4 @@
-package com.valterc.ki2.karoo.gears;
+package com.valterc.ki2.karoo.shifting;
 
 import com.valterc.ki2.data.device.DeviceId;
 import com.valterc.ki2.data.preferences.PreferencesView;
@@ -11,7 +11,7 @@ import com.valterc.ki2.karoo.hooks.AudioAlertHook;
 import java.util.HashMap;
 import java.util.Map;
 
-public class GearsAudioAlertHandler implements IRideHandler {
+public class ShiftingAudioAlertHandler implements IRideHandler {
 
     private final Ki2Context context;
     private final Map<DeviceId, ShiftingInfo> deviceShiftingMap;
@@ -21,7 +21,7 @@ public class GearsAudioAlertHandler implements IRideHandler {
     private boolean alertEnabledUpcomingSynchroShift;
     private boolean riding;
 
-    public GearsAudioAlertHandler(Ki2Context context) {
+    public ShiftingAudioAlertHandler(Ki2Context context) {
         this.context = context;
         this.deviceShiftingMap = new HashMap<>();
 
@@ -53,7 +53,7 @@ public class GearsAudioAlertHandler implements IRideHandler {
                 shiftingInfo.getRearGear() == 1 && shiftingInfo.getFrontGear() == 1 &&
                 (lastShiftingInfo.getRearGear() != 1 || lastShiftingInfo.getFrontGear() != 1)) {
             if (alertEnabledLowestGear) {
-                AudioAlertHook.triggerGearLimitAudioAlert(context.getSdkContext());
+                AudioAlertHook.triggerShiftingLimitAudioAlert(context.getSdkContext());
             }
             return;
         }
@@ -62,13 +62,13 @@ public class GearsAudioAlertHandler implements IRideHandler {
                 shiftingInfo.getRearGear() == shiftingInfo.getRearGearMax() && shiftingInfo.getFrontGear() == shiftingInfo.getFrontGearMax() &&
                 (lastShiftingInfo.getRearGear() != shiftingInfo.getRearGearMax() || lastShiftingInfo.getFrontGear() != shiftingInfo.getFrontGearMax())) {
             if (alertEnabledHighestGear) {
-                AudioAlertHook.triggerGearLimitAudioAlert(context.getSdkContext());
+                AudioAlertHook.triggerShiftingLimitAudioAlert(context.getSdkContext());
             }
             return;
         }
 
         if (alertEnabledShiftingLimit && shiftingInfo.getBuzzerType() == BuzzerType.OVERLIMIT_PROTECTION) {
-            AudioAlertHook.triggerGearLimitAudioAlert(context.getSdkContext());
+            AudioAlertHook.triggerShiftingLimitAudioAlert(context.getSdkContext());
             return;
         }
 

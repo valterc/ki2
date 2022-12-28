@@ -8,7 +8,7 @@ import androidx.annotation.Nullable;
 import com.valterc.ki2.BuildConfig;
 import com.valterc.ki2.data.message.RideStatusMessage;
 import com.valterc.ki2.data.ride.RideStatus;
-import com.valterc.ki2.karoo.gears.GearsAudioAlertHandler;
+import com.valterc.ki2.karoo.shifting.ShiftingAudioAlertHandler;
 import com.valterc.ki2.karoo.battery.LowBatteryHandler;
 import com.valterc.ki2.karoo.datatypes.BatteryTextDataType;
 import com.valterc.ki2.karoo.datatypes.GearsDrivetrainDataType;
@@ -17,7 +17,6 @@ import com.valterc.ki2.karoo.datatypes.GearsTextDataType;
 import com.valterc.ki2.karoo.datatypes.ShiftCountTextDataType;
 import com.valterc.ki2.karoo.datatypes.ShiftModeTextDataType;
 import com.valterc.ki2.karoo.handlers.HandlerManager;
-import com.valterc.ki2.karoo.handlers.IRideHandler;
 import com.valterc.ki2.karoo.hooks.ActivityServiceHook;
 import com.valterc.ki2.karoo.hooks.RideActivityHook;
 import com.valterc.ki2.karoo.service.ServiceClient;
@@ -25,7 +24,6 @@ import com.valterc.ki2.karoo.update.UpdateAvailableHandler;
 import com.valterc.ki2.karoo.update.UpdateAvailableNotification;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import io.hammerhead.sdk.v0.Module;
@@ -59,7 +57,7 @@ public class Ki2Module extends Module {
             handlerManager = new HandlerManager(serviceClient, Arrays.asList(
                     new UpdateAvailableHandler(ki2Context),
                     new LowBatteryHandler(ki2Context),
-                    new GearsAudioAlertHandler(ki2Context)));
+                    new ShiftingAudioAlertHandler(ki2Context)));
         } else {
             handlerManager = null;
         }

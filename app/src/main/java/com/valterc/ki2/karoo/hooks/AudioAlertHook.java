@@ -97,12 +97,12 @@ public class AudioAlertHook {
     }
 
     /**
-     * Trigger a gear limit audio alert.
+     * Trigger a shifting limit audio alert.
      *
      * @param context Sdk context.
      * @return True if the alert was triggered, False otherwise.
      */
-    public static boolean triggerGearLimitAudioAlert(SdkContext context) {
+    public static boolean triggerShiftingLimitAudioAlert(SdkContext context) {
         return triggerAudioAlert_1(context, "AUTO_LAP") ||
                 triggerAudioAlert_2(context, "AUTO_LAP") ||
                 triggerAudioAlert_3(context, 17);
