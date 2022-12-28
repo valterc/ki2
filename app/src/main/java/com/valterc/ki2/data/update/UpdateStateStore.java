@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.preference.PreferenceManager;
 
+import com.valterc.ki2.BuildConfig;
 import com.valterc.ki2.R;
 
 import java.time.Instant;
@@ -80,7 +81,8 @@ public final class UpdateStateStore {
         SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences sharedPreferences = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
 
-        return defaultSharedPreferences.getBoolean(context.getString(R.string.preference_auto_update), true) &&
+        return !BuildConfig.DEBUG &&
+                defaultSharedPreferences.getBoolean(context.getString(R.string.preference_auto_update), Boolean.parseBoolean(context.getString(R.string.default_preference_auto_update))) &&
                 (sharedPreferences.getBoolean(PREFERENCE_KEY_UPDATE_AVAILABLE, false) ||
                         Instant.ofEpochMilli(sharedPreferences.getLong(PREFERENCE_KEY_CHECK_INSTANT, 0))
                                 .plus(Period.ofDays(1)).isBefore(Instant.now()));
@@ -90,7 +92,8 @@ public final class UpdateStateStore {
         SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences sharedPreferences = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
 
-        return defaultSharedPreferences.getBoolean(context.getString(R.string.preference_auto_update), true) &&
+        return !BuildConfig.DEBUG &&
+                defaultSharedPreferences.getBoolean(context.getString(R.string.preference_auto_update), Boolean.parseBoolean(context.getString(R.string.default_preference_auto_update))) &&
                 Instant.ofEpochMilli(sharedPreferences.getLong(PREFERENCE_KEY_CHECK_INSTANT, 0))
                         .plus(Period.ofDays(1)).isBefore(Instant.now());
     }
