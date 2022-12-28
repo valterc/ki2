@@ -235,7 +235,7 @@ public class DeviceDetailsFragment extends Fragment implements IKarooKeyListener
             } else if (batteryValue >= 20) {
                 color = requireContext().getColor(R.color.hh_orange_dark);
                 drawableId = R.drawable.ic_battery_1;
-            }else {
+            } else {
                 color = requireContext().getColor(R.color.hh_red);
                 drawableId = R.drawable.ic_battery_0;
             }
@@ -280,7 +280,6 @@ public class DeviceDetailsFragment extends Fragment implements IKarooKeyListener
             boolean autoClear = false;
 
             switch (switchEvent.getCommand()) {
-
                 case LONG_PRESS_UP:
                 case NO_SWITCH:
                     textViewSwitch.setText(R.string.text_no_action);
@@ -300,10 +299,9 @@ public class DeviceDetailsFragment extends Fragment implements IKarooKeyListener
                 case LONG_PRESS_CONTINUE:
                     textViewSwitch.setText(R.string.text_holding);
                     break;
-
             }
 
-            if (autoClear){
+            if (autoClear) {
                 handler.postDelayed(() -> {
                     if (switchEvent.getType() == SwitchType.LEFT) {
                         if (System.currentTimeMillis() - timestampLeftSwitch > SWITCH_AUTO_CLEAR_DELAY_MS * 0.8) {
