@@ -187,4 +187,26 @@ public class PreferencesView implements Parcelable {
                 Boolean.parseBoolean(context.getString(R.string.default_preference_audio_alert)));
     }
 
+    /**
+     * Indicates if the audio alert for when attempting to shift over the gear limit is enabled.
+     *
+     * @param context Ki2 application context. Cannot be a context generated from another package.
+     * @return True if the audio alert for when attempting to shift over the gear limit is enabled, False otherwise.
+     */
+    public boolean isAudioAlertShiftingLimit(Context context) {
+        return getBoolean(context.getString(R.string.preference_audio_alert_shifting_limit),
+                Boolean.parseBoolean(context.getString(R.string.default_preference_audio_alert)));
+    }
+
+    /**
+     * Indicates if the audio alert for when the next shift can trigger a synchronized shift is enabled.
+     *
+     * @param context Ki2 application context. Cannot be a context generated from another package.
+     * @return True if the audio alert for when the next shift can trigger a synchronized shift is enabled, False otherwise.
+     */
+    public boolean isAudioAlertUpcomingSynchroShift(Context context) {
+        return getBoolean(context.getString(R.string.preference_audio_alert_upcoming_synchro_shift),
+                Boolean.parseBoolean(context.getString(R.string.default_preference_audio_alert)));
+    }
+
 }

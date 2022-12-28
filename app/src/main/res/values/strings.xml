@@ -9,27 +9,30 @@
     <string name="category_preference_pre_load">Pre load</string>
     <string name="category_preference_battery_notification">Battery Notification</string>
     <string name="category_preference_update">Update</string>
+    <string name="category_preference_audio_alerts">Audio Alerts</string>
 
     <string name="title_preference_left_single_press">Left Single Press</string>
     <string name="title_preference_left_double_press">Left Double Press</string>
     <string name="title_preference_left_hold">Left Hold</string>
-
     <string name="title_preference_right_single_press">Right Single Press</string>
     <string name="title_preference_right_double_press">Right Double Press</string>
     <string name="title_preference_right_hold">Right Hold</string>
-
     <string name="title_preference_pre_load">Pre load ride application</string>
     <string name="title_preference_battery_level_low">Battery low</string>
     <string name="title_preference_battery_level_critical">Battery critical</string>
     <string name="title_preference_auto_update">Auto update</string>
     <string name="title_preference_audio_alert_lowest_gear">Lowest Gear</string>
     <string name="title_preference_audio_alert_highest_gear">Highest Gear</string>
+    <string name="title_preference_audio_alert_shifting_limit">Shifting Limit</string>
+    <string name="title_preference_audio_alert_upcoming_synchro_shift">Upcoming Synchro Shift</string>
 
     <string name="summary_preference_pre_load">Pre load the ride application to avoid data elements not showing after startup</string>
     <string name="summary_preference_battery_notification">Show notifications when the shifting battery level is at or below a certain value</string>
     <string name="summary_preference_auto_update">Automatically check for application updates</string>
     <string name="summary_preference_audio_alert_lowest_gear">Audio alert when shifting to the lowest gear</string>
     <string name="summary_preference_audio_alert_highest_gear">Audio alert when shifting to the highest gear</string>
+    <string name="summary_preference_audio_alert_shifting_limit">Audio alert when attempting to shift while already on the gear limit</string>
+    <string name="summary_preference_audio_alert_upcoming_synchro_shift">Audio alert when the next shift can trigger a synchronized shift (on S2 mode)</string>
 
     <string name="default_preference_left_switch_single_press">navigate_left</string>
     <string name="default_preference_left_switch_double_press">lap_map_back</string>
@@ -57,6 +60,8 @@
     <string name="preference_auto_update">AUTO_UPDATE</string>
     <string name="preference_audio_alert_lowest_gear">AUDIO_ALERT_LOWEST_GEAR</string>
     <string name="preference_audio_alert_highest_gear">AUDIO_ALERT_HIGHEST_GEAR</string>
+    <string name="preference_audio_alert_shifting_limit">AUDIO_ALERT_SHIFTING_LIMIT</string>
+    <string name="preference_audio_alert_upcoming_synchro_shift">AUDIO_ALERT_UPCOMING_SYNCHRO_SHIFT</string>
 
     <!-- General -->
 
