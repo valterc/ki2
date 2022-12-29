@@ -16,8 +16,6 @@ import java.util.Set;
 @SuppressWarnings({"unchecked", "unused"})
 public class PreferencesView implements Parcelable {
 
-    private static final String BATTERY_LEVEL_OFF = "off";
-
     private final Map<String, ?> preferenceMap;
 
     public static final Parcelable.Creator<PreferencesView> CREATOR = new Parcelable.Creator<PreferencesView>() {
@@ -42,6 +40,15 @@ public class PreferencesView implements Parcelable {
      */
     public PreferencesView(Context context) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        preferenceMap = preferences.getAll();
+    }
+
+    /**
+     * Generate a new preference view.
+     *
+     * @param preferences Default shared preferences from Ki2 application context.
+     */
+    public PreferencesView(SharedPreferences preferences) {
         preferenceMap = preferences.getAll();
     }
 
@@ -117,24 +124,24 @@ public class PreferencesView implements Parcelable {
     /**
      * Indicates if the preload setting is active.
      *
-     * @param context Ki2 application context. Cannot be a context generated from another process.
+     * @param context Ki2 application context. Cannot be a context generated from another package.
      * @return True if the preload setting is active, false otherwise.
      */
     public boolean getPreLoad(Context context) {
-        return getBoolean(context.getString(R.string.preference_pre_load), true);
+        return getBoolean(context.getString(R.string.preference_pre_load), Boolean.parseBoolean(context.getString(R.string.default_preference_pre_load)));
     }
 
     /**
      * Get the battery level that should be considered as low battery.
      *
-     * @param context Ki2 application context. Cannot be a context generated from another process.
+     * @param context Ki2 application context. Cannot be a context generated from another package.
      * @return Integer value corresponding to the battery level in percentage.
      * Null to indicate that there is no low battery level.
      */
     public Integer getBatteryLevelLow(Context context) {
         String value = getString(context.getString(R.string.preference_battery_level_low), context.getString(R.string.default_preference_battery_level_low));
 
-        if (value == null || value.equalsIgnoreCase(BATTERY_LEVEL_OFF)) {
+        if (value == null || value.equalsIgnoreCase(context.getString(R.string.value_preference_battery_level_off))) {
             return null;
         }
 
@@ -144,18 +151,62 @@ public class PreferencesView implements Parcelable {
     /**
      * Get the battery level that should be considered as critical battery.
      *
-     * @param context Ki2 application context. Cannot be a context generated from another process.
+     * @param context Ki2 application context. Cannot be a context generated from another package.
      * @return Integer value corresponding to the battery level in percentage.
      * Null to indicate that there is no critical battery level.
      */
     public Integer getBatteryLevelCritical(Context context) {
         String value = getString(context.getString(R.string.preference_battery_level_critical), context.getString(R.string.default_preference_battery_level_critical));
 
-        if (value == null || value.equalsIgnoreCase(BATTERY_LEVEL_OFF)) {
+        if (value == null || value.equalsIgnoreCase(context.getString(R.string.value_preference_battery_level_off))) {
             return null;
         }
 
         return Integer.valueOf(value);
+    }
+
+    /**
+     * Indicates if the audio alert for when shifting into the lowest gear is enabled.
+     *
+     * @param context Ki2 application context. Cannot be a context generated from another package.
+     * @return True if the audio alert for when shifting into the lowest gear is enabled, False otherwise.
+     */
+    public boolean isAudioAlertLowestGearEnabled(Context context) {
+        return getBoolean(context.getString(R.string.preference_audio_alert_lowest_gear),
+                Boolean.parseBoolean(context.getString(R.string.default_preference_audio_alert)));
+    }
+
+    /**
+     * Indicates if the audio alert for when shifting into the highest gear is enabled.
+     *
+     * @param context Ki2 application context. Cannot be a context generated from another package.
+     * @return True if the audio alert for when shifting into the highest gear is enabled, False otherwise.
+     */
+    public boolean isAudioAlertHighestGearEnabled(Context context) {
+        return getBoolean(context.getString(R.string.preference_audio_alert_highest_gear),
+                Boolean.parseBoolean(context.getString(R.string.default_preference_audio_alert)));
+    }
+
+    /**
+     * Indicates if the audio alert for when attempting to shift over the gear limit is enabled.
+     *
+     * @param context Ki2 application context. Cannot be a context generated from another package.
+     * @return True if the audio alert for when attempting to shift over the gear limit is enabled, False otherwise.
+     */
+    public boolean isAudioAlertShiftingLimit(Context context) {
+        return getBoolean(context.getString(R.string.preference_audio_alert_shifting_limit),
+                Boolean.parseBoolean(context.getString(R.string.default_preference_audio_alert)));
+    }
+
+    /**
+     * Indicates if the audio alert for when the next shift can trigger a synchronized shift is enabled.
+     *
+     * @param context Ki2 application context. Cannot be a context generated from another package.
+     * @return True if the audio alert for when the next shift can trigger a synchronized shift is enabled, False otherwise.
+     */
+    public boolean isAudioAlertUpcomingSynchroShift(Context context) {
+        return getBoolean(context.getString(R.string.preference_audio_alert_upcoming_synchro_shift),
+                Boolean.parseBoolean(context.getString(R.string.default_preference_audio_alert)));
     }
 
 }

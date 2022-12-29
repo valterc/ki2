@@ -12,9 +12,9 @@ import java.lang.reflect.Type;
 import io.hammerhead.sdk.v0.SdkContext;
 
 @SuppressLint("LogNotTimber")
-public class KarooActivityServiceNotificationControllerHook {
+public class ActivityServiceNotificationControllerHook {
 
-    private KarooActivityServiceNotificationControllerHook() {
+    private ActivityServiceNotificationControllerHook() {
     }
 
     private static boolean showNotification_1(SdkContext context, Object notification) {
@@ -108,7 +108,7 @@ public class KarooActivityServiceNotificationControllerHook {
     }
 
     public static boolean showSensorLowBatteryNotification(SdkContext context, String deviceName) {
-        Object notification = KarooNotificationHook.buildSensorLowBatteryNotification(context.getString(R.string.text_param_di2_name, deviceName));
+        Object notification = NotificationHook.buildSensorLowBatteryNotification(context.getString(R.string.text_param_di2_name, deviceName));
         return showNotification_1(context, notification)
                 || showNotification_2(context, notification);
     }

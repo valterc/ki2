@@ -2,36 +2,29 @@ package com.valterc.ki2.data.shifting;
 
 public class BuzzerData {
 
-    public static final long BUZZER_ON_TIME_MS = 2000;
+    public static final long TIME_MS_BUZZER_ON = 500;
 
     private int sequenceNumber;
     private long time;
 
-    public BuzzerData(){
+    public BuzzerData() {
     }
 
     public int getSequenceNumber() {
         return sequenceNumber;
     }
 
-    public void setSequenceNumber(int sequenceNumber){
+    public void setSequenceNumber(int sequenceNumber) {
         this.sequenceNumber = sequenceNumber;
-    }
-
-    public long getTime() {
-        return time;
-    }
-
-    public void setTime(long time) {
-        this.time = time;
+        this.time = System.currentTimeMillis();
     }
 
     public void resetTime() {
         this.time = 0;
     }
 
-    public boolean isExpired(){
-        return System.currentTimeMillis() - time > BUZZER_ON_TIME_MS;
+    public boolean isExpired() {
+        return System.currentTimeMillis() - time > TIME_MS_BUZZER_ON;
     }
 
 }

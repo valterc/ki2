@@ -2,14 +2,14 @@ package com.valterc.ki2.data.shifting;
 
 public class ShiftingInfoBuilder {
 
-    private boolean buzzerOn;
+    private BuzzerType buzzerType;
     private int frontGear;
     private int frontGearMax;
     private int rearGear;
     private int rearGearMax;
     private ShiftingMode shiftingMode;
 
-    private boolean buzzerOnSet;
+    private boolean buzzerTypeSet;
     private boolean frontGearSet;
     private boolean frontGearMaxSet;
     private boolean rearGearSet;
@@ -19,13 +19,13 @@ public class ShiftingInfoBuilder {
     public ShiftingInfoBuilder() {
     }
 
-    public boolean isBuzzerOn() {
-        return buzzerOn;
+    public BuzzerType getBuzzerType() {
+        return buzzerType;
     }
 
-    public void setBuzzerOn(boolean buzzerOn) {
-        this.buzzerOn = buzzerOn;
-        this.buzzerOnSet = true;
+    public void setBuzzerType(BuzzerType buzzerType) {
+        this.buzzerType = buzzerType;
+        this.buzzerTypeSet = true;
     }
 
     public int getFrontGear() {
@@ -74,7 +74,7 @@ public class ShiftingInfoBuilder {
     }
 
     public boolean allSet(){
-        return buzzerOnSet &&
+        return buzzerTypeSet &&
                 frontGearSet &&
                 frontGearMaxSet &&
                 rearGearSet &&
@@ -83,6 +83,6 @@ public class ShiftingInfoBuilder {
     }
 
     public ShiftingInfo build(){
-        return new ShiftingInfo(buzzerOn, frontGear, frontGearMax, rearGear, rearGearMax, shiftingMode);
+        return new ShiftingInfo(buzzerType, frontGear, frontGearMax, rearGear, rearGearMax, shiftingMode);
     }
 }

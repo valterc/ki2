@@ -57,4 +57,11 @@ public class BatteryInfo implements Parcelable {
     public int hashCode() {
         return value;
     }
+
+    @Override
+    public String toString() {
+        return "BatteryInfo{" +
+                "value=" + value +
+                '}';
+    }
 }

@@ -1,15 +1,16 @@
 package com.valterc.ki2.data.shifting;
 
-public enum BuzzerPattern {
+public enum BuzzerType {
 
     DEFAULT(0),
     ON(1),
     OFF(2),
     OVERLIMIT_PROTECTION(3),
+    UPCOMING_SYNCHRO_SHIFT(4),
     UNKNOWN(255);
 
-    public static BuzzerPattern fromCommandNumber(int commandNumber) {
-        for (BuzzerPattern s : values()) {
+    public static BuzzerType fromCommandNumber(int commandNumber) {
+        for (BuzzerType s : values()) {
             if (s.commandNumber == commandNumber) {
                 return s;
             }
@@ -18,13 +19,13 @@ public enum BuzzerPattern {
         return UNKNOWN;
     }
 
-    private final long commandNumber;
+    private final int commandNumber;
 
-    BuzzerPattern(long commandNumber) {
+    BuzzerType(int commandNumber) {
         this.commandNumber = commandNumber;
     }
 
-    public final long getCommandNumber() {
+    public final int getCommandNumber() {
         return this.commandNumber;
     }
 

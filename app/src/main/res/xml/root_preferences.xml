@@ -82,10 +82,39 @@
 
     </com.valterc.ki2.views.MultiLinePreferenceCategory>
 
+    <PreferenceCategory app:title="@string/category_preference_audio_alerts">
+
+        <SwitchPreference
+            app:defaultValue="@string/default_preference_audio_alert"
+            app:key="@string/preference_audio_alert_lowest_gear"
+            app:summary="@string/summary_preference_audio_alert_lowest_gear"
+            app:title="@string/title_preference_audio_alert_lowest_gear" />
+
+        <SwitchPreference
+            app:defaultValue="@string/default_preference_audio_alert"
+            app:key="@string/preference_audio_alert_highest_gear"
+            app:summary="@string/summary_preference_audio_alert_highest_gear"
+            app:title="@string/title_preference_audio_alert_highest_gear" />
+
+        <SwitchPreference
+            app:defaultValue="@string/default_preference_audio_alert"
+            app:key="@string/preference_audio_alert_shifting_limit"
+            app:summary="@string/summary_preference_audio_alert_shifting_limit"
+            app:title="@string/title_preference_audio_alert_shifting_limit" />
+
+        <SwitchPreference
+            app:defaultValue="@string/default_preference_audio_alert"
+            app:key="@string/preference_audio_alert_upcoming_synchro_shift"
+            app:summary="@string/summary_preference_audio_alert_upcoming_synchro_shift"
+            app:title="@string/title_preference_audio_alert_upcoming_synchro_shift" />
+
+
+    </PreferenceCategory>
+
     <PreferenceCategory app:title="@string/category_preference_pre_load">
 
         <SwitchPreference
-            app:defaultValue="true"
+            app:defaultValue="@string/default_preference_pre_load"
             app:key="@string/preference_pre_load"
             app:summary="@string/summary_preference_pre_load"
             app:title="@string/title_preference_pre_load" />
@@ -95,7 +124,7 @@
     <PreferenceCategory app:title="@string/category_preference_update">
 
         <SwitchPreference
-            app:defaultValue="true"
+            app:defaultValue="@string/default_preference_auto_update"
             app:key="@string/preference_auto_update"
             app:summary="@string/summary_preference_auto_update"
             app:title="@string/title_preference_auto_update" />

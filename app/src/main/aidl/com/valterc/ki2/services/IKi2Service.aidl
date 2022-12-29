@@ -10,6 +10,7 @@ import com.valterc.ki2.services.callbacks.IKeyCallback;
 import com.valterc.ki2.services.callbacks.ISwitchCallback;
 import com.valterc.ki2.services.callbacks.IScanCallback;
 import com.valterc.ki2.services.callbacks.IMessageCallback;
+import com.valterc.ki2.services.callbacks.IPreferencesCallback;
 
 import com.valterc.ki2.data.device.DeviceId;
 import com.valterc.ki2.data.message.Message;
@@ -43,6 +44,9 @@ interface IKi2Service {
 
     void registerMessageListener(IMessageCallback callback);
     void unregisterMessageListener(IMessageCallback callback);
+
+    void registerPreferencesListener(IPreferencesCallback callback);
+    void unregisterPreferencesListener(IPreferencesCallback callback);
 
     void sendMessage(in Message message);
     void clearMessage(String key);

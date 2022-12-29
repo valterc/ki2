@@ -18,12 +18,14 @@ import com.valterc.ki2.data.message.Message;
 import com.valterc.ki2.data.preferences.PreferencesView;
 import com.valterc.ki2.data.shifting.ShiftingInfo;
 import com.valterc.ki2.input.InputAdapter;
+import com.valterc.ki2.karoo.service.messages.CustomMessageClient;
 import com.valterc.ki2.services.IKi2Service;
 import com.valterc.ki2.services.Ki2Service;
 import com.valterc.ki2.services.callbacks.IBatteryCallback;
 import com.valterc.ki2.services.callbacks.IConnectionInfoCallback;
 import com.valterc.ki2.services.callbacks.IKeyCallback;
 import com.valterc.ki2.services.callbacks.IMessageCallback;
+import com.valterc.ki2.services.callbacks.IPreferencesCallback;
 import com.valterc.ki2.services.callbacks.IShiftingCallback;
 
 import java.util.function.BiConsumer;
@@ -32,9 +34,9 @@ import java.util.function.Consumer;
 import io.hammerhead.sdk.v0.SdkContext;
 
 @SuppressLint("LogNotTimber")
-public class Ki2ServiceClient {
+public class ServiceClient {
 
-    private static final int TIME_MS_ATTEMPT_BIND = 2500;
+    private static final int TIME_MS_ATTEMPT_BIND = 500;
 
     @SuppressWarnings("FieldCanBeLocal")
     private final ServiceConnection serviceConnection = new ServiceConnection() {
@@ -43,6 +45,7 @@ public class Ki2ServiceClient {
             service = IKi2Service.Stub.asInterface(binder);
             handler.post(() -> {
                 maybeStartConnectionEvents();
+                maybeStartPreferencesEvents();
                 maybeStartMessageEvents();
                 maybeStartKeyEvents();
                 maybeStartBatteryEvents();
@@ -123,25 +126,39 @@ public class Ki2ServiceClient {
         }
     };
 
+    private final IPreferencesCallback preferencesCallback = new IPreferencesCallback.Stub() {
+        @Override
+        public void onPreferences(PreferencesView preferences) {
+            handler.post(() -> {
+                preferencesListeners.pushData(preferences);
+                maybeStopPreferencesEvents();
+            });
+        }
+    };
+
     private final Context context;
     private final InputAdapter inputAdapter;
     private final Handler handler;
     private final ConnectionFilter connectionFilter;
+    private final CustomMessageClient customMessageClient;
     private final BiDataStreamWeakListenerList<DeviceId, ConnectionInfo> connectionInfoListeners;
     private final BiDataStreamWeakListenerList<DeviceId, BatteryInfo> batteryInfoListeners;
     private final BiDataStreamWeakListenerList<DeviceId, ShiftingInfo> shiftingInfoListeners;
     private final DataStreamWeakListenerList<Message> messageListeners;
+    private final DataStreamWeakListenerList<PreferencesView> preferencesListeners;
     private IKi2Service service;
 
-    public Ki2ServiceClient(SdkContext context) {
+    public ServiceClient(SdkContext context) {
         this.context = context;
         inputAdapter = new InputAdapter(context);
         connectionInfoListeners = new BiDataStreamWeakListenerList<>();
         batteryInfoListeners = new BiDataStreamWeakListenerList<>();
         shiftingInfoListeners = new BiDataStreamWeakListenerList<>();
         messageListeners = new DataStreamWeakListenerList<>();
+        preferencesListeners = new DataStreamWeakListenerList<>();
         handler = new Handler(Looper.getMainLooper());
         connectionFilter = new ConnectionFilter();
+        customMessageClient = new CustomMessageClient(this, handler);
         attemptBindToService();
     }
 
@@ -327,6 +344,10 @@ public class Ki2ServiceClient {
         }
     }
 
+    public CustomMessageClient getCustomMessageClient() {
+        return customMessageClient;
+    }
+
     private void maybeStartMessageEvents() {
         if (service == null) {
             return;
@@ -361,7 +382,7 @@ public class Ki2ServiceClient {
 
     public PreferencesView getPreferences() {
         if (service == null) {
-            return new PreferencesView();
+            return null;
         }
 
         try {
@@ -370,7 +391,46 @@ public class Ki2ServiceClient {
             Log.e("KI2", "Unable to get preferences", e);
         }
 
-        return new PreferencesView();
+        return null;
+    }
+
+    public void registerPreferencesWeakListener(Consumer<PreferencesView> preferencesConsumer) {
+        handler.post(() -> {
+            preferencesListeners.addListener(preferencesConsumer);
+            maybeStartPreferencesEvents();
+        });
+    }
+
+    private void maybeStartPreferencesEvents() {
+        if (service == null) {
+            return;
+        }
+
+        if (!preferencesListeners.hasListeners()) {
+            return;
+        }
+
+        try {
+            service.registerPreferencesListener(preferencesCallback);
+        } catch (RemoteException e) {
+            Log.e("KI2", "Unable to register listener", e);
+        }
+    }
+
+    private void maybeStopPreferencesEvents() {
+        if (service == null) {
+            return;
+        }
+
+        if (preferencesListeners.hasListeners()) {
+            return;
+        }
+
+        try {
+            service.unregisterPreferencesListener(preferencesCallback);
+        } catch (Exception e) {
+            Log.e("KI2", "Unable to unregister listener", e);
+        }
     }
 
 }
