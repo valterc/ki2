@@ -53,7 +53,7 @@ public enum FrontTeethPattern {
             return gearTeethCount[gearTeethCount.length - 1];
         }
 
-        if (gearIndex < 1) {
+        if (gearTeethCount.length - gearIndex < 0) {
             return gearTeethCount[0];
         }
 

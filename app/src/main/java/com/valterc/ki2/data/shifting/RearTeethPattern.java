@@ -68,15 +68,15 @@ public enum RearTeethPattern {
             return 0;
         }
 
-        if (gearIndex > gearTeethCount.length) {
+        if (gearTeethCount.length - gearIndex > gearTeethCount.length - 1) {
             return gearTeethCount[gearTeethCount.length - 1];
         }
 
-        if (gearIndex < 1) {
+        if (gearTeethCount.length - gearIndex < 0) {
             return gearTeethCount[0];
         }
 
-        return gearTeethCount[gearIndex - 1];
+        return gearTeethCount[gearTeethCount.length - gearIndex];
     }
 
     public int getGearCount() {
