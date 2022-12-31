@@ -1,6 +1,7 @@
 package com.valterc.ki2.karoo.service.messages;
 
 import android.os.Handler;
+import android.os.Looper;
 
 import com.valterc.ki2.data.message.Message;
 import com.valterc.ki2.data.message.MessageType;
@@ -12,20 +13,22 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked", "FieldCanBeLocal"})
 public class CustomMessageClient {
 
     private final Map<MessageType, CustomMessageHandler<? extends Message>> customMessageHandlers;
     private final Handler handler;
 
-    public CustomMessageClient(ServiceClient serviceClient, Handler handler) {
-        this.handler = handler;
+    private final Consumer<Message> onMessage = this::onMessage;
+
+    public CustomMessageClient(ServiceClient serviceClient) {
+        this.handler = new Handler(Looper.getMainLooper());
 
         customMessageHandlers = new HashMap<>();
         customMessageHandlers.put(MessageType.RIDE_STATUS, new CustomMessageHandler<>(MessageType.RIDE_STATUS, RideStatusMessage::parse));
         customMessageHandlers.put(MessageType.UPDATE_AVAILABLE, new CustomMessageHandler<>(MessageType.UPDATE_AVAILABLE, UpdateAvailableMessage::parse));
 
-        serviceClient.registerMessageWeakListener(this::onMessage);
+        serviceClient.registerMessageWeakListener(onMessage);
     }
 
     private void onMessage(Message message) {

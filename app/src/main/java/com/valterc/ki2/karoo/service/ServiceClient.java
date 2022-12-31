@@ -158,7 +158,7 @@ public class ServiceClient {
         preferencesListeners = new DataStreamWeakListenerList<>();
         handler = new Handler(Looper.getMainLooper());
         connectionFilter = new ConnectionFilter();
-        customMessageClient = new CustomMessageClient(this, handler);
+        customMessageClient = new CustomMessageClient(this);
         attemptBindToService();
     }
 

@@ -4,21 +4,26 @@ import com.valterc.ki2.data.message.RideStatusMessage;
 import com.valterc.ki2.data.ride.RideStatus;
 import com.valterc.ki2.karoo.service.ServiceClient;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
+@SuppressWarnings("FieldCanBeLocal")
 public class HandlerManager {
 
     private final List<IRideHandler> rideHandlerList;
     private RideStatus rideStatus;
 
+    private final Consumer<RideStatusMessage> onRideStatusMessage = this::onRideStatus;
+
     public HandlerManager(ServiceClient serviceClient, List<IRideHandler> rideHandlerList) {
-        this.rideHandlerList = rideHandlerList;
+        this.rideHandlerList = new ArrayList<>(rideHandlerList);
         this.rideStatus = RideStatus.NEW;
 
-        serviceClient.getCustomMessageClient().registerRideStatusWeakListener(this::onRideStatusMessage);
+        serviceClient.getCustomMessageClient().registerRideStatusWeakListener(onRideStatusMessage);
     }
 
-    private void onRideStatusMessage(RideStatusMessage rideStatusMessage) {
+    private void onRideStatus(RideStatusMessage rideStatusMessage) {
         RideStatus newRideStatus = rideStatusMessage.getRideStatus();
 
         switch (newRideStatus) {

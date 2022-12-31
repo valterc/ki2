@@ -10,7 +10,10 @@ import com.valterc.ki2.karoo.hooks.AudioAlertHook;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
+@SuppressWarnings("FieldCanBeLocal")
 public class ShiftingAudioAlertHandler implements IRideHandler {
 
     private final Ki2Context context;
@@ -21,12 +24,15 @@ public class ShiftingAudioAlertHandler implements IRideHandler {
     private boolean alertEnabledUpcomingSynchroShift;
     private boolean riding;
 
+    private final Consumer<PreferencesView> onPreferences = this::onPreferences;
+    private final BiConsumer<DeviceId, ShiftingInfo> onShifting = this::onShifting;
+
     public ShiftingAudioAlertHandler(Ki2Context context) {
         this.context = context;
         this.deviceShiftingMap = new HashMap<>();
 
-        context.getServiceClient().registerPreferencesWeakListener(this::onPreferences);
-        context.getServiceClient().registerShiftingInfoWeakListener(this::onShifting);
+        context.getServiceClient().registerPreferencesWeakListener(onPreferences);
+        context.getServiceClient().registerShiftingInfoWeakListener(onShifting);
     }
 
     private void onPreferences(PreferencesView preferences) {
