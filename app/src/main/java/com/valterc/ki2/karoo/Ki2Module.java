@@ -8,6 +8,7 @@ import androidx.annotation.Nullable;
 import com.valterc.ki2.BuildConfig;
 import com.valterc.ki2.data.message.RideStatusMessage;
 import com.valterc.ki2.data.ride.RideStatus;
+import com.valterc.ki2.karoo.datatypes.GearRatioTextDataType;
 import com.valterc.ki2.karoo.shifting.ShiftingAudioAlertHandler;
 import com.valterc.ki2.karoo.battery.LowBatteryHandler;
 import com.valterc.ki2.karoo.datatypes.BatteryTextDataType;
@@ -83,6 +84,7 @@ public class Ki2Module extends Module {
                 new GearsTextDataType(ki2Context),
                 new ShiftModeTextDataType(ki2Context),
                 new ShiftCountTextDataType(ki2Context),
+                new GearRatioTextDataType(ki2Context),
                 new GearsDrivetrainDataType(ki2Context),
                 new GearsGearsDataType(ki2Context));
     }
