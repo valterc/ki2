@@ -1,6 +1,6 @@
 package com.valterc.ki2.data.device;
 
-public enum StatusIndicator {
+public enum SlaveStatusIndicator {
 
     NONE(0),
     BATTERY_INDICATOR(1),
@@ -25,10 +25,10 @@ public enum StatusIndicator {
     SYSTEM_FUNCTIONS(2097152),
     CHAINRINGS(4194304);
 
-    public static StatusIndicator fromFlag(int flag) {
-        for (StatusIndicator statusIndicator : values()) {
-            if (statusIndicator.flag == flag) {
-                return statusIndicator;
+    public static SlaveStatusIndicator fromFlag(int flag) {
+        for (SlaveStatusIndicator slaveStatusIndicator : values()) {
+            if (slaveStatusIndicator.flag == flag) {
+                return slaveStatusIndicator;
             }
         }
 
@@ -37,7 +37,7 @@ public enum StatusIndicator {
 
     private final int flag;
 
-    StatusIndicator(int flag) {
+    SlaveStatusIndicator(int flag) {
         this.flag = flag;
     }
 
