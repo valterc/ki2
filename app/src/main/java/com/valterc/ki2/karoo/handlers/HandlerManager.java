@@ -14,7 +14,7 @@ public class HandlerManager {
     private final List<IRideHandler> rideHandlerList;
     private RideStatus rideStatus;
 
-    private final Consumer<RideStatusMessage> onRideStatusMessage = this::onRideStatus;
+    private final Consumer<RideStatusMessage> onRideStatusMessage = this::onRideStatusMessage;
 
     public HandlerManager(ServiceClient serviceClient, List<IRideHandler> rideHandlerList) {
         this.rideHandlerList = new ArrayList<>(rideHandlerList);
@@ -23,7 +23,7 @@ public class HandlerManager {
         serviceClient.getCustomMessageClient().registerRideStatusWeakListener(onRideStatusMessage);
     }
 
-    private void onRideStatus(RideStatusMessage rideStatusMessage) {
+    private void onRideStatusMessage(RideStatusMessage rideStatusMessage) {
         RideStatus newRideStatus = rideStatusMessage.getRideStatus();
 
         switch (newRideStatus) {
