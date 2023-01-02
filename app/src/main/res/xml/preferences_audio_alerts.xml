@@ -26,8 +26,7 @@
             app:key="@string/preference_audio_alert_upcoming_synchro_shift"
             app:summary="@string/summary_preference_audio_alert_upcoming_synchro_shift"
             app:title="@string/title_preference_audio_alert_upcoming_synchro_shift" />
-
-
+        
     </PreferenceCategory>
 
 </PreferenceScreen>
