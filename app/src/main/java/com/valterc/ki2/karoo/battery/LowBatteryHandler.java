@@ -18,7 +18,10 @@ import com.valterc.ki2.karoo.hooks.AudioAlertHook;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
+@SuppressWarnings("FieldCanBeLocal")
 @SuppressLint("LogNotTimber")
 public class LowBatteryHandler implements IRideHandler {
 
@@ -32,32 +35,30 @@ public class LowBatteryHandler implements IRideHandler {
     private boolean riding;
     private long pauseTimestamp;
 
+    private final Consumer<PreferencesView> onPreferences = this::onPreferences;
+    private final BiConsumer<DeviceId, BatteryInfo> onBattery =  this::onBattery;
+
     public LowBatteryHandler(Ki2Context context) {
         this.context = context;
         this.deviceNotificationMap = new HashMap<>();
         this.handler = new Handler(Looper.getMainLooper());
 
-        context.getServiceClient().registerPreferencesWeakListener(this::onPreferences);
-        context.getServiceClient().registerBatteryInfoWeakListener(this::onBattery);
+        context.getServiceClient().registerPreferencesWeakListener(onPreferences);
+        context.getServiceClient().registerBatteryInfoWeakListener(onBattery);
     }
 
     private void onPreferences(PreferencesView preferencesView) {
         batteryLevelLow = preferencesView.getBatteryLevelLow(context.getSdkContext());
         batteryLevelCritical = preferencesView.getBatteryLevelCritical(context.getSdkContext());
-
-        deviceNotificationMap.forEach((deviceId, record) -> {
-            performBatteryCheck(deviceId, record.getBatteryInfo());
-        });
+        deviceNotificationMap.forEach((deviceId, record) -> performBatteryCheck(deviceId, record.getBatteryInfo()));
     }
 
     @Override
     public void onRideStart() {
         riding = true;
-        deviceNotificationMap.forEach((deviceId, record) -> {
-            if (record.shouldNotifyInRide()) {
-                notify(record);
-            }
-        });
+        deviceNotificationMap.values().stream()
+                .filter(LowBatteryRecord::shouldNotifyInRide)
+                .forEach(this::notify);
     }
 
     @Override
