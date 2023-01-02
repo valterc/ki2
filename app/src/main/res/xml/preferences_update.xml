@@ -1,0 +1,21 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:title="@string/category_preference_update">
+
+    <PreferenceCategory app:title="@string/category_preference_update">
+
+        <SwitchPreference
+            app:defaultValue="@string/default_preference_auto_update"
+            app:key="@string/preference_auto_update"
+            app:summary="@string/summary_preference_auto_update"
+            app:title="@string/title_preference_auto_update" />
+
+        <Preference
+            app:title="@string/text_check_for_updates">
+            <intent android:targetPackage="com.valterc.ki2"
+                android:targetClass="com.valterc.ki2.activities.update.UpdateActivity"/>
+        </Preference>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

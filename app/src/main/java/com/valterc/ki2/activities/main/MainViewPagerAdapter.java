@@ -7,6 +7,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.valterc.ki2.fragments.devices.list.ListDevicesFragment;
 import com.valterc.ki2.fragments.settings.SettingsFragment;
+import com.valterc.ki2.fragments.settings.SettingsHostFragment;
 
 public class MainViewPagerAdapter extends FragmentStateAdapter {
 
@@ -20,7 +21,7 @@ public class MainViewPagerAdapter extends FragmentStateAdapter {
 
         switch (position) {
             case 0: return new ListDevicesFragment();
-            case 1: return new SettingsFragment();
+            case 1: return new SettingsHostFragment();
         }
 
         throw new RuntimeException("Unexpected fragment position");

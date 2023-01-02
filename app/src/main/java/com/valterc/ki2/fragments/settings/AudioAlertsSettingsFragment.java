@@ -7,17 +7,15 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.valterc.ki2.R;
 
-public class SettingsFragment extends PreferenceFragmentCompat {
+public class AudioAlertsSettingsFragment extends PreferenceFragmentCompat {
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
-        setPreferencesFromResource(R.xml.preferences_root, rootKey);
+        setPreferencesFromResource(R.xml.preferences_audio_alerts, rootKey);
     }
 
     @Override
@@ -29,4 +27,5 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         float paddingBottom = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 80, resources.getDisplayMetrics());
         recyclerView.setPadding(0, 0, 0, (int) paddingBottom);
     }
+
 }
