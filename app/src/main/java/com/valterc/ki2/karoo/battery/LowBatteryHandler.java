@@ -36,7 +36,7 @@ public class LowBatteryHandler implements IRideHandler {
     private long pauseTimestamp;
 
     private final Consumer<PreferencesView> onPreferences = this::onPreferences;
-    private final BiConsumer<DeviceId, BatteryInfo> onBattery =  this::onBattery;
+    private final BiConsumer<DeviceId, BatteryInfo> onBattery = this::onBattery;
 
     public LowBatteryHandler(Ki2Context context) {
         this.context = context;
@@ -76,6 +76,7 @@ public class LowBatteryHandler implements IRideHandler {
     @Override
     public void onRideEnd() {
         riding = false;
+        deviceNotificationMap.forEach((deviceId, record) -> record.resetNotifiedInRide());
     }
 
     private LowBatteryCategory getCategory(BatteryInfo batteryInfo) {

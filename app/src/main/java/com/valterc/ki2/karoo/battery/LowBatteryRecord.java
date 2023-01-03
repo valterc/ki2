@@ -58,4 +58,9 @@ public class LowBatteryRecord {
     public void markNotifiedInRide() {
         this.notifiedInRide = true;
     }
+
+    public void resetNotifiedInRide() {
+        this.notifiedInRide = false;
+    }
+
 }
