@@ -14,12 +14,14 @@ import com.valterc.ki2.data.device.DeviceId;
 import com.valterc.ki2.data.device.DeviceType;
 import com.valterc.ki2.data.device.ShimanoPageType;
 import com.valterc.ki2.data.device.SignalInfo;
-import com.valterc.ki2.data.device.StatusIndicator;
+import com.valterc.ki2.data.device.SlaveStatusIndicator;
 import com.valterc.ki2.data.info.DataType;
 import com.valterc.ki2.data.info.Manufacturer;
 import com.valterc.ki2.data.info.ManufacturerInfoBuilder;
 import com.valterc.ki2.data.shifting.BuzzerData;
 import com.valterc.ki2.data.shifting.BuzzerType;
+import com.valterc.ki2.data.shifting.FrontTeethPattern;
+import com.valterc.ki2.data.shifting.RearTeethPattern;
 import com.valterc.ki2.data.shifting.ShiftingInfoBuilder;
 import com.valterc.ki2.data.shifting.ShiftingMode;
 import com.valterc.ki2.data.switches.SwitchCommand;
@@ -44,7 +46,7 @@ public class ShimanoShiftingProfileHandler implements IDeviceProfileHandler {
     private final ITransportHandler transportHandler;
     private final IDeviceConnectionListener deviceConnectionListener;
 
-    private final Set<StatusIndicator> missingIndicators;
+    private final Set<SlaveStatusIndicator> missingIndicators;
     private final byte[] broadcastData;
     private int requestShiftModeTransitionSequenceNumber;
     private byte[] requestShiftModeTransitionData;
@@ -64,12 +66,13 @@ public class ShimanoShiftingProfileHandler implements IDeviceProfileHandler {
         this.transportHandler = transportHandler;
         this.deviceConnectionListener = deviceConnectionListener;
         this.missingIndicators = new HashSet<>(Arrays.asList(
-                StatusIndicator.BATTERY_INDICATOR,
-                StatusIndicator.FRONT_SPEEDS_CURRENT,
-                StatusIndicator.REAR_SPEEDS_CURRENT,
-                StatusIndicator.FRONT_SPEEDS_MAX,
-                StatusIndicator.REAR_SPEEDS_MAX,
-                StatusIndicator.SWITCH_COMMAND_NUMBER));
+                SlaveStatusIndicator.BATTERY_INDICATOR,
+                SlaveStatusIndicator.FRONT_SPEEDS_CURRENT,
+                SlaveStatusIndicator.REAR_SPEEDS_CURRENT,
+                SlaveStatusIndicator.FRONT_SPEEDS_MAX,
+                SlaveStatusIndicator.REAR_SPEEDS_MAX,
+                SlaveStatusIndicator.SWITCH_COMMAND_NUMBER,
+                SlaveStatusIndicator.CHAINRINGS));
         this.broadcastData = new byte[8];
 
         this.shiftingInfoBuilder = new ShiftingInfoBuilder();
@@ -115,10 +118,29 @@ public class ShimanoShiftingProfileHandler implements IDeviceProfileHandler {
                 handleProductInformation(payload);
                 break;
 
+            case CHAINRINGS:
+                handleChainringsPage(payload);
+                break;
+
             default:
                 Timber.d("[%s] Unhandled page %s", deviceId, pageType);
                 break;
         }
+    }
+
+    private void handleChainringsPage(byte[] payload) {
+        this.missingIndicators.remove(SlaveStatusIndicator.CHAINRINGS);
+
+        int frontTeethPatternId = (int) MessageUtils.numberFromBytes(payload, 1, 1);
+        int rearTeethPatternId = (int) MessageUtils.numberFromBytes(payload, 3, 1);
+
+        FrontTeethPattern frontTeethPattern = FrontTeethPattern.fromId(frontTeethPatternId);
+        RearTeethPattern rearTeethPattern = RearTeethPattern.fromId(rearTeethPatternId);
+
+        Timber.d("[%s] Received chainrings: {front=%s, rear=%s}", deviceId, frontTeethPattern, rearTeethPattern);
+
+        shiftingInfoBuilder.setFrontTeethPattern(frontTeethPattern);
+        shiftingInfoBuilder.setRearTeethPattern(rearTeethPattern);
     }
 
     private void handleProductInformation(byte[] payload) {
@@ -177,7 +199,7 @@ public class ShimanoShiftingProfileHandler implements IDeviceProfileHandler {
     }
 
     private void handleSwitchStatusPage(byte[] payload) {
-        this.missingIndicators.remove(StatusIndicator.SWITCH_COMMAND_NUMBER);
+        this.missingIndicators.remove(SlaveStatusIndicator.SWITCH_COMMAND_NUMBER);
 
         int sequenceNumberRight = (int) (MessageUtils.numberFromBytes(payload, 1, 1) & 15);
         SwitchCommand switchCommandRight = SwitchCommand.fromCommandNumber((int) MessageUtils.numberFromBytes(payload, 1, 1) & 240);
@@ -210,8 +232,8 @@ public class ShimanoShiftingProfileHandler implements IDeviceProfileHandler {
     }
 
     private void handleBikeStatusPage(byte[] payload) {
-        this.missingIndicators.remove(StatusIndicator.FRONT_SPEEDS_MAX);
-        this.missingIndicators.remove(StatusIndicator.REAR_SPEEDS_MAX);
+        this.missingIndicators.remove(SlaveStatusIndicator.FRONT_SPEEDS_MAX);
+        this.missingIndicators.remove(SlaveStatusIndicator.REAR_SPEEDS_MAX);
 
         int frontGearMax = (int) MessageUtils.numberFromBytes(payload, 2, 1);
         int rearGearMax = (int) MessageUtils.numberFromBytes(payload, 3, 1);
@@ -235,14 +257,14 @@ public class ShimanoShiftingProfileHandler implements IDeviceProfileHandler {
     }
 
     private void handleBatterySpeedsPage(byte[] payload) {
-        this.missingIndicators.remove(StatusIndicator.BATTERY_INDICATOR);
+        this.missingIndicators.remove(SlaveStatusIndicator.BATTERY_INDICATOR);
 
         int frontGear = (int) MessageUtils.numberFromBytes(payload, 2, 1);
         int rearGear = (int) MessageUtils.numberFromBytes(payload, 3, 1);
 
         if ((frontGear != 255 && frontGear != 0) || (rearGear != 255 && rearGear != 0)) {
-            this.missingIndicators.remove(StatusIndicator.FRONT_SPEEDS_CURRENT);
-            this.missingIndicators.remove(StatusIndicator.REAR_SPEEDS_CURRENT);
+            this.missingIndicators.remove(SlaveStatusIndicator.FRONT_SPEEDS_CURRENT);
+            this.missingIndicators.remove(SlaveStatusIndicator.REAR_SPEEDS_CURRENT);
 
             Timber.d("[%s] Received speeds: {front=%s, rear=%s}", deviceId, frontGear, rearGear);
 
@@ -274,10 +296,10 @@ public class ShimanoShiftingProfileHandler implements IDeviceProfileHandler {
         }
     }
 
-    private byte[] encodeSlaveStatus(Collection<StatusIndicator> statusIndicatorCollection) {
+    private byte[] encodeSlaveStatus(Collection<SlaveStatusIndicator> slaveStatusIndicatorCollection) {
         long bitSet = 0xFFFFFFFF;
 
-        for (StatusIndicator slaveStatusIndicator : statusIndicatorCollection) {
+        for (SlaveStatusIndicator slaveStatusIndicator : slaveStatusIndicatorCollection) {
             bitSet &= ~slaveStatusIndicator.getFlag();
         }
 

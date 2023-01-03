@@ -7,6 +7,8 @@ public class ShiftingInfoBuilder {
     private int frontGearMax;
     private int rearGear;
     private int rearGearMax;
+    private FrontTeethPattern frontTeethPattern;
+    private RearTeethPattern rearTeethPattern;
     private ShiftingMode shiftingMode;
 
     private boolean buzzerTypeSet;
@@ -14,6 +16,8 @@ public class ShiftingInfoBuilder {
     private boolean frontGearMaxSet;
     private boolean rearGearSet;
     private boolean rearGearMaxSet;
+    private boolean frontTeethPatternSet;
+    private boolean rearTeethPatternSet;
     private boolean shiftingModeSet;
 
     public ShiftingInfoBuilder() {
@@ -64,6 +68,24 @@ public class ShiftingInfoBuilder {
         this.rearGearMaxSet = true;
     }
 
+    public FrontTeethPattern getFrontTeethPattern() {
+        return frontTeethPattern;
+    }
+
+    public void setFrontTeethPattern(FrontTeethPattern frontTeethPattern) {
+        this.frontTeethPattern = frontTeethPattern;
+        this.frontTeethPatternSet = true;
+    }
+
+    public RearTeethPattern getRearTeethPattern() {
+        return rearTeethPattern;
+    }
+
+    public void setRearTeethPattern(RearTeethPattern rearTeethPattern) {
+        this.rearTeethPattern = rearTeethPattern;
+        this.rearTeethPatternSet = true;
+    }
+
     public ShiftingMode getShiftingMode() {
         return shiftingMode;
     }
@@ -79,10 +101,12 @@ public class ShiftingInfoBuilder {
                 frontGearMaxSet &&
                 rearGearSet &&
                 rearGearMaxSet &&
+                frontTeethPatternSet &&
+                rearTeethPatternSet &&
                 shiftingModeSet;
     }
 
     public ShiftingInfo build(){
-        return new ShiftingInfo(buzzerType, frontGear, frontGearMax, rearGear, rearGearMax, shiftingMode);
+        return new ShiftingInfo(buzzerType, frontGear, frontGearMax, rearGear, rearGearMax, frontTeethPattern, rearTeethPattern, shiftingMode);
     }
 }
