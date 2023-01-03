@@ -7,10 +7,12 @@
     <string name="category_preference_left_switch">Left Switch</string>
     <string name="category_preference_right_switch">Right Switch</string>
     <string name="category_preference_pre_load">Pre load</string>
+    <string name="category_preference_battery">Battery</string>
     <string name="category_preference_battery_notification">Battery Notification</string>
     <string name="category_preference_update">Update</string>
     <string name="category_preference_audio_alerts">Audio Alerts</string>
-
+    <string name="category_preference_general_settings">General Settings</string>
+    
     <string name="title_preference_left_single_press">Left Single Press</string>
     <string name="title_preference_left_double_press">Left Double Press</string>
     <string name="title_preference_left_hold">Left Hold</string>

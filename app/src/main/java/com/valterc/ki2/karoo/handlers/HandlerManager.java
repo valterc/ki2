@@ -28,7 +28,7 @@ public class HandlerManager {
 
         switch (newRideStatus) {
             case ONGOING:
-                if (rideStatus == RideStatus.NEW) {
+                if (rideStatus == RideStatus.NEW || rideStatus == RideStatus.FINISHED) {
                     rideHandlerList.forEach(IRideHandler::onRideStart);
                 } else if (rideStatus == RideStatus.PAUSED) {
                     rideHandlerList.forEach(IRideHandler::onRideResume);

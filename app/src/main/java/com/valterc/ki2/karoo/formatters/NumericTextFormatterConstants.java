@@ -7,5 +7,6 @@ public final class NumericTextFormatterConstants {
 
     public static final String NOT_AVAILABLE = "N/A";
     public static final String WAITING_FOR_DATA = "...";
+    public static final String UNKNOWN = "Unknown";
 
 }

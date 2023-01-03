@@ -70,7 +70,11 @@ public class MainActivity extends AppCompatActivity {
         });
 
         ExtendedFloatingActionButton buttonBack = findViewById(R.id.button_back);
-        buttonBack.setOnClickListener((view) -> finish());
+        buttonBack.setOnClickListener((view) ->
+        {
+            dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_BACK));
+            dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_BACK));
+        });
 
         if (UpdateStateStore.shouldAutomaticallyCheckForUpdatesInApp(this)) {
             handler.postDelayed(() -> {
