@@ -73,13 +73,16 @@ public final class RideActivityHook {
         return null;
     });
 
+    private static final Lazy<Boolean> IS_RIDE_ACTIVITY_PROCESS = LazyKt.lazy(() ->
+            "io.hammerhead.rideapp:io.hammerhead.rideapp.rideActivityProcess".equals(ProcessUtils.getProcessName()));
+
     /**
      * Indicates if the running code is inside the Ride activity process.
      *
      * @return True if the running process is dedicated to the Ride activity, False otherwise.
      */
     public static boolean isRideActivityProcess() {
-        return "io.hammerhead.rideapp:io.hammerhead.rideapp.rideActivityProcess".equals(ProcessUtils.getProcessName());
+        return IS_RIDE_ACTIVITY_PROCESS.getValue();
     }
 
     public static void preload(Context context) {
@@ -90,17 +93,19 @@ public final class RideActivityHook {
     }
 
     public static void tryHandlePreload(Context context) {
-        if (RideActivityHook.isRideActivityProcess()) {
-            Activity activity = ActivityUtils.getRunningActivity();
-            if (activity != null) {
-                boolean preload = activity.getIntent().getBooleanExtra("ki2.preload", false);
-                Log.d("KI2", "Ride activity preload extra: " + preload);
-                if (preload) {
-                    Log.d("KI2", "Finish activity and broadcast events");
-                    activity.finishAndRemoveTask();
-                    context.sendBroadcast(new Intent("io.hammerhead.hx.intent.action.RIDE_STOP"));
-                    context.sendBroadcast(new Intent("io.hammerhead.action.RIDE_APP_NOT_RECORDING_EXITED"));
-                }
+        if (!RideActivityHook.isRideActivityProcess()) {
+            return;
+        }
+
+        Activity activity = ActivityUtils.getRunningActivity();
+        if (activity != null) {
+            boolean preload = activity.getIntent().getBooleanExtra("ki2.preload", false);
+            Log.d("KI2", "Ride activity preload extra: " + preload);
+            if (preload) {
+                Log.d("KI2", "Finish activity and broadcast events");
+                activity.finishAndRemoveTask();
+                context.sendBroadcast(new Intent("io.hammerhead.hx.intent.action.RIDE_STOP"));
+                context.sendBroadcast(new Intent("io.hammerhead.action.RIDE_APP_NOT_RECORDING_EXITED"));
             }
         }
     }
