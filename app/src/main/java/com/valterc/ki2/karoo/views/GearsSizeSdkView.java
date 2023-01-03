@@ -18,7 +18,7 @@ import com.valterc.ki2.views.GearsView;
 
 import java.util.function.BiConsumer;
 
-public class GearsSdkView extends Ki2SdkView {
+public class GearsSizeSdkView extends Ki2SdkView {
 
     @SuppressWarnings("FieldCanBeLocal")
     private final BiConsumer<DeviceId, ConnectionInfo> connectionInfoConsumer = (deviceId, connectionInfo) -> {
@@ -37,7 +37,7 @@ public class GearsSdkView extends Ki2SdkView {
     private TextView textView;
     private GearsView gearsView;
 
-    public GearsSdkView(@NonNull Ki2Context context) {
+    public GearsSizeSdkView(@NonNull Ki2Context context) {
         super(context);
         context.getServiceClient().registerConnectionInfoWeakListener(connectionInfoConsumer);
         context.getServiceClient().registerShiftingInfoWeakListener(shiftingInfoConsumer);
@@ -82,10 +82,15 @@ public class GearsSdkView extends Ki2SdkView {
             return;
         }
 
+        int frontTeethCount = shiftingInfo.getFrontTeethPattern().getTeethCount(shiftingInfo.getFrontGear());
+        int rearTeethCount = shiftingInfo.getRearTeethPattern().getTeethCount(shiftingInfo.getRearGear());
+
         gearsView.setGears(
                 shiftingInfo.getFrontGearMax(),
                 shiftingInfo.getFrontGear(),
+                String.valueOf(frontTeethCount),
                 shiftingInfo.getRearGearMax(),
-                shiftingInfo.getRearGear());
+                shiftingInfo.getRearGear(),
+                String.valueOf(rearTeethCount));
     }
 }

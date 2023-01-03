@@ -16,6 +16,8 @@ import com.valterc.ki2.karoo.datatypes.FrontShiftCountTextDataType;
 import com.valterc.ki2.karoo.datatypes.GearRatioTextDataType;
 import com.valterc.ki2.karoo.datatypes.GearsDrivetrainDataType;
 import com.valterc.ki2.karoo.datatypes.GearsGearsDataType;
+import com.valterc.ki2.karoo.datatypes.GearsSizeDrivetrainDataType;
+import com.valterc.ki2.karoo.datatypes.GearsSizeGearsDataType;
 import com.valterc.ki2.karoo.datatypes.GearsSizeTextDataType;
 import com.valterc.ki2.karoo.datatypes.GearsTextDataType;
 import com.valterc.ki2.karoo.datatypes.RearGearDataType;
@@ -100,7 +102,9 @@ public class Ki2Module extends Module {
                 new RearShiftCountTextDataType(ki2Context),
                 new GearRatioTextDataType(ki2Context),
                 new GearsDrivetrainDataType(ki2Context),
-                new GearsGearsDataType(ki2Context));
+                new GearsSizeDrivetrainDataType(ki2Context),
+                new GearsGearsDataType(ki2Context),
+                new GearsSizeGearsDataType(ki2Context));
     }
 
     @Nullable

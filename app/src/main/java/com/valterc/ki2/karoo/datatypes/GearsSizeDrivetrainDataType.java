@@ -8,7 +8,7 @@ import androidx.appcompat.content.res.AppCompatResources;
 
 import com.valterc.ki2.R;
 import com.valterc.ki2.karoo.Ki2Context;
-import com.valterc.ki2.karoo.views.DrivetrainSdkView;
+import com.valterc.ki2.karoo.views.DrivetrainSizeSdkView;
 import com.valterc.ki2.utils.CallerUtils;
 
 import java.util.Collections;
@@ -20,13 +20,13 @@ import io.hammerhead.sdk.v0.datatype.transformer.BuiltInTransformer;
 import io.hammerhead.sdk.v0.datatype.transformer.SdkTransformer;
 import io.hammerhead.sdk.v0.datatype.view.SdkView;
 
-public class GearsDrivetrainDataType extends Ki2DataType {
+public class GearsSizeDrivetrainDataType extends Ki2DataType {
 
-    private static final String TYPE_ID = "ki2::gears-drivetrain";
+    private static final String TYPE_ID = "ki2::gears-size-drivetrain";
 
     private final List<Drawable> drawables;
 
-    public GearsDrivetrainDataType(@NonNull Ki2Context context) {
+    public GearsSizeDrivetrainDataType(@NonNull Ki2Context context) {
         super(context);
 
         this.drawables = CallerUtils.safeWrap(() -> Collections.singletonList(
@@ -36,7 +36,7 @@ public class GearsDrivetrainDataType extends Ki2DataType {
     @NonNull
     @Override
     public String getDescription() {
-        return "Drivetrain view with gear index.";
+        return "Drivetrain view with gear size.";
     }
 
     @NonNull
@@ -74,6 +74,6 @@ public class GearsDrivetrainDataType extends Ki2DataType {
     public SdkView newView() {
         return getKi2Context()
                 .getInstanceManager()
-                .getOrComputeInstance(DrivetrainSdkView.class.getSimpleName(), SdkView.class, () -> new DrivetrainSdkView(getKi2Context()));
+                .getOrComputeInstance(DrivetrainSizeSdkView.class.getSimpleName(), SdkView.class, () -> new DrivetrainSizeSdkView(getKi2Context()));
     }
 }

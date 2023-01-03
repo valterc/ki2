@@ -36,7 +36,7 @@ public class GearsGearsDataType extends Ki2DataType {
     @NonNull
     @Override
     public String getDescription() {
-        return "Gears view.";
+        return "Gears view with gear index.";
     }
 
     @NonNull
