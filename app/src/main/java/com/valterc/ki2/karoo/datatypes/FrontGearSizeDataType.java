@@ -8,7 +8,6 @@ import androidx.appcompat.content.res.AppCompatResources;
 
 import com.valterc.ki2.R;
 import com.valterc.ki2.karoo.Ki2Context;
-import com.valterc.ki2.karoo.formatters.FrontGearFormatter;
 import com.valterc.ki2.karoo.formatters.FrontGearSizeFormatter;
 import com.valterc.ki2.utils.CallerUtils;
 

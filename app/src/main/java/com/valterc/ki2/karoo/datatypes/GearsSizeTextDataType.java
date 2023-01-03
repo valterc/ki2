@@ -9,7 +9,6 @@ import androidx.appcompat.content.res.AppCompatResources;
 import com.valterc.ki2.R;
 import com.valterc.ki2.karoo.Ki2Context;
 import com.valterc.ki2.karoo.formatters.GearsSizeTextFormatter;
-import com.valterc.ki2.karoo.formatters.GearsTextFormatter;
 import com.valterc.ki2.utils.CallerUtils;
 
 import java.util.Collections;
