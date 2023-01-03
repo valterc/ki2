@@ -8,7 +8,8 @@ import androidx.appcompat.content.res.AppCompatResources;
 
 import com.valterc.ki2.R;
 import com.valterc.ki2.karoo.Ki2Context;
-import com.valterc.ki2.karoo.formatters.GearsTextFormatter;
+import com.valterc.ki2.karoo.formatters.RearShiftCountTextFormatter;
+import com.valterc.ki2.karoo.formatters.ShiftCountTextFormatter;
 import com.valterc.ki2.utils.CallerUtils;
 
 import java.util.Collections;
@@ -20,13 +21,13 @@ import io.hammerhead.sdk.v0.datatype.transformer.SdkTransformer;
 import io.hammerhead.sdk.v0.datatype.view.BuiltInView;
 import io.hammerhead.sdk.v0.datatype.view.SdkView;
 
-public class GearsTextDataType extends Ki2DataType {
+public class RearShiftCountTextDataType extends Ki2DataType {
 
-    private static final String TYPE_ID = "ki2::gears-text";
+    private static final String TYPE_ID = "ki2::rear-shiftcount-text";
 
     private final List<Drawable> drawables;
 
-    public GearsTextDataType(@NonNull Ki2Context context) {
+    public RearShiftCountTextDataType(@NonNull Ki2Context context) {
         super(context);
 
         this.drawables = CallerUtils.safeWrap(() -> Collections.singletonList(
@@ -36,13 +37,13 @@ public class GearsTextDataType extends Ki2DataType {
     @NonNull
     @Override
     public String getDescription() {
-        return "Shifting gears index FF-RR (FF Front, RR Rear), example: 02-05.";
+        return "Total number of rear shifts during the ride.";
     }
 
     @NonNull
     @Override
     public String getDisplayName() {
-        return "Gears";
+        return "Rear Shift Count";
     }
 
     @NonNull
@@ -55,11 +56,6 @@ public class GearsTextDataType extends Ki2DataType {
     @Override
     public List<Drawable> displayIcons() {
         return drawables;
-    }
-
-    @Override
-    public double getSampleValue() {
-        return 01.07;
     }
 
     @NonNull
@@ -75,7 +71,7 @@ public class GearsTextDataType extends Ki2DataType {
     public SdkFormatter newFormatter() {
         return getKi2Context()
                 .getInstanceManager()
-                .getOrComputeInstance(GearsTextFormatter.class.getSimpleName(), SdkFormatter.class, () -> new GearsTextFormatter(getKi2Context()));
+                .getOrComputeInstance(RearShiftCountTextFormatter.class.getSimpleName(), SdkFormatter.class, () -> new RearShiftCountTextFormatter(getKi2Context()));
     }
 
     @NonNull
