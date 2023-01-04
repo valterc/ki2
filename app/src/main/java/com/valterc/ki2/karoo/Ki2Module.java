@@ -11,11 +11,18 @@ import com.valterc.ki2.data.ride.RideStatus;
 import com.valterc.ki2.karoo.battery.LowBatteryHandler;
 import com.valterc.ki2.karoo.datatypes.BatteryTextDataType;
 import com.valterc.ki2.karoo.datatypes.FrontGearDataType;
+import com.valterc.ki2.karoo.datatypes.FrontGearSizeDataType;
+import com.valterc.ki2.karoo.datatypes.FrontShiftCountTextDataType;
 import com.valterc.ki2.karoo.datatypes.GearRatioTextDataType;
 import com.valterc.ki2.karoo.datatypes.GearsDrivetrainDataType;
 import com.valterc.ki2.karoo.datatypes.GearsGearsDataType;
+import com.valterc.ki2.karoo.datatypes.GearsSizeDrivetrainDataType;
+import com.valterc.ki2.karoo.datatypes.GearsSizeGearsDataType;
+import com.valterc.ki2.karoo.datatypes.GearsSizeTextDataType;
 import com.valterc.ki2.karoo.datatypes.GearsTextDataType;
 import com.valterc.ki2.karoo.datatypes.RearGearDataType;
+import com.valterc.ki2.karoo.datatypes.RearGearSizeDataType;
+import com.valterc.ki2.karoo.datatypes.RearShiftCountTextDataType;
 import com.valterc.ki2.karoo.datatypes.ShiftCountTextDataType;
 import com.valterc.ki2.karoo.datatypes.ShiftModeTextDataType;
 import com.valterc.ki2.karoo.handlers.HandlerManager;
@@ -84,13 +91,20 @@ public class Ki2Module extends Module {
         return Arrays.asList(
                 new BatteryTextDataType(ki2Context),
                 new GearsTextDataType(ki2Context),
+                new GearsSizeTextDataType(ki2Context),
                 new FrontGearDataType(ki2Context),
+                new FrontGearSizeDataType(ki2Context),
                 new RearGearDataType(ki2Context),
+                new RearGearSizeDataType(ki2Context),
                 new ShiftModeTextDataType(ki2Context),
                 new ShiftCountTextDataType(ki2Context),
+                new FrontShiftCountTextDataType(ki2Context),
+                new RearShiftCountTextDataType(ki2Context),
                 new GearRatioTextDataType(ki2Context),
                 new GearsDrivetrainDataType(ki2Context),
-                new GearsGearsDataType(ki2Context));
+                new GearsSizeDrivetrainDataType(ki2Context),
+                new GearsGearsDataType(ki2Context),
+                new GearsSizeGearsDataType(ki2Context));
     }
 
     @Nullable

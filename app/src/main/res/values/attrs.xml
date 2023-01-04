@@ -11,6 +11,9 @@
     <attr name="frontGear" format="integer" />
     <attr name="rearGear" format="integer" />
 
+    <attr name="frontGearLabel" format="string" />
+    <attr name="rearGearLabel" format="string" />
+
     <declare-styleable name="DrivetrainView">
         <attr name="android:textSize" format="dimension" />
         <attr name="android:textColor" format="color" />
@@ -28,6 +31,9 @@
         <attr name="rearGearMax" />
         <attr name="frontGear" />
         <attr name="rearGear" />
+
+        <attr name="frontGearLabel" />
+        <attr name="rearGearLabel" />
     </declare-styleable>
 
     <declare-styleable name="GearsView">
@@ -44,6 +50,9 @@
         <attr name="rearGearMax" />
         <attr name="frontGear" />
         <attr name="rearGear" />
+
+        <attr name="frontGearLabel" />
+        <attr name="rearGearLabel" />
     </declare-styleable>
 
 </resources>

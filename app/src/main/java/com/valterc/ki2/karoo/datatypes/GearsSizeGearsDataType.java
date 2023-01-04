@@ -8,25 +8,26 @@ import androidx.appcompat.content.res.AppCompatResources;
 
 import com.valterc.ki2.R;
 import com.valterc.ki2.karoo.Ki2Context;
-import com.valterc.ki2.karoo.formatters.GearsTextFormatter;
+import com.valterc.ki2.karoo.views.GearsSdkView;
+import com.valterc.ki2.karoo.views.GearsSizeSdkView;
 import com.valterc.ki2.utils.CallerUtils;
 
 import java.util.Collections;
 import java.util.List;
 
+import io.hammerhead.sdk.v0.datatype.formatter.BuiltInFormatter;
 import io.hammerhead.sdk.v0.datatype.formatter.SdkFormatter;
 import io.hammerhead.sdk.v0.datatype.transformer.BuiltInTransformer;
 import io.hammerhead.sdk.v0.datatype.transformer.SdkTransformer;
-import io.hammerhead.sdk.v0.datatype.view.BuiltInView;
 import io.hammerhead.sdk.v0.datatype.view.SdkView;
 
-public class GearsTextDataType extends Ki2DataType {
+public class GearsSizeGearsDataType extends Ki2DataType {
 
-    private static final String TYPE_ID = "ki2::gears-text";
+    private static final String TYPE_ID = "ki2::gears-size-gears";
 
     private final List<Drawable> drawables;
 
-    public GearsTextDataType(@NonNull Ki2Context context) {
+    public GearsSizeGearsDataType(@NonNull Ki2Context context) {
         super(context);
 
         this.drawables = CallerUtils.safeWrap(() -> Collections.singletonList(
@@ -36,7 +37,7 @@ public class GearsTextDataType extends Ki2DataType {
     @NonNull
     @Override
     public String getDescription() {
-        return "Shifting gears index FF-RR (FF Front, RR Rear), example: 02-05.";
+        return "Gears view with gear size.";
     }
 
     @NonNull
@@ -57,25 +58,16 @@ public class GearsTextDataType extends Ki2DataType {
         return drawables;
     }
 
-    @Override
-    public double getSampleValue() {
-        return 01.07;
-    }
-
     @NonNull
     @Override
     public SdkTransformer newTransformer() {
-        return getKi2Context()
-                .getInstanceManager()
-                .getOrComputeInstance(BuiltInTransformer.Identity.class.getSimpleName(), SdkTransformer.class, () -> new BuiltInTransformer.Identity(getContext()));
+        return new BuiltInTransformer.Identity(getContext());
     }
 
     @NonNull
     @Override
     public SdkFormatter newFormatter() {
-        return getKi2Context()
-                .getInstanceManager()
-                .getOrComputeInstance(GearsTextFormatter.class.getSimpleName(), SdkFormatter.class, () -> new GearsTextFormatter(getKi2Context()));
+        return new BuiltInFormatter.None();
     }
 
     @NonNull
@@ -83,6 +75,6 @@ public class GearsTextDataType extends Ki2DataType {
     public SdkView newView() {
         return getKi2Context()
                 .getInstanceManager()
-                .getOrComputeInstance(BuiltInView.Numeric.class.getSimpleName(), SdkView.class, () -> new BuiltInView.Numeric(getContext()));
+                .getOrComputeInstance(GearsSizeSdkView.class.getSimpleName(), SdkView.class, () -> new GearsSizeSdkView(getKi2Context()));
     }
 }

@@ -18,6 +18,8 @@ import androidx.annotation.Nullable;
 
 import com.valterc.ki2.R;
 
+import java.util.Objects;
+
 @SuppressWarnings({"UnnecessaryLocalVariable", "unused"})
 public class DrivetrainView extends View {
 
@@ -51,6 +53,9 @@ public class DrivetrainView extends View {
     private int frontGear;
     private int rearGearMax;
     private int rearGear;
+
+    private String frontGearLabel;
+    private String rearGearLabel;
 
     private Paint drivetrainPaint;
     private Paint selectedGearPaint;
@@ -97,6 +102,9 @@ public class DrivetrainView extends View {
             setRearGearMax(array.getInt(R.styleable.DrivetrainView_rearGearMax, DEFAULT_REAR_GEAR_MAX));
             setFrontGear(array.getInt(R.styleable.DrivetrainView_frontGear, DEFAULT_FRONT_GEAR));
             setRearGear(array.getInt(R.styleable.DrivetrainView_rearGear, DEFAULT_REAR_GEAR));
+
+            setFrontGearLabel(array.getString(R.styleable.DrivetrainView_frontGearLabel));
+            setRearGearLabel(array.getString(R.styleable.DrivetrainView_rearGearLabel));
 
             setDrivetrainColor(array.getColor(R.styleable.DrivetrainView_drivetrainColor, DEFAULT_DRIVETRAIN_COLOR));
             setSelectedGearColor(array.getColor(R.styleable.DrivetrainView_selectedGearColor, DEFAULT_SELECTED_GEAR_COLOR));
@@ -255,19 +263,28 @@ public class DrivetrainView extends View {
         textPaint.setTypeface(Typeface.DEFAULT_BOLD);
         textPaint.getTextBounds(STRING_MEASURE, 0, STRING_MEASURE.length(), tempRect);
 
-        float appendedWidth = appendString(tempPath2, tempPath1, STRING_REAR_PREFIX, Typeface.DEFAULT, 0);
-        appendedWidth += appendString(tempPath2, tempPath1, Integer.toString(rearGear), Typeface.DEFAULT_BOLD, appendedWidth);
-        appendedWidth += appendString(tempPath2, tempPath1, STRING_GEAR_SEPARATOR, Typeface.DEFAULT, appendedWidth);
-        appendedWidth += appendString(tempPath2, tempPath1, Integer.toString(rearGearMax), Typeface.DEFAULT, appendedWidth);
+        float appendedWidth;
+        if (rearGearLabel != null) {
+            appendedWidth = appendString(tempPath2, tempPath1, rearGearLabel, Typeface.DEFAULT, 0);
+        } else {
+            appendedWidth = appendString(tempPath2, tempPath1, STRING_REAR_PREFIX, Typeface.DEFAULT, 0);
+            appendedWidth += appendString(tempPath2, tempPath1, Integer.toString(rearGear), Typeface.DEFAULT_BOLD, appendedWidth);
+            appendedWidth += appendString(tempPath2, tempPath1, STRING_GEAR_SEPARATOR, Typeface.DEFAULT, appendedWidth);
+            appendedWidth += appendString(tempPath2, tempPath1, Integer.toString(rearGearMax), Typeface.DEFAULT, appendedWidth);
+        }
 
         textPath.addPath(tempPath2, Math.max(0, rearGearPositionX - appendedWidth * .5f), textPositionYOffset + tempRect.height());
         tempPath1.reset();
         tempPath2.reset();
 
-        appendedWidth = appendString(tempPath2, tempPath1, STRING_FRONT_PREFIX, Typeface.DEFAULT, 0);
-        appendedWidth += appendString(tempPath2, tempPath1, Integer.toString(frontGear), Typeface.DEFAULT_BOLD, appendedWidth);
-        appendedWidth += appendString(tempPath2, tempPath1, STRING_GEAR_SEPARATOR, Typeface.DEFAULT, appendedWidth);
-        appendedWidth += appendString(tempPath2, tempPath1, Integer.toString(frontGearMax), Typeface.DEFAULT, appendedWidth);
+        if (frontGearLabel != null) {
+            appendedWidth = appendString(tempPath2, tempPath1, frontGearLabel, Typeface.DEFAULT, 0);
+        } else {
+            appendedWidth = appendString(tempPath2, tempPath1, STRING_FRONT_PREFIX, Typeface.DEFAULT, 0);
+            appendedWidth += appendString(tempPath2, tempPath1, Integer.toString(frontGear), Typeface.DEFAULT_BOLD, appendedWidth);
+            appendedWidth += appendString(tempPath2, tempPath1, STRING_GEAR_SEPARATOR, Typeface.DEFAULT, appendedWidth);
+            appendedWidth += appendString(tempPath2, tempPath1, Integer.toString(frontGearMax), Typeface.DEFAULT, appendedWidth);
+        }
 
         textPath.addPath(tempPath2, Math.min(frontGearPositionX - appendedWidth * .5f, getWidth() - appendedWidth), textPositionYOffset + tempRect.height());
     }
@@ -506,6 +523,43 @@ public class DrivetrainView extends View {
         }
     }
 
+    public void setGears(int frontGearMax, int frontGear, String frontGearLabel, int rearGearMax, int rearGear, String rearGearLabel) {
+        if (frontGearMax <= 0) {
+            throw new IllegalArgumentException("Invalid front gear max value:" + frontGearMax);
+        }
+
+        if (frontGear <= 0 || frontGear > frontGearMax) {
+            throw new IllegalArgumentException("Invalid front gear value:" + frontGear);
+        }
+
+        if (rearGearMax <= 0) {
+            throw new IllegalArgumentException("Invalid rear gear max value:" + rearGearMax);
+        }
+
+        if (rearGear <= 0 || rearGear > rearGearMax) {
+            throw new IllegalArgumentException("Invalid rear gear value:" + rearGear);
+        }
+
+        if (this.frontGearMax != frontGearMax ||
+                this.frontGear != frontGear ||
+                this.rearGearMax != rearGearMax ||
+                this.rearGear != rearGear ||
+                !Objects.equals(this.frontGearLabel, frontGearLabel) ||
+                !Objects.equals(this.rearGearLabel, rearGearLabel)) {
+            this.frontGearMax = frontGearMax;
+            this.frontGear = frontGear;
+            this.frontGearLabel = frontGearLabel;
+            this.rearGearMax = rearGearMax;
+            this.rearGear = rearGear;
+            this.rearGearLabel = rearGearLabel;
+
+            if (initialized) {
+                invalidate();
+                requestLayout();
+            }
+        }
+    }
+
     public int getFrontGearMax() {
         return frontGearMax;
     }
@@ -574,6 +628,36 @@ public class DrivetrainView extends View {
 
         if (this.rearGear != rearGear) {
             this.rearGear = rearGear;
+
+            if (initialized) {
+                invalidate();
+                requestLayout();
+            }
+        }
+    }
+
+    public String getFrontGearLabel() {
+        return frontGearLabel;
+    }
+
+    public void setFrontGearLabel(String frontGearLabel) {
+        if (!Objects.equals(this.frontGearLabel, frontGearLabel)) {
+            this.frontGearLabel = frontGearLabel;
+
+            if (initialized) {
+                invalidate();
+                requestLayout();
+            }
+        }
+    }
+
+    public String getRearGearLabel() {
+        return rearGearLabel;
+    }
+
+    public void setRearGearLabel(String rearGearLabel) {
+        if (!Objects.equals(this.rearGearLabel, rearGearLabel)) {
+            this.rearGearLabel = rearGearLabel;
 
             if (initialized) {
                 invalidate();

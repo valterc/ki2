@@ -36,7 +36,7 @@ public class GearsDrivetrainDataType extends Ki2DataType {
     @NonNull
     @Override
     public String getDescription() {
-        return "Drivetrain view.";
+        return "Drivetrain view with gear index.";
     }
 
     @NonNull

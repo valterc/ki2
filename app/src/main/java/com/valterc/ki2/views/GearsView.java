@@ -20,8 +20,10 @@ import androidx.annotation.Nullable;
 
 import com.valterc.ki2.R;
 
-@SuppressWarnings({"UnnecessaryLocalVariable","unused"})
-public class GearsView extends View  {
+import java.util.Objects;
+
+@SuppressWarnings({"UnnecessaryLocalVariable", "unused"})
+public class GearsView extends View {
 
     private static final int DEFAULT_FRONT_GEAR_MAX = 2;
     private static final int DEFAULT_REAR_GEAR_MAX = 11;
@@ -55,6 +57,9 @@ public class GearsView extends View  {
     private final Path tempPath2;
     private final Rect tempRect;
 
+    private String frontGearLabel;
+    private String rearGearLabel;
+
     public GearsView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         initPaint();
@@ -65,6 +70,9 @@ public class GearsView extends View  {
             setRearGearMax(array.getInt(R.styleable.GearsView_rearGearMax, DEFAULT_REAR_GEAR_MAX));
             setFrontGear(array.getInt(R.styleable.GearsView_frontGear, DEFAULT_FRONT_GEAR));
             setRearGear(array.getInt(R.styleable.GearsView_rearGear, DEFAULT_REAR_GEAR));
+
+            setFrontGearLabel(array.getString(R.styleable.GearsView_frontGearLabel));
+            setRearGearLabel(array.getString(R.styleable.GearsView_rearGearLabel));
 
             setTextEnabled(array.getBoolean(R.styleable.GearsView_textEnabled, DEFAULT_TEXT_ENABLED));
 
@@ -125,7 +133,7 @@ public class GearsView extends View  {
         initialized = true;
     }
 
-    private void initPaint(){
+    private void initPaint() {
         unselectedGearPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         unselectedGearPaint.setStyle(Paint.Style.STROKE);
         unselectedGearPaint.setStrokeWidth(2.0f);
@@ -153,7 +161,7 @@ public class GearsView extends View  {
         return (int) (tempRect.height() + padding + 0.5);
     }
 
-    private void drawPicture(){
+    private void drawPicture() {
         picture = new Picture();
         Canvas canvas = picture.beginRecording(getWidth(), getHeight());
 
@@ -204,7 +212,8 @@ public class GearsView extends View  {
                     textPositionY,
                     STRING_FRONT_PREFIX,
                     frontGearMax,
-                    frontGear);
+                    frontGear,
+                    frontGearLabel);
 
             float rearGearsCenterPositionX = rearGearsPositionX + (rearGearMax * (gearWidth + spaceBetweenGears) * .5f);
 
@@ -213,7 +222,8 @@ public class GearsView extends View  {
                     textPositionY,
                     STRING_REAR_PREFIX,
                     rearGearMax,
-                    rearGear);
+                    rearGear,
+                    rearGearLabel);
         }
 
         picture.endRecording();
@@ -227,7 +237,7 @@ public class GearsView extends View  {
             float positionYStart = positionY + (gearBumpSize * (frontGearMax - i));
             float positionYEnd = positionY + availableHeight;
             Paint paint = i == frontGear ? getSelectGearPaint(positionYStart, positionYEnd) : unselectedGearPaint;
-            canvas.drawRoundRect(positionX, positionYStart, positionX + gearWidth, positionYEnd, gearWidth *.5f, gearWidth *.5f, paint);
+            canvas.drawRoundRect(positionX, positionYStart, positionX + gearWidth, positionYEnd, gearWidth * .5f, gearWidth * .5f, paint);
             positionX += gearWidth + spaceBetweenGears;
         }
     }
@@ -240,12 +250,12 @@ public class GearsView extends View  {
             float positionYStart = positionY + (gearBumpSize * (i - 1));
             float positionYEnd = positionY + availableHeight;
             Paint paint = i == rearGear ? getSelectGearPaint(positionYStart, positionYEnd) : unselectedGearPaint;
-            canvas.drawRoundRect(positionX, positionYStart, positionX + gearWidth, positionYEnd, gearWidth *.5f, gearWidth *.5f, paint);
+            canvas.drawRoundRect(positionX, positionYStart, positionX + gearWidth, positionYEnd, gearWidth * .5f, gearWidth * .5f, paint);
             positionX += gearWidth + spaceBetweenGears;
         }
     }
 
-    private void drawGearsText(Canvas canvas, float positionX, float positionY, String prefix, int gearsMax, int selectedGear) {
+    private void drawGearsText(Canvas canvas, float positionX, float positionY, String prefix, int gearsMax, int selectedGear, String label) {
         textPath.reset();
         tempPath1.reset();
         tempPath2.reset();
@@ -253,10 +263,15 @@ public class GearsView extends View  {
         textPaint.setTypeface(Typeface.DEFAULT_BOLD);
         textPaint.getTextBounds(STRING_MEASURE, 0, STRING_MEASURE.length(), tempRect);
 
-        float appendedWidth = appendString(tempPath2, tempPath1, prefix, Typeface.DEFAULT, 0);
-        appendedWidth += appendString(tempPath2, tempPath1, Integer.toString(selectedGear), Typeface.DEFAULT_BOLD, appendedWidth);
-        appendedWidth += appendString(tempPath2, tempPath1, STRING_GEAR_SEPARATOR, Typeface.DEFAULT, appendedWidth);
-        appendedWidth += appendString(tempPath2, tempPath1, Integer.toString(gearsMax), Typeface.DEFAULT, appendedWidth);
+        float appendedWidth;
+        if (label != null) {
+            appendedWidth = appendString(tempPath2, tempPath1, label, Typeface.DEFAULT, 0);
+        } else {
+            appendedWidth = appendString(tempPath2, tempPath1, prefix, Typeface.DEFAULT, 0);
+            appendedWidth += appendString(tempPath2, tempPath1, Integer.toString(selectedGear), Typeface.DEFAULT_BOLD, appendedWidth);
+            appendedWidth += appendString(tempPath2, tempPath1, STRING_GEAR_SEPARATOR, Typeface.DEFAULT, appendedWidth);
+            appendedWidth += appendString(tempPath2, tempPath1, Integer.toString(gearsMax), Typeface.DEFAULT, appendedWidth);
+        }
 
         textPath.addPath(tempPath2, Math.max(0, positionX - appendedWidth * .5f), positionY + tempRect.height());
         tempPath1.reset();
@@ -316,6 +331,43 @@ public class GearsView extends View  {
         }
     }
 
+    public void setGears(int frontGearMax, int frontGear, String frontGearLabel, int rearGearMax, int rearGear, String rearGearLabel) {
+        if (frontGearMax <= 0) {
+            throw new IllegalArgumentException("Invalid front gear max value:" + frontGearMax);
+        }
+
+        if (frontGear <= 0 || frontGear > frontGearMax) {
+            throw new IllegalArgumentException("Invalid front gear value:" + frontGear);
+        }
+
+        if (rearGearMax <= 0) {
+            throw new IllegalArgumentException("Invalid rear gear max value:" + rearGearMax);
+        }
+
+        if (rearGear <= 0 || rearGear > rearGearMax) {
+            throw new IllegalArgumentException("Invalid rear gear value:" + rearGear);
+        }
+
+        if (this.frontGearMax != frontGearMax ||
+                this.frontGear != frontGear ||
+                this.rearGearMax != rearGearMax ||
+                this.rearGear != rearGear ||
+                !Objects.equals(this.frontGearLabel, frontGearLabel) ||
+                !Objects.equals(this.rearGearLabel, rearGearLabel)) {
+            this.frontGearMax = frontGearMax;
+            this.frontGear = frontGear;
+            this.frontGearLabel = frontGearLabel;
+            this.rearGearMax = rearGearMax;
+            this.rearGear = rearGear;
+            this.rearGearLabel = rearGearLabel;
+
+            if (initialized) {
+                invalidate();
+                requestLayout();
+            }
+        }
+    }
+
     public int getFrontGearMax() {
         return frontGearMax;
     }
@@ -325,7 +377,7 @@ public class GearsView extends View  {
             throw new IllegalArgumentException("Invalid front gear max value:" + frontGearMax);
         }
 
-        if (this.frontGearMax !=  frontGearMax) {
+        if (this.frontGearMax != frontGearMax) {
             this.frontGearMax = frontGearMax;
 
             if (initialized) {
@@ -384,6 +436,36 @@ public class GearsView extends View  {
 
         if (this.rearGear != rearGear) {
             this.rearGear = rearGear;
+
+            if (initialized) {
+                invalidate();
+                requestLayout();
+            }
+        }
+    }
+
+    public String getFrontGearLabel() {
+        return frontGearLabel;
+    }
+
+    public void setFrontGearLabel(String frontGearLabel) {
+        if (!Objects.equals(this.frontGearLabel, frontGearLabel)) {
+            this.frontGearLabel = frontGearLabel;
+
+            if (initialized) {
+                invalidate();
+                requestLayout();
+            }
+        }
+    }
+
+    public String getRearGearLabel() {
+        return rearGearLabel;
+    }
+
+    public void setRearGearLabel(String rearGearLabel) {
+        if (!Objects.equals(this.rearGearLabel, rearGearLabel)) {
+            this.rearGearLabel = rearGearLabel;
 
             if (initialized) {
                 invalidate();

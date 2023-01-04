@@ -8,7 +8,7 @@ import androidx.appcompat.content.res.AppCompatResources;
 
 import com.valterc.ki2.R;
 import com.valterc.ki2.karoo.Ki2Context;
-import com.valterc.ki2.karoo.formatters.GearsTextFormatter;
+import com.valterc.ki2.karoo.formatters.RearGearSizeFormatter;
 import com.valterc.ki2.utils.CallerUtils;
 
 import java.util.Collections;
@@ -20,13 +20,13 @@ import io.hammerhead.sdk.v0.datatype.transformer.SdkTransformer;
 import io.hammerhead.sdk.v0.datatype.view.BuiltInView;
 import io.hammerhead.sdk.v0.datatype.view.SdkView;
 
-public class GearsTextDataType extends Ki2DataType {
+public class RearGearSizeDataType extends Ki2DataType {
 
-    private static final String TYPE_ID = "ki2::gears-text";
+    private static final String TYPE_ID = "ki2::rear-gear-size-text";
 
     private final List<Drawable> drawables;
 
-    public GearsTextDataType(@NonNull Ki2Context context) {
+    public RearGearSizeDataType(@NonNull Ki2Context context) {
         super(context);
 
         this.drawables = CallerUtils.safeWrap(() -> Collections.singletonList(
@@ -36,13 +36,13 @@ public class GearsTextDataType extends Ki2DataType {
     @NonNull
     @Override
     public String getDescription() {
-        return "Shifting gears index FF-RR (FF Front, RR Rear), example: 02-05.";
+        return "Rear gear size.";
     }
 
     @NonNull
     @Override
     public String getDisplayName() {
-        return "Gears";
+        return "Rear Gear Size";
     }
 
     @NonNull
@@ -59,7 +59,7 @@ public class GearsTextDataType extends Ki2DataType {
 
     @Override
     public double getSampleValue() {
-        return 01.07;
+        return 11;
     }
 
     @NonNull
@@ -75,7 +75,7 @@ public class GearsTextDataType extends Ki2DataType {
     public SdkFormatter newFormatter() {
         return getKi2Context()
                 .getInstanceManager()
-                .getOrComputeInstance(GearsTextFormatter.class.getSimpleName(), SdkFormatter.class, () -> new GearsTextFormatter(getKi2Context()));
+                .getOrComputeInstance(RearGearSizeFormatter.class.getSimpleName(), SdkFormatter.class, () -> new RearGearSizeFormatter(getKi2Context()));
     }
 
     @NonNull

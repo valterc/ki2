@@ -36,13 +36,13 @@ public class ShiftCountTextDataType extends Ki2DataType {
     @NonNull
     @Override
     public String getDescription() {
-        return "Total number of shift during ride.";
+        return "Total number of shifts during a ride.";
     }
 
     @NonNull
     @Override
     public String getDisplayName() {
-        return "Shf Count";
+        return "Shift Count";
     }
 
     @NonNull

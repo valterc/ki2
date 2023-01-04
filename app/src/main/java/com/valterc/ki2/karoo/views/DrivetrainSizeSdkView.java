@@ -14,11 +14,11 @@ import com.valterc.ki2.data.connection.ConnectionStatus;
 import com.valterc.ki2.data.device.DeviceId;
 import com.valterc.ki2.data.shifting.ShiftingInfo;
 import com.valterc.ki2.karoo.Ki2Context;
-import com.valterc.ki2.views.GearsView;
+import com.valterc.ki2.views.DrivetrainView;
 
 import java.util.function.BiConsumer;
 
-public class GearsSdkView extends Ki2SdkView {
+public class DrivetrainSizeSdkView extends Ki2SdkView {
 
     @SuppressWarnings("FieldCanBeLocal")
     private final BiConsumer<DeviceId, ConnectionInfo> connectionInfoConsumer = (deviceId, connectionInfo) -> {
@@ -28,16 +28,16 @@ public class GearsSdkView extends Ki2SdkView {
     @SuppressWarnings("FieldCanBeLocal")
     private final BiConsumer<DeviceId, ShiftingInfo> shiftingInfoConsumer = (deviceId, shiftingInfo) -> {
         this.shiftingInfo = shiftingInfo;
-        updateGearsView();
+        updateDrivetrainView();
     };
 
     private ConnectionStatus connectionStatus;
     private ShiftingInfo shiftingInfo;
 
     private TextView textView;
-    private GearsView gearsView;
+    private DrivetrainView drivetrainView;
 
-    public GearsSdkView(@NonNull Ki2Context context) {
+    public DrivetrainSizeSdkView(@NonNull Ki2Context context) {
         super(context);
         context.getServiceClient().registerConnectionInfoWeakListener(connectionInfoConsumer);
         context.getServiceClient().registerShiftingInfoWeakListener(shiftingInfoConsumer);
@@ -46,16 +46,16 @@ public class GearsSdkView extends Ki2SdkView {
     @NonNull
     @Override
     protected View createView(@NonNull LayoutInflater layoutInflater, @NonNull ViewGroup parent) {
-        View inflatedView = layoutInflater.inflate(R.layout.view_karoo_gears, parent, false);
-        textView = inflatedView.findViewById(R.id.textview_karoo_gears_waiting_for_data);
-        gearsView = inflatedView.findViewById(R.id.gearsview_karoo_gears);
+        View inflatedView = layoutInflater.inflate(R.layout.view_karoo_drivetrain, parent, false);
+        textView = inflatedView.findViewById(R.id.textview_karoo_drivetrain_waiting_for_data);
+        drivetrainView = inflatedView.findViewById(R.id.drivetrainview_karoo_drivetrain);
 
         KarooTheme karooTheme = getKarooTheme(parent);
 
         if (karooTheme == KarooTheme.WHITE) {
             textView.setTextColor(getContext().getColor(R.color.hh_black));
-            gearsView.setTextColor(getContext().getColor(R.color.hh_black));
-            gearsView.setUnselectedGearBorderColor(getContext().getColor(R.color.hh_gears_border_dark));
+            drivetrainView.setTextColor(getContext().getColor(R.color.hh_black));
+            drivetrainView.setChainColor(getContext().getColor(R.color.hh_black));
         }
 
         return inflatedView;
@@ -68,24 +68,29 @@ public class GearsSdkView extends Ki2SdkView {
     @Override
     public void onUpdate(@NonNull View view, double value, @Nullable String formattedValue) {
         if (connectionStatus != ConnectionStatus.ESTABLISHED || shiftingInfo == null) {
-            gearsView.setVisibility(View.INVISIBLE);
+            drivetrainView.setVisibility(View.INVISIBLE);
             textView.setVisibility(View.VISIBLE);
         } else {
             textView.setVisibility(View.INVISIBLE);
-            gearsView.setVisibility(View.VISIBLE);
-            updateGearsView();
+            drivetrainView.setVisibility(View.VISIBLE);
+            updateDrivetrainView();
         }
     }
 
-    private void updateGearsView() {
-        if (gearsView == null || shiftingInfo == null) {
+    private void updateDrivetrainView(){
+        if (drivetrainView == null || shiftingInfo == null) {
             return;
         }
 
-        gearsView.setGears(
+        int frontTeethCount = shiftingInfo.getFrontTeethPattern().getTeethCount(shiftingInfo.getFrontGear());
+        int rearTeethCount = shiftingInfo.getRearTeethPattern().getTeethCount(shiftingInfo.getRearGear());
+
+        drivetrainView.setGears(
                 shiftingInfo.getFrontGearMax(),
                 shiftingInfo.getFrontGear(),
+                String.valueOf(frontTeethCount),
                 shiftingInfo.getRearGearMax(),
-                shiftingInfo.getRearGear());
+                shiftingInfo.getRearGear(),
+                String.valueOf(rearTeethCount));
     }
 }
