@@ -24,7 +24,7 @@ public final class ProcessUtils {
             Method methodGetProcessName = classActivityThread.getDeclaredMethod("currentProcessName");
             return (String) methodGetProcessName.invoke(null);
         } catch (Exception e) {
-            Log.e("KI2", "Unable to get activity: " + e);
+            Log.e("KI2", "Unable to get current process name from activity thread: " + e);
             return null;
         }
     }

@@ -18,6 +18,7 @@ import com.valterc.ki2.data.message.Message;
 import com.valterc.ki2.data.preferences.PreferencesView;
 import com.valterc.ki2.data.shifting.ShiftingInfo;
 import com.valterc.ki2.input.InputAdapter;
+import com.valterc.ki2.karoo.hooks.RideActivityHook;
 import com.valterc.ki2.karoo.service.messages.CustomMessageClient;
 import com.valterc.ki2.services.IKi2Service;
 import com.valterc.ki2.services.Ki2Service;
@@ -294,7 +295,8 @@ public class ServiceClient {
             return;
         }
 
-        if (!shiftingInfoListeners.hasListeners() &&
+        if (!RideActivityHook.isRideActivityProcess() &&
+                !shiftingInfoListeners.hasListeners() &&
                 !connectionInfoListeners.hasListeners() &&
                 !batteryInfoListeners.hasListeners()) {
             return;
@@ -312,7 +314,8 @@ public class ServiceClient {
             return;
         }
 
-        if (shiftingInfoListeners.hasListeners() ||
+        if (RideActivityHook.isRideActivityProcess() ||
+                shiftingInfoListeners.hasListeners() ||
                 connectionInfoListeners.hasListeners() ||
                 batteryInfoListeners.hasListeners()) {
             return;
