@@ -54,7 +54,7 @@
     <string name="text_waiting_for_state">Waiting for state…</string>
     <string name="text_param_dbm">%d dBm</string>
     <string name="text_dismiss">Dismiss</string>
-    <string name="text_param_low_battery" formatted="false">Battery of %s at %d%%</string>
+    <string name="text_param_low_battery">Battery of %s at %d%%</string>
     <string name="text_di2_low_battery">Di2 low battery</string>
     <string name="text_update_complete">Update complete</string>
     <string name="text_report_problems">Report problems at:\nhttps://github.com/valterc/ki2</string>
