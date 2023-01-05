@@ -29,7 +29,7 @@ public class Ki2BroadcastReceiver extends BroadcastReceiver {
                 Log.i(TAG, "Boot completed");
 
                 SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-                boolean preload = preferences.getBoolean(context.getString(R.string.preference_pre_load), true);
+                boolean preload = preferences.getBoolean(context.getString(R.string.preference_pre_load), context.getResources().getBoolean(R.bool.default_preference_pre_load));
                 if (preload) {
                     Log.i(TAG, "Pre-load enabled, preloading ride application");
                     RideActivityHook.preload(context);

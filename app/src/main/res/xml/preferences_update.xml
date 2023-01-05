@@ -5,7 +5,7 @@
     <PreferenceCategory app:title="@string/category_preference_update">
 
         <SwitchPreference
-            app:defaultValue="@string/default_preference_auto_update"
+            app:defaultValue="@bool/default_preference_auto_update"
             app:key="@string/preference_auto_update"
             app:summary="@string/summary_preference_auto_update"
             app:title="@string/title_preference_auto_update" />
