@@ -11,10 +11,13 @@ import com.valterc.ki2.services.callbacks.ISwitchCallback;
 import com.valterc.ki2.services.callbacks.IScanCallback;
 import com.valterc.ki2.services.callbacks.IMessageCallback;
 import com.valterc.ki2.services.callbacks.IPreferencesCallback;
+import com.valterc.ki2.services.callbacks.IDevicePreferencesCallback;
 
 import com.valterc.ki2.data.device.DeviceId;
+import com.valterc.ki2.data.device.DeviceInfo;
 import com.valterc.ki2.data.message.Message;
 import com.valterc.ki2.data.preferences.PreferencesView;
+import com.valterc.ki2.data.preferences.device.DevicePreferencesView;
 
 interface IKi2Service {
 
@@ -48,12 +51,16 @@ interface IKi2Service {
     void registerPreferencesListener(IPreferencesCallback callback);
     void unregisterPreferencesListener(IPreferencesCallback callback);
 
+    void registerDevicePreferencesListener(IDevicePreferencesCallback callback);
+    void unregisterDevicePreferencesListener(IDevicePreferencesCallback callback);
+
     void sendMessage(in Message message);
     void clearMessage(String key);
     void clearMessages();
     List<Message> getMessages();
 
     PreferencesView getPreferences();
+    DevicePreferencesView getDevicePreferences(in DeviceId deviceId);
 
     void restartDeviceScan();
     void restartDeviceConnections();

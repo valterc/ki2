@@ -34,6 +34,8 @@ import com.valterc.ki2.data.message.RideStatusMessage;
 import com.valterc.ki2.data.message.UpdateAvailableMessage;
 import com.valterc.ki2.data.preferences.PreferencesStore;
 import com.valterc.ki2.data.preferences.PreferencesView;
+import com.valterc.ki2.data.preferences.device.DevicePreferencesStore;
+import com.valterc.ki2.data.preferences.device.DevicePreferencesView;
 import com.valterc.ki2.data.ride.RideStatus;
 import com.valterc.ki2.data.shifting.ShiftingInfo;
 import com.valterc.ki2.data.switches.SwitchEvent;
@@ -42,6 +44,7 @@ import com.valterc.ki2.input.InputManager;
 import com.valterc.ki2.services.callbacks.IBatteryCallback;
 import com.valterc.ki2.services.callbacks.IConnectionDataInfoCallback;
 import com.valterc.ki2.services.callbacks.IConnectionInfoCallback;
+import com.valterc.ki2.services.callbacks.IDevicePreferencesCallback;
 import com.valterc.ki2.services.callbacks.IKeyCallback;
 import com.valterc.ki2.services.callbacks.IManufacturerInfoCallback;
 import com.valterc.ki2.services.callbacks.IMessageCallback;
@@ -56,6 +59,8 @@ import com.valterc.ki2.update.background.IUpdateCheckerListener;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.Supplier;
 
 import timber.log.Timber;
@@ -92,6 +97,8 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
     private final RemoteCallbackList<IMessageCallback> callbackListMessage
             = new RemoteCallbackList<>();
     private final RemoteCallbackList<IPreferencesCallback> callbackListPreferences
+            = new RemoteCallbackList<>();
+    private final RemoteCallbackList<IDevicePreferencesCallback> callbackListDevicePreferences
             = new RemoteCallbackList<>();
 
     private final IKi2Service.Stub binder = new IKi2Service.Stub() {
@@ -359,6 +366,32 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
         }
 
         @Override
+        public void registerDevicePreferencesListener(IDevicePreferencesCallback callback) {
+            if (callback == null) {
+                return;
+            }
+
+            callbackListDevicePreferences.register(callback);
+            serviceHandler.postAction(() -> {
+                Set<Map.Entry<DeviceId, DevicePreferencesView>> entries = devicePreferencesStore.getDevicePreferences().entrySet();
+                for (Map.Entry<DeviceId, DevicePreferencesView> entry : entries) {
+                    try {
+                        callback.onDevicePreferences(entry.getKey(), entry.getValue());
+                    } catch (RemoteException e) {
+                        break;
+                    }
+                }
+            });
+        }
+
+        @Override
+        public void unregisterDevicePreferencesListener(IDevicePreferencesCallback callback) {
+            if (callback != null) {
+                callbackListDevicePreferences.unregister(callback);
+            }
+        }
+
+        @Override
         public void sendMessage(Message message) {
             onMessage(message);
         }
@@ -381,6 +414,11 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
         @Override
         public PreferencesView getPreferences() {
             return preferencesStore.getPreferences();
+        }
+
+        @Override
+        public DevicePreferencesView getDevicePreferences(DeviceId deviceId) {
+            return devicePreferencesStore.getDevicePreferences(deviceId);
         }
 
         @Override
@@ -445,6 +483,7 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
     private InputManager inputManager;
     private BackgroundUpdateChecker backgroundUpdateChecker;
     private PreferencesStore preferencesStore;
+    private DevicePreferencesStore devicePreferencesStore;
 
     @Override
     public IBinder onBind(Intent arg0) {
@@ -463,6 +502,7 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
         inputManager = new InputManager(this);
         backgroundUpdateChecker = new BackgroundUpdateChecker(this, this);
         preferencesStore = new PreferencesStore(this, this::onPreferences);
+        devicePreferencesStore = new DevicePreferencesStore(this, this::onDevicePreferences);
 
         Timber.i("Service created");
     }
@@ -715,6 +755,11 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
 
     private void onPreferences(PreferencesView preferencesView) {
         serviceHandler.postRetriableAction(() -> broadcastData(callbackListPreferences, () -> preferencesView, IPreferencesCallback::onPreferences));
+    }
+
+    private void onDevicePreferences(DeviceId deviceId, DevicePreferencesView devicePreferencesView) {
+        serviceHandler.postRetriableAction(() -> broadcastData(callbackListDevicePreferences,
+                () -> devicePreferencesView, (callback, devicePreferences) -> callback.onDevicePreferences(deviceId, devicePreferences)));
     }
 
 }
