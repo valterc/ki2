@@ -170,6 +170,7 @@ public class DeviceDetailsFragment extends Fragment implements IKarooKeyListener
             View dialogView = getLayoutInflater().inflate(R.layout.view_alert_device_rename, null);
             final EditText editText = dialogView.findViewById(R.id.edittext_alert_device_name);
             editText.setText(viewModel.getDevicePreferences(requireContext()).getName());
+            editText.setSelection(editText.getText().length());
 
             new AlertDialog.Builder(requireContext(), R.style.AlertDialogStyle)
                     .setTitle(R.string.text_rename)

@@ -19,30 +19,30 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview_list_devices"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        tools:listitem="@layout/view_list_devices_item"
-        tools:itemCount="20"
-        android:paddingBottom="80dp"
         android:clipToPadding="false"
+        android:paddingBottom="80dp"
         android:scrollbarStyle="outsideOverlay"
-        android:scrollbars="vertical"/>
+        android:scrollbars="vertical"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:itemCount="20"
+        tools:listitem="@layout/view_list_devices_item" />
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/button_list_devices_add"
-        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlayRightSide"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:clickable="true"
-        app:icon="@drawable/ic_add"
+        android:contentDescription="@string/text_add_device"
         app:backgroundTint="@color/hh_yellow"
         app:collapsedSize="50dp"
+        app:icon="@drawable/ic_add"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:contentDescription="@string/text_add_device"/>
+        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlayRightSide" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
