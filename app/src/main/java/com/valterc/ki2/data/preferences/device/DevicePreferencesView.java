@@ -18,6 +18,7 @@ import java.util.function.Supplier;
 @SuppressWarnings({"unchecked", "unused"})
 public class DevicePreferencesView implements Parcelable {
 
+    private final DeviceId deviceId;
     private final Map<String, ?> preferenceMap;
 
     public static final Creator<DevicePreferencesView> CREATOR = new Creator<DevicePreferencesView>() {
@@ -33,6 +34,7 @@ public class DevicePreferencesView implements Parcelable {
     private DevicePreferencesView(Parcel in) {
         preferenceMap = new HashMap<>();
         in.readMap(preferenceMap, DevicePreferencesView.class.getClassLoader());
+        deviceId = in.readParcelable(DeviceId.class.getClassLoader());
     }
 
     /**
@@ -42,7 +44,7 @@ public class DevicePreferencesView implements Parcelable {
      * @param deviceId Device identifier.
      */
     public DevicePreferencesView(Context context, DeviceId deviceId) {
-        this(context.getSharedPreferences(context.getString(R.string.preference_param_device, deviceId.getUid()), Context.MODE_PRIVATE));
+        this(context.getSharedPreferences(context.getString(R.string.preference_param_device, deviceId.getUid()), Context.MODE_PRIVATE), deviceId);
     }
 
     /**
@@ -50,25 +52,24 @@ public class DevicePreferencesView implements Parcelable {
      *
      * @param preferences Device shared preferences from Ki2 application context.
      */
-    public DevicePreferencesView(SharedPreferences preferences) {
+    public DevicePreferencesView(SharedPreferences preferences, DeviceId deviceId) {
+        this.deviceId = deviceId;
         preferenceMap = preferences.getAll();
-    }
-
-    /**
-     * Generate a new empty device preference view with no preferences set.
-     */
-    public DevicePreferencesView() {
-        preferenceMap = new HashMap<>();
     }
 
     @Override
     public void writeToParcel(Parcel out, int flags) {
         out.writeMap(preferenceMap);
+        out.writeParcelable(deviceId, flags);
     }
 
     @Override
     public int describeContents() {
         return 0;
+    }
+
+    public DeviceId getDeviceId() {
+        return deviceId;
     }
 
     public boolean getBoolean(String key, boolean defaultValue) {
@@ -178,14 +179,14 @@ public class DevicePreferencesView implements Parcelable {
     }
 
     /**
-     * Get a custom name for the device, if present.
+     * Get the name for the device.
      *
      * @param context Ki2 application context. Cannot be a context generated from another package.
-     * @return String with custom name for the device, or <code>null</code> if not custom name is set.
+     * @return String with name for the device.
      */
     @Nullable
     public String getName(Context context) {
-        return getString(context.getString(R.string.preference_device_name), context.getString(R.string.default_preference_device_name));
+        return getString(context.getString(R.string.preference_device_name), context.getString(R.string.text_param_di2_name, deviceId.getName()));
     }
 
 }

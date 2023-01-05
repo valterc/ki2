@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,9 +23,9 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.valterc.ki2.R;
 import com.valterc.ki2.data.device.DeviceId;
+import com.valterc.ki2.data.input.KarooKey;
 import com.valterc.ki2.data.switches.SwitchType;
 import com.valterc.ki2.fragments.IKarooKeyListener;
-import com.valterc.ki2.data.input.KarooKey;
 import com.valterc.ki2.services.Ki2Service;
 import com.valterc.ki2.views.DrivetrainView;
 
@@ -96,7 +97,7 @@ public class DeviceDetailsFragment extends Fragment implements IKarooKeyListener
         super.onViewCreated(view, savedInstanceState);
 
         TextView textViewName = view.findViewById(R.id.textview_device_details_name);
-        textViewName.setText(getString(R.string.text_param_di2_name, viewModel.getDeviceId().getName()));
+        textViewName.setText(viewModel.getDevicePreferences(requireContext()).getName());
 
         TextView textViewConnectionStatus = view.findViewById(R.id.textview_device_details_connection_status);
         textViewConnectionStatus.setText(R.string.text_connecting);
@@ -105,7 +106,7 @@ public class DeviceDetailsFragment extends Fragment implements IKarooKeyListener
         buttonReconnect.setOnClickListener(v -> {
             try {
                 viewModel.reconnect();
-                buttonReconnect.setVisibility(ViewGroup.GONE);
+                buttonReconnect.setEnabled(false);
                 textViewConnectionStatus.setText(R.string.text_connecting);
                 textViewConnectionStatus.setTextColor(requireContext().getColor(R.color.hh_black));
             } catch (Exception e) {
@@ -149,7 +150,7 @@ public class DeviceDetailsFragment extends Fragment implements IKarooKeyListener
         Button buttonRemove = view.findViewById(R.id.button_device_details_remove);
         buttonRemove.setOnClickListener(v -> new AlertDialog.Builder(requireContext(), R.style.AlertDialogStyle)
                 .setTitle(R.string.text_remove)
-                .setMessage(getString(R.string.text_param_question_remove, getString(R.string.text_param_di2_name, viewModel.getDeviceId().getName())))
+                .setMessage(getString(R.string.text_param_question_remove, viewModel.getDevicePreferences(requireContext()).getName()))
                 .setIcon(R.drawable.ic_delete)
                 .setPositiveButton(android.R.string.yes, (dialog, whichButton) ->
                 {
@@ -163,6 +164,24 @@ public class DeviceDetailsFragment extends Fragment implements IKarooKeyListener
                 })
                 .setNegativeButton(android.R.string.no, null).show());
         handler.postDelayed(() -> buttonRemove.setEnabled(true), ENABLE_REMOVE_BUTTON_DELAY_MS);
+
+        Button buttonRename = view.findViewById(R.id.button_device_details_rename);
+        buttonRename.setOnClickListener(v -> {
+            View dialogView = getLayoutInflater().inflate(R.layout.view_alert_device_rename, null);
+            final EditText editText = dialogView.findViewById(R.id.edittext_alert_device_name);
+            editText.setText(viewModel.getDevicePreferences(requireContext()).getName());
+
+            new AlertDialog.Builder(requireContext(), R.style.AlertDialogStyle)
+                    .setTitle(R.string.text_rename)
+                    .setIcon(R.drawable.ic_edit)
+                    .setView(dialogView)
+                    .setNegativeButton(android.R.string.cancel, null)
+                    .setPositiveButton(android.R.string.ok, (dialog, whichButton) -> {
+                        String newName = editText.getText().toString();
+                        viewModel.getDevicePreferences(requireContext()).setName(newName);
+                        textViewName.setText(viewModel.getDevicePreferences(requireContext()).getName());
+                    }).show();
+        });
 
         viewModel.getService().observe(getViewLifecycleOwner(), service -> {
             if (service == null) {
@@ -189,13 +208,13 @@ public class DeviceDetailsFragment extends Fragment implements IKarooKeyListener
 
                 case NEW:
                 case CONNECTING:
-                    buttonReconnect.setVisibility(ViewGroup.GONE);
+                    buttonReconnect.setEnabled(false);
                     textViewConnectionStatus.setText(R.string.text_connecting);
                     textViewConnectionStatus.setTextColor(requireContext().getColor(R.color.hh_black));
                     break;
 
                 case ESTABLISHED:
-                    buttonReconnect.setVisibility(ViewGroup.GONE);
+                    buttonReconnect.setEnabled(false);
                     textViewConnectionStatus.setText(R.string.text_connected);
                     textViewConnectionStatus.setTextColor(requireContext().getColor(R.color.hh_black));
                     linearLayoutData.setVisibility(View.VISIBLE);
@@ -205,7 +224,7 @@ public class DeviceDetailsFragment extends Fragment implements IKarooKeyListener
                     textViewConnectionStatus.setText(R.string.text_not_found);
                     textViewConnectionStatus.setTextColor(requireContext().getColor(R.color.hh_red));
                     textViewSignal.setText(R.string.text_na);
-                    buttonReconnect.setVisibility(ViewGroup.VISIBLE);
+                    buttonReconnect.setEnabled(true);
                     break;
 
             }

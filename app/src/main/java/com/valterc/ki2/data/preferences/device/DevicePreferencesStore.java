@@ -1,13 +1,10 @@
 package com.valterc.ki2.data.preferences.device;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-
-import androidx.preference.PreferenceManager;
 
 import com.valterc.ki2.data.device.DeviceId;
-import com.valterc.ki2.data.preferences.PreferencesView;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -27,7 +24,7 @@ public class DevicePreferencesStore {
         this.preferencesEntryMap = new HashMap<>();
     }
 
-    public void setDevices(List<DeviceId> devices) {
+    public void setDevices(Collection<DeviceId> devices) {
         Iterator<DeviceId> deviceIdIterator = preferencesEntryMap.keySet().iterator();
         while (deviceIdIterator.hasNext()) {
             DeviceId deviceId = deviceIdIterator.next();
@@ -54,7 +51,7 @@ public class DevicePreferencesStore {
             return devicePreferencesEntry.getDevicePreferences();
         }
 
-        return null;
+        return new DevicePreferencesView(context, deviceId);
     }
 
     public Map<DeviceId, DevicePreferencesView> getDevicePreferences() {

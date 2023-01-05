@@ -14,7 +14,6 @@ import com.valterc.ki2.services.callbacks.IPreferencesCallback;
 import com.valterc.ki2.services.callbacks.IDevicePreferencesCallback;
 
 import com.valterc.ki2.data.device.DeviceId;
-import com.valterc.ki2.data.device.DeviceInfo;
 import com.valterc.ki2.data.message.Message;
 import com.valterc.ki2.data.preferences.PreferencesView;
 import com.valterc.ki2.data.preferences.device.DevicePreferencesView;

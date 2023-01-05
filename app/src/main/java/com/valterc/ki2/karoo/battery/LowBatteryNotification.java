@@ -22,7 +22,7 @@ public class LowBatteryNotification {
 
     public static void showLowBatteryNotification(Context context, String deviceName, LowBatteryCategory category, int batteryPercentage) {
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        String lowBatteryString = context.getString(R.string.text_param_di2_low_battery, deviceName, batteryPercentage);
+        String lowBatteryString = context.getString(R.string.text_param_low_battery, deviceName, batteryPercentage);
 
         NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, context.getString(R.string.text_di2_low_battery), NotificationManager.IMPORTANCE_DEFAULT);
         notificationManager.createNotificationChannel(notificationChannel);

@@ -16,6 +16,7 @@ import com.valterc.ki2.data.device.DeviceId;
 import com.valterc.ki2.data.input.KarooKeyEvent;
 import com.valterc.ki2.data.message.Message;
 import com.valterc.ki2.data.preferences.PreferencesView;
+import com.valterc.ki2.data.preferences.device.DevicePreferencesView;
 import com.valterc.ki2.data.shifting.ShiftingInfo;
 import com.valterc.ki2.input.InputAdapter;
 import com.valterc.ki2.karoo.hooks.RideActivityHook;
@@ -434,6 +435,20 @@ public class ServiceClient {
         } catch (Exception e) {
             Log.e("KI2", "Unable to unregister listener", e);
         }
+    }
+
+    public DevicePreferencesView getDevicePreferences(DeviceId deviceId) {
+        if (service == null) {
+            return null;
+        }
+
+        try {
+            return service.getDevicePreferences(deviceId);
+        } catch (Exception e) {
+            Log.e("KI2", "Unable to get device preferences", e);
+        }
+
+        return null;
     }
 
 }

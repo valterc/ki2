@@ -4,13 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/grey_100"
     tools:context=".fragments.devices.details.DeviceDetailsFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintlayout_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/hh_divider_color"
+        android:background="@color/hh_dark_blue"
         android:paddingHorizontal="10dp"
         android:paddingVertical="10dp"
         app:layout_constraintTop_toTopOf="parent">
@@ -25,17 +26,21 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_di2" />
+            app:srcCompat="@drawable/ic_di2"
+            app:tint="@color/white" />
 
         <TextView
             android:id="@+id/textview_device_details_name"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:textColor="@color/hh_black"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/white"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/imageview_device_details_icon"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Device Name" />
@@ -59,8 +64,8 @@
                 android:id="@+id/gridview_device_details_connection"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/white"
                 android:columnCount="2"
-                android:paddingHorizontal="20dp"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
                 android:rowCount="2">
@@ -72,7 +77,8 @@
                     android:layout_column="0"
                     android:layout_columnWeight="1"
                     android:layout_gravity="fill"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:paddingHorizontal="20dp">
 
                     <TextView
                         android:id="@+id/textview_device_details_connection_status"
@@ -98,7 +104,8 @@
                     android:layout_column="1"
                     android:layout_columnWeight="1"
                     android:layout_gravity="fill"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:paddingHorizontal="20dp">
 
                     <TextView
                         android:id="@+id/textview_device_details_signal"
@@ -117,37 +124,114 @@
 
                 </LinearLayout>
 
-                <Button
-                    android:id="@+id/button_device_details_reconnect"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_row="1"
-                    android:layout_columnSpan="2"
-                    android:layout_marginTop="10dp"
-                    android:backgroundTint="@color/hh_light_blue"
-                    android:contentDescription="@string/text_reconnect"
-                    android:text="@string/text_reconnect"
-                    android:visibility="gone"
-                    app:icon="@drawable/ic_refresh"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:visibility="visible" />
 
             </GridLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/hh_divider_color" />
+                android:layout_height="wrap_content"
+                android:background="@color/grey_100"
+                android:baselineAligned="false"
+                android:orientation="vertical"
+                android:paddingVertical="5dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="20dp"
+                    android:paddingVertical="5dp"
+                    android:text="Manage device"
+                    android:textColor="@color/hh_dark_blue"
+                    android:textSize="14sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="1dp"
+                    android:background="@color/white">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/button_device_details_reconnect"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:backgroundTint="@color/white"
+                        android:contentDescription="@string/text_reconnect"
+                        android:enabled="false"
+                        android:text="@string/text_reconnect"
+                        android:textAlignment="viewStart"
+                        android:textAllCaps="false"
+                        app:icon="@drawable/ic_refresh" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="1dp"
+                    android:background="@color/white">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/button_device_details_rename"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:backgroundTint="@color/white"
+                        android:text="@string/text_rename"
+                        android:textAlignment="viewStart"
+                        android:textAllCaps="false"
+                        app:icon="@drawable/ic_edit" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/button_device_details_remove"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:backgroundTint="@color/white"
+                        android:enabled="false"
+                        android:paddingVertical="0dp"
+                        android:text="@string/text_remove"
+                        android:textAlignment="viewStart"
+                        android:textAllCaps="false"
+                        android:textColor="@color/red_faded"
+                        app:icon="@drawable/ic_delete"
+                        app:iconTint="@color/red_faded" />
+                </LinearLayout>
+
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/linearlayout_device_details_data"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/white"
                 android:orientation="vertical"
                 android:visibility="gone"
                 tools:visibility="visible">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/grey_100"
+                    android:baselineAligned="false"
+                    android:orientation="vertical"
+                    android:paddingVertical="5dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingHorizontal="20dp"
+                        android:paddingVertical="5dp"
+                        android:text="Device details"
+                        android:textColor="@color/hh_dark_blue"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -263,13 +347,14 @@
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
+                            android:layout_height="wrap_content"
+                            android:baselineAligned="false">
 
                             <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1"
                                 android:layout_marginBottom="5dp"
+                                android:layout_weight="1"
                                 android:orientation="vertical"
                                 android:paddingTop="5dp">
 
@@ -293,8 +378,8 @@
                             <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1"
                                 android:layout_marginBottom="5dp"
+                                android:layout_weight="1"
                                 android:orientation="vertical"
                                 android:paddingTop="5dp">
 
@@ -320,6 +405,7 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:baselineAligned="false"
                             android:orientation="horizontal">
 
                             <LinearLayout
@@ -644,24 +730,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:background="@color/hh_divider_color" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:baselineAligned="false"
-                android:orientation="horizontal"
-                android:paddingHorizontal="20dp"
-                android:paddingVertical="5dp">
-
-                <Button
-                    android:id="@+id/button_device_details_remove"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:backgroundTint="@color/red_faded"
-                    android:text="@string/text_remove"
-                    android:enabled="false" />
 
             </LinearLayout>
 

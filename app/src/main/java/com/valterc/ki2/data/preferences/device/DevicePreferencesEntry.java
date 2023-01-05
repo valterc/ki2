@@ -24,12 +24,12 @@ public class DevicePreferencesEntry {
         this.preferencesListener = preferencesListener;
 
         sharedPreferences = context.getSharedPreferences(context.getString(R.string.preference_param_device, deviceId.getUid()), Context.MODE_PRIVATE);
-        devicePreferencesView = new DevicePreferencesView(sharedPreferences);
+        devicePreferencesView = new DevicePreferencesView(sharedPreferences, deviceId);
         sharedPreferences.registerOnSharedPreferenceChangeListener(onSharedPreferenceChanged);
     }
 
     private void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        devicePreferencesView = new DevicePreferencesView(sharedPreferences);
+        devicePreferencesView = new DevicePreferencesView(sharedPreferences, deviceId);
         preferencesListener.accept(deviceId, devicePreferencesView);
     }
 

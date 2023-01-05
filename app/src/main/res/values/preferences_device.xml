@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="preference_param_device">DevicePreferences-%s</string>
+    <string name="preference_param_device">DEVICE_PREFERENCES_%s</string>
 
     <string name="category_preference_device_name">Name</string>
 

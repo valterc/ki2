@@ -45,4 +45,6 @@
     <color name="white">#FFFFFFFF</color>
     <color name="white_100">#FFFAFAFA</color>
     <color name="grey">#777777</color>
+    <color name="grey_100">#F0F0F0</color>
+
 </resources>

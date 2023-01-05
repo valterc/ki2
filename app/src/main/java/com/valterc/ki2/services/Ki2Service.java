@@ -503,6 +503,7 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
         backgroundUpdateChecker = new BackgroundUpdateChecker(this, this);
         preferencesStore = new PreferencesStore(this, this::onPreferences);
         devicePreferencesStore = new DevicePreferencesStore(this, this::onDevicePreferences);
+        devicePreferencesStore.setDevices(deviceStore.getDevices());
 
         Timber.i("Service created");
     }
@@ -540,6 +541,9 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
     }
 
     private void processConnections() throws Exception {
+        Collection<DeviceId> devices = deviceStore.getDevices();
+        devicePreferencesStore.setDevices(devices);
+
         if (callbackListSwitch.getRegisteredCallbackCount() != 0
                 || callbackListConnectionInfo.getRegisteredCallbackCount() != 0
                 || callbackListBattery.getRegisteredCallbackCount() != 0
@@ -548,7 +552,6 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
                 || callbackListShifting.getRegisteredCallbackCount() != 0
                 || callbackListKey.getRegisteredCallbackCount() != 0) {
             if (antManager.isReady()) {
-                Collection<DeviceId> devices = deviceStore.getDevices();
                 connectionsDataManager.addConnections(devices);
                 antConnectionManager.connectOnly(devices, this);
                 connectionsDataManager.setConnections(devices);

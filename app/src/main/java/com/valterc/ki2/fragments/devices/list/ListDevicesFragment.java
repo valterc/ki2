@@ -20,8 +20,8 @@ import com.valterc.ki2.R;
 import com.valterc.ki2.activities.devices.add.AddDeviceActivity;
 import com.valterc.ki2.activities.devices.details.DeviceDetailsActivity;
 import com.valterc.ki2.data.device.DeviceId;
-import com.valterc.ki2.fragments.IKarooKeyListener;
 import com.valterc.ki2.data.input.KarooKey;
+import com.valterc.ki2.fragments.IKarooKeyListener;
 import com.valterc.ki2.services.Ki2Service;
 
 import java.util.List;
@@ -74,7 +74,7 @@ public class ListDevicesFragment extends Fragment implements IKarooKeyListener {
         textViewNoSavedDevices = view.findViewById(R.id.textview_list_devices_no_devices);
         ExtendedFloatingActionButton buttonAddDevice = view.findViewById(R.id.button_list_devices_add);
         RecyclerView recyclerView = view.findViewById(R.id.recyclerview_list_devices);
-        listDevicesAdapter = new ListDevicesAdapter(deviceId -> {
+        listDevicesAdapter = new ListDevicesAdapter(requireContext(), deviceId -> {
             Intent intent = new Intent(getContext(), DeviceDetailsActivity.class);
             intent.putExtra(DeviceId.class.getSimpleName(), deviceId);
             startActivity(intent);
@@ -86,7 +86,6 @@ public class ListDevicesFragment extends Fragment implements IKarooKeyListener {
                 Toast.makeText(getContext(), R.string.text_unable_to_communicate_with_service, Toast.LENGTH_LONG).show();
             }
         });
-        recyclerView.setAdapter(listDevicesAdapter);
 
         viewModel.getService().observe(getViewLifecycleOwner(), service -> {
             if (service != null) {
@@ -103,6 +102,8 @@ public class ListDevicesFragment extends Fragment implements IKarooKeyListener {
         });
 
         viewModel.getDeviceConnectionDataEvent().observe(getViewLifecycleOwner(), listDevicesAdapter::addConnectionDataInfo);
+        recyclerView.setAdapter(listDevicesAdapter);
+
         buttonAddDevice.setOnClickListener(v -> startActivity(new Intent(getContext(), AddDeviceActivity.class)));
     }
 
