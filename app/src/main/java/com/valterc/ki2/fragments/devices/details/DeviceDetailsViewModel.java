@@ -1,6 +1,7 @@
 package com.valterc.ki2.fragments.devices.details;
 
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.os.RemoteException;
@@ -17,6 +18,7 @@ import com.valterc.ki2.data.device.SignalInfo;
 import com.valterc.ki2.data.info.DataInfo;
 import com.valterc.ki2.data.info.DataType;
 import com.valterc.ki2.data.info.ManufacturerInfo;
+import com.valterc.ki2.data.preferences.device.DevicePreferences;
 import com.valterc.ki2.data.shifting.ShiftingInfo;
 import com.valterc.ki2.data.switches.SwitchEvent;
 import com.valterc.ki2.services.IKi2Service;
@@ -88,13 +90,13 @@ public class DeviceDetailsViewModel extends ViewModel {
     private final MutableLiveData<SignalInfo> signalInfo;
 
     public DeviceDetailsViewModel() {
-        service = new MutableLiveData<>();
-        connectionStatus = new MutableLiveData<>();
-        manufacturerInfo = new MutableLiveData<>();
-        shiftingInfo = new MutableLiveData<>();
-        batteryInfo = new MutableLiveData<>();
-        switchEvent = new MutableLiveData<>();
-        signalInfo = new MutableLiveData<>();
+        this.service = new MutableLiveData<>();
+        this.connectionStatus = new MutableLiveData<>();
+        this.manufacturerInfo = new MutableLiveData<>();
+        this.shiftingInfo = new MutableLiveData<>();
+        this.batteryInfo = new MutableLiveData<>();
+        this.switchEvent = new MutableLiveData<>();
+        this.signalInfo = new MutableLiveData<>();
     }
 
     public DeviceId getDeviceId() {
@@ -103,6 +105,10 @@ public class DeviceDetailsViewModel extends ViewModel {
 
     public void setDeviceId(DeviceId deviceId) {
         this.deviceId = deviceId;
+    }
+
+    public DevicePreferences getDevicePreferences(Context context) {
+        return new DevicePreferences(context, deviceId);
     }
 
     public ServiceConnection getServiceConnection() {

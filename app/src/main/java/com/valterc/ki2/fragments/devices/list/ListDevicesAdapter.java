@@ -14,25 +14,31 @@ import com.valterc.ki2.R;
 import com.valterc.ki2.data.connection.ConnectionDataInfo;
 import com.valterc.ki2.data.device.DeviceId;
 import com.valterc.ki2.data.device.DeviceType;
+import com.valterc.ki2.data.preferences.device.DevicePreferences;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 public class ListDevicesAdapter extends RecyclerView.Adapter<ListDevicesViewHolder> {
 
+    private final Context context;
     private final Consumer<DeviceId> listenerConfigureDevice;
     private final Consumer<DeviceId> listenerReconnectDevice;
     private final List<DeviceId> devices;
+    private final Map<DeviceId, DevicePreferences> devicePreferencesMap;
     private final Map<DeviceId, ConnectionDataInfo> connectionDataInfoMap;
 
-    public ListDevicesAdapter(Consumer<DeviceId> listenerConfigureDevice, Consumer<DeviceId> listenerReconnectDevice) {
+    public ListDevicesAdapter(Context context, Consumer<DeviceId> listenerConfigureDevice, Consumer<DeviceId> listenerReconnectDevice) {
+        this.context = context;
         this.listenerConfigureDevice = listenerConfigureDevice;
         this.listenerReconnectDevice = listenerReconnectDevice;
         this.devices = new ArrayList<>();
+        this.devicePreferencesMap = new HashMap<>();
         this.connectionDataInfoMap = new HashMap<>();
     }
 
@@ -40,9 +46,14 @@ public class ListDevicesAdapter extends RecyclerView.Adapter<ListDevicesViewHold
     public void setDevices(Collection<DeviceId> devices) {
         this.devices.clear();
         this.connectionDataInfoMap.clear();
+        this.devicePreferencesMap.clear();
 
         if (devices != null && devices.size() > 0) {
             this.devices.addAll(devices);
+        }
+
+        for (DeviceId device: this.devices) {
+            devicePreferencesMap.put(device, new DevicePreferences(context, device));
         }
 
         notifyDataSetChanged();
@@ -58,15 +69,6 @@ public class ListDevicesAdapter extends RecyclerView.Adapter<ListDevicesViewHold
         }
     }
 
-    public void onDeviceRemoved(DeviceId deviceId) {
-        int index = devices.indexOf(deviceId);
-        if (index != -1) {
-            devices.remove(deviceId);
-            connectionDataInfoMap.remove(deviceId);
-            notifyItemRemoved(index);
-        }
-    }
-
     @NonNull
     @Override
     public ListDevicesViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -78,15 +80,13 @@ public class ListDevicesAdapter extends RecyclerView.Adapter<ListDevicesViewHold
     @Override
     public void onBindViewHolder(@NonNull ListDevicesViewHolder holder, int position) {
         DeviceId deviceId = devices.get(position);
-        String deviceName = deviceId.getName();
 
         if (deviceId.getDeviceType() == DeviceType.SHIMANO_SHIFTING) {
             holder.getImageViewIcon().setImageResource(R.drawable.ic_di2);
-            String deviceLabel = holder.getTextViewName().getContext().getString(R.string.text_param_di2_name, deviceName);
-            holder.getTextViewName().setText(deviceLabel);
+            holder.getTextViewName().setText(Objects.requireNonNull(devicePreferencesMap.get(deviceId)).getName());
         } else {
             holder.getImageViewIcon().setImageResource(R.drawable.ic_memory);
-            String deviceLabel = holder.getTextViewName().getContext().getString(R.string.text_param_sensor_name, deviceName);
+            String deviceLabel = holder.getTextViewName().getContext().getString(R.string.text_param_sensor_name, deviceId.getName());
             holder.getTextViewName().setText(deviceLabel);
         }
 

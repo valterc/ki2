@@ -8,6 +8,7 @@ import com.valterc.ki2.R;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
+import java.util.Locale;
 
 import io.hammerhead.sdk.v0.SdkContext;
 
@@ -35,7 +36,7 @@ public class ActivityServiceNotificationControllerHook {
             assert notificationSubject != null;
             Method[] allMethods = notificationSubject.getClass().getDeclaredMethods();
 
-            for (Method method: allMethods) {
+            for (Method method : allMethods) {
                 Type[] types = method.getGenericParameterTypes();
                 if (types.length == 1 && types[0].toString().equals("T")) {
                     method.invoke(notificationSubject, notification);
@@ -56,7 +57,7 @@ public class ActivityServiceNotificationControllerHook {
             Class<?> classActivityServiceApplication = Class.forName("io.hammerhead.activityservice.ActivityServiceApplication");
             Field[] fieldsInActivityServiceApplication = classActivityServiceApplication.getDeclaredFields();
 
-            for (Field fieldActivityComponent: fieldsInActivityServiceApplication) {
+            for (Field fieldActivityComponent : fieldsInActivityServiceApplication) {
                 fieldActivityComponent.setAccessible(true);
                 Object activityComponent = fieldActivityComponent.get(context.getBaseContext());
 
@@ -65,7 +66,7 @@ public class ActivityServiceNotificationControllerHook {
                 }
 
                 Method[] methodsInActivityComponent = activityComponent.getClass().getDeclaredMethods();
-                for (Method method: methodsInActivityComponent) {
+                for (Method method : methodsInActivityComponent) {
                     Field[] fieldsInNotificationController = method.getReturnType().getDeclaredFields();
 
                     if (fieldsInNotificationController.length == 0) {
@@ -73,7 +74,7 @@ public class ActivityServiceNotificationControllerHook {
                     }
 
                     Object notificationController = method.invoke(activityComponent);
-                    for (Field fieldNotificationSubject: fieldsInNotificationController) {
+                    for (Field fieldNotificationSubject : fieldsInNotificationController) {
 
                         if (fieldNotificationSubject.getType().getTypeParameters().length == 1 &&
                                 fieldNotificationSubject.getGenericType().toString().contains("Notification")) {
@@ -87,7 +88,7 @@ public class ActivityServiceNotificationControllerHook {
 
                             Method[] methodsInPublishSubject = notificationSubject.getClass().getDeclaredMethods();
 
-                            for (Method methodOnNext: methodsInPublishSubject) {
+                            for (Method methodOnNext : methodsInPublishSubject) {
                                 Type[] types = methodOnNext.getGenericParameterTypes();
                                 if (types.length == 1 && types[0].toString().equals("T")) {
                                     methodOnNext.invoke(notificationSubject, notification);
@@ -108,7 +109,7 @@ public class ActivityServiceNotificationControllerHook {
     }
 
     public static boolean showSensorLowBatteryNotification(SdkContext context, String deviceName) {
-        Object notification = NotificationHook.buildSensorLowBatteryNotification(context.getString(R.string.text_param_di2_name, deviceName));
+        Object notification = NotificationHook.buildSensorLowBatteryNotification(deviceName);
         return showNotification_1(context, notification)
                 || showNotification_2(context, notification);
     }

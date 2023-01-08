@@ -4,7 +4,7 @@
     <PreferenceCategory app:title="@string/category_preference_pre_load">
 
         <SwitchPreference
-            app:defaultValue="@string/default_preference_pre_load"
+            app:defaultValue="@bool/default_preference_pre_load"
             app:key="@string/preference_pre_load"
             app:summary="@string/summary_preference_pre_load"
             app:title="@string/title_preference_pre_load" />

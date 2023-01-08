@@ -57,11 +57,11 @@ public class ListDevicesViewModel extends ViewModel {
         return service;
     }
 
-    public LiveData<ConnectionDataInfo> getDeviceConnectionDataEvent(){
+    public LiveData<ConnectionDataInfo> getDeviceConnectionDataEvent() {
         return deviceConnectionDataEvent;
     }
 
-    public boolean anyDevicesSaved(){
+    public boolean anyDevicesSaved() {
         try {
             return getSavedDevices().size() != 0;
         } catch (Exception e) {
@@ -105,7 +105,7 @@ public class ListDevicesViewModel extends ViewModel {
         }
     }
 
-    public void reconnect(DeviceId deviceId) throws Exception  {
+    public void reconnect(DeviceId deviceId) throws Exception {
         IKi2Service service = this.service.getValue();
         if (service == null) {
             throw new Exception("Service is not ready");
@@ -114,7 +114,7 @@ public class ListDevicesViewModel extends ViewModel {
         try {
             service.reconnectDevice(deviceId);
         } catch (RemoteException e) {
-            Timber.e(e, "Unable to delete device");
+            Timber.e(e, "Unable to reconnect to device");
             throw new Exception("Unable to reconnect to device", e);
         }
     }

@@ -39,6 +39,7 @@
 
         <activity
             android:name=".activities.devices.details.DeviceDetailsActivity"
+            android:theme="@style/Theme.Ki2.NoActionBar.Blue"
             android:exported="false" />
 
         <activity
