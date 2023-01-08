@@ -42,7 +42,7 @@ public class FrontGearSizeDataType extends Ki2DataType {
     @NonNull
     @Override
     public String getDisplayName() {
-        return "Front Gear Size";
+        return "Front Gear T";
     }
 
     @NonNull
