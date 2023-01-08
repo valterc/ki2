@@ -24,6 +24,7 @@ import com.valterc.ki2.karoo.datatypes.RearGearDataType;
 import com.valterc.ki2.karoo.datatypes.RearGearSizeDataType;
 import com.valterc.ki2.karoo.datatypes.RearShiftCountTextDataType;
 import com.valterc.ki2.karoo.datatypes.ShiftCountTextDataType;
+import com.valterc.ki2.karoo.datatypes.ShiftModeDataType;
 import com.valterc.ki2.karoo.datatypes.ShiftModeTextDataType;
 import com.valterc.ki2.karoo.handlers.HandlerManager;
 import com.valterc.ki2.karoo.hooks.ActivityServiceHook;
@@ -104,7 +105,8 @@ public class Ki2Module extends Module {
                 new GearsDrivetrainDataType(ki2Context),
                 new GearsSizeDrivetrainDataType(ki2Context),
                 new GearsGearsDataType(ki2Context),
-                new GearsSizeGearsDataType(ki2Context));
+                new GearsSizeGearsDataType(ki2Context),
+                new ShiftModeDataType(ki2Context));
     }
 
     @Nullable
