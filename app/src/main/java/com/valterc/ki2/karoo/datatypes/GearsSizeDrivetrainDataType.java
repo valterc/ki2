@@ -42,7 +42,7 @@ public class GearsSizeDrivetrainDataType extends Ki2DataType {
     @NonNull
     @Override
     public String getDisplayName() {
-        return "Drivetrain";
+        return "Drivetrain T";
     }
 
     @NonNull
