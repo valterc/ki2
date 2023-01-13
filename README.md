@@ -23,11 +23,15 @@ These screenshots have been _slightly_ edited.
 - Change shifting mode
 - Setup Karoo ride profiles with data elements such as:
   - Gears in text format
+  - Gear size (teeth count) in text format
+  - Gear ration in text format
   - Battery % in text format
   - Shifting mode in text format
   - Ride shift count in text format
   - Gears in graphical format
+  - Gear size (teeth count) in graphical format
   - Drivetrain view in graphical format
+  - Drivetrain size (teeth count) in graphical format
 - While in a ride, control Karoo from the Hood buttons:
   - Navigate page left/right
   - Pause/Resume ride
@@ -35,6 +39,8 @@ These screenshots have been _slightly_ edited.
   - Zoom map
   - Switch to map page
 - Receive notifications when shifting battery is low
+- Audio alerts before upcoming synchro shift or when reaching shifting limits
+- Self update
 
 ## How does it work?
 
@@ -94,7 +100,8 @@ Karoo software may change with new updates, for best experience please use the l
 | 1.342.1374 (Nov 17, 2022) | ✅        | 0.6                |
 | 1.344.1384 (Nov 18, 2022) | ✅        | 0.6                |
 | 1.346.1384 (Dec 01, 2022) | ✅        | 0.7                |
-| 1.349.1396 (Dec 15, 2022) | ✅        | 0.7 / 0.8          |
+| 1.349.1396 (Dec 15, 2022) | ✅        | 0.7                |
+| 1.352.1409 (Jan 12, 2023) | ✅        | 0.8                |
 
 ## Known issues
 
@@ -104,11 +111,11 @@ Unfortunately this is a problem with the Karoo software itself. I've tried diffe
 
 **Workaround:** Open the ride app with a profile with any Ki2 data elements, before starting the ride, back out from the ride app and return to the dashboard via the back button. The next time the ride app is opened from the dashboard or from a route, all Ki2 data elements should appear. This workaround is applied automatically if the "Pre load ride application" setting is enabled.
 
-### Hood buttons don't work in the control center or outside the ride app (or in a ride profile without any Ki2 data elements)
+### Hood buttons don't work in the control center or outside the ride app
 
 This is a limitation of the Karoo SDK and a restriction of Android. Unfortunately the Karoo SDK does not provide any way to send commands, so the implementation has to perform restricted Android operations that are not allowed when Ki2 app is on the background.
 
-**Workaround:** There is no known workaround, hood buttons only work in the ride app when a Ki2 data element is present on any page.
+**Workaround:** There is no known workaround, hood buttons only work in the ride app.
 
 ## Battery usage
 
@@ -180,6 +187,14 @@ No! I don't work for hammerhead and I don't have access to their code. I'm just 
 ### Hood buttons are inverted or don't work as expected?
 
 It might be because your shifting configuration has a different action assigned to the hood buttons. Ki2 expects _Channel 1_ for left button and _Channel 2_ for right button. If your shifting configuration is different, you might experience weird behavior. Please double check the configuration via the manufacturer's official shifting app available on smartphones. _Channel 3_ and _Channel 4_ are currently not supported.
+
+### The app disconnects from the shifting unit while riding
+
+It's likely a signal issue, verify the signal between the wireless unit and Karoo. To do that, tap on the shifting device on the list of devices in Ki2. The signal value is displayed on the top when the shifting unit is connected. Signal values between -30 to -50dBm offer best and stable connectivity while a signal in range of -75 to -90dBm is degraded and can cause connectivity issues. There is nothing that can be done in the app/software to improve the signal. Recommendation is to move or rotate the shifting wireless unit, perhaps moving it a small amount could be enough or in some cases it may require relocating the wireless unit to another location in the bicycle.
+
+### Gear size (teeth count) or gear ratio unknown or not correct
+
+The gear size (teeth count) is obtained from the shifting unit. If the shifting unit is misconfigured then the wrong information will be displayed in Ki2. Please use the official mobile application from the shifting unit manufacturer to configure the correct chainring information.
 
 ### It does not work or I have a problem
 
