@@ -8,8 +8,7 @@ import androidx.appcompat.content.res.AppCompatResources;
 
 import com.valterc.ki2.R;
 import com.valterc.ki2.karoo.Ki2Context;
-import com.valterc.ki2.karoo.views.GearsSdkView;
-import com.valterc.ki2.karoo.views.GearsSizeSdkView;
+import com.valterc.ki2.karoo.views.ShiftModeSdkView;
 import com.valterc.ki2.utils.CallerUtils;
 
 import java.util.Collections;
@@ -21,13 +20,13 @@ import io.hammerhead.sdk.v0.datatype.transformer.BuiltInTransformer;
 import io.hammerhead.sdk.v0.datatype.transformer.SdkTransformer;
 import io.hammerhead.sdk.v0.datatype.view.SdkView;
 
-public class GearsSizeGearsDataType extends Ki2DataType {
+public class ShiftModeDataType extends Ki2DataType {
 
-    private static final String TYPE_ID = "ki2::gears-size-gears";
+    private static final String TYPE_ID = "ki2::shift-mode";
 
     private final List<Drawable> drawables;
 
-    public GearsSizeGearsDataType(@NonNull Ki2Context context) {
+    public ShiftModeDataType(@NonNull Ki2Context context) {
         super(context);
 
         this.drawables = CallerUtils.safeWrap(() -> Collections.singletonList(
@@ -37,13 +36,13 @@ public class GearsSizeGearsDataType extends Ki2DataType {
     @NonNull
     @Override
     public String getDescription() {
-        return "Gears view with gear size.";
+        return "Change Shift Mode while riding.";
     }
 
     @NonNull
     @Override
     public String getDisplayName() {
-        return "Gears T";
+        return "Shift Mode";
     }
 
     @NonNull
@@ -75,6 +74,6 @@ public class GearsSizeGearsDataType extends Ki2DataType {
     public SdkView newView() {
         return getKi2Context()
                 .getInstanceManager()
-                .getOrComputeInstance(GearsSizeSdkView.class.getSimpleName(), SdkView.class, () -> new GearsSizeSdkView(getKi2Context()));
+                .getOrComputeInstance(ShiftModeSdkView.class.getSimpleName(), SdkView.class, () -> new ShiftModeSdkView(getKi2Context()));
     }
 }

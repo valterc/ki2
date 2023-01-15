@@ -344,7 +344,7 @@ public class ServiceClient {
         try {
             service.sendMessage(message);
         } catch (RemoteException e) {
-            Log.e("KI2", "Unable to send message");
+            Log.e("KI2", "Unable to send message", e);
         }
     }
 
@@ -449,6 +449,18 @@ public class ServiceClient {
         }
 
         return null;
+    }
+
+    public void changeShiftMode(DeviceId deviceId) {
+        if (service == null) {
+            return;
+        }
+
+        try {
+            service.changeShiftMode(deviceId);
+        } catch (RemoteException e) {
+            Log.e("KI2", "Unable to change shift mode", e);
+        }
     }
 
 }
