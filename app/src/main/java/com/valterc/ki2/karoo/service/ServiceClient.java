@@ -343,7 +343,7 @@ public class ServiceClient {
         try {
             service.sendMessage(message);
         } catch (RemoteException e) {
-            Log.e("KI2", "Unable to send message");
+            Log.e("KI2", "Unable to send message", e);
         }
     }
 
@@ -433,6 +433,18 @@ public class ServiceClient {
             service.unregisterPreferencesListener(preferencesCallback);
         } catch (Exception e) {
             Log.e("KI2", "Unable to unregister listener", e);
+        }
+    }
+
+    public void changeShiftMode(DeviceId deviceId) {
+        if (service == null) {
+            return;
+        }
+
+        try {
+            service.changeShiftMode(deviceId);
+        } catch (RemoteException e) {
+            Log.e("KI2", "Unable to change shift mode", e);
         }
     }
 
