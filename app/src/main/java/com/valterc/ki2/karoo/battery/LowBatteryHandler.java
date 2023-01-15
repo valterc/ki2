@@ -11,6 +11,7 @@ import com.valterc.ki2.R;
 import com.valterc.ki2.data.device.BatteryInfo;
 import com.valterc.ki2.data.device.DeviceId;
 import com.valterc.ki2.data.preferences.PreferencesView;
+import com.valterc.ki2.data.preferences.device.DevicePreferencesView;
 import com.valterc.ki2.karoo.Ki2Context;
 import com.valterc.ki2.karoo.handlers.IRideHandler;
 import com.valterc.ki2.karoo.hooks.ActivityServiceNotificationControllerHook;
@@ -121,6 +122,10 @@ public class LowBatteryHandler implements IRideHandler {
         DeviceId deviceId = record.getDeviceId();
         BatteryInfo batteryInfo = record.getBatteryInfo();
         LowBatteryCategory category = record.getCategory();
+        DevicePreferencesView devicePreferences = context.getServiceClient().getDevicePreferences(deviceId);
+        String deviceName = devicePreferences != null ?
+                devicePreferences.getName(context.getSdkContext()) :
+                context.getSdkContext().getString(R.string.text_param_di2_name, deviceId.getName());
 
         handler.postDelayed(() -> {
             Log.d("KI2", "Low battery notification");
@@ -128,16 +133,16 @@ public class LowBatteryHandler implements IRideHandler {
 
             if (riding) {
                 record.markNotifiedInRide();
-                boolean karooNotificationResult = ActivityServiceNotificationControllerHook.showSensorLowBatteryNotification(context.getSdkContext(), deviceId.getName());
+                boolean karooNotificationResult = ActivityServiceNotificationControllerHook.showSensorLowBatteryNotification(context.getSdkContext(), deviceName);
                 if (!karooNotificationResult) {
-                    Toast toast = Toast.makeText(context.getSdkContext(), context.getSdkContext().getString(R.string.text_param_di2_low_battery, deviceId.getName(), batteryInfo.getValue()), Toast.LENGTH_LONG);
+                    Toast toast = Toast.makeText(context.getSdkContext(), context.getSdkContext().getString(R.string.text_param_low_battery, deviceName, batteryInfo.getValue()), Toast.LENGTH_LONG);
                     toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
                     toast.show();
                 }
                 AudioAlertHook.triggerLowBatteryAudioAlert(context.getSdkContext());
             }
 
-            LowBatteryNotification.showLowBatteryNotification(context.getSdkContext(), deviceId.getName(), category, batteryInfo.getValue());
+            LowBatteryNotification.showLowBatteryNotification(context.getSdkContext(), deviceName, category, batteryInfo.getValue());
         }, 500);
     }
 
