@@ -254,4 +254,15 @@ public class PreferencesView implements Parcelable {
                 context.getResources().getBoolean(R.bool.default_preference_audio_alert));
     }
 
+    /**
+     * Delay between audio alerts in milliseconds.
+     *
+     * @param context Ki2 application context. Cannot be a context generated from another package.
+     * @return Delay between audio alerts in milliseconds.
+     */
+    public int getDelayBetweenAudioAlerts(Context context) {
+        return Integer.parseInt(getString(context.getString(R.string.preference_audio_alert_delay),
+                context.getString(R.string.default_preference_audio_alert_delay)));
+    }
+
 }
