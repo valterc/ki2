@@ -3,6 +3,15 @@
 
     <PreferenceCategory app:title="@string/category_preference_audio_alerts">
 
+        <ListPreference
+            app:defaultValue="@string/default_preference_audio_alert_delay"
+            app:entries="@array/preference_titles_audio_alert_delay"
+            app:entryValues="@array/preference_values_audio_alert_delay"
+            app:key="@string/preference_audio_alert_delay"
+            app:summary="@string/summary_preference_audio_alert_delay"
+            app:title="@string/title_preference_audio_alert_delay"
+            app:useSimpleSummaryProvider="true" />
+
         <SwitchPreference
             app:defaultValue="@bool/default_preference_audio_alert"
             app:key="@string/preference_audio_alert_lowest_gear"
@@ -26,7 +35,7 @@
             app:key="@string/preference_audio_alert_upcoming_synchro_shift"
             app:summary="@string/summary_preference_audio_alert_upcoming_synchro_shift"
             app:title="@string/title_preference_audio_alert_upcoming_synchro_shift" />
-        
+
     </PreferenceCategory>
 
 </PreferenceScreen>

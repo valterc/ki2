@@ -22,7 +22,9 @@ public class ShiftingAudioAlertHandler implements IRideHandler {
     private boolean alertEnabledHighestGear;
     private boolean alertEnabledShiftingLimit;
     private boolean alertEnabledUpcomingSynchroShift;
+    private int delayBetweenAlerts;
     private boolean riding;
+    private long timestampLastAlert;
 
     private final Consumer<PreferencesView> onPreferences = this::onPreferences;
     private final BiConsumer<DeviceId, ShiftingInfo> onShifting = this::onShifting;
@@ -40,6 +42,7 @@ public class ShiftingAudioAlertHandler implements IRideHandler {
         alertEnabledHighestGear = preferences.isAudioAlertHighestGearEnabled(context.getSdkContext());
         alertEnabledShiftingLimit = preferences.isAudioAlertShiftingLimit(context.getSdkContext());
         alertEnabledUpcomingSynchroShift = preferences.isAudioAlertUpcomingSynchroShift(context.getSdkContext());
+        delayBetweenAlerts = preferences.getDelayBetweenAudioAlerts(context.getSdkContext());
     }
 
     private void onShifting(DeviceId deviceId, ShiftingInfo shiftingInfo) {
@@ -53,7 +56,7 @@ public class ShiftingAudioAlertHandler implements IRideHandler {
                 shiftingInfo.getRearGear() == 1 && shiftingInfo.getFrontGear() == 1 &&
                 (lastShiftingInfo.getRearGear() != 1 || lastShiftingInfo.getFrontGear() != 1)) {
             if (alertEnabledLowestGear) {
-                AudioAlertHook.triggerShiftingLimitAudioAlert(context.getSdkContext());
+                tryTriggerAudioAlert(() -> AudioAlertHook.triggerShiftingLimitAudioAlert(context.getSdkContext()));
             }
             return;
         }
@@ -62,18 +65,25 @@ public class ShiftingAudioAlertHandler implements IRideHandler {
                 shiftingInfo.getRearGear() == shiftingInfo.getRearGearMax() && shiftingInfo.getFrontGear() == shiftingInfo.getFrontGearMax() &&
                 (lastShiftingInfo.getRearGear() != shiftingInfo.getRearGearMax() || lastShiftingInfo.getFrontGear() != shiftingInfo.getFrontGearMax())) {
             if (alertEnabledHighestGear) {
-                AudioAlertHook.triggerShiftingLimitAudioAlert(context.getSdkContext());
+                tryTriggerAudioAlert(() -> AudioAlertHook.triggerShiftingLimitAudioAlert(context.getSdkContext()));
             }
             return;
         }
 
         if (alertEnabledShiftingLimit && shiftingInfo.getBuzzerType() == BuzzerType.OVERLIMIT_PROTECTION) {
-            AudioAlertHook.triggerShiftingLimitAudioAlert(context.getSdkContext());
+            tryTriggerAudioAlert(() -> AudioAlertHook.triggerShiftingLimitAudioAlert(context.getSdkContext()));
             return;
         }
 
         if (alertEnabledUpcomingSynchroShift && shiftingInfo.getBuzzerType() == BuzzerType.UPCOMING_SYNCHRO_SHIFT) {
-            AudioAlertHook.triggerSynchroShiftAudioAlert(context.getSdkContext());
+            tryTriggerAudioAlert(() -> AudioAlertHook.triggerSynchroShiftAudioAlert(context.getSdkContext()));
+        }
+    }
+
+    private void tryTriggerAudioAlert(Runnable audioTrigger) {
+        if (System.currentTimeMillis() - timestampLastAlert > delayBetweenAlerts) {
+            audioTrigger.run();
+            timestampLastAlert = System.currentTimeMillis();
         }
     }
 

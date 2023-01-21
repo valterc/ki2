@@ -5,10 +5,7 @@ import android.content.SharedPreferences;
 
 import androidx.preference.PreferenceManager;
 
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
-
-import timber.log.Timber;
 
 public class PreferencesStore {
 

@@ -25,6 +25,7 @@
     <string name="title_preference_audio_alert_highest_gear">Highest Gear</string>
     <string name="title_preference_audio_alert_shifting_limit">Shifting Limit</string>
     <string name="title_preference_audio_alert_upcoming_synchro_shift">Upcoming Synchro Shift</string>
+    <string name="title_preference_audio_alert_delay">Delay between audio alerts</string>
 
     <string name="summary_preference_pre_load">Pre load the ride application to avoid data elements not showing after startup</string>
     <string name="summary_preference_battery_notification">Show notifications when the shifting battery level is at or below a certain value</string>
@@ -33,6 +34,7 @@
     <string name="summary_preference_audio_alert_highest_gear">Audio alert when shifting to the highest gear</string>
     <string name="summary_preference_audio_alert_shifting_limit">Audio alert when attempting to shift while already on the gear limit</string>
     <string name="summary_preference_audio_alert_upcoming_synchro_shift">Audio alert when the next shift can trigger a synchronized shift (on S2 mode)</string>
+    <string name="summary_preference_audio_alert_delay">Minimum delay between audio alerts</string>
 
     <string name="default_preference_left_switch_single_press">navigate_left</string>
     <string name="default_preference_left_switch_double_press">lap_map_back</string>
@@ -42,6 +44,7 @@
     <string name="default_preference_right_switch_hold">map_graph_zoom_in</string>
     <string name="default_preference_battery_level_low">20</string>
     <string name="default_preference_battery_level_critical">10</string>
+    <string name="default_preference_audio_alert_delay">0</string>
     <bool name="default_preference_auto_update">true</bool>
     <bool name="default_preference_audio_alert">false</bool>
     <bool name="default_preference_pre_load">true</bool>
@@ -62,5 +65,6 @@
     <string name="preference_audio_alert_highest_gear">AUDIO_ALERT_HIGHEST_GEAR</string>
     <string name="preference_audio_alert_shifting_limit">AUDIO_ALERT_SHIFTING_LIMIT</string>
     <string name="preference_audio_alert_upcoming_synchro_shift">AUDIO_ALERT_UPCOMING_SYNCHRO_SHIFT</string>
+    <string name="preference_audio_alert_delay">AUDIO_ALERT_DELAY</string>
 
 </resources>
