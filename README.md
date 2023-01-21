@@ -2,7 +2,7 @@
 
 Ki2 is an _app_/_addon_/_plugin_ for Hammerhead Karoo 2 devices. It is a companion app for electronic shifting groupsets produced by a Japanese company.
 
-[![Validate workflow](https://github.com/valterc/ki2/actions/workflows/android-validate.yml/badge.svg?branch=main)](https://github.com/valterc/ki2/actions/workflows/android-validate.yml) [![Latest Release](https://img.shields.io/github/v/release/valterc/ki2?label=Latest%20Release)](https://github.com/valterc/ki2/releases/latest/)
+[![Buy me a coffee](https://img.shields.io/badge/☕-Buy%20me%20a%20coffee-blue)](https://www.paypal.com/donate/?business=N6PWH859NY7W6&no_recurring=1&item_name=Buy+me+a+coffee&currency_code=EUR) [![Validate workflow](https://github.com/valterc/ki2/actions/workflows/android-validate.yml/badge.svg?branch=main)](https://github.com/valterc/ki2/actions/workflows/android-validate.yml) [![Latest Release](https://img.shields.io/github/v/release/valterc/ki2?label=Latest%20Release)](https://github.com/valterc/ki2/releases/latest/)
 
 ## Screenshots
 
@@ -24,7 +24,7 @@ These screenshots have been _slightly_ edited.
 - Setup Karoo ride profiles with data elements such as:
   - Gears in text format
   - Gear size (teeth count) in text format
-  - Gear ration in text format
+  - Gear ratio in text format
   - Battery % in text format
   - Shifting mode in text format
   - Ride shift count in text format
@@ -190,15 +190,15 @@ It might be because your shifting configuration has a different action assigned 
 
 ### The app disconnects from the shifting unit while riding
 
-It's likely a signal issue, verify the signal between the wireless unit and Karoo. To do that, tap on the shifting device on the list of devices in Ki2. The signal value is displayed on the top when the shifting unit is connected. Signal values between -30 to -50dBm offer best and stable connectivity while a signal in range of -75 to -90dBm is degraded and can cause connectivity issues. There is nothing that can be done in the app/software to improve the signal. Recommendation is to move or rotate the shifting wireless unit, perhaps moving it a small amount could be enough or in some cases it may require relocating the wireless unit to another location in the bicycle.
+Make sure you are using the [latest Ki2 version](https://github.com/valterc/ki2/releases/latest/). It could be a signal issue, verify the signal between the wireless unit and Karoo. To do that, tap on the shifting device on the list of devices in Ki2. The signal value is displayed on the top when the shifting unit is connected. Signal values between -30 to -50dBm offer best and stable connectivity while a signal in range of -75 to -90dBm is degraded and can cause connectivity issues. There is nothing that can be done in the app/software to improve the signal. Recommendation is to move or rotate the shifting wireless unit, perhaps moving it a small amount could be enough or in some cases it may require relocating the wireless unit to another location in the bicycle.
 
 ### Gear size (teeth count) or gear ratio unknown or not correct
 
-The gear size (teeth count) is obtained from the shifting unit. If the shifting unit is misconfigured then the wrong information will be displayed in Ki2. Please use the official mobile application from the shifting unit manufacturer to configure the correct chainring information.
+The gear size (teeth count) is obtained from the shifting unit. If the shifting unit is misconfigured then the wrong information will be displayed in Ki2. Please use the official mobile application from the shifting unit manufacturer to configure the correct chainring information. This might not be supported in all bicycles or shifting systems.
 
 ### It does not work or I have a problem
 
-Please open an issue in this github repository. Explain the problem and explain what you are trying to achieve. Keep in mind that there is no official support for this project.
+Please open an issue in this github repository. Explain the problem in detail and explain what you are trying to achieve. Keep in mind that there is no official support for this project.
 
 ## License and notices
 
