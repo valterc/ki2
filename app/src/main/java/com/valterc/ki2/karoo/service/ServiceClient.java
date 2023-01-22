@@ -39,6 +39,7 @@ import io.hammerhead.sdk.v0.SdkContext;
 public class ServiceClient {
 
     private static final int TIME_MS_ATTEMPT_BIND = 500;
+    private static final int TIME_MS_ATTEMPT_REBIND = 15_000;
 
     @SuppressWarnings("FieldCanBeLocal")
     private final ServiceConnection serviceConnection = new ServiceConnection() {
@@ -59,6 +60,13 @@ public class ServiceClient {
         public void onServiceDisconnected(ComponentName name) {
             service = null;
             connectionFilter.reset();
+            handler.postDelayed(() -> {
+                if (service == null) {
+                    Log.w("KI2", "Attempting to re-bind to service");
+                    context.unbindService(serviceConnection);
+                    attemptBindToService();
+                }
+            }, TIME_MS_ATTEMPT_REBIND);
         }
     };
 
