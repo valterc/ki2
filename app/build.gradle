@@ -27,12 +27,12 @@ android {
     }
 
     namespace 'com.valterc.ki2'
-    compileSdk 32
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.valterc.ki2"
         minSdk 26
-        targetSdk 32
+        targetSdk 33
 		
         versionCode properties.getProperty("VERSION_CODE", "1") as int
         versionName properties.getProperty("VERSION_NAME", "0.1")
@@ -83,7 +83,7 @@ configurations {
 }
 
 dependencies {
-    implementation 'androidx.appcompat:appcompat:1.5.1'
+    implementation 'androidx.appcompat:appcompat:1.6.0'
     implementation 'com.google.android.material:material:1.7.0'
     implementation 'androidx.preference:preference:1.2.0'
     implementation 'com.google.code.gson:gson:2.9.1'
@@ -96,6 +96,6 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.1'
     testImplementation 'org.junit.jupiter:junit-jupiter-params:5.9.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.1'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.4'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 }
