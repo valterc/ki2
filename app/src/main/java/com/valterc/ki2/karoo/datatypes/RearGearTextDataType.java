@@ -8,7 +8,7 @@ import androidx.appcompat.content.res.AppCompatResources;
 
 import com.valterc.ki2.R;
 import com.valterc.ki2.karoo.Ki2Context;
-import com.valterc.ki2.karoo.formatters.RearGearFormatter;
+import com.valterc.ki2.karoo.formatters.RearGearTextFormatter;
 import com.valterc.ki2.utils.CallerUtils;
 
 import java.util.Collections;
@@ -20,13 +20,13 @@ import io.hammerhead.sdk.v0.datatype.transformer.SdkTransformer;
 import io.hammerhead.sdk.v0.datatype.view.BuiltInView;
 import io.hammerhead.sdk.v0.datatype.view.SdkView;
 
-public class RearGearDataType extends Ki2DataType {
+public class RearGearTextDataType extends Ki2DataType {
 
     private static final String TYPE_ID = "ki2::rear-gear-text";
 
     private final List<Drawable> drawables;
 
-    public RearGearDataType(@NonNull Ki2Context context) {
+    public RearGearTextDataType(@NonNull Ki2Context context) {
         super(context);
 
         this.drawables = CallerUtils.safeWrap(() -> Collections.singletonList(
@@ -75,7 +75,7 @@ public class RearGearDataType extends Ki2DataType {
     public SdkFormatter newFormatter() {
         return getKi2Context()
                 .getInstanceManager()
-                .getOrComputeInstance(RearGearFormatter.class.getSimpleName(), SdkFormatter.class, () -> new RearGearFormatter(getKi2Context()));
+                .getOrComputeInstance(RearGearTextFormatter.class.getSimpleName(), SdkFormatter.class, () -> new RearGearTextFormatter(getKi2Context()));
     }
 
     @NonNull
