@@ -8,9 +8,12 @@
     <string name="title_preference_device_name">Name</string>>
 
     <bool name="default_preference_device_enabled">true</bool>
+    <bool name="default_preference_device_switch_events_only">false</bool>
     <string name="default_preference_device_name">@null</string>
 
     <string name="preference_device_enabled">ENABLED</string>
+    <string name="preference_device_switch_events_only">SWITCH_EVENTS_ONLY</string>
     <string name="preference_device_name">NAME</string>
+    <string name="preference_device_priority">PRIORITY</string>
 
 </resources>
