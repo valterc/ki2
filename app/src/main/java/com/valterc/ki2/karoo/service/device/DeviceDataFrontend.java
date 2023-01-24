@@ -161,6 +161,13 @@ public class DeviceDataFrontend {
         });
     }
 
+    public void registerUnfilteredBatteryInfoWeakListener(BiConsumer<DeviceId, BatteryInfo> batteryInfoConsumer) {
+        handler.post(() -> {
+            dataRouter.registerUnfilteredBatteryInfoWeakListener(batteryInfoConsumer);
+            maybeStartEvents();
+        });
+    }
+
     private void maybeStartBatteryEvents() {
         if (service == null) {
             return;

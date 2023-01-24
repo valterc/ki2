@@ -10,6 +10,9 @@ import android.os.Looper;
 import android.os.RemoteException;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.valterc.ki2.data.connection.ConnectionInfo;
 import com.valterc.ki2.data.device.BatteryInfo;
 import com.valterc.ki2.data.device.DeviceId;
@@ -109,30 +112,76 @@ public class ServiceClient {
         }
     }
 
+    /**
+     * Register a weak referenced listener that will receive connection info from the main ride device.
+     *
+     * @param connectionInfoConsumer Consumer that will receive connection events. It will be referenced using a weak reference so the owner must keep a strong reference.
+     */
     public void registerConnectionInfoWeakListener(BiConsumer<DeviceId, ConnectionInfo> connectionInfoConsumer) {
         deviceDataFrontend.registerConnectionInfoWeakListener(connectionInfoConsumer);
     }
 
+    /**
+     * Register a weak referenced listener that will receive battery info from the main ride device.
+     *
+     * @param batteryInfoConsumer Consumer that will receive battery events. It will be referenced using a weak reference so the owner must keep a strong reference.
+     */
     public void registerBatteryInfoWeakListener(BiConsumer<DeviceId, BatteryInfo> batteryInfoConsumer) {
         deviceDataFrontend.registerBatteryInfoWeakListener(batteryInfoConsumer);
     }
 
+    /**
+     * Register a weak referenced listener that will receive unfiltered battery info.
+     * Unfiltered data means that the listener will received data from all available devices, not just from the main ride device.
+     *
+     * @param batteryInfoConsumer Consumer that will receive battery events. It will be referenced using a weak reference so the owner must keep a strong reference.
+     */
+    public void registerUnfilteredBatteryInfoWeakListener(BiConsumer<DeviceId, BatteryInfo> batteryInfoConsumer) {
+        deviceDataFrontend.registerUnfilteredBatteryInfoWeakListener(batteryInfoConsumer);
+    }
+
+    /**
+     * Register a weak referenced listener that will receive shifting info from the main ride device.
+     *
+     * @param shiftingInfoConsumer Consumer that will receive shifting events. It will be referenced using a weak reference so the owner must keep a strong reference.
+     */
     public void registerShiftingInfoWeakListener(BiConsumer<DeviceId, ShiftingInfo> shiftingInfoConsumer) {
         deviceDataFrontend.registerShiftingInfoWeakListener(shiftingInfoConsumer);
     }
 
+    /**
+     * Register a weak referenced listener that will receive preferences info from the main ride device.
+     *
+     * @param devicePreferencesConsumer Consumer that will receive preferences events. It will be referenced using a weak reference so the owner must keep a strong reference.
+     */
     public void registerDevicePreferencesWeakListener(BiConsumer<DeviceId, DevicePreferencesView> devicePreferencesConsumer) {
         deviceDataFrontend.registerDevicePreferencesWeakListener(devicePreferencesConsumer);
     }
 
+    /**
+     * Get device preferences.
+     *
+     * @param deviceId Device identifier.
+     * @return Device preference for the specified device. Can be <code>null</code> if the service is not reachable.
+     */
     public DevicePreferencesView getDevicePreferences(DeviceId deviceId) {
         return deviceDataFrontend.getDevicePreferences(deviceId);
     }
 
+    /**
+     * Change shift mode. The shift mode will not be changed if the service cannot be reached.
+     *
+     * @param deviceId Device identifier.
+     */
     public void changeShiftMode(DeviceId deviceId) {
         deviceDataFrontend.changeShiftMode(deviceId);
     }
 
+    /**
+     * Register a weak referenced listener that will receive messages.
+     *
+     * @param messageConsumer Consumer that will receive messages. It will be referenced using a weak reference so the owner must keep a strong reference.
+     */
     public void registerMessageWeakListener(Consumer<Message> messageConsumer) {
         handler.post(() -> {
             messageListeners.addListener(messageConsumer);
@@ -140,7 +189,12 @@ public class ServiceClient {
         });
     }
 
-    public void sendMessage(Message message) {
+    /**
+     * Send message. The message will not be sent if the service cannot be reached.
+     *
+     * @param message Message to send. Cannot be null.
+     */
+    public void sendMessage(@NonNull Message message) {
         if (service == null) {
             return;
         }
@@ -152,6 +206,11 @@ public class ServiceClient {
         }
     }
 
+    /**
+     * Get custom message client.
+     *
+     * @return Custom message client.
+     */
     public CustomMessageClient getCustomMessageClient() {
         return customMessageClient;
     }
@@ -188,6 +247,12 @@ public class ServiceClient {
         }
     }
 
+    /**
+     * Get global preferences.
+     *
+     * @return Global preferences. Can be <code>null</code> if the service is not reachable.
+     */
+    @Nullable
     public PreferencesView getPreferences() {
         if (service == null) {
             return null;
@@ -202,6 +267,11 @@ public class ServiceClient {
         return null;
     }
 
+    /**
+     * Register a weak referenced listener that will receive global preferences.
+     *
+     * @param preferencesConsumer Consumer that will receive global preferences. It will be referenced using a weak reference so the owner must keep a strong reference.
+     */
     public void registerPreferencesWeakListener(Consumer<PreferencesView> preferencesConsumer) {
         handler.post(() -> {
             preferencesListeners.addListener(preferencesConsumer);

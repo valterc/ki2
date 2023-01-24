@@ -21,6 +21,7 @@ public class DeviceDataRouter {
 
     private final BiDataStreamWeakListenerList<DeviceId, ConnectionInfo> connectionInfoListeners;
     private final BiDataStreamWeakListenerList<DeviceId, BatteryInfo> batteryInfoListeners;
+    private final BiDataStreamWeakListenerList<DeviceId, BatteryInfo> batteryInfoUnfilteredListeners;
     private final BiDataStreamWeakListenerList<DeviceId, ShiftingInfo> shiftingInfoListeners;
     private final BiDataStreamWeakListenerList<DeviceId, DevicePreferencesView> devicePreferencesListener;
 
@@ -33,12 +34,12 @@ public class DeviceDataRouter {
 
         connectionInfoListeners = new BiDataStreamWeakListenerList<>();
         batteryInfoListeners = new BiDataStreamWeakListenerList<>();
+        batteryInfoUnfilteredListeners = new BiDataStreamWeakListenerList<>();
         shiftingInfoListeners = new BiDataStreamWeakListenerList<>();
         devicePreferencesListener = new BiDataStreamWeakListenerList<>();
 
         deviceDataMap = new HashMap<>();
     }
-
 
     public void registerConnectionInfoWeakListener(BiConsumer<DeviceId, ConnectionInfo> connectionInfoConsumer) {
         connectionInfoListeners.addListener(connectionInfoConsumer);
@@ -52,8 +53,12 @@ public class DeviceDataRouter {
         batteryInfoListeners.addListener(batteryInfoConsumer);
     }
 
+    public void registerUnfilteredBatteryInfoWeakListener(BiConsumer<DeviceId, BatteryInfo> batteryInfoConsumer) {
+        batteryInfoUnfilteredListeners.addListener(batteryInfoConsumer);
+    }
+
     public boolean hasBatteryInfoListeners() {
-        return batteryInfoListeners.hasListeners();
+        return batteryInfoListeners.hasListeners() || batteryInfoUnfilteredListeners.hasListeners();
     }
 
     public void registerShiftingInfoWeakListener(BiConsumer<DeviceId, ShiftingInfo> shiftingInfoConsumer) {
@@ -82,6 +87,7 @@ public class DeviceDataRouter {
 
             if (newDeviceData.getBatteryInfo() != null) {
                 batteryInfoListeners.pushData(currentDeviceId, newDeviceData.getBatteryInfo());
+                batteryInfoUnfilteredListeners.pushData(currentDeviceId, newDeviceData.getBatteryInfo());
             }
 
             if (newDeviceData.getShiftingInfo() != null) {
@@ -160,6 +166,8 @@ public class DeviceDataRouter {
         if (Objects.equals(deviceId, currentDeviceId)) {
             batteryInfoListeners.pushData(deviceId, batteryInfo);
         }
+
+        batteryInfoUnfilteredListeners.pushData(deviceId, batteryInfo);
     }
 
     public void onShifting(DeviceId deviceId, ShiftingInfo shiftingInfo) {

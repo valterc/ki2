@@ -1,7 +1,6 @@
 package com.valterc.ki2.karoo.service.messages;
 
 import android.os.Handler;
-import android.os.Looper;
 
 import com.valterc.ki2.data.message.Message;
 import com.valterc.ki2.data.message.MessageType;
@@ -38,6 +37,11 @@ public class CustomMessageClient {
         }
     }
 
+    /**
+     * Register a weak referenced listener that will receive ride status messages.
+     *
+     * @param consumer Consumer that will receive ride status messages. It will be referenced using a weak reference so the owner must keep a strong reference.
+     */
     public void registerRideStatusWeakListener(Consumer<RideStatusMessage> consumer) {
         handler.post(() -> {
             CustomMessageHandler<RideStatusMessage> customMessageHandler =
@@ -48,6 +52,11 @@ public class CustomMessageClient {
         });
     }
 
+    /**
+     * Register a weak referenced listener that will receive update available messages.
+     *
+     * @param consumer Consumer that will receive update available messages. It will be referenced using a weak reference so the owner must keep a strong reference.
+     */
     public void registerUpdateAvailableWeakListener(Consumer<UpdateAvailableMessage> consumer) {
         handler.post(() -> {
             CustomMessageHandler<UpdateAvailableMessage> customMessageHandler =

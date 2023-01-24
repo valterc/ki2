@@ -26,20 +26,18 @@ public class ListDevicesViewModel extends ViewModel {
     private final ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder binder) {
-            Timber.d("Service connected");
             service.postValue(IKi2Service.Stub.asInterface(binder));
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-            Timber.d("Service disconnected");
             service.postValue(null);
         }
     };
 
     private final IConnectionDataInfoCallback connectionDataInfoCallback = new IConnectionDataInfoCallback.Stub() {
         @Override
-        public void onConnectionDataInfo(DeviceId deviceId, ConnectionDataInfo connectionDataInfo) throws RemoteException {
+        public void onConnectionDataInfo(DeviceId deviceId, ConnectionDataInfo connectionDataInfo) {
             Map<DeviceId, ConnectionDataInfo> connectionDataInfoMap = Objects.requireNonNull(deviceConnectionDataEvent.getValue());
             connectionDataInfoMap.put(deviceId, connectionDataInfo);
             deviceConnectionDataEvent.postValue(connectionDataInfoMap);
