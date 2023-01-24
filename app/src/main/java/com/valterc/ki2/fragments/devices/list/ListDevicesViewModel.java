@@ -14,7 +14,10 @@ import com.valterc.ki2.data.device.DeviceId;
 import com.valterc.ki2.services.IKi2Service;
 import com.valterc.ki2.services.callbacks.IConnectionDataInfoCallback;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 import timber.log.Timber;
 
@@ -37,16 +40,18 @@ public class ListDevicesViewModel extends ViewModel {
     private final IConnectionDataInfoCallback connectionDataInfoCallback = new IConnectionDataInfoCallback.Stub() {
         @Override
         public void onConnectionDataInfo(DeviceId deviceId, ConnectionDataInfo connectionDataInfo) throws RemoteException {
-            deviceConnectionDataEvent.postValue(connectionDataInfo);
+            Map<DeviceId, ConnectionDataInfo> connectionDataInfoMap = Objects.requireNonNull(deviceConnectionDataEvent.getValue());
+            connectionDataInfoMap.put(deviceId, connectionDataInfo);
+            deviceConnectionDataEvent.postValue(connectionDataInfoMap);
         }
     };
 
     private final MutableLiveData<IKi2Service> service;
-    private final MutableLiveData<ConnectionDataInfo> deviceConnectionDataEvent;
+    private final MutableLiveData<Map<DeviceId, ConnectionDataInfo>> deviceConnectionDataEvent;
 
     public ListDevicesViewModel() {
         this.service = new MutableLiveData<>();
-        this.deviceConnectionDataEvent = new MutableLiveData<>();
+        this.deviceConnectionDataEvent = new MutableLiveData<>(new HashMap<>());
     }
 
     public ServiceConnection getServiceConnection() {
@@ -57,7 +62,7 @@ public class ListDevicesViewModel extends ViewModel {
         return service;
     }
 
-    public LiveData<ConnectionDataInfo> getDeviceConnectionDataEvent() {
+    public LiveData<Map<DeviceId, ConnectionDataInfo>> getDeviceConnectionDataEvent() {
         return deviceConnectionDataEvent;
     }
 
