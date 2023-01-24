@@ -17,12 +17,11 @@ import com.valterc.ki2.karoo.hooks.RideActivityHook;
 
 public class Ki2BroadcastReceiver extends BroadcastReceiver {
 
-    private static final String TAG = "Ki2BroadcastReceiver";
+    private static final String TAG = "KI2";
 
     @SuppressLint("LogNotTimber")
     @Override
     public void onReceive(Context context, Intent intent) {
-
         switch (intent.getAction()) {
 
             case "android.intent.action.BOOT_COMPLETED":

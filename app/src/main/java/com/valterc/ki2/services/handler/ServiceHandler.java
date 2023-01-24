@@ -15,11 +15,12 @@ public class ServiceHandler {
     private static final long RETRY_DELAY_MS = 100;
     private static final long RETRY_MAX_ATTEMPTS = 2;
 
+    private final Thread thread;
     private Looper looper;
     private Handler handler;
 
     public ServiceHandler() {
-        Thread thread = new Thread(() -> {
+        thread = new Thread(() -> {
             Looper.prepare();
             this.looper = Looper.myLooper();
             this.handler = new RunnableHandler(this.looper);
@@ -61,6 +62,10 @@ public class ServiceHandler {
         };
 
         handler.post(() -> retriableRunnable.accept(0));
+    }
+
+    public boolean isOnServiceHandlerThread() {
+        return Thread.currentThread() == thread;
     }
 
     private static class RunnableHandler extends Handler {

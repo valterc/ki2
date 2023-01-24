@@ -1,8 +1,11 @@
 package com.valterc.ki2.services;
 
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.IBinder;
 import android.os.IInterface;
 import android.os.Parcelable;
@@ -34,6 +37,7 @@ import com.valterc.ki2.data.message.RideStatusMessage;
 import com.valterc.ki2.data.message.UpdateAvailableMessage;
 import com.valterc.ki2.data.preferences.PreferencesStore;
 import com.valterc.ki2.data.preferences.PreferencesView;
+import com.valterc.ki2.data.preferences.device.DevicePreferences;
 import com.valterc.ki2.data.preferences.device.DevicePreferencesStore;
 import com.valterc.ki2.data.preferences.device.DevicePreferencesView;
 import com.valterc.ki2.data.ride.RideStatus;
@@ -60,8 +64,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import timber.log.Timber;
 
@@ -142,7 +148,6 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
             serviceHandler.postAction(() -> {
                 for (ConnectionDataManager connectionDataManager : connectionsDataManager.getDataManagers()) {
                     try {
-                        Timber.d("Sending connection info after register");
                         callback.onConnectionInfo(
                                 connectionDataManager.getDeviceId(),
                                 connectionDataManager.buildConnectionInfo());
@@ -473,6 +478,14 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
         }
     };
 
+    private final BroadcastReceiver receiverReconnectDevices = new BroadcastReceiver() {
+        @Override
+        public void onReceive(final Context context, final Intent intent) {
+            Timber.d("Received reconnect devices broadcast");
+            serviceHandler.postRetriableAction(() -> antConnectionManager.restartClosedConnections(Ki2Service.this));
+        }
+    };
+
     private MessageManager messageManager;
     private AntManager antManager;
     private AntScanner antScanner;
@@ -505,6 +518,7 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
         devicePreferencesStore = new DevicePreferencesStore(this, this::onDevicePreferences);
         devicePreferencesStore.setDevices(deviceStore.getDevices());
 
+        registerReceiver(receiverReconnectDevices, new IntentFilter("io.hammerhead.action.RECONNECT_DEVICES"));
         Timber.i("Service created");
     }
 
@@ -527,6 +541,8 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
         backgroundUpdateChecker.dispose();
 
         serviceHandler.dispose();
+
+        unregisterReceiver(receiverReconnectDevices);
         super.onDestroy();
     }
 
@@ -552,9 +568,13 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
                 || callbackListShifting.getRegisteredCallbackCount() != 0
                 || callbackListKey.getRegisteredCallbackCount() != 0) {
             if (antManager.isReady()) {
-                connectionsDataManager.addConnections(devices);
-                antConnectionManager.connectOnly(devices, this);
-                connectionsDataManager.setConnections(devices);
+                Collection<DeviceId> enabledDevices = devices.stream()
+                        .filter(deviceId -> new DevicePreferences(this, deviceId).isEnabled())
+                        .collect(Collectors.toList());
+
+                connectionsDataManager.addConnections(enabledDevices);
+                antConnectionManager.connectOnly(enabledDevices, this);
+                connectionsDataManager.setConnections(enabledDevices);
             }
         } else {
             antConnectionManager.disconnectAll();
@@ -607,18 +627,21 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
 
     @Override
     public void onConnectionStatus(DeviceId deviceId, ConnectionStatus connectionStatus) {
-        serviceHandler.postAction(() -> {
-            boolean sendUpdate = connectionsDataManager.onConnectionStatus(deviceId, connectionStatus);
+        if (!serviceHandler.isOnServiceHandlerThread()) {
+            serviceHandler.postAction(() -> onConnectionStatus(deviceId, connectionStatus));
+            return;
+        }
 
-            if (sendUpdate) {
-                broadcastData(callbackListConnectionInfo,
-                        () -> connectionsDataManager.buildConnectionInfo(deviceId),
-                        (callback, connectionInfo) -> callback.onConnectionInfo(deviceId, connectionInfo));
-                broadcastData(callbackListConnectionDataInfo,
-                        () -> connectionsDataManager.buildConnectionDataInfo(deviceId),
-                        (callback, connectionDataInfo) -> callback.onConnectionDataInfo(deviceId, connectionDataInfo));
-            }
-        });
+        boolean sendUpdate = connectionsDataManager.onConnectionStatus(deviceId, connectionStatus);
+
+        if (sendUpdate) {
+            broadcastData(callbackListConnectionInfo,
+                    () -> connectionsDataManager.buildConnectionInfo(deviceId),
+                    (callback, connectionInfo) -> callback.onConnectionInfo(deviceId, connectionInfo));
+            broadcastData(callbackListConnectionDataInfo,
+                    () -> connectionsDataManager.buildConnectionDataInfo(deviceId),
+                    (callback, connectionDataInfo) -> callback.onConnectionDataInfo(deviceId, connectionDataInfo));
+        }
     }
 
     @Override
@@ -763,6 +786,7 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
     private void onDevicePreferences(DeviceId deviceId, DevicePreferencesView devicePreferencesView) {
         serviceHandler.postRetriableAction(() -> broadcastData(callbackListDevicePreferences,
                 () -> devicePreferencesView, (callback, devicePreferences) -> callback.onDevicePreferences(deviceId, devicePreferences)));
+        serviceHandler.postRetriableAction(Ki2Service.this::processConnections);
     }
 
 }
