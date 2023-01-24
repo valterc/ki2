@@ -77,6 +77,9 @@ public class ShimanoShiftingProfileHandler implements IDeviceProfileHandler {
 
         this.shiftingInfoBuilder = new ShiftingInfoBuilder();
         this.shiftingInfoBuilder.setBuzzerType(BuzzerType.DEFAULT);
+        this.shiftingInfoBuilder.setFrontTeethPattern(FrontTeethPattern.UNKNOWN);
+        this.shiftingInfoBuilder.setRearTeethPattern(RearTeethPattern.UNKNOWN);
+
         this.manufacturerInfoBuilder = new ManufacturerInfoBuilder();
         this.manufacturerInfoBuilder.setComponentId(null);
 
