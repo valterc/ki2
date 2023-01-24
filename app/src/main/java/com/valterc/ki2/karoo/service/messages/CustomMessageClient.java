@@ -21,8 +21,8 @@ public class CustomMessageClient {
 
     private final Consumer<Message> onMessage = this::onMessage;
 
-    public CustomMessageClient(ServiceClient serviceClient) {
-        this.handler = new Handler(Looper.getMainLooper());
+    public CustomMessageClient(ServiceClient serviceClient, Handler handler) {
+        this.handler = handler;
 
         customMessageHandlers = new HashMap<>();
         customMessageHandlers.put(MessageType.RIDE_STATUS, new CustomMessageHandler<>(MessageType.RIDE_STATUS, RideStatusMessage::parse));
