@@ -45,7 +45,7 @@ public class LowBatteryHandler implements IRideHandler {
         this.handler = new Handler(Looper.getMainLooper());
 
         context.getServiceClient().registerPreferencesWeakListener(onPreferences);
-        context.getServiceClient().registerBatteryInfoWeakListener(onBattery);
+        context.getServiceClient().registerUnfilteredBatteryInfoWeakListener(onBattery);
     }
 
     private void onPreferences(PreferencesView preferencesView) {

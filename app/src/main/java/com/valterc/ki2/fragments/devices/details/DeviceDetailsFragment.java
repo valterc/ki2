@@ -21,9 +21,11 @@ import androidx.core.widget.TextViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.material.checkbox.MaterialCheckBox;
 import com.valterc.ki2.R;
 import com.valterc.ki2.data.device.DeviceId;
 import com.valterc.ki2.data.input.KarooKey;
+import com.valterc.ki2.data.preferences.device.DevicePreferences;
 import com.valterc.ki2.data.switches.SwitchType;
 import com.valterc.ki2.fragments.IKarooKeyListener;
 import com.valterc.ki2.services.Ki2Service;
@@ -184,6 +186,56 @@ public class DeviceDetailsFragment extends Fragment implements IKarooKeyListener
                     }).show();
         });
 
+        DevicePreferences devicePreferences = viewModel.getDevicePreferences(requireContext());
+
+        MaterialCheckBox checkBoxEnabled = view.findViewById(R.id.checkbox_device_details_enabled);
+        checkBoxEnabled.setChecked(devicePreferences.isEnabled());
+        checkBoxEnabled.addOnCheckedStateChangedListener((checkBox, state) -> {
+            if (checkBox.isChecked()) {
+                viewModel.getDevicePreferences(requireContext()).setEnabled(true);
+            } else {
+                new AlertDialog.Builder(requireContext(), R.style.AlertDialogStyle)
+                        .setTitle(R.string.text_question_device_disable)
+                        .setMessage(getString(R.string.text_device_disable))
+                        .setPositiveButton(R.string.text_disable, (dialog, whichButton) ->
+                        {
+                            viewModel.getDevicePreferences(requireContext()).setEnabled(false);
+
+                            textViewConnectionStatus.setText(R.string.text_disabled);
+                            textViewConnectionStatus.setTextColor(requireContext().getColor(R.color.hh_dark_grey));
+                            textViewSignal.setText(R.string.text_na);
+                            buttonReconnect.setEnabled(false);
+                            linearLayoutData.setVisibility(View.GONE);
+                        })
+                        .setNegativeButton(R.string.text_cancel, (dialog, whichButton) ->
+                                checkBox.setChecked(true)).show();
+            }
+        });
+
+        MaterialCheckBox checkBoxSwitchEventsOnly = view.findViewById(R.id.checkbox_device_details_switch_only);
+        checkBoxSwitchEventsOnly.setChecked(devicePreferences.isSwitchEventsOnly());
+        checkBoxSwitchEventsOnly.addOnCheckedStateChangedListener((checkBox, state) -> {
+            if (!checkBox.isChecked()) {
+                viewModel.getDevicePreferences(requireContext()).setSwitchEventsOnly(false);
+            } else {
+                new AlertDialog.Builder(requireContext(), R.style.AlertDialogStyle)
+                        .setTitle(R.string.text_switches_only)
+                        .setMessage(getString(R.string.text_device_switches_only))
+                        .setPositiveButton(android.R.string.ok, (dialog, whichButton) ->
+                                viewModel.getDevicePreferences(requireContext()).setSwitchEventsOnly(true))
+                        .setNegativeButton(R.string.text_cancel, (dialog, whichButton) ->
+                                checkBox.setChecked(false)).show();
+            }
+        });
+
+        if (!devicePreferences.isEnabled()) {
+            textViewConnectionStatus.setText(R.string.text_disabled);
+            textViewConnectionStatus.setTextColor(requireContext().getColor(R.color.hh_dark_grey));
+            textViewSignal.setText(R.string.text_na);
+            buttonReconnect.setEnabled(false);
+            linearLayoutData.setVisibility(View.GONE);
+        }
+
         viewModel.getService().observe(getViewLifecycleOwner(), service -> {
             if (service == null) {
                 textViewConnectionStatus.setText(R.string.text_failed);
@@ -212,6 +264,7 @@ public class DeviceDetailsFragment extends Fragment implements IKarooKeyListener
                     buttonReconnect.setEnabled(false);
                     textViewConnectionStatus.setText(R.string.text_connecting);
                     textViewConnectionStatus.setTextColor(requireContext().getColor(R.color.hh_black));
+                    textViewSignal.setText(R.string.text_na);
                     break;
 
                 case ESTABLISHED:
@@ -222,10 +275,18 @@ public class DeviceDetailsFragment extends Fragment implements IKarooKeyListener
                     break;
 
                 case CLOSED:
-                    textViewConnectionStatus.setText(R.string.text_not_found);
-                    textViewConnectionStatus.setTextColor(requireContext().getColor(R.color.hh_red));
-                    textViewSignal.setText(R.string.text_na);
-                    buttonReconnect.setEnabled(true);
+                    if (viewModel.getDevicePreferences(requireContext()).isEnabled()) {
+                        textViewConnectionStatus.setText(R.string.text_not_found);
+                        textViewConnectionStatus.setTextColor(requireContext().getColor(R.color.hh_red));
+                        textViewSignal.setText(R.string.text_na);
+                        buttonReconnect.setEnabled(true);
+                    } else {
+                        textViewConnectionStatus.setText(R.string.text_disabled);
+                        textViewConnectionStatus.setTextColor(requireContext().getColor(R.color.hh_dark_grey));
+                        textViewSignal.setText(R.string.text_na);
+                        buttonReconnect.setEnabled(false);
+                        linearLayoutData.setVisibility(View.GONE);
+                    }
                     break;
 
             }

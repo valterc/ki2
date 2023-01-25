@@ -13,7 +13,7 @@ import java.util.function.BiConsumer;
 
 import io.hammerhead.sdk.v0.datatype.formatter.SdkFormatter;
 
-public class RearGearFormatter extends SdkFormatter {
+public class RearGearTextFormatter extends SdkFormatter {
 
     private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("00");
 
@@ -28,7 +28,7 @@ public class RearGearFormatter extends SdkFormatter {
     private ConnectionStatus connectionStatus;
     private ShiftingInfo shiftingInfo;
 
-    public RearGearFormatter(Ki2Context ki2Context) {
+    public RearGearTextFormatter(Ki2Context ki2Context) {
         ki2Context.getServiceClient().registerConnectionInfoWeakListener(connectionInfoConsumer);
         ki2Context.getServiceClient().registerShiftingInfoWeakListener(shiftingInfoConsumer);
     }

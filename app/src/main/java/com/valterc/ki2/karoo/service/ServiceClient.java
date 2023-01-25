@@ -10,25 +10,22 @@ import android.os.Looper;
 import android.os.RemoteException;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.valterc.ki2.data.connection.ConnectionInfo;
 import com.valterc.ki2.data.device.BatteryInfo;
 import com.valterc.ki2.data.device.DeviceId;
-import com.valterc.ki2.data.input.KarooKeyEvent;
 import com.valterc.ki2.data.message.Message;
 import com.valterc.ki2.data.preferences.PreferencesView;
 import com.valterc.ki2.data.preferences.device.DevicePreferencesView;
 import com.valterc.ki2.data.shifting.ShiftingInfo;
-import com.valterc.ki2.input.InputAdapter;
-import com.valterc.ki2.karoo.hooks.RideActivityHook;
+import com.valterc.ki2.karoo.service.device.DeviceDataFrontend;
 import com.valterc.ki2.karoo.service.messages.CustomMessageClient;
 import com.valterc.ki2.services.IKi2Service;
 import com.valterc.ki2.services.Ki2Service;
-import com.valterc.ki2.services.callbacks.IBatteryCallback;
-import com.valterc.ki2.services.callbacks.IConnectionInfoCallback;
-import com.valterc.ki2.services.callbacks.IKeyCallback;
 import com.valterc.ki2.services.callbacks.IMessageCallback;
 import com.valterc.ki2.services.callbacks.IPreferencesCallback;
-import com.valterc.ki2.services.callbacks.IShiftingCallback;
 
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -46,20 +43,17 @@ public class ServiceClient {
         @Override
         public void onServiceConnected(ComponentName name, IBinder binder) {
             service = IKi2Service.Stub.asInterface(binder);
+            deviceDataFrontend.setService(service);
             handler.post(() -> {
-                maybeStartConnectionEvents();
                 maybeStartPreferencesEvents();
                 maybeStartMessageEvents();
-                maybeStartKeyEvents();
-                maybeStartBatteryEvents();
-                maybeStartShiftingEvents();
             });
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
             service = null;
-            connectionFilter.reset();
+            deviceDataFrontend.setService(null);
             handler.postDelayed(() -> {
                 if (service == null) {
                     Log.w("KI2", "Attempting to re-bind to service");
@@ -67,62 +61,6 @@ public class ServiceClient {
                     attemptBindToService();
                 }
             }, TIME_MS_ATTEMPT_REBIND);
-        }
-    };
-
-    private final IConnectionInfoCallback connectionInfoCallback = new IConnectionInfoCallback.Stub() {
-        @Override
-        public void onConnectionInfo(DeviceId deviceId, ConnectionInfo connectionInfo) {
-            handler.post(() -> {
-                if (connectionFilter.onConnectionStatusReceived(deviceId, connectionInfo.getConnectionStatus())) {
-                    connectionInfoListeners.pushData(deviceId, connectionInfo);
-
-                    if (connectionFilter.shouldEmitEstablishedEvent()) {
-                        connectionFilter.emitEstablishedEvent(connectionInfoListeners::pushData);
-                    }
-                }
-                maybeStopConnectionEvents();
-            });
-        }
-    };
-
-    private final IBatteryCallback batteryCallback = new IBatteryCallback.Stub() {
-        @Override
-        public void onBattery(DeviceId deviceId, BatteryInfo batteryInfo) {
-            handler.post(() -> {
-                if (connectionFilter.onDataReceived(deviceId)) {
-                    batteryInfoListeners.pushData(deviceId, batteryInfo);
-                }
-                maybeStopBatteryEvents();
-            });
-        }
-    };
-
-    private final IShiftingCallback shiftingCallback = new IShiftingCallback.Stub() {
-        @Override
-        public void onShifting(DeviceId deviceId, ShiftingInfo shiftingInfo) {
-            handler.post(() -> {
-                if (connectionFilter.onDataReceived(deviceId)) {
-                    shiftingInfoListeners.pushData(deviceId, shiftingInfo);
-                }
-                maybeStopShiftingEvents();
-            });
-        }
-    };
-
-    private final IKeyCallback keyCallback = new IKeyCallback.Stub() {
-        @Override
-        public void onKeyEvent(DeviceId deviceId, KarooKeyEvent keyEvent) {
-            handler.post(() -> {
-                if (connectionFilter.onDataReceived(deviceId)) {
-                    try {
-                        inputAdapter.executeKeyEvent(keyEvent);
-                    } catch (Exception e) {
-                        Log.e("KI2", "Error handling input", e);
-                    }
-                }
-                maybeStopKeyEvents();
-            });
         }
     };
 
@@ -147,28 +85,23 @@ public class ServiceClient {
     };
 
     private final Context context;
-    private final InputAdapter inputAdapter;
     private final Handler handler;
-    private final ConnectionFilter connectionFilter;
     private final CustomMessageClient customMessageClient;
-    private final BiDataStreamWeakListenerList<DeviceId, ConnectionInfo> connectionInfoListeners;
-    private final BiDataStreamWeakListenerList<DeviceId, BatteryInfo> batteryInfoListeners;
-    private final BiDataStreamWeakListenerList<DeviceId, ShiftingInfo> shiftingInfoListeners;
     private final DataStreamWeakListenerList<Message> messageListeners;
     private final DataStreamWeakListenerList<PreferencesView> preferencesListeners;
     private IKi2Service service;
+    private final DeviceDataFrontend deviceDataFrontend;
 
     public ServiceClient(SdkContext context) {
         this.context = context;
-        inputAdapter = new InputAdapter(context);
-        connectionInfoListeners = new BiDataStreamWeakListenerList<>();
-        batteryInfoListeners = new BiDataStreamWeakListenerList<>();
-        shiftingInfoListeners = new BiDataStreamWeakListenerList<>();
+
+        handler = new Handler(Looper.getMainLooper());
+        deviceDataFrontend = new DeviceDataFrontend(context, handler);
+
         messageListeners = new DataStreamWeakListenerList<>();
         preferencesListeners = new DataStreamWeakListenerList<>();
-        handler = new Handler(Looper.getMainLooper());
-        connectionFilter = new ConnectionFilter();
-        customMessageClient = new CustomMessageClient(this);
+        customMessageClient = new CustomMessageClient(this, handler);
+
         attemptBindToService();
     }
 
@@ -179,164 +112,76 @@ public class ServiceClient {
         }
     }
 
+    /**
+     * Register a weak referenced listener that will receive connection info from the main ride device.
+     *
+     * @param connectionInfoConsumer Consumer that will receive connection events. It will be referenced using a weak reference so the owner must keep a strong reference.
+     */
     public void registerConnectionInfoWeakListener(BiConsumer<DeviceId, ConnectionInfo> connectionInfoConsumer) {
-        handler.post(() -> {
-            connectionInfoListeners.addListener(connectionInfoConsumer);
-            maybeStartConnectionEvents();
-            maybeStartKeyEvents();
-        });
+        deviceDataFrontend.registerConnectionInfoWeakListener(connectionInfoConsumer);
     }
 
-    private void maybeStartConnectionEvents() {
-        if (service == null) {
-            return;
-        }
-
-        if (!connectionInfoListeners.hasListeners()) {
-            return;
-        }
-
-        try {
-            service.registerConnectionInfoListener(connectionInfoCallback);
-        } catch (RemoteException e) {
-            Log.e("KI2", "Unable to register listener", e);
-        }
-    }
-
-    private void maybeStopConnectionEvents() {
-        if (service == null) {
-            return;
-        }
-
-        if (connectionInfoListeners.hasListeners()) {
-            return;
-        }
-
-        try {
-            service.unregisterConnectionInfoListener(connectionInfoCallback);
-        } catch (Exception e) {
-            Log.e("KI2", "Unable to unregister listener", e);
-        }
-    }
-
+    /**
+     * Register a weak referenced listener that will receive battery info from the main ride device.
+     *
+     * @param batteryInfoConsumer Consumer that will receive battery events. It will be referenced using a weak reference so the owner must keep a strong reference.
+     */
     public void registerBatteryInfoWeakListener(BiConsumer<DeviceId, BatteryInfo> batteryInfoConsumer) {
-        handler.post(() -> {
-            batteryInfoListeners.addListener(batteryInfoConsumer);
-            maybeStartBatteryEvents();
-            maybeStartKeyEvents();
-        });
+        deviceDataFrontend.registerBatteryInfoWeakListener(batteryInfoConsumer);
     }
 
-    private void maybeStartBatteryEvents() {
-        if (service == null) {
-            return;
-        }
-
-        if (!batteryInfoListeners.hasListeners()) {
-            return;
-        }
-
-        try {
-            service.registerBatteryListener(batteryCallback);
-        } catch (RemoteException e) {
-            Log.e("KI2", "Unable to register listener", e);
-        }
+    /**
+     * Register a weak referenced listener that will receive unfiltered battery info.
+     * Unfiltered data means that the listener will received data from all available devices, not just from the main ride device.
+     *
+     * @param batteryInfoConsumer Consumer that will receive battery events. It will be referenced using a weak reference so the owner must keep a strong reference.
+     */
+    public void registerUnfilteredBatteryInfoWeakListener(BiConsumer<DeviceId, BatteryInfo> batteryInfoConsumer) {
+        deviceDataFrontend.registerUnfilteredBatteryInfoWeakListener(batteryInfoConsumer);
     }
 
-    private void maybeStopBatteryEvents() {
-        if (service == null) {
-            return;
-        }
-
-        if (batteryInfoListeners.hasListeners()) {
-            return;
-        }
-
-        try {
-            service.unregisterBatteryListener(batteryCallback);
-        } catch (Exception e) {
-            Log.e("KI2", "Unable to unregister listener", e);
-        }
-    }
-
+    /**
+     * Register a weak referenced listener that will receive shifting info from the main ride device.
+     *
+     * @param shiftingInfoConsumer Consumer that will receive shifting events. It will be referenced using a weak reference so the owner must keep a strong reference.
+     */
     public void registerShiftingInfoWeakListener(BiConsumer<DeviceId, ShiftingInfo> shiftingInfoConsumer) {
-        handler.post(() -> {
-            shiftingInfoListeners.addListener(shiftingInfoConsumer);
-            maybeStartShiftingEvents();
-            maybeStartKeyEvents();
-        });
+        deviceDataFrontend.registerShiftingInfoWeakListener(shiftingInfoConsumer);
     }
 
-    private void maybeStartShiftingEvents() {
-        if (service == null) {
-            return;
-        }
-
-        if (!shiftingInfoListeners.hasListeners()) {
-            return;
-        }
-
-        try {
-            service.registerShiftingListener(shiftingCallback);
-        } catch (RemoteException e) {
-            Log.e("KI2", "Unable to register listener", e);
-        }
+    /**
+     * Register a weak referenced listener that will receive preferences info from the main ride device.
+     *
+     * @param devicePreferencesConsumer Consumer that will receive preferences events. It will be referenced using a weak reference so the owner must keep a strong reference.
+     */
+    public void registerDevicePreferencesWeakListener(BiConsumer<DeviceId, DevicePreferencesView> devicePreferencesConsumer) {
+        deviceDataFrontend.registerDevicePreferencesWeakListener(devicePreferencesConsumer);
     }
 
-    private void maybeStopShiftingEvents() {
-        if (service == null) {
-            return;
-        }
-
-        if (shiftingInfoListeners.hasListeners()) {
-            return;
-        }
-
-        try {
-            service.unregisterShiftingListener(shiftingCallback);
-        } catch (Exception e) {
-            Log.e("KI2", "Unable to unregister listener", e);
-        }
+    /**
+     * Get device preferences.
+     *
+     * @param deviceId Device identifier.
+     * @return Device preference for the specified device. Can be <code>null</code> if the service is not reachable.
+     */
+    public DevicePreferencesView getDevicePreferences(DeviceId deviceId) {
+        return deviceDataFrontend.getDevicePreferences(deviceId);
     }
 
-    private void maybeStartKeyEvents() {
-        if (service == null) {
-            return;
-        }
-
-        if (!RideActivityHook.isRideActivityProcess() &&
-                !shiftingInfoListeners.hasListeners() &&
-                !connectionInfoListeners.hasListeners() &&
-                !batteryInfoListeners.hasListeners()) {
-            return;
-        }
-
-        try {
-            service.registerKeyListener(keyCallback);
-        } catch (RemoteException e) {
-            Log.e("KI2", "Unable to register listener", e);
-        }
+    /**
+     * Change shift mode. The shift mode will not be changed if the service cannot be reached.
+     *
+     * @param deviceId Device identifier.
+     */
+    public void changeShiftMode(DeviceId deviceId) {
+        deviceDataFrontend.changeShiftMode(deviceId);
     }
 
-    private void maybeStopKeyEvents() {
-        if (service == null) {
-            return;
-        }
-
-        if (RideActivityHook.isRideActivityProcess() ||
-                shiftingInfoListeners.hasListeners() ||
-                connectionInfoListeners.hasListeners() ||
-                batteryInfoListeners.hasListeners()) {
-            return;
-        }
-
-        try {
-            service.unregisterKeyListener(keyCallback);
-        } catch (RemoteException e) {
-            Log.e("KI2", "Unable to unregister listener", e);
-        }
-    }
-
+    /**
+     * Register a weak referenced listener that will receive messages.
+     *
+     * @param messageConsumer Consumer that will receive messages. It will be referenced using a weak reference so the owner must keep a strong reference.
+     */
     public void registerMessageWeakListener(Consumer<Message> messageConsumer) {
         handler.post(() -> {
             messageListeners.addListener(messageConsumer);
@@ -344,7 +189,12 @@ public class ServiceClient {
         });
     }
 
-    public void sendMessage(Message message) {
+    /**
+     * Send message. The message will not be sent if the service cannot be reached.
+     *
+     * @param message Message to send. Cannot be null.
+     */
+    public void sendMessage(@NonNull Message message) {
         if (service == null) {
             return;
         }
@@ -356,6 +206,11 @@ public class ServiceClient {
         }
     }
 
+    /**
+     * Get custom message client.
+     *
+     * @return Custom message client.
+     */
     public CustomMessageClient getCustomMessageClient() {
         return customMessageClient;
     }
@@ -392,6 +247,12 @@ public class ServiceClient {
         }
     }
 
+    /**
+     * Get global preferences.
+     *
+     * @return Global preferences. Can be <code>null</code> if the service is not reachable.
+     */
+    @Nullable
     public PreferencesView getPreferences() {
         if (service == null) {
             return null;
@@ -406,6 +267,11 @@ public class ServiceClient {
         return null;
     }
 
+    /**
+     * Register a weak referenced listener that will receive global preferences.
+     *
+     * @param preferencesConsumer Consumer that will receive global preferences. It will be referenced using a weak reference so the owner must keep a strong reference.
+     */
     public void registerPreferencesWeakListener(Consumer<PreferencesView> preferencesConsumer) {
         handler.post(() -> {
             preferencesListeners.addListener(preferencesConsumer);
@@ -442,32 +308,6 @@ public class ServiceClient {
             service.unregisterPreferencesListener(preferencesCallback);
         } catch (Exception e) {
             Log.e("KI2", "Unable to unregister listener", e);
-        }
-    }
-
-    public DevicePreferencesView getDevicePreferences(DeviceId deviceId) {
-        if (service == null) {
-            return null;
-        }
-
-        try {
-            return service.getDevicePreferences(deviceId);
-        } catch (Exception e) {
-            Log.e("KI2", "Unable to get device preferences", e);
-        }
-
-        return null;
-    }
-
-    public void changeShiftMode(DeviceId deviceId) {
-        if (service == null) {
-            return;
-        }
-
-        try {
-            service.changeShiftMode(deviceId);
-        } catch (RemoteException e) {
-            Log.e("KI2", "Unable to change shift mode", e);
         }
     }
 

@@ -1,36 +1,40 @@
 package com.valterc.ki2.karoo.formatters;
 
+import android.content.Context;
+
 import androidx.annotation.NonNull;
 
 import com.valterc.ki2.data.connection.ConnectionInfo;
 import com.valterc.ki2.data.connection.ConnectionStatus;
 import com.valterc.ki2.data.device.DeviceId;
-import com.valterc.ki2.data.shifting.ShiftingInfo;
+import com.valterc.ki2.data.preferences.device.DevicePreferencesView;
 import com.valterc.ki2.karoo.Ki2Context;
 
-import java.text.DecimalFormat;
 import java.util.function.BiConsumer;
 
 import io.hammerhead.sdk.v0.datatype.formatter.SdkFormatter;
 
-public class FrontGearFormatter extends SdkFormatter {
+public class DeviceNameTextFormatter extends SdkFormatter {
 
-    private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("00");
-
-    @SuppressWarnings("FieldCanBeLocal")
-    private final BiConsumer<DeviceId, ConnectionInfo> connectionInfoConsumer = (deviceId, connectionInfo) ->
-            connectionStatus = connectionInfo.getConnectionStatus();
+    private Context context;
 
     @SuppressWarnings("FieldCanBeLocal")
-    private final BiConsumer<DeviceId, ShiftingInfo> shiftingInfoConsumer = (deviceId, shiftingInfo) ->
-            this.shiftingInfo = shiftingInfo;
+    private final BiConsumer<DeviceId, ConnectionInfo> connectionInfoConsumer = (deviceId, connectionInfo) -> {
+        connectionStatus = connectionInfo.getConnectionStatus();
+    };
+
+    @SuppressWarnings("FieldCanBeLocal")
+    private final BiConsumer<DeviceId, DevicePreferencesView> devicePreferencesConsumer = (deviceId, preferences) -> {
+        deviceName = preferences.getName(context);
+    };
 
     private ConnectionStatus connectionStatus;
-    private ShiftingInfo shiftingInfo;
+    private String deviceName;
 
-    public FrontGearFormatter(Ki2Context ki2Context) {
+    public DeviceNameTextFormatter(Ki2Context ki2Context) {
+        this.context = ki2Context.getSdkContext();
         ki2Context.getServiceClient().registerConnectionInfoWeakListener(connectionInfoConsumer);
-        ki2Context.getServiceClient().registerShiftingInfoWeakListener(shiftingInfoConsumer);
+        ki2Context.getServiceClient().registerDevicePreferencesWeakListener(devicePreferencesConsumer);
     }
 
     @NonNull
@@ -40,10 +44,11 @@ public class FrontGearFormatter extends SdkFormatter {
             return NumericTextFormatterConstants.NOT_AVAILABLE;
         }
 
-        if (shiftingInfo == null) {
+        if (deviceName == null) {
             return NumericTextFormatterConstants.WAITING_FOR_DATA;
         }
 
-        return DECIMAL_FORMAT.format(shiftingInfo.getFrontGear());
+        return deviceName;
     }
+
 }

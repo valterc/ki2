@@ -179,6 +179,15 @@ public class DevicePreferencesView implements Parcelable {
     }
 
     /**
+     * Indicates if the device to configured to only receive switch events.
+     *
+     * @return True if the device is configured to only receive switch events, False otherwise.
+     */
+    public boolean isSwitchEventsOnly(Context context) {
+        return getBoolean(context.getString(R.string.preference_device_switch_events_only), context.getResources().getBoolean(R.bool.default_preference_device_switch_events_only));
+    }
+
+    /**
      * Get the name for the device.
      *
      * @param context Ki2 application context. Cannot be a context generated from another package.
@@ -187,6 +196,15 @@ public class DevicePreferencesView implements Parcelable {
     @Nullable
     public String getName(Context context) {
         return getString(context.getString(R.string.preference_device_name), context.getString(R.string.text_param_di2_name, deviceId.getName()));
+    }
+
+    /**
+     * Get the priority of the device. Top priority is given to devices with lower priority value, a priority of 0 is the first.
+     *
+     * @return Priority of the device.
+     */
+    public int getPriority(Context context) {
+        return getInt(context.getString(R.string.preference_device_priority), Integer.MAX_VALUE);
     }
 
 }

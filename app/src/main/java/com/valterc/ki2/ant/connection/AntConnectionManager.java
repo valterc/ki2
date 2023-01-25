@@ -56,20 +56,41 @@ public class AntConnectionManager {
         IAntDeviceConnection existingConnection = connectionMap.get(deviceId);
         if (existingConnection != null) {
             if (forceReconnect ||
-                    existingConnection.getConnectionStatus() == ConnectionStatus.INVALID ||
-                    existingConnection.getConnectionStatus() == ConnectionStatus.CLOSED) {
+                    existingConnection.getConnectionStatus() == ConnectionStatus.INVALID) {
                 existingConnection.disconnect();
             } else {
                 return;
             }
         }
 
-        ChannelConfiguration channelConfiguration = ConfigurationStore.getChannelConfiguration(context, deviceId.getAntDeviceId());
         try {
+            ChannelConfiguration channelConfiguration = ConfigurationStore.getChannelConfiguration(context, deviceId.getAntDeviceId());
             AntDeviceConnection connection = new AntDeviceConnection(antManager, deviceId, channelConfiguration, deviceConnectionListener);
             connectionMap.put(deviceId, connection);
         } catch (Exception e) {
             Timber.e(e, "Unable to create ANT connection for deviceId %s", deviceId);
+        }
+    }
+
+    public void restartClosedConnections(IDeviceConnectionListener deviceConnectionListener) {
+        for (DeviceId deviceId : connectionMap.keySet()) {
+            IAntDeviceConnection existingConnection = connectionMap.get(deviceId);
+            if (existingConnection != null) {
+                if (existingConnection.getConnectionStatus() == ConnectionStatus.INVALID ||
+                        existingConnection.getConnectionStatus() == ConnectionStatus.CLOSED) {
+                    existingConnection.disconnect();
+                } else {
+                    continue;
+                }
+            }
+
+            try {
+                ChannelConfiguration channelConfiguration = ConfigurationStore.getChannelConfiguration(context, deviceId.getAntDeviceId());
+                AntDeviceConnection connection = new AntDeviceConnection(antManager, deviceId, channelConfiguration, deviceConnectionListener);
+                connectionMap.put(deviceId, connection);
+            } catch (Exception e) {
+                Timber.e(e, "Unable to create ANT connection for deviceId %s", deviceId);
+            }
         }
     }
 
@@ -82,7 +103,7 @@ public class AntConnectionManager {
     }
 
     public void disconnect(Collection<DeviceId> devices) {
-        for (DeviceId deviceId: devices) {
+        for (DeviceId deviceId : devices) {
             disconnect(deviceId);
         }
     }

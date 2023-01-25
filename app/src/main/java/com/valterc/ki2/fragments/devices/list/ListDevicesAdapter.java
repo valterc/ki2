@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -29,14 +30,16 @@ public class ListDevicesAdapter extends RecyclerView.Adapter<ListDevicesViewHold
     private final Context context;
     private final Consumer<DeviceId> listenerConfigureDevice;
     private final Consumer<DeviceId> listenerReconnectDevice;
+    private final Consumer<RecyclerView.ViewHolder> listenerDragStart;
     private final List<DeviceId> devices;
     private final Map<DeviceId, DevicePreferences> devicePreferencesMap;
     private final Map<DeviceId, ConnectionDataInfo> connectionDataInfoMap;
 
-    public ListDevicesAdapter(Context context, Consumer<DeviceId> listenerConfigureDevice, Consumer<DeviceId> listenerReconnectDevice) {
+    public ListDevicesAdapter(Context context, Consumer<DeviceId> listenerConfigureDevice, Consumer<DeviceId> listenerReconnectDevice, Consumer<RecyclerView.ViewHolder> listenerDragStart) {
         this.context = context;
         this.listenerConfigureDevice = listenerConfigureDevice;
         this.listenerReconnectDevice = listenerReconnectDevice;
+        this.listenerDragStart = listenerDragStart;
         this.devices = new ArrayList<>();
         this.devicePreferencesMap = new HashMap<>();
         this.connectionDataInfoMap = new HashMap<>();
@@ -52,45 +55,65 @@ public class ListDevicesAdapter extends RecyclerView.Adapter<ListDevicesViewHold
             this.devices.addAll(devices);
         }
 
-        for (DeviceId device: this.devices) {
+        for (DeviceId device : this.devices) {
             devicePreferencesMap.put(device, new DevicePreferences(context, device));
         }
 
         notifyDataSetChanged();
     }
 
-    public void addConnectionDataInfo(ConnectionDataInfo connectionDataInfo) {
-        int index = devices.indexOf(connectionDataInfo.getDeviceId());
-        ConnectionDataInfo existingConnectionDataInfo = connectionDataInfoMap.get(connectionDataInfo.getDeviceId());
-        if (index != -1 &&
-                (existingConnectionDataInfo == null || existingConnectionDataInfo.getConnectionStatus() != connectionDataInfo.getConnectionStatus())) {
-            this.connectionDataInfoMap.put(connectionDataInfo.getDeviceId(), connectionDataInfo);
-            notifyItemChanged(index);
+    public List<DeviceId> getDevices() {
+        return new ArrayList<>(devices);
+    }
+
+    public void setConnectionDataInfo(Map<DeviceId, ConnectionDataInfo> connectionDataInfoMap) {
+        for (int i = 0; i < devices.size(); i++) {
+            DeviceId deviceId = devices.get(i);
+            ConnectionDataInfo existingConnectionDataInfo = this.connectionDataInfoMap.get(deviceId);
+            ConnectionDataInfo newConnectionDataInfo = connectionDataInfoMap.get(deviceId);
+
+            if (newConnectionDataInfo != null &&
+                    (existingConnectionDataInfo == null || existingConnectionDataInfo.getConnectionStatus() != newConnectionDataInfo.getConnectionStatus())) {
+                this.connectionDataInfoMap.put(deviceId, newConnectionDataInfo);
+                notifyItemChanged(i);
+            }
         }
     }
 
     @NonNull
     @Override
+    @SuppressLint("ClickableViewAccessibility")
     public ListDevicesViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.view_list_devices_item, parent, false);
-        return new ListDevicesViewHolder(view);
+        ListDevicesViewHolder viewHolder = new ListDevicesViewHolder(view);
+
+        viewHolder.getImageViewDrag().setOnTouchListener((v, event) -> {
+            if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
+                listenerDragStart.accept(viewHolder);
+            }
+
+            return true;
+        });
+
+        return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(@NonNull ListDevicesViewHolder holder, int position) {
         DeviceId deviceId = devices.get(position);
+        DevicePreferences devicePreferences = Objects.requireNonNull(devicePreferencesMap.get(deviceId));
 
         if (deviceId.getDeviceType() == DeviceType.SHIMANO_SHIFTING) {
             holder.getImageViewIcon().setImageResource(R.drawable.ic_di2);
-            holder.getTextViewName().setText(Objects.requireNonNull(devicePreferencesMap.get(deviceId)).getName());
+            holder.getTextViewName().setText(devicePreferences.getName());
         } else {
             holder.getImageViewIcon().setImageResource(R.drawable.ic_memory);
             String deviceLabel = holder.getTextViewName().getContext().getString(R.string.text_param_sensor_name, deviceId.getName());
             holder.getTextViewName().setText(deviceLabel);
         }
 
-        setConnectionStatusIndicator(holder, connectionDataInfoMap.get(deviceId));
+        setConnectionStatusIndicator(holder, connectionDataInfoMap.get(deviceId), devicePreferences.isEnabled());
         holder.getRootView().setOnClickListener(e -> listenerConfigureDevice.accept(deviceId));
         holder.getButtonReconnect().setOnClickListener(e -> {
             listenerReconnectDevice.accept(deviceId);
@@ -106,9 +129,16 @@ public class ListDevicesAdapter extends RecyclerView.Adapter<ListDevicesViewHold
         return devices.size();
     }
 
-    private void setConnectionStatusIndicator(ListDevicesViewHolder holder, ConnectionDataInfo connectionDataInfo) {
-
+    private void setConnectionStatusIndicator(ListDevicesViewHolder holder, ConnectionDataInfo connectionDataInfo, boolean enabled) {
         Context context = holder.getTextViewConnectionStatus().getContext();
+
+        if (!enabled) {
+            holder.getTextViewConnectionStatus().setText(R.string.text_disabled);
+            holder.getTextViewConnectionStatus().setTextColor(context.getColor(R.color.hh_faded_gray));
+            holder.getTextViewName().setTextColor(context.getColor(R.color.hh_dark_grey));
+            holder.getButtonReconnect().setVisibility(View.INVISIBLE);
+            return;
+        }
 
         if (connectionDataInfo == null) {
             holder.getTextViewConnectionStatus().setText(R.string.text_waiting_for_state);
@@ -150,7 +180,10 @@ public class ListDevicesAdapter extends RecyclerView.Adapter<ListDevicesViewHold
                 break;
 
         }
-
     }
 
+    public void moveDevicePosition(int fromPosition, int toPosition) {
+        devices.add(toPosition, devices.remove(fromPosition));
+        notifyItemMoved(fromPosition, toPosition);
+    }
 }

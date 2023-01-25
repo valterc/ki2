@@ -84,5 +84,15 @@
     <string name="text_start_update">Start update</string>
     <string name="text_update_restart">Please <b>restart Karoo</b> before riding.</string>
     <string name="text_rename">Rename</string>
+    <string name="text_manage_device">Manage device</string>
+    <string name="text_device_details">Device details</string>
+    <string name="text_disabled">Disabled</string>
+    <string name="text_disable">Disable</string>
+    <string name="text_switches_only">Switches only</string>
+    <string name="text_enabled">Enabled</string>
+    <string name="text_device_switches_only">In \'Switches only\' mode, the app will not use any data from this device except for Switch/Button events.\n\nData such as gearing or battery will not be displayed in ride elements.</string>
+    <string name="text_device_disable">Ki2 will not connect to disabled devices.</string>
+    <string name="text_question_device_disable">Disable device?</string>
+    <string name="text_drag">Drag</string>
 
 </resources>

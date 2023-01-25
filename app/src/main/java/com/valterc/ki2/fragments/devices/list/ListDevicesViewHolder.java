@@ -18,6 +18,8 @@ public class ListDevicesViewHolder extends RecyclerView.ViewHolder {
     private final TextView textViewConnectionStatus;
     private final ImageButton buttonReconnect;
 
+    private final ImageView imageViewDrag;
+
     public ListDevicesViewHolder(@NonNull View itemView) {
         super(itemView);
 
@@ -26,6 +28,7 @@ public class ListDevicesViewHolder extends RecyclerView.ViewHolder {
         textViewName = itemView.findViewById(R.id.textview_list_devices_item_name);
         textViewConnectionStatus = itemView.findViewById(R.id.textview_list_devices_item_connection_status);
         buttonReconnect = itemView.findViewById(R.id.imagebutton_list_devices_item_reconnect);
+        imageViewDrag = itemView.findViewById(R.id.imageview_list_devices_item_drag);
     }
 
     public View getRootView(){
@@ -48,4 +51,7 @@ public class ListDevicesViewHolder extends RecyclerView.ViewHolder {
         return buttonReconnect;
     }
 
+    public ImageView getImageViewDrag() {
+        return imageViewDrag;
+    }
 }
