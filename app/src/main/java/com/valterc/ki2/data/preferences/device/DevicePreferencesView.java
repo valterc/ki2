@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 
 import com.valterc.ki2.R;
 import com.valterc.ki2.data.device.DeviceId;
+import com.valterc.ki2.data.device.DeviceType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -184,7 +185,7 @@ public class DevicePreferencesView implements Parcelable {
      * @return True if the device is configured to only receive switch events, False otherwise.
      */
     public boolean isSwitchEventsOnly(Context context) {
-        return getBoolean(context.getString(R.string.preference_device_switch_events_only), context.getResources().getBoolean(R.bool.default_preference_device_switch_events_only));
+        return getBoolean(context.getString(R.string.preference_device_switch_events_only), () -> context.getResources().getBoolean(R.bool.default_preference_device_switch_events_only));
     }
 
     /**
@@ -195,7 +196,17 @@ public class DevicePreferencesView implements Parcelable {
      */
     @Nullable
     public String getName(Context context) {
-        return getString(context.getString(R.string.preference_device_name), context.getString(R.string.text_param_di2_name, deviceId.getName()));
+        return getString(context.getString(R.string.preference_device_name), () -> getDefaultName(context));
+    }
+
+    private String getDefaultName(Context context) {
+        if (deviceId.getDeviceType() == DeviceType.SHIMANO_SHIFTING) {
+            return context.getString(R.string.text_param_di2_name, deviceId.getName());
+        } else if (deviceId.getDeviceType() == DeviceType.MOCK_SHIFTING) {
+            return context.getString(R.string.text_param_mock_name, deviceId.getName());
+        } else {
+            return context.getString(R.string.text_param_sensor_name, deviceId.getName());
+        }
     }
 
     /**

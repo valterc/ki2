@@ -40,4 +40,9 @@ public class DevicePreferencesEntry {
     public DevicePreferencesView getDevicePreferences() {
         return devicePreferencesView;
     }
+
+    public void delete(Context context) {
+        dispose();
+        context.deleteSharedPreferences(context.getString(R.string.preference_param_device, deviceId.getUid()));
+    }
 }

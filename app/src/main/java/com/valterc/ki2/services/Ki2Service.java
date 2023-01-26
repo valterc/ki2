@@ -56,6 +56,7 @@ import com.valterc.ki2.services.callbacks.IPreferencesCallback;
 import com.valterc.ki2.services.callbacks.IScanCallback;
 import com.valterc.ki2.services.callbacks.IShiftingCallback;
 import com.valterc.ki2.services.callbacks.ISwitchCallback;
+import com.valterc.ki2.services.debug.DebugHelper;
 import com.valterc.ki2.services.handler.ServiceHandler;
 import com.valterc.ki2.update.background.BackgroundUpdateChecker;
 import com.valterc.ki2.update.background.IUpdateCheckerListener;
@@ -468,6 +469,7 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
         @Override
         public void deleteDevice(DeviceId deviceId) {
             deviceStore.deleteDevice(deviceId);
+            devicePreferencesStore.deletePreferences(deviceId);
             serviceHandler.postRetriableAction(Ki2Service.this::processConnections);
         }
 
@@ -515,6 +517,8 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
         backgroundUpdateChecker = new BackgroundUpdateChecker(this, this);
         preferencesStore = new PreferencesStore(this, this::onPreferences);
         devicePreferencesStore = new DevicePreferencesStore(this, this::onDevicePreferences);
+
+        DebugHelper.init(deviceStore);
         devicePreferencesStore.setDevices(deviceStore.getDevices());
 
         registerReceiver(receiverReconnectDevices, new IntentFilter("io.hammerhead.action.RECONNECT_DEVICES"));
