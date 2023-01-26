@@ -58,4 +58,11 @@ public class DevicePreferencesStore {
         return preferencesEntryMap.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, value -> value.getValue().getDevicePreferences()));
     }
 
+    public void deletePreferences(DeviceId deviceId) {
+        DevicePreferencesEntry devicePreferencesEntry = preferencesEntryMap.remove(deviceId);
+        if (devicePreferencesEntry != null) {
+            devicePreferencesEntry.delete(context);
+        }
+    }
+
 }
