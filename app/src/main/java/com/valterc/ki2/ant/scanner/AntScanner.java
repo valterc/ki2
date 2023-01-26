@@ -67,14 +67,14 @@ public class AntScanner {
         return antChannelWrapper != null;
     }
 
-    private final DeviceId createDeviceId(int transmissionType, int deviceTypeValue) {
+    private DeviceId createDeviceId(int transmissionType, int deviceTypeValue) {
         String uid = transmissionType + "-" + deviceTypeValue;
         DeviceType deviceType = DeviceType.fromDeviceTypeValue(deviceTypeValue);
         return new DeviceId(uid, deviceType);
     }
 
     public final DeviceId processScanResult(MessageFromAntType messageFromAntType, AntMessageParcel antMessageParcel) {
-        if (messageFromAntType == null || antMessageParcel == null || messageFromAntType != MessageFromAntType.BROADCAST_DATA) {
+        if (antMessageParcel == null || messageFromAntType != MessageFromAntType.BROADCAST_DATA) {
             return null;
         }
 

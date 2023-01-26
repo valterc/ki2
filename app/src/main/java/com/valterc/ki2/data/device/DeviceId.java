@@ -35,7 +35,7 @@ public class DeviceId implements Parcelable {
     @Override
     public void writeToParcel(Parcel out, int flags) {
         out.writeString(uid);
-        out.writeInt(deviceType.getDeviceTypeValue());
+        out.writeInt(deviceType.getValue());
     }
 
     @Override

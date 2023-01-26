@@ -35,7 +35,7 @@ public class TransportHandler implements ITransportHandler {
         this.deviceId = deviceId;
         this.antDeviceConnection = antDeviceConnection;
         this.deviceConnectionListener = deviceConnectionListener;
-        this.profileHandler = ProfileHandlerFactory.getProfileHandler(deviceId, this, deviceConnectionListener);
+        this.profileHandler = ProfileHandlerFactory.buildProfileHandler(deviceId, this, deviceConnectionListener);
     }
 
     public final void processAntMessage(MessageFromAntType messageFromAntType, AntMessageParcel antMessageParcel) {

@@ -64,8 +64,7 @@ public class AntConnectionManager {
         }
 
         try {
-            ChannelConfiguration channelConfiguration = ConfigurationStore.getChannelConfiguration(context, deviceId.getAntDeviceId());
-            AntDeviceConnection connection = new AntDeviceConnection(antManager, deviceId, channelConfiguration, deviceConnectionListener);
+            IAntDeviceConnection connection = DeviceConnectionFactory.buildDeviceConnection(context, antManager, deviceId, deviceConnectionListener);
             connectionMap.put(deviceId, connection);
         } catch (Exception e) {
             Timber.e(e, "Unable to create ANT connection for deviceId %s", deviceId);
@@ -122,10 +121,6 @@ public class AntConnectionManager {
 
     public IAntDeviceConnection getConnection(DeviceId deviceId) {
         return connectionMap.get(deviceId);
-    }
-
-    public Collection<IAntDeviceConnection> getConnections() {
-        return connectionMap.values();
     }
 
 }
