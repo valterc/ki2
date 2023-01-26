@@ -30,7 +30,7 @@ public class SearchDevicesAdapter extends RecyclerView.Adapter<SearchDevicesView
     @SuppressLint("NotifyDataSetChanged")
     public void setDevices(Collection<DeviceId> devices) {
         this.devices.clear();
-        if (devices != null && devices.size() > 0){
+        if (devices != null && devices.size() > 0) {
             this.devices.addAll(devices);
         }
 
@@ -52,6 +52,11 @@ public class SearchDevicesAdapter extends RecyclerView.Adapter<SearchDevicesView
         if (deviceId.getDeviceType() == DeviceType.SHIMANO_SHIFTING) {
             holder.getImageViewIcon().setImageResource(R.drawable.ic_di2);
             String deviceLabel = holder.getTextViewName().getContext().getString(R.string.text_param_di2_name, deviceId.getName());
+            holder.getTextViewName().setText(deviceLabel);
+            holder.getButtonAdd().setVisibility(View.VISIBLE);
+        } else if (deviceId.getDeviceType() == DeviceType.MOCK_SHIFTING) {
+            holder.getImageViewIcon().setImageResource(R.drawable.ic_mock);
+            String deviceLabel = holder.getTextViewName().getContext().getString(R.string.text_param_mock_name, deviceId.getName());
             holder.getTextViewName().setText(deviceLabel);
             holder.getButtonAdd().setVisibility(View.VISIBLE);
         } else {

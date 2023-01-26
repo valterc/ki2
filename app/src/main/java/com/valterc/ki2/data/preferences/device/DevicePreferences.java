@@ -7,6 +7,7 @@ import androidx.annotation.Nullable;
 
 import com.valterc.ki2.R;
 import com.valterc.ki2.data.device.DeviceId;
+import com.valterc.ki2.data.device.DeviceType;
 
 public class DevicePreferences {
 
@@ -73,7 +74,17 @@ public class DevicePreferences {
      */
     @Nullable
     public String getName() {
-        return sharedPreferences.getString(context.getString(R.string.preference_device_name), context.getString(R.string.text_param_di2_name, deviceId.getName()));
+        return sharedPreferences.getString(context.getString(R.string.preference_device_name), getDefaultName());
+    }
+
+    private String getDefaultName() {
+        if (deviceId.getDeviceType() == DeviceType.SHIMANO_SHIFTING) {
+            return context.getString(R.string.text_param_di2_name, deviceId.getName());
+        } else if (deviceId.getDeviceType() == DeviceType.MOCK_SHIFTING) {
+            return context.getString(R.string.text_param_mock_name, deviceId.getName());
+        } else {
+            return context.getString(R.string.text_param_sensor_name, deviceId.getName());
+        }
     }
 
     public void setName(String name) {

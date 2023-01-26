@@ -103,14 +103,14 @@ public class ListDevicesAdapter extends RecyclerView.Adapter<ListDevicesViewHold
     public void onBindViewHolder(@NonNull ListDevicesViewHolder holder, int position) {
         DeviceId deviceId = devices.get(position);
         DevicePreferences devicePreferences = Objects.requireNonNull(devicePreferencesMap.get(deviceId));
+        holder.getTextViewName().setText(devicePreferences.getName());
 
         if (deviceId.getDeviceType() == DeviceType.SHIMANO_SHIFTING) {
             holder.getImageViewIcon().setImageResource(R.drawable.ic_di2);
-            holder.getTextViewName().setText(devicePreferences.getName());
+        } else if (deviceId.getDeviceType() == DeviceType.MOCK_SHIFTING) {
+            holder.getImageViewIcon().setImageResource(R.drawable.ic_mock);
         } else {
             holder.getImageViewIcon().setImageResource(R.drawable.ic_memory);
-            String deviceLabel = holder.getTextViewName().getContext().getString(R.string.text_param_sensor_name, deviceId.getName());
-            holder.getTextViewName().setText(deviceLabel);
         }
 
         setConnectionStatusIndicator(holder, connectionDataInfoMap.get(deviceId), devicePreferences.isEnabled());
