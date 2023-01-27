@@ -14,17 +14,14 @@ import com.valterc.ki2.utils.CallerUtils;
 import java.util.Collections;
 import java.util.List;
 
-import io.hammerhead.sdk.v0.datatype.formatter.BuiltInFormatter;
-import io.hammerhead.sdk.v0.datatype.formatter.SdkFormatter;
-import io.hammerhead.sdk.v0.datatype.transformer.BuiltInTransformer;
-import io.hammerhead.sdk.v0.datatype.transformer.SdkTransformer;
 import io.hammerhead.sdk.v0.datatype.view.SdkView;
 
-public class ShiftModeDataType extends Ki2DataType {
+public class ShiftModeDataType extends GraphicalKi2DataType {
 
     private static final String TYPE_ID = "ki2::shift-mode";
 
     private final List<Drawable> drawables;
+    private SdkView view;
 
     public ShiftModeDataType(@NonNull Ki2Context context) {
         super(context);
@@ -59,21 +56,7 @@ public class ShiftModeDataType extends Ki2DataType {
 
     @NonNull
     @Override
-    public SdkTransformer newTransformer() {
-        return new BuiltInTransformer.Identity(getContext());
-    }
-
-    @NonNull
-    @Override
-    public SdkFormatter newFormatter() {
-        return new BuiltInFormatter.None();
-    }
-
-    @NonNull
-    @Override
-    public SdkView newView() {
-        return getKi2Context()
-                .getInstanceManager()
-                .getOrComputeInstance(ShiftModeSdkView.class.getSimpleName(), SdkView.class, () -> new ShiftModeSdkView(getKi2Context()));
+    public SdkView createView() {
+        return new ShiftModeSdkView(getKi2Context());
     }
 }

@@ -14,6 +14,7 @@ import com.valterc.ki2.data.connection.ConnectionStatus;
 import com.valterc.ki2.data.device.DeviceId;
 import com.valterc.ki2.data.shifting.ShiftingInfo;
 import com.valterc.ki2.karoo.Ki2Context;
+import com.valterc.ki2.karoo.formatters.NumericTextFormatterConstants;
 import com.valterc.ki2.views.DrivetrainView;
 
 import java.util.function.BiConsumer;
@@ -88,9 +89,9 @@ public class DrivetrainSizeSdkView extends Ki2SdkView {
         drivetrainView.setGears(
                 shiftingInfo.getFrontGearMax(),
                 shiftingInfo.getFrontGear(),
-                String.valueOf(frontTeethCount),
+                frontTeethCount == 0 ? NumericTextFormatterConstants.NOT_AVAILABLE : String.valueOf(frontTeethCount),
                 shiftingInfo.getRearGearMax(),
                 shiftingInfo.getRearGear(),
-                String.valueOf(rearTeethCount));
+                rearTeethCount == 0 ? NumericTextFormatterConstants.NOT_AVAILABLE : String.valueOf(rearTeethCount));
     }
 }
