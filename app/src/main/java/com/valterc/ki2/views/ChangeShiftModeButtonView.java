@@ -43,6 +43,7 @@ public class ChangeShiftModeButtonView extends View {
     public ChangeShiftModeButtonView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         initPaint();
+        setText("Change\nMode");
 
         setClickable(true);
         setOnClickListener(this::onClickListener);
