@@ -3,11 +3,11 @@ package com.valterc.ki2.data.preferences.device;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import androidx.annotation.Nullable;
+import androidx.annotation.NonNull;
 
 import com.valterc.ki2.R;
 import com.valterc.ki2.data.device.DeviceId;
-import com.valterc.ki2.data.device.DeviceType;
+import com.valterc.ki2.data.device.DeviceName;
 
 public class DevicePreferences {
 
@@ -72,19 +72,9 @@ public class DevicePreferences {
      *
      * @return String with name for the device.
      */
-    @Nullable
+    @NonNull
     public String getName() {
-        return sharedPreferences.getString(context.getString(R.string.preference_device_name), getDefaultName());
-    }
-
-    private String getDefaultName() {
-        if (deviceId.getDeviceType() == DeviceType.SHIMANO_SHIFTING) {
-            return context.getString(R.string.text_param_di2_name, deviceId.getName());
-        } else if (deviceId.getDeviceType() == DeviceType.MOCK_SHIFTING) {
-            return context.getString(R.string.text_param_mock_name, deviceId.getName());
-        } else {
-            return context.getString(R.string.text_param_sensor_name, deviceId.getName());
-        }
+        return sharedPreferences.getString(context.getString(R.string.preference_device_name), DeviceName.getDefaultName(context, deviceId));
     }
 
     public void setName(String name) {

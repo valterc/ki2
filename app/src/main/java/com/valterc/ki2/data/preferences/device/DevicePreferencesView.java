@@ -5,11 +5,11 @@ import android.content.SharedPreferences;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import androidx.annotation.Nullable;
+import androidx.annotation.NonNull;
 
 import com.valterc.ki2.R;
 import com.valterc.ki2.data.device.DeviceId;
-import com.valterc.ki2.data.device.DeviceType;
+import com.valterc.ki2.data.device.DeviceName;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -41,7 +41,7 @@ public class DevicePreferencesView implements Parcelable {
     /**
      * Generate a new device preference view.
      *
-     * @param context Ki2 application context. Cannot be a context generated from another process.
+     * @param context  Ki2 application context. Cannot be a context generated from another process.
      * @param deviceId Device identifier.
      */
     public DevicePreferencesView(Context context, DeviceId deviceId) {
@@ -194,19 +194,9 @@ public class DevicePreferencesView implements Parcelable {
      * @param context Ki2 application context. Cannot be a context generated from another package.
      * @return String with name for the device.
      */
-    @Nullable
+    @NonNull
     public String getName(Context context) {
-        return getString(context.getString(R.string.preference_device_name), () -> getDefaultName(context));
-    }
-
-    private String getDefaultName(Context context) {
-        if (deviceId.getDeviceType() == DeviceType.SHIMANO_SHIFTING) {
-            return context.getString(R.string.text_param_di2_name, deviceId.getName());
-        } else if (deviceId.getDeviceType() == DeviceType.MOCK_SHIFTING) {
-            return context.getString(R.string.text_param_mock_name, deviceId.getName());
-        } else {
-            return context.getString(R.string.text_param_sensor_name, deviceId.getName());
-        }
+        return getString(context.getString(R.string.preference_device_name), () -> DeviceName.getDefaultName(context, deviceId));
     }
 
     /**

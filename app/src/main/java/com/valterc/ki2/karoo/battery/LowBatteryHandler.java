@@ -10,6 +10,7 @@ import android.widget.Toast;
 import com.valterc.ki2.R;
 import com.valterc.ki2.data.device.BatteryInfo;
 import com.valterc.ki2.data.device.DeviceId;
+import com.valterc.ki2.data.device.DeviceName;
 import com.valterc.ki2.data.preferences.PreferencesView;
 import com.valterc.ki2.data.preferences.device.DevicePreferencesView;
 import com.valterc.ki2.karoo.Ki2Context;
@@ -108,6 +109,7 @@ public class LowBatteryHandler implements IRideHandler {
         } else if (category == record.getCategory()) {
             return;
         } else {
+            record.setBatteryInfo(batteryInfo);
             record.setCategory(category);
         }
 
@@ -125,10 +127,10 @@ public class LowBatteryHandler implements IRideHandler {
         DevicePreferencesView devicePreferences = context.getServiceClient().getDevicePreferences(deviceId);
         String deviceName = devicePreferences != null ?
                 devicePreferences.getName(context.getSdkContext()) :
-                context.getSdkContext().getString(R.string.text_param_di2_name, deviceId.getName());
+                DeviceName.getDefaultName(context.getSdkContext(), deviceId);
 
         handler.postDelayed(() -> {
-            Log.d("KI2", "Low battery notification");
+            Log.i("KI2", "Low battery notification, device " + deviceName + ", battery at " + batteryInfo.getValue());
             record.markNotified();
 
             if (riding) {
