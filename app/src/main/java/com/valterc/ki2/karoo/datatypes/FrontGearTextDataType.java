@@ -9,7 +9,7 @@ import androidx.appcompat.content.res.AppCompatResources;
 import com.valterc.ki2.R;
 import com.valterc.ki2.karoo.Ki2Context;
 import com.valterc.ki2.karoo.formatters.FrontGearTextFormatter;
-import com.valterc.ki2.utils.CallerUtils;
+import com.valterc.ki2.utils.function.FunctionUtils;
 
 import java.util.Collections;
 import java.util.List;
@@ -29,7 +29,7 @@ public class FrontGearTextDataType extends Ki2DataType {
     public FrontGearTextDataType(@NonNull Ki2Context context) {
         super(context);
 
-        this.drawables = CallerUtils.safeWrap(() -> Collections.singletonList(
+        this.drawables = FunctionUtils.safeInvoke(() -> Collections.singletonList(
                 AppCompatResources.getDrawable(getContext(), R.drawable.ic_hh_gear)));
     }
 
