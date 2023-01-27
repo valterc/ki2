@@ -2,7 +2,7 @@ package com.valterc.ki2.karoo.service.messages;
 
 import com.valterc.ki2.data.message.Message;
 import com.valterc.ki2.data.message.MessageType;
-import com.valterc.ki2.karoo.service.DataStreamWeakListenerList;
+import com.valterc.ki2.karoo.service.listeners.DataStreamWeakListenerList;
 
 import java.util.function.Consumer;
 import java.util.function.Function;

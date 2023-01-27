@@ -21,6 +21,8 @@ import com.valterc.ki2.data.preferences.PreferencesView;
 import com.valterc.ki2.data.preferences.device.DevicePreferencesView;
 import com.valterc.ki2.data.shifting.ShiftingInfo;
 import com.valterc.ki2.karoo.service.device.DeviceDataFrontend;
+import com.valterc.ki2.karoo.service.listeners.DataStreamWeakListenerList;
+import com.valterc.ki2.karoo.service.listeners.ServiceCallbackRegistration;
 import com.valterc.ki2.karoo.service.messages.CustomMessageClient;
 import com.valterc.ki2.services.IKi2Service;
 import com.valterc.ki2.services.Ki2Service;
@@ -43,7 +45,11 @@ public class ServiceClient {
         @Override
         public void onServiceConnected(ComponentName name, IBinder binder) {
             service = IKi2Service.Stub.asInterface(binder);
+
+            registrationMessage.setUnregistered();
+            registrationPreferences.setUnregistered();
             deviceDataFrontend.setService(service);
+
             handler.post(() -> {
                 maybeStartPreferencesEvents();
                 maybeStartMessageEvents();
@@ -53,7 +59,11 @@ public class ServiceClient {
         @Override
         public void onServiceDisconnected(ComponentName name) {
             service = null;
+
+            registrationMessage.setUnregistered();
+            registrationPreferences.setUnregistered();
             deviceDataFrontend.setService(null);
+
             handler.postDelayed(() -> {
                 if (service == null) {
                     Log.w("KI2", "Attempting to re-bind to service");
@@ -64,26 +74,6 @@ public class ServiceClient {
         }
     };
 
-    private final IMessageCallback messageCallback = new IMessageCallback.Stub() {
-        @Override
-        public void onMessage(Message message) {
-            handler.post(() -> {
-                messageListeners.pushData(message, message.isPersistent());
-                maybeStopMessageEvents();
-            });
-        }
-    };
-
-    private final IPreferencesCallback preferencesCallback = new IPreferencesCallback.Stub() {
-        @Override
-        public void onPreferences(PreferencesView preferences) {
-            handler.post(() -> {
-                preferencesListeners.pushData(preferences);
-                maybeStopPreferencesEvents();
-            });
-        }
-    };
-
     private final Context context;
     private final Handler handler;
     private final CustomMessageClient customMessageClient;
@@ -91,6 +81,26 @@ public class ServiceClient {
     private final DataStreamWeakListenerList<PreferencesView> preferencesListeners;
     private IKi2Service service;
     private final DeviceDataFrontend deviceDataFrontend;
+
+    private final ServiceCallbackRegistration<IMessageCallback> registrationMessage = new ServiceCallbackRegistration<>(new IMessageCallback.Stub() {
+        @Override
+        public void onMessage(Message message) {
+            handler.post(() -> {
+                messageListeners.pushData(message, message.isPersistent());
+                maybeStopMessageEvents();
+            });
+        }
+    }, callback -> service.registerMessageListener(callback), callback -> service.unregisterMessageListener(callback));
+
+    private final ServiceCallbackRegistration<IPreferencesCallback> registrationPreferences = new ServiceCallbackRegistration<>(new IPreferencesCallback.Stub() {
+        @Override
+        public void onPreferences(PreferencesView preferences) {
+            handler.post(() -> {
+                preferencesListeners.pushData(preferences);
+                maybeStopPreferencesEvents();
+            });
+        }
+    }, callback -> service.registerPreferencesListener(callback), callback -> service.unregisterPreferencesListener(callback));
 
     public ServiceClient(SdkContext context) {
         this.context = context;
@@ -224,11 +234,7 @@ public class ServiceClient {
             return;
         }
 
-        try {
-            service.registerMessageListener(messageCallback);
-        } catch (RemoteException e) {
-            Log.e("KI2", "Unable to register listener", e);
-        }
+        registrationMessage.register();
     }
 
     private void maybeStopMessageEvents() {
@@ -240,11 +246,7 @@ public class ServiceClient {
             return;
         }
 
-        try {
-            service.unregisterMessageListener(messageCallback);
-        } catch (Exception e) {
-            Log.e("KI2", "Unable to unregister listener", e);
-        }
+        registrationMessage.unregister();
     }
 
     /**
@@ -288,11 +290,7 @@ public class ServiceClient {
             return;
         }
 
-        try {
-            service.registerPreferencesListener(preferencesCallback);
-        } catch (RemoteException e) {
-            Log.e("KI2", "Unable to register listener", e);
-        }
+        registrationPreferences.register();
     }
 
     private void maybeStopPreferencesEvents() {
@@ -304,11 +302,7 @@ public class ServiceClient {
             return;
         }
 
-        try {
-            service.unregisterPreferencesListener(preferencesCallback);
-        } catch (Exception e) {
-            Log.e("KI2", "Unable to unregister listener", e);
-        }
+        registrationPreferences.unregister();
     }
 
 }

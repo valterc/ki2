@@ -6,6 +6,8 @@ import android.os.Message;
 
 import androidx.annotation.NonNull;
 
+import com.valterc.ki2.utils.function.ThrowingRunnable;
+
 import java.util.function.Consumer;
 
 import timber.log.Timber;
@@ -45,7 +47,7 @@ public class ServiceHandler {
         handler.postDelayed(runnable, delayMs);
     }
 
-    public void postRetriableAction(UnsafeRunnable runnable) {
+    public void postRetriableAction(ThrowingRunnable runnable) {
         Consumer<Integer> retriableRunnable = new Consumer<Integer>() {
             @Override
             public void accept(Integer retry) {

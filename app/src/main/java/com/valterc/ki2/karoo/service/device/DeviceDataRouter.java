@@ -8,7 +8,7 @@ import com.valterc.ki2.data.device.BatteryInfo;
 import com.valterc.ki2.data.device.DeviceId;
 import com.valterc.ki2.data.preferences.device.DevicePreferencesView;
 import com.valterc.ki2.data.shifting.ShiftingInfo;
-import com.valterc.ki2.karoo.service.BiDataStreamWeakListenerList;
+import com.valterc.ki2.karoo.service.listeners.BiDataStreamWeakListenerList;
 
 import java.util.HashMap;
 import java.util.List;

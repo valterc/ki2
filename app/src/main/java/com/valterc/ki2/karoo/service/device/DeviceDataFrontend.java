@@ -13,6 +13,7 @@ import com.valterc.ki2.data.preferences.device.DevicePreferencesView;
 import com.valterc.ki2.data.shifting.ShiftingInfo;
 import com.valterc.ki2.input.InputAdapter;
 import com.valterc.ki2.karoo.hooks.RideActivityHook;
+import com.valterc.ki2.karoo.service.listeners.ServiceCallbackRegistration;
 import com.valterc.ki2.services.IKi2Service;
 import com.valterc.ki2.services.callbacks.IBatteryCallback;
 import com.valterc.ki2.services.callbacks.IConnectionInfoCallback;
@@ -27,7 +28,12 @@ import io.hammerhead.sdk.v0.SdkContext;
 @SuppressLint("LogNotTimber")
 public class DeviceDataFrontend {
 
-    private final IConnectionInfoCallback connectionInfoCallback = new IConnectionInfoCallback.Stub() {
+    private IKi2Service service;
+    private final Handler handler;
+    private final InputAdapter inputAdapter;
+    private final DeviceDataRouter dataRouter;
+
+    private final ServiceCallbackRegistration<IConnectionInfoCallback> registrationConnectionInfo = new ServiceCallbackRegistration<>(new IConnectionInfoCallback.Stub() {
         @Override
         public void onConnectionInfo(DeviceId deviceId, ConnectionInfo connectionInfo) {
             handler.post(() -> {
@@ -35,9 +41,9 @@ public class DeviceDataFrontend {
                 maybeStopConnectionEvents();
             });
         }
-    };
+    }, callback -> service.registerConnectionInfoListener(callback), callback -> service.unregisterConnectionInfoListener(callback));
 
-    private final IBatteryCallback batteryCallback = new IBatteryCallback.Stub() {
+    private final ServiceCallbackRegistration<IBatteryCallback> registrationBatteryInfo = new ServiceCallbackRegistration<>(new IBatteryCallback.Stub() {
         @Override
         public void onBattery(DeviceId deviceId, BatteryInfo batteryInfo) {
             handler.post(() -> {
@@ -45,9 +51,9 @@ public class DeviceDataFrontend {
                 maybeStopBatteryEvents();
             });
         }
-    };
+    }, callback -> service.registerBatteryListener(callback), callback -> service.unregisterBatteryListener(callback));
 
-    private final IShiftingCallback shiftingCallback = new IShiftingCallback.Stub() {
+    private final ServiceCallbackRegistration<IShiftingCallback> registrationShiftingInfo = new ServiceCallbackRegistration<>(new IShiftingCallback.Stub() {
         @Override
         public void onShifting(DeviceId deviceId, ShiftingInfo shiftingInfo) {
             handler.post(() -> {
@@ -55,9 +61,9 @@ public class DeviceDataFrontend {
                 maybeStopShiftingEvents();
             });
         }
-    };
+    }, callback -> service.registerShiftingListener(callback), callback -> service.unregisterShiftingListener(callback));
 
-    private final IKeyCallback keyCallback = new IKeyCallback.Stub() {
+    private final ServiceCallbackRegistration<IKeyCallback> registrationKey = new ServiceCallbackRegistration<>(new IKeyCallback.Stub() {
         @Override
         public void onKeyEvent(DeviceId deviceId, KarooKeyEvent keyEvent) {
             handler.post(() -> {
@@ -69,9 +75,9 @@ public class DeviceDataFrontend {
                 maybeStopKeyEvents();
             });
         }
-    };
+    }, callback -> service.registerKeyListener(callback), callback -> service.unregisterKeyListener(callback));
 
-    private final IDevicePreferencesCallback devicePreferencesCallback = new IDevicePreferencesCallback.Stub() {
+    private final ServiceCallbackRegistration<IDevicePreferencesCallback> registrationDevicePreferences = new ServiceCallbackRegistration<>(new IDevicePreferencesCallback.Stub() {
         @Override
         public void onDevicePreferences(DeviceId deviceId, DevicePreferencesView preferences) {
             handler.post(() -> {
@@ -79,12 +85,7 @@ public class DeviceDataFrontend {
                 maybeStopDevicePreferencesEvents();
             });
         }
-    };
-
-    private IKi2Service service;
-    private final Handler handler;
-    private final InputAdapter inputAdapter;
-    private final DeviceDataRouter dataRouter;
+    }, callback -> service.registerDevicePreferencesListener(callback), callback -> service.unregisterDevicePreferencesListener(callback));
 
     public DeviceDataFrontend(SdkContext context, Handler handler) {
         this.handler = handler;
@@ -95,6 +96,12 @@ public class DeviceDataFrontend {
 
     public void setService(IKi2Service service) {
         this.service = service;
+
+        registrationConnectionInfo.setUnregistered();
+        registrationBatteryInfo.setUnregistered();
+        registrationShiftingInfo.setUnregistered();
+        registrationKey.setUnregistered();
+        registrationDevicePreferences.setUnregistered();
 
         if (service != null) {
             handler.post(this::maybeStartEvents);
@@ -128,11 +135,7 @@ public class DeviceDataFrontend {
             return;
         }
 
-        try {
-            service.registerConnectionInfoListener(connectionInfoCallback);
-        } catch (RemoteException e) {
-            Log.e("KI2", "Unable to register listener", e);
-        }
+        registrationConnectionInfo.register();
     }
 
     private void maybeStopConnectionEvents() {
@@ -147,11 +150,7 @@ public class DeviceDataFrontend {
             return;
         }
 
-        try {
-            service.unregisterConnectionInfoListener(connectionInfoCallback);
-        } catch (Exception e) {
-            Log.e("KI2", "Unable to unregister listener", e);
-        }
+        registrationConnectionInfo.unregister();
     }
 
     public void registerBatteryInfoWeakListener(BiConsumer<DeviceId, BatteryInfo> batteryInfoConsumer) {
@@ -177,11 +176,7 @@ public class DeviceDataFrontend {
             return;
         }
 
-        try {
-            service.registerBatteryListener(batteryCallback);
-        } catch (RemoteException e) {
-            Log.e("KI2", "Unable to register listener", e);
-        }
+        registrationBatteryInfo.register();
     }
 
     private void maybeStopBatteryEvents() {
@@ -193,11 +188,7 @@ public class DeviceDataFrontend {
             return;
         }
 
-        try {
-            service.unregisterBatteryListener(batteryCallback);
-        } catch (Exception e) {
-            Log.e("KI2", "Unable to unregister listener", e);
-        }
+        registrationBatteryInfo.unregister();
     }
 
     public void registerShiftingInfoWeakListener(BiConsumer<DeviceId, ShiftingInfo> shiftingInfoConsumer) {
@@ -216,11 +207,7 @@ public class DeviceDataFrontend {
             return;
         }
 
-        try {
-            service.registerShiftingListener(shiftingCallback);
-        } catch (RemoteException e) {
-            Log.e("KI2", "Unable to register listener", e);
-        }
+        registrationShiftingInfo.register();
     }
 
     private void maybeStopShiftingEvents() {
@@ -232,11 +219,7 @@ public class DeviceDataFrontend {
             return;
         }
 
-        try {
-            service.unregisterShiftingListener(shiftingCallback);
-        } catch (Exception e) {
-            Log.e("KI2", "Unable to unregister listener", e);
-        }
+        registrationShiftingInfo.unregister();
     }
 
     public void registerDevicePreferencesWeakListener(BiConsumer<DeviceId, DevicePreferencesView> devicePreferencesConsumer) {
@@ -258,11 +241,7 @@ public class DeviceDataFrontend {
             return;
         }
 
-        try {
-            service.registerDevicePreferencesListener(devicePreferencesCallback);
-        } catch (RemoteException e) {
-            Log.e("KI2", "Unable to register device preferences listener", e);
-        }
+        registrationDevicePreferences.register();
     }
 
     private void maybeStopDevicePreferencesEvents() {
@@ -277,11 +256,7 @@ public class DeviceDataFrontend {
             return;
         }
 
-        try {
-            service.unregisterDevicePreferencesListener(devicePreferencesCallback);
-        } catch (RemoteException e) {
-            Log.e("KI2", "Unable to unregister device preferences listener", e);
-        }
+        registrationDevicePreferences.unregister();
     }
 
     private void maybeStartKeyEvents() {
@@ -293,11 +268,7 @@ public class DeviceDataFrontend {
             return;
         }
 
-        try {
-            service.registerKeyListener(keyCallback);
-        } catch (RemoteException e) {
-            Log.e("KI2", "Unable to register listener", e);
-        }
+        registrationKey.register();
     }
 
     private void maybeStopKeyEvents() {
@@ -309,11 +280,7 @@ public class DeviceDataFrontend {
             return;
         }
 
-        try {
-            service.unregisterKeyListener(keyCallback);
-        } catch (RemoteException e) {
-            Log.e("KI2", "Unable to unregister listener", e);
-        }
+        registrationKey.unregister();
     }
 
     public DevicePreferencesView getDevicePreferences(DeviceId deviceId) {
