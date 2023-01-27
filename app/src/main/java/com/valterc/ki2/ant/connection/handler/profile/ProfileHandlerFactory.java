@@ -14,15 +14,15 @@ public final class ProfileHandlerFactory {
 
     public static IDeviceProfileHandler buildProfileHandler(DeviceId deviceId, ITransportHandler transportHandler, IDeviceConnectionListener deviceConnectionListener) {
         if (deviceId == null || deviceId.getDeviceType() == null) {
-            return null;
+            throw new IllegalArgumentException("Device identifier is invalid: " + deviceId);
         }
 
         if (deviceId.getDeviceType() == DeviceType.SHIMANO_SHIFTING) {
             return new ShimanoShiftingProfileHandler(deviceId, transportHandler, deviceConnectionListener);
         }
 
-        Timber.w("Unable to construct connection handler for device type %s", deviceId.getDeviceType());
-        return null;
+        Timber.e("Unable to construct connection handler for device %s", deviceId);
+        throw new RuntimeException("Unable to construct connection handler for device: " + deviceId);
     }
 
 }

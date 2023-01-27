@@ -20,12 +20,11 @@ public final class DeviceConnectionFactory {
                                                              DeviceId deviceId,
                                                              IDeviceConnectionListener deviceConnectionListener) {
         if (deviceId == null || deviceId.getDeviceType() == null) {
-            return null;
+            throw new IllegalArgumentException("Device identifier is invalid: " + deviceId);
         }
 
         switch (deviceId.getDeviceType()) {
             case SHIMANO_SHIFTING:
-            case UNKNOWN:
                 ChannelConfiguration channelConfiguration = ConfigurationStore.getChannelConfiguration(context, deviceId.getAntDeviceId());
                 return new AntDeviceConnection(antManager, deviceId, channelConfiguration, deviceConnectionListener);
 
@@ -33,8 +32,8 @@ public final class DeviceConnectionFactory {
                 return new MockShiftingDeviceConnection(deviceId, deviceConnectionListener);
         }
 
-        Timber.w("Unable to construct connection for device type %s", deviceId.getDeviceType());
-        return null;
+        Timber.e("Unable to construct connection for device %s", deviceId);
+        throw new RuntimeException("Unable to construct connection for device: " + deviceId);
     }
 
 }
