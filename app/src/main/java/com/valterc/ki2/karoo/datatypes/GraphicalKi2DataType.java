@@ -22,7 +22,6 @@ public abstract class GraphicalKi2DataType extends Ki2DataType {
     @Override
     public SdkTransformer newTransformer() {
         return new BuiltInTransformer.Identity(getContext());
-
     }
 
     @NonNull
@@ -33,7 +32,7 @@ public abstract class GraphicalKi2DataType extends Ki2DataType {
 
     @NonNull
     @Override
-    public SdkView newView() {
+    public final SdkView newView() {
         if (view == null) {
             view = createView();
         }

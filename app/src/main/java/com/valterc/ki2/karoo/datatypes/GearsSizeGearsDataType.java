@@ -21,7 +21,6 @@ public class GearsSizeGearsDataType extends GraphicalKi2DataType {
     private static final String TYPE_ID = "ki2::gears-size-gears";
 
     private final List<Drawable> drawables;
-    private SdkView view;
 
     public GearsSizeGearsDataType(@NonNull Ki2Context context) {
         super(context);
