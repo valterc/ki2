@@ -107,6 +107,7 @@ public class LowBatteryHandler implements IRideHandler {
             record = new LowBatteryRecord(deviceId, batteryInfo, category);
             deviceNotificationMap.put(deviceId, record);
         } else if (category == record.getCategory()) {
+            record.setBatteryInfo(batteryInfo);
             return;
         } else {
             record.setBatteryInfo(batteryInfo);
