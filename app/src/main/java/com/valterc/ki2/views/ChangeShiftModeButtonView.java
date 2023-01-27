@@ -21,6 +21,10 @@ import com.valterc.ki2.R;
 public class ChangeShiftModeButtonView extends View {
 
     private static final int TIME_MS_DONE_COOLDOWN = 1000;
+    private static final String TEXT_CHANGE_MODE = "Change\nMode";
+    private static final String TEXT_PRESS_AGAIN = "Press\nAgain";
+    private static final String TEXT_DONE = "Done";
+    private static final String TEXT_CHANGE = "CHANGE";
 
     private TimeAnimator timeAnimator;
     private Picture picture;
@@ -43,7 +47,7 @@ public class ChangeShiftModeButtonView extends View {
     public ChangeShiftModeButtonView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         initPaint();
-        setText("Change\nMode");
+        setText(TEXT_CHANGE_MODE);
 
         setClickable(true);
         setOnClickListener(this::onClickListener);
@@ -86,12 +90,12 @@ public class ChangeShiftModeButtonView extends View {
         if (!timeAnimator.isRunning()) {
             confirmationProgress = 0;
             confirming = true;
-            setText("Press\nAgain");
+            setText(TEXT_PRESS_AGAIN);
             timeAnimator.start();
         } else if (timeAnimator.isRunning() && !done) {
             confirming = false;
             done = true;
-            setText("Done");
+            setText(TEXT_DONE);
             doneTimestamp = System.currentTimeMillis();
             if (runnable != null) {
                 runnable.run();
@@ -103,7 +107,7 @@ public class ChangeShiftModeButtonView extends View {
         if (confirming) {
             if (confirmationProgress >= .99) {
                 confirming = false;
-                setText("Change\nMode");
+                setText(TEXT_CHANGE_MODE);
                 timeAnimator.cancel();
             } else {
                 confirmationProgress = Math.min(confirmationProgress + 0.0005f * deltaTime, 1);
@@ -111,7 +115,7 @@ public class ChangeShiftModeButtonView extends View {
         } else if (done) {
             if (System.currentTimeMillis() - doneTimestamp > TIME_MS_DONE_COOLDOWN) {
                 timeAnimator.cancel();
-                setText("Change\nMode");
+                setText(TEXT_CHANGE_MODE);
                 done = false;
             }
         }
@@ -183,7 +187,7 @@ public class ChangeShiftModeButtonView extends View {
 
         while (true) {
             Rect textBounds = new Rect();
-            paintText.getTextBounds("CHANGE", 0, "CHANGE".length(), textBounds);
+            paintText.getTextBounds(TEXT_CHANGE, 0, TEXT_CHANGE.length(), textBounds);
 
             float lineDistance = paintText.descent() - paintText.ascent();
             if (paintText.getTextSize() >= 49 || textBounds.width() >= internalWidth || lineDistance * 2 >= internalHeight) {
