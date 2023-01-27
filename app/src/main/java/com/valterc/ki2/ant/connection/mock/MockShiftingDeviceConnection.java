@@ -30,7 +30,7 @@ public class MockShiftingDeviceConnection implements IAntDeviceConnection {
     private static final int TIME_MS_DATA_UPDATE = 500;
     private static final int VALUE_INIT_BATTERY_MIN = 20;
     private static final int VALUE_INIT_BATTERY_MAX = 70;
-    private static final double PROBABILITY_INIT_DISCONNECT = .5;
+    private static final float PROBABILITY_INIT_DISCONNECT = .5f;
     private static final float PROBABILITY_DATA_REAR_SHIFT = .5f;
     private static final float PROBABILITY_DATA_FRONT_SHIFT = .1f;
     private static final float PROBABILITY_DATA_BATTERY_DECREASE = .001f;
