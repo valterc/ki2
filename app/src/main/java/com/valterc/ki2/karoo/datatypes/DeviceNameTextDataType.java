@@ -36,13 +36,13 @@ public class DeviceNameTextDataType extends Ki2DataType {
     @NonNull
     @Override
     public String getDescription() {
-        return "Di2 device name.";
+        return "Shifting device name.";
     }
 
     @NonNull
     @Override
     public String getDisplayName() {
-        return "Di2 Unit";
+        return "Shf Name";
     }
 
     @NonNull
