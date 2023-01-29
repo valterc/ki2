@@ -55,7 +55,7 @@ public class MockShiftingDeviceConnection implements IAntDeviceConnection {
 
         this.deviceId = deviceId;
         this.deviceConnectionListener = deviceConnectionListener;
-        this.random = new Random(deviceId.getAntDeviceId());
+        this.random = new Random(deviceId.getDeviceNumber());
         initThread();
         initDevice();
     }
@@ -66,7 +66,7 @@ public class MockShiftingDeviceConnection implements IAntDeviceConnection {
             this.looper = Looper.myLooper();
             this.handler = new Handler(this.looper);
             Looper.loop();
-        }, "MockDeviceThread::" + deviceId.getName());
+        }, "MockDeviceThread::" + deviceId.getUid());
         thread.start();
 
         while (this.handler == null) {

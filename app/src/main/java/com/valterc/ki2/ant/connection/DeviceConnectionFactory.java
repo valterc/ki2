@@ -25,7 +25,7 @@ public final class DeviceConnectionFactory {
 
         switch (deviceId.getDeviceType()) {
             case SHIMANO_SHIFTING:
-                ChannelConfiguration channelConfiguration = ConfigurationStore.getChannelConfiguration(context, deviceId.getAntDeviceId());
+                ChannelConfiguration channelConfiguration = ConfigurationStore.getChannelConfiguration(context, deviceId);
                 return new AntDeviceConnection(antManager, deviceId, channelConfiguration, deviceConnectionListener);
 
             case MOCK_SHIFTING:

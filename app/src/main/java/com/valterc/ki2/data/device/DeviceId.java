@@ -5,11 +5,11 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
-import java.util.Objects;
-
 public class DeviceId implements Parcelable {
 
-    private final String uid;
+    private final int deviceNumber;
+    private final int deviceTypeValue;
+    private final int transmissionType;
     private final DeviceType deviceType;
 
     public static final Parcelable.Creator<DeviceId> CREATOR = new Parcelable.Creator<DeviceId>() {
@@ -23,19 +23,24 @@ public class DeviceId implements Parcelable {
     };
 
     private DeviceId(Parcel in) {
-        uid = in.readString();
-        deviceType = DeviceType.fromDeviceTypeValue(in.readInt());
+        deviceNumber = in.readInt();
+        deviceTypeValue = in.readInt();
+        transmissionType = in.readInt();
+        deviceType = DeviceType.fromDeviceTypeValue(deviceTypeValue);
     }
 
-    public DeviceId(String uid, DeviceType deviceType) {
-        this.uid = uid;
-        this.deviceType = deviceType;
+    public DeviceId(int deviceNumber, int deviceTypeValue, int transmissionType) {
+        this.deviceNumber = deviceNumber;
+        this.deviceTypeValue = deviceTypeValue;
+        this.transmissionType = transmissionType;
+        this.deviceType = DeviceType.fromDeviceTypeValue(deviceTypeValue);
     }
 
     @Override
     public void writeToParcel(Parcel out, int flags) {
-        out.writeString(uid);
-        out.writeInt(deviceType.getValue());
+        out.writeInt(deviceNumber);
+        out.writeInt(deviceTypeValue);
+        out.writeInt(transmissionType);
     }
 
     @Override
@@ -43,32 +48,30 @@ public class DeviceId implements Parcelable {
         return 0;
     }
 
+    /**
+     * Get a simple string with a unique identifier representation of this device identifier.
+     *
+     * @return String with unique identifier representation of this device identifier.
+     */
+    @NonNull
     public String getUid() {
-        return uid;
+        return deviceNumber + "-" + deviceTypeValue + "-" + transmissionType;
+    }
+
+    public int getDeviceNumber() {
+        return deviceNumber;
+    }
+
+    public int getDeviceTypeValue() {
+        return deviceTypeValue;
+    }
+
+    public int getTransmissionType() {
+        return transmissionType;
     }
 
     public DeviceType getDeviceType() {
         return deviceType;
-    }
-
-    public Integer getAntDeviceId() {
-        if (this.uid.contains("-")) {
-            try {
-                return Integer.parseInt(uid.substring(0, uid.indexOf('-')));
-            } catch (Exception ignored) {
-            }
-        }
-
-        return null;
-    }
-
-    public String getName(){
-        Integer antDeviceId = getAntDeviceId();
-        if (antDeviceId != null) {
-            return antDeviceId.toString();
-        }
-
-        return getUid();
     }
 
     @Override
@@ -78,14 +81,16 @@ public class DeviceId implements Parcelable {
 
         DeviceId deviceId = (DeviceId) o;
 
-        if (!Objects.equals(uid, deviceId.uid)) return false;
-        return deviceType == deviceId.deviceType;
+        if (deviceNumber != deviceId.deviceNumber) return false;
+        if (deviceTypeValue != deviceId.deviceTypeValue) return false;
+        return transmissionType == deviceId.transmissionType;
     }
 
     @Override
     public int hashCode() {
-        int result = uid != null ? uid.hashCode() : 0;
-        result = 31 * result + (deviceType != null ? deviceType.hashCode() : 0);
+        int result = deviceNumber;
+        result = 31 * result + deviceTypeValue;
+        result = 31 * result + transmissionType;
         return result;
     }
 
@@ -93,9 +98,10 @@ public class DeviceId implements Parcelable {
     @Override
     public String toString() {
         return "DeviceId{" +
-                "deviceType=" + deviceType +
-                ", uid='" + uid + '\'' +
-                ", antId='" + getAntDeviceId() + '\'' +
+                "deviceNumber=" + deviceNumber +
+                ", deviceTypeValue=" + deviceTypeValue +
+                ", transmissionType=" + transmissionType +
+                ", deviceType=" + deviceType +
                 '}';
     }
 }

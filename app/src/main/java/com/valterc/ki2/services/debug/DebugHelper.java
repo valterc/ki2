@@ -22,8 +22,8 @@ public final class DebugHelper {
     }
 
     private static void generateMockDevices(DeviceStore deviceStore) {
-        deviceStore.saveDevice(new DeviceId("10100-1", DeviceType.MOCK_SHIFTING));
-        deviceStore.saveDevice(new DeviceId("10200-1", DeviceType.MOCK_SHIFTING));
+        deviceStore.saveDevice(new DeviceId(10100, DeviceType.MOCK_SHIFTING_VALUE, 5));
+        deviceStore.saveDevice(new DeviceId(10200, DeviceType.MOCK_SHIFTING_VALUE, 5));
     }
 
 }
