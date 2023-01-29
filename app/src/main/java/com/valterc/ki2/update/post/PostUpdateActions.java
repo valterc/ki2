@@ -2,7 +2,9 @@ package com.valterc.ki2.update.post;
 
 import com.valterc.ki2.data.update.PostUpdateActionsStore;
 import com.valterc.ki2.update.PostUpdateContext;
+import com.valterc.ki2.update.post.actions.IPostInitPostUpdateAction;
 import com.valterc.ki2.update.post.actions.IPostUpdateAction;
+import com.valterc.ki2.update.post.actions.IPreInitPostUpdateAction;
 import com.valterc.ki2.update.post.actions.InitializeDevicesPriority;
 import com.valterc.ki2.update.post.actions.UpdateDeviceIds;
 
@@ -16,8 +18,8 @@ public final class PostUpdateActions {
     private PostUpdateActions() {
     }
 
-    private static final Map<String, IPostUpdateAction> preInitActionMap;
-    private static final Map<String, IPostUpdateAction> postInitActionMap;
+    private static final Map<String, IPreInitPostUpdateAction> preInitActionMap;
+    private static final Map<String, IPostInitPostUpdateAction> postInitActionMap;
 
     static {
         preInitActionMap = new HashMap<>();
@@ -28,32 +30,33 @@ public final class PostUpdateActions {
     }
 
     public static void executePreInit(PostUpdateContext context) {
-        execute(context, preInitActionMap);
-    }
-
-    public static void executePostInit(PostUpdateContext context) {
-        execute(context, postInitActionMap);
-    }
-
-    private static void execute(PostUpdateContext context, Map<String, IPostUpdateAction> actionMap) {
-        for (String actionName : actionMap.keySet()) {
-            if (!PostUpdateActionsStore.hasExecuted(context.getContext(), actionName)) {
-                Timber.i("Executing post update action: %s", actionName);
-
-                IPostUpdateAction action = postInitActionMap.get(actionName);
-                if (action == null) {
-                    continue;
-                }
-
-                try {
-                    action.execute(context);
-                    PostUpdateActionsStore.executedAction(context.getContext(), actionName);
-                    Timber.i("Executed post update action: %s", actionName);
-                } catch (Exception exception) {
-                    Timber.e(exception, "Unable to execute post update action: %s", actionName);
-                }
-            }
+        for (String actionName : preInitActionMap.keySet()) {
+            executeAction(context, actionName, preInitActionMap.get(actionName));
         }
     }
 
+    public static void executePostInit(PostUpdateContext context) {
+        for (String actionName : postInitActionMap.keySet()) {
+            executeAction(context, actionName, postInitActionMap.get(actionName));
+        }
+    }
+
+    private static void executeAction(PostUpdateContext context, String actionName, IPostUpdateAction action) {
+        if (actionName == null || action == null) {
+            return;
+        }
+
+        if (!PostUpdateActionsStore.hasExecuted(context.getContext(), actionName)) {
+            Timber.i("Executing post update action: %s", actionName);
+
+            try {
+                action.execute(context);
+                PostUpdateActionsStore.executedAction(context.getContext(), actionName);
+                Timber.i("Executed post update action: %s", actionName);
+            } catch (Exception exception) {
+                Timber.e(exception, "Unable to execute post update action: %s", actionName);
+            }
+        }
+    }
 }
+

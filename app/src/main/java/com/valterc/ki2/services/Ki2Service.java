@@ -58,10 +58,10 @@ import com.valterc.ki2.services.callbacks.IShiftingCallback;
 import com.valterc.ki2.services.callbacks.ISwitchCallback;
 import com.valterc.ki2.services.debug.DebugHelper;
 import com.valterc.ki2.services.handler.ServiceHandler;
-import com.valterc.ki2.update.post.PostUpdateActions;
 import com.valterc.ki2.update.PostUpdateContext;
 import com.valterc.ki2.update.background.BackgroundUpdateChecker;
 import com.valterc.ki2.update.background.IUpdateCheckerListener;
+import com.valterc.ki2.update.post.PostUpdateActions;
 
 import java.util.ArrayList;
 import java.util.Collection;

@@ -7,7 +7,7 @@ import com.valterc.ki2.update.PostUpdateContext;
 import java.util.Comparator;
 import java.util.stream.Collectors;
 
-public class InitializeDevicesPriority implements IPostUpdateAction {
+public class InitializeDevicesPriority implements IPostInitPostUpdateAction {
 
     @Override
     public void execute(PostUpdateContext context) {
