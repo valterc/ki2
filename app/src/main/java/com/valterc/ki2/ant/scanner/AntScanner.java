@@ -10,7 +10,6 @@ import com.valterc.ki2.ant.AntManager;
 import com.valterc.ki2.ant.channel.AntChannelWrapper;
 import com.valterc.ki2.ant.channel.ScanChannelConfiguration;
 import com.valterc.ki2.data.device.DeviceId;
-import com.valterc.ki2.data.device.DeviceType;
 
 import timber.log.Timber;
 
@@ -63,16 +62,6 @@ public class AntScanner {
         }
     }
 
-    public boolean isScanning() {
-        return antChannelWrapper != null;
-    }
-
-    private DeviceId createDeviceId(int transmissionType, int deviceTypeValue) {
-        String uid = transmissionType + "-" + deviceTypeValue;
-        DeviceType deviceType = DeviceType.fromDeviceTypeValue(deviceTypeValue);
-        return new DeviceId(uid, deviceType);
-    }
-
     public final DeviceId processScanResult(MessageFromAntType messageFromAntType, AntMessageParcel antMessageParcel) {
         if (antMessageParcel == null || messageFromAntType != MessageFromAntType.BROADCAST_DATA) {
             return null;
@@ -93,10 +82,7 @@ public class AntScanner {
             return null;
         }
 
-        int transmissionType = ((channelId.getTransmissionType() & 240) << 12) | channelId.getDeviceNumber();
-        int deviceType = channelId.getDeviceType();
-
-        return createDeviceId(transmissionType, deviceType);
+        return new DeviceId(channelId.getDeviceNumber(), channelId.getDeviceType(), channelId.getTransmissionType());
     }
 
 }

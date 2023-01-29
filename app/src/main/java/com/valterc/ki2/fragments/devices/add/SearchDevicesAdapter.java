@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.valterc.ki2.R;
 import com.valterc.ki2.data.device.DeviceId;
+import com.valterc.ki2.data.device.DeviceName;
 import com.valterc.ki2.data.device.DeviceType;
 
 import java.util.ArrayList;
@@ -51,21 +52,16 @@ public class SearchDevicesAdapter extends RecyclerView.Adapter<SearchDevicesView
 
         if (deviceId.getDeviceType() == DeviceType.SHIMANO_SHIFTING) {
             holder.getImageViewIcon().setImageResource(R.drawable.ic_di2);
-            String deviceLabel = holder.getTextViewName().getContext().getString(R.string.text_param_di2_name, deviceId.getName());
-            holder.getTextViewName().setText(deviceLabel);
             holder.getButtonAdd().setVisibility(View.VISIBLE);
         } else if (deviceId.getDeviceType() == DeviceType.MOCK_SHIFTING) {
             holder.getImageViewIcon().setImageResource(R.drawable.ic_mock);
-            String deviceLabel = holder.getTextViewName().getContext().getString(R.string.text_param_mock_name, deviceId.getName());
-            holder.getTextViewName().setText(deviceLabel);
             holder.getButtonAdd().setVisibility(View.VISIBLE);
         } else {
             holder.getImageViewIcon().setImageResource(R.drawable.ic_memory);
-            String deviceLabel = holder.getTextViewName().getContext().getString(R.string.text_param_sensor_name, deviceId.getName());
-            holder.getTextViewName().setText(deviceLabel);
             holder.getButtonAdd().setVisibility(View.INVISIBLE);
         }
 
+        holder.getTextViewName().setText(DeviceName.getDefaultName(holder.itemView.getContext(), deviceId));
         holder.getButtonAdd().setOnClickListener(e -> listenerAddDevice.accept(deviceId));
     }
 

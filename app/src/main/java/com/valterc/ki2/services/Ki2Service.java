@@ -58,10 +58,10 @@ import com.valterc.ki2.services.callbacks.IShiftingCallback;
 import com.valterc.ki2.services.callbacks.ISwitchCallback;
 import com.valterc.ki2.services.debug.DebugHelper;
 import com.valterc.ki2.services.handler.ServiceHandler;
-import com.valterc.ki2.update.PostUpdateActions;
 import com.valterc.ki2.update.PostUpdateContext;
 import com.valterc.ki2.update.background.BackgroundUpdateChecker;
 import com.valterc.ki2.update.background.IUpdateCheckerListener;
+import com.valterc.ki2.update.post.PostUpdateActions;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -508,6 +508,8 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
 
     @Override
     public void onCreate() {
+        PostUpdateActions.executePreInit(new PostUpdateContext(this, deviceStore));
+
         messageManager = new MessageManager();
         antManager = new AntManager(this, this);
         antScanner = new AntScanner(antManager, this);
@@ -521,7 +523,7 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
         devicePreferencesStore = new DevicePreferencesStore(this, this::onDevicePreferences);
 
         DebugHelper.init(deviceStore);
-        PostUpdateActions.execute(new PostUpdateContext(this, deviceStore));
+        PostUpdateActions.executePostInit(new PostUpdateContext(this, deviceStore));
         devicePreferencesStore.setDevices(deviceStore.getDevices());
 
         registerReceiver(receiverReconnectDevices, new IntentFilter("io.hammerhead.action.RECONNECT_DEVICES"));

@@ -21,12 +21,13 @@ public final class DeviceName {
      */
     @NonNull
     public static String getDefaultName(Context context, DeviceId deviceId) {
+        String name = String.valueOf(deviceId.getDeviceNumber());
         if (deviceId.getDeviceType() == DeviceType.SHIMANO_SHIFTING) {
-            return context.getString(R.string.text_param_di2_name, deviceId.getName());
+            return context.getString(R.string.text_param_di2_name, name);
         } else if (deviceId.getDeviceType() == DeviceType.MOCK_SHIFTING) {
-            return context.getString(R.string.text_param_mock_name, deviceId.getName());
+            return context.getString(R.string.text_param_mock_name, name);
         } else {
-            return context.getString(R.string.text_param_sensor_name, deviceId.getName());
+            return context.getString(R.string.text_param_sensor_name, name);
         }
     }
 

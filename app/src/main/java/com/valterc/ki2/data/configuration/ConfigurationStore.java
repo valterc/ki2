@@ -9,6 +9,7 @@ import com.dsi.ant.message.LowPrioritySearchTimeout;
 import com.valterc.ki2.R;
 import com.valterc.ki2.ant.channel.ChannelConfiguration;
 import com.valterc.ki2.ant.channel.ScanChannelConfiguration;
+import com.valterc.ki2.data.device.DeviceId;
 
 import java.util.Base64;
 
@@ -31,14 +32,14 @@ public final class ConfigurationStore {
     /**
      * Get channel configuration.
      *
-     * @param context Context of the caller.
-     * @param antDeviceId ANT device id.
+     * @param context  Context of the caller.
+     * @param deviceId Device identifier.
      * @return Channel configuration.
      */
-    public static ChannelConfiguration getChannelConfiguration(Context context, int antDeviceId) {
+    public static ChannelConfiguration getChannelConfiguration(Context context, DeviceId deviceId) {
         byte[] networkKey = Base64.getDecoder().decode(context.getString(R.string.network_key));
         return new ChannelConfiguration(
-                new ChannelId(antDeviceId, 1, 5),
+                new ChannelId(deviceId.getDeviceNumber(), deviceId.getDeviceTypeValue(), deviceId.getTransmissionType()),
                 ChannelType.BIDIRECTIONAL_SLAVE,
                 LowPrioritySearchTimeout.FIVE_SECONDS,
                 new NetworkKey(networkKey),

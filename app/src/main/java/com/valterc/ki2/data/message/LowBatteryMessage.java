@@ -10,7 +10,7 @@ public class LowBatteryMessage extends Message {
     private static final String KEY_BATTERY_PERCENTAGE = "batteryPercentage";
 
     public static String getKey(DeviceId deviceId) {
-        return "low-battery-" + deviceId.getName();
+        return "low-battery-" + deviceId.getUid();
     }
 
     public static LowBatteryMessage parse(Message message) {
