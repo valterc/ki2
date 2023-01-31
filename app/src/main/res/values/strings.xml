@@ -8,6 +8,7 @@
     <string name="text_no_devices_found">No devices found</string>
     <string name="text_search_for_devices">Search for devices</string>
     <string name="text_param_di2_name">Di2 %s</string>
+    <string name="text_param_steps_name">Steps %s</string>
     <string name="text_param_mock_name">Mock %s</string>
     <string name="text_param_sensor_name">Sensor %s</string>
     <string name="text_add">Add</string>

@@ -5,6 +5,7 @@ import com.dsi.ant.message.ChannelId;
 public enum DeviceType {
 
     SHIMANO_SHIFTING(1),
+    SHIMANO_EBIKE(2),
     UNKNOWN(ChannelId.MAX_DEVICE_TYPE + 1),
     MOCK_SHIFTING(UNKNOWN.value + 1);
 

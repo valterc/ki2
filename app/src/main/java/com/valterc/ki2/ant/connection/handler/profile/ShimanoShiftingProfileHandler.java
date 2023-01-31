@@ -11,7 +11,6 @@ import com.valterc.ki2.ant.connection.handler.transport.ITransportHandler;
 import com.valterc.ki2.data.command.CommandType;
 import com.valterc.ki2.data.device.BatteryInfo;
 import com.valterc.ki2.data.device.DeviceId;
-import com.valterc.ki2.data.device.DeviceType;
 import com.valterc.ki2.data.device.ShimanoPageType;
 import com.valterc.ki2.data.device.SignalInfo;
 import com.valterc.ki2.data.device.SlaveStatusIndicator;
@@ -57,11 +56,8 @@ public class ShimanoShiftingProfileHandler implements IDeviceProfileHandler {
     private final SwitchData switchDataRight;
     private final BuzzerData buzzerData;
 
-    public ShimanoShiftingProfileHandler(DeviceId deviceId, ITransportHandler transportHandler, IDeviceConnectionListener deviceConnectionListener) {
-        if (deviceId.getDeviceType() != DeviceType.SHIMANO_SHIFTING) {
-            throw new RuntimeException("Invalid profile handler for device type " + deviceId.getDeviceType());
-        }
 
+    public ShimanoShiftingProfileHandler(DeviceId deviceId, ITransportHandler transportHandler, IDeviceConnectionListener deviceConnectionListener) {
         this.deviceId = deviceId;
         this.transportHandler = transportHandler;
         this.deviceConnectionListener = deviceConnectionListener;
@@ -167,7 +163,7 @@ public class ShimanoShiftingProfileHandler implements IDeviceProfileHandler {
         }
     }
 
-    public final String softwareVersionFromRevisions(int majorRevision, int minorRevision) {
+    private String softwareVersionFromRevisions(int majorRevision, int minorRevision) {
         if (minorRevision == 255) {
             return String.valueOf((float) majorRevision / 10);
         }
@@ -371,7 +367,7 @@ public class ShimanoShiftingProfileHandler implements IDeviceProfileHandler {
         }
     }
 
-    public void changeShiftMode() {
+    private void changeShiftMode() {
         byte[] data = new byte[8];
         this.requestShiftModeTransitionSequenceNumber++;
         data[0] = (byte) ShimanoPageType.REQUEST_SHIFT_MODE_TRANSITION.getPageNumber();
