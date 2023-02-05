@@ -190,8 +190,8 @@ public class DeviceDetailsFragment extends Fragment implements IKarooKeyListener
 
         Button buttonRename = view.findViewById(R.id.button_device_details_rename);
         buttonRename.setOnClickListener(v -> {
-            View dialogView = getLayoutInflater().inflate(R.layout.view_alert_device_rename, null);
-            final EditText editText = dialogView.findViewById(R.id.edittext_alert_device_name);
+            View dialogView = getLayoutInflater().inflate(R.layout.dialog_device_rename, null);
+            final EditText editText = dialogView.findViewById(R.id.edittext_dialog_device_name);
             editText.setText(viewModel.getDevicePreferences(requireContext()).getName());
             editText.setSelection(editText.getText().length());
 

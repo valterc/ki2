@@ -84,7 +84,7 @@ public class ListDevicesAdapter extends RecyclerView.Adapter<ListDevicesViewHold
     @SuppressLint("ClickableViewAccessibility")
     public ListDevicesViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.view_list_devices_item, parent, false);
+                .inflate(R.layout.view_item_list_devices, parent, false);
         ListDevicesViewHolder viewHolder = new ListDevicesViewHolder(view);
 
         viewHolder.getImageViewDrag().setOnTouchListener((v, event) -> {

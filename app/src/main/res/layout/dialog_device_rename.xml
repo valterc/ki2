@@ -9,7 +9,7 @@
     android:paddingTop="10dp">
 
     <EditText
-        android:id="@+id/edittext_alert_device_name"
+        android:id="@+id/edittext_dialog_device_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="top"

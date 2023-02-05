@@ -55,7 +55,7 @@
         android:layout_height="0dp"
         app:layout_constraintTop_toBottomOf="@id/linearlayout_add_top_panel"
         app:layout_constraintBottom_toBottomOf="parent"
-        tools:listitem="@layout/view_add_device_item"
+        tools:listitem="@layout/view_item_add_device"
         tools:itemCount="10"
         android:paddingBottom="80dp"/>
 
