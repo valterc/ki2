@@ -1,14 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="DesignSurface">
-    <option name="filePathToZoomLevelMap">
-      <map>
-        <entry key="..\:/repos/Ki2/app/src/main/res/layout/settings_activity.xml" value="0.36666666666666664" />
-        <entry key="..\:/repos/Ki2/app/src/main/res/xml/root_preferences.xml" value="0.36666666666666664" />
-        <entry key="..\:/repos/ki2/app/src/main/res/layout/activity_channel_list.xml" value="0.18802083333333333" />
-      </map>
-    </option>
-  </component>
   <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
