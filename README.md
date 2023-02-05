@@ -93,15 +93,16 @@ This app utilizes the Android environment along with the ANT service and the Kar
 Karoo software may change with new updates, for best experience please use the latest Ki2 version or the version tested with your Karoo software version.
 
 | Version                   | Supported | Tested Ki2 Version |
-| -----                     | -----     | -----              |
-| 1.297.1231 (May 19, 2022) | ✅        | 0.4                |
-| 1.333.1345 (Oct 06, 2022) | ✅        | 0.5                |
-| 1.335.1353 (Oct 20, 2022) | ✅        | 0.5                |
-| 1.342.1374 (Nov 17, 2022) | ✅        | 0.6                |
-| 1.344.1384 (Nov 18, 2022) | ✅        | 0.6                |
-| 1.346.1384 (Dec 01, 2022) | ✅        | 0.7                |
-| 1.349.1396 (Dec 15, 2022) | ✅        | 0.7                |
-| 1.352.1409 (Jan 12, 2023) | ✅        | 0.8                |
+|---------------------------|-----------|--------------------|
+| 1.297.1231 (May 19, 2022) | ✅         | 0.4                |
+| 1.333.1345 (Oct 06, 2022) | ✅         | 0.5                |
+| 1.335.1353 (Oct 20, 2022) | ✅         | 0.5                |
+| 1.342.1374 (Nov 17, 2022) | ✅         | 0.6                |
+| 1.344.1384 (Nov 18, 2022) | ✅         | 0.6                |
+| 1.346.1384 (Dec 01, 2022) | ✅         | 0.7                |
+| 1.349.1396 (Dec 15, 2022) | ✅         | 0.7                |
+| 1.352.1409 (Jan 12, 2023) | ✅         | 0.8                |
+| 1.355.1428 (Jan 25, 2023) | ✅         | 1.0                |
 
 ## Known issues
 
@@ -117,22 +118,29 @@ This is a limitation of the Karoo SDK and a restriction of Android. Unfortunatel
 
 **Workaround:** There is no known workaround, hood buttons only work in the ride app.
 
+## Limitations
+
+Karoo SDK is very limited, here are some things that are not possible:
+
+- Include shifting information in the FIT file
+- Control lights from the hood buttons/switches
+
 ## Battery usage
 
 While the implementation is fairly tidy and optimized, this app will be yet another process running on the Karoo. This means that there is _some_ battery impact. I did some non-scientific testing.
 
-| Setup                                                |
-| -----                                                |
-| Karoo 2 (Early 2021) Software Version: 1.297.1231    |
-| Garmin HR                                            |
-| Varia Radar + Light                                  |
-| Built-in GPS                                         |
-| Audio alerts on (navigation + radar)                 |
+| Setup                                             |
+|---------------------------------------------------|
+| Karoo 2 (Early 2021) Software Version: 1.297.1231 |
+| Garmin HR                                         |
+| Varia Radar + Light                               |
+| Built-in GPS                                      |
+| Audio alerts on (navigation + radar)              |
 
-| Setup                         | Distance | Ride Duration | Recorded Ascent | Avg Speed | Avg Temperature | Total Shifts | Battery Usage                                           |
-| -----                         | -----    | -----         | -----           | -----     | -----           | -----        | -----                                                   |
-| Karoo 2                       | 52.6km   | 2:06:03       | 592m            | 25.1km/h  | 25C             | 410          | **18%**<br> **8.5% / hour**<br> (Start: 98% - End: 80%) |
-| Karoo 2 + Ki2                 | 52.6km   | 1:58:21       | 585m            | 26.7km/h  | 21C             | 368          | **15%**<br> **7.5% / hour**<br> (Start: 97% - End: 82%) |
+| Setup         | Distance | Ride Duration | Recorded Ascent | Avg Speed | Avg Temperature | Total Shifts | Battery Usage                                           |
+|---------------|----------|---------------|-----------------|-----------|-----------------|--------------|---------------------------------------------------------|
+| Karoo 2       | 52.6km   | 2:06:03       | 592m            | 25.1km/h  | 25C             | 410          | **18%**<br> **8.5% / hour**<br> (Start: 98% - End: 80%) |
+| Karoo 2 + Ki2 | 52.6km   | 1:58:21       | 585m            | 26.7km/h  | 21C             | 368          | **15%**<br> **7.5% / hour**<br> (Start: 97% - End: 82%) |
 
 Tested in the same route in different days. Similar profile in Karoo with the original shifting data elements and then the equivalent ones from Ki2.
 
