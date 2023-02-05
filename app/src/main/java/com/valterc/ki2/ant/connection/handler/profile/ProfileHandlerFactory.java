@@ -17,8 +17,12 @@ public final class ProfileHandlerFactory {
             throw new IllegalArgumentException("Device identifier is invalid: " + deviceId);
         }
 
-        if (deviceId.getDeviceType() == DeviceType.SHIMANO_SHIFTING) {
-            return new ShimanoShiftingProfileHandler(deviceId, transportHandler, deviceConnectionListener);
+        switch (deviceId.getDeviceType()) {
+            case SHIMANO_SHIFTING:
+                return new ShimanoShiftingProfileHandler(deviceId, transportHandler, deviceConnectionListener);
+
+            case SHIMANO_EBIKE:
+                return new ShimanoEBikeProfileHandler(deviceId, transportHandler, deviceConnectionListener);
         }
 
         Timber.e("Unable to construct connection handler for device %s", deviceId);

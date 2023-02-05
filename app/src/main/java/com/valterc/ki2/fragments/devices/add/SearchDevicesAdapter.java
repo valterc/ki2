@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.valterc.ki2.R;
 import com.valterc.ki2.data.device.DeviceId;
 import com.valterc.ki2.data.device.DeviceName;
-import com.valterc.ki2.data.device.DeviceType;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -50,15 +49,27 @@ public class SearchDevicesAdapter extends RecyclerView.Adapter<SearchDevicesView
     public void onBindViewHolder(@NonNull SearchDevicesViewHolder holder, int position) {
         DeviceId deviceId = devices.get(position);
 
-        if (deviceId.getDeviceType() == DeviceType.SHIMANO_SHIFTING) {
-            holder.getImageViewIcon().setImageResource(R.drawable.ic_di2);
-            holder.getButtonAdd().setVisibility(View.VISIBLE);
-        } else if (deviceId.getDeviceType() == DeviceType.MOCK_SHIFTING) {
-            holder.getImageViewIcon().setImageResource(R.drawable.ic_mock);
-            holder.getButtonAdd().setVisibility(View.VISIBLE);
-        } else {
-            holder.getImageViewIcon().setImageResource(R.drawable.ic_memory);
-            holder.getButtonAdd().setVisibility(View.INVISIBLE);
+        switch (deviceId.getDeviceType()) {
+            case SHIMANO_SHIFTING:
+                holder.getImageViewIcon().setImageResource(R.drawable.ic_di2);
+                holder.getButtonAdd().setVisibility(View.VISIBLE);
+                break;
+
+            case SHIMANO_EBIKE:
+                holder.getImageViewIcon().setImageResource(R.drawable.ic_steps);
+                holder.getButtonAdd().setVisibility(View.VISIBLE);
+                break;
+
+            case MOCK_SHIFTING:
+                holder.getImageViewIcon().setImageResource(R.drawable.ic_mock);
+                holder.getButtonAdd().setVisibility(View.VISIBLE);
+                break;
+
+            case UNKNOWN:
+            default:
+                holder.getImageViewIcon().setImageResource(R.drawable.ic_memory);
+                holder.getButtonAdd().setVisibility(View.INVISIBLE);
+                break;
         }
 
         holder.getTextViewName().setText(DeviceName.getDefaultName(holder.itemView.getContext(), deviceId));

@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.valterc.ki2.R;
 import com.valterc.ki2.data.connection.ConnectionDataInfo;
 import com.valterc.ki2.data.device.DeviceId;
-import com.valterc.ki2.data.device.DeviceType;
 import com.valterc.ki2.data.preferences.device.DevicePreferences;
 
 import java.util.ArrayList;
@@ -105,12 +104,23 @@ public class ListDevicesAdapter extends RecyclerView.Adapter<ListDevicesViewHold
         DevicePreferences devicePreferences = Objects.requireNonNull(devicePreferencesMap.get(deviceId));
         holder.getTextViewName().setText(devicePreferences.getName());
 
-        if (deviceId.getDeviceType() == DeviceType.SHIMANO_SHIFTING) {
-            holder.getImageViewIcon().setImageResource(R.drawable.ic_di2);
-        } else if (deviceId.getDeviceType() == DeviceType.MOCK_SHIFTING) {
-            holder.getImageViewIcon().setImageResource(R.drawable.ic_mock);
-        } else {
-            holder.getImageViewIcon().setImageResource(R.drawable.ic_memory);
+        switch (deviceId.getDeviceType()) {
+            case SHIMANO_SHIFTING:
+                holder.getImageViewIcon().setImageResource(R.drawable.ic_di2);
+                break;
+
+            case SHIMANO_EBIKE:
+                holder.getImageViewIcon().setImageResource(R.drawable.ic_steps);
+                break;
+
+            case MOCK_SHIFTING:
+                holder.getImageViewIcon().setImageResource(R.drawable.ic_mock);
+                break;
+
+            case UNKNOWN:
+            default:
+                holder.getImageViewIcon().setImageResource(R.drawable.ic_memory);
+                break;
         }
 
         setConnectionStatusIndicator(holder, connectionDataInfoMap.get(deviceId), devicePreferences.isEnabled());

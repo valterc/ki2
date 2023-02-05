@@ -12,6 +12,7 @@ import com.valterc.ki2.data.device.DeviceType;
 import com.valterc.ki2.update.PostUpdateContext;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import timber.log.Timber;
@@ -26,8 +27,12 @@ public class UpdateDeviceIds implements IPreInitPostUpdateAction {
 
             if (devices != null) {
                 Set<OldDeviceId> oldDeviceSet = new Gson().fromJson(devices, new TypeToken<HashSet<OldDeviceId>>() {}.getType());
-                Set<DeviceId> newDeviceSet = new HashSet<>();
+                if (oldDeviceSet == null || oldDeviceSet.isEmpty() || oldDeviceSet.stream().allMatch(Objects::isNull)) {
+                    Timber.i("Did not convert Device Ids, original set was empty or invalid");
+                    return;
+                }
 
+                Set<DeviceId> newDeviceSet = new HashSet<>();
                 for (OldDeviceId oldDeviceId : oldDeviceSet) {
                     try {
                         newDeviceSet.add(new DeviceId(Integer.parseInt(oldDeviceId.uid.split("-")[0]), 1, 5));

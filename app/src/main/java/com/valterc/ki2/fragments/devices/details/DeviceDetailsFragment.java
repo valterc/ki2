@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -97,6 +98,26 @@ public class DeviceDetailsFragment extends Fragment implements IKarooKeyListener
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        ImageView imageViewIcon = view.findViewById(R.id.imageview_device_details_icon);
+        switch (viewModel.getDeviceId().getDeviceType()) {
+            case SHIMANO_SHIFTING:
+                imageViewIcon.setImageResource(R.drawable.ic_di2);
+                break;
+
+            case SHIMANO_EBIKE:
+                imageViewIcon.setImageResource(R.drawable.ic_steps);
+                break;
+
+            case MOCK_SHIFTING:
+                imageViewIcon.setImageResource(R.drawable.ic_mock);
+                break;
+
+            case UNKNOWN:
+            default:
+                imageViewIcon.setImageResource(R.drawable.ic_memory);
+                break;
+        }
 
         TextView textViewName = view.findViewById(R.id.textview_device_details_name);
         textViewName.setText(viewModel.getDevicePreferences(requireContext()).getName());

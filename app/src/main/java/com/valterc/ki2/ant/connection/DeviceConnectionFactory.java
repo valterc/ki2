@@ -25,6 +25,7 @@ public final class DeviceConnectionFactory {
 
         switch (deviceId.getDeviceType()) {
             case SHIMANO_SHIFTING:
+            case SHIMANO_EBIKE:
                 ChannelConfiguration channelConfiguration = ConfigurationStore.getChannelConfiguration(context, deviceId);
                 return new AntDeviceConnection(antManager, deviceId, channelConfiguration, deviceConnectionListener);
 
