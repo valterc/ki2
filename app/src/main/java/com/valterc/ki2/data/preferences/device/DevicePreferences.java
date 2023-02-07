@@ -4,10 +4,14 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.valterc.ki2.R;
 import com.valterc.ki2.data.device.DeviceId;
 import com.valterc.ki2.data.device.DeviceName;
+
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public class DevicePreferences {
 
@@ -106,4 +110,102 @@ public class DevicePreferences {
         editor.putInt(context.getString(R.string.preference_device_priority), priority);
         editor.apply();
     }
+
+    /**
+     * Indicates if the device gearing is detected automatically.
+     *
+     * @return True if gearing is automatically detected, False to use custom gearing.
+     */
+    public boolean isGearingDetectedAutomatically() {
+        return sharedPreferences.getBoolean(context.getString(R.string.preference_device_gearing_detected_automatically),
+                context.getResources().getBoolean(R.bool.default_preference_device_gearing_detected_automatically));
+    }
+
+    /**
+     * Set the device gearing detected automatically.
+     *
+     * @param detectAutomatically True to automatically detect gearing, False to use custom gearing.
+     */
+    public void setGearingDetectedAutomatically(boolean detectAutomatically) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(context.getString(R.string.preference_device_gearing_detected_automatically), detectAutomatically);
+        editor.apply();
+    }
+
+    /**
+     * Get custom front gearing.
+     *
+     * @return Array with front gearing values. Might be <code>null</code>.
+     */
+    @Nullable
+    public int[] getCustomGearingFront() {
+        String gearing = sharedPreferences.getString(context.getString(R.string.preference_device_gearing_custom_front), null);
+        if (gearing == null) {
+            return null;
+        }
+
+        return Arrays.stream(gearing.split("-")).mapToInt(Integer::parseInt).toArray();
+    }
+
+    /**
+     * Set custom front gearing.
+     *
+     * @param gearing Array with front gearing values. Can be <code>null</code> to unset existing values.
+     */
+    public void setCustomGearingFront(@Nullable int[] gearing) {
+        String serializedArray;
+
+        if (gearing == null) {
+            serializedArray = null;
+        } else {
+            if (gearing.length == 0 || gearing.length > 12) {
+                throw new IllegalArgumentException("Invalid gearing: " + gearing.length);
+            }
+
+            serializedArray = Arrays.stream(gearing).mapToObj(String::valueOf).collect(Collectors.joining("-"));
+        }
+
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(context.getString(R.string.preference_device_gearing_custom_front), serializedArray);
+        editor.apply();
+    }
+
+    /**
+     * Get custom rear gearing.
+     *
+     * @return Array with rear gearing values. Might be <code>null</code>.
+     */
+    @Nullable
+    public int[] getCustomGearingRear() {
+        String gearing = sharedPreferences.getString(context.getString(R.string.preference_device_gearing_custom_rear), null);
+        if (gearing == null) {
+            return null;
+        }
+
+        return Arrays.stream(gearing.split("-")).mapToInt(Integer::parseInt).toArray();
+    }
+
+    /**
+     * Set custom rear gearing.
+     *
+     * @param gearing Array with rear gearing values. Can be <code>null</code> to unset existing values.
+     */
+    public void setCustomGearingRear(@Nullable int[] gearing) {
+        String serializedArray;
+
+        if (gearing == null) {
+            serializedArray = null;
+        } else {
+            if (gearing.length == 0 || gearing.length > 12) {
+                throw new IllegalArgumentException("Invalid gearing: " + gearing.length);
+            }
+
+            serializedArray = Arrays.stream(gearing).mapToObj(String::valueOf).collect(Collectors.joining("-"));
+        }
+
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(context.getString(R.string.preference_device_gearing_custom_rear), serializedArray);
+        editor.apply();
+    }
+
 }
