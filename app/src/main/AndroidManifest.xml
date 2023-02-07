@@ -42,6 +42,11 @@
             android:theme="@style/Theme.Ki2.NoActionBar.Blue" />
 
         <activity
+            android:name=".activities.devices.gearing.DeviceGearingActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Ki2.NoActionBar.Blue" />
+
+        <activity
             android:name=".activities.devices.add.AddDeviceActivity"
             android:exported="false" />
 
