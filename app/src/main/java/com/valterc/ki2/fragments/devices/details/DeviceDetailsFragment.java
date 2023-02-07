@@ -2,6 +2,7 @@ package com.valterc.ki2.fragments.devices.details;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.os.Handler;
@@ -24,9 +25,13 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.valterc.ki2.R;
+import com.valterc.ki2.activities.devices.gearing.DeviceGearingActivity;
 import com.valterc.ki2.data.device.DeviceId;
 import com.valterc.ki2.data.input.KarooKey;
 import com.valterc.ki2.data.preferences.device.DevicePreferences;
+import com.valterc.ki2.data.shifting.FrontTeethPattern;
+import com.valterc.ki2.data.shifting.RearTeethPattern;
+import com.valterc.ki2.data.shifting.ShiftingInfo;
 import com.valterc.ki2.data.switches.SwitchType;
 import com.valterc.ki2.fragments.IKarooKeyListener;
 import com.valterc.ki2.services.Ki2Service;
@@ -249,6 +254,13 @@ public class DeviceDetailsFragment extends Fragment implements IKarooKeyListener
             }
         });
 
+        View viewGearing = view.findViewById(R.id.constrainglayout_device_details_gearing);
+        viewGearing.setOnClickListener(v -> startActivity(new Intent(requireContext(), DeviceGearingActivity.class)
+                .putExtra(DeviceId.class.getSimpleName(), viewModel.getDeviceId())));
+
+        TextView textViewGearing = view.findViewById(R.id.textview_device_details_gearing);
+        setGearingText(textViewGearing, devicePreferences, null);
+
         if (!devicePreferences.isEnabled()) {
             textViewConnectionStatus.setText(R.string.text_disabled);
             textViewConnectionStatus.setTextColor(requireContext().getColor(R.color.hh_dark_grey));
@@ -366,6 +378,8 @@ public class DeviceDetailsFragment extends Fragment implements IKarooKeyListener
             textViewFrontGear.setText(shiftingInfo.getFrontGear() + "/" + shiftingInfo.getFrontGearMax());
             textViewShiftingMode.setText(shiftingInfo.getShiftingMode().getMode());
             linearLayoutWaitingForDataShifting.setVisibility(View.GONE);
+
+            setGearingText(textViewGearing, viewModel.getDevicePreferences(requireContext()), shiftingInfo);
         });
 
         viewModel.getSwitchEvent().observe(getViewLifecycleOwner(), switchEvent -> {
@@ -424,5 +438,38 @@ public class DeviceDetailsFragment extends Fragment implements IKarooKeyListener
     @Override
     public boolean onKarooKeyPressed(KarooKey karooKey) {
         return false;
+    }
+
+    private void setGearingText(TextView textView, DevicePreferences devicePreferences, ShiftingInfo shiftingInfo) {
+        if (devicePreferences.isGearingDetectedAutomatically()) {
+            if (shiftingInfo == null) {
+                textView.setText(R.string.text_detect_automatically);
+            } else {
+                FrontTeethPattern frontTeethPattern = shiftingInfo.getFrontTeethPattern();
+                RearTeethPattern rearTeethPattern = shiftingInfo.getRearTeethPattern();
+                textView.setText(getString(R.string.text_param_gearing_detect_automatically,
+                        frontTeethPattern.getName(), rearTeethPattern.getName()));
+            }
+        } else {
+            int[] frontGearing = devicePreferences.getCustomGearingFront();
+            int[] rearGearing = devicePreferences.getCustomGearingRear();
+            String frontGearingString;
+            String rearGearingString;
+
+            if (frontGearing != null) {
+                frontGearingString = frontGearing.length == 1 ? String.valueOf(frontGearing[0]) : frontGearing[0] + "-" + frontGearing[frontGearing.length - 1];
+            } else {
+                frontGearingString = getString(R.string.text_unknown);
+            }
+
+            if (rearGearing != null) {
+                rearGearingString = rearGearing.length == 1 ? String.valueOf(rearGearing[0]) : rearGearing[0] + "-" + rearGearing[rearGearing.length - 1];
+            } else {
+                rearGearingString = getString(R.string.text_unknown);
+            }
+
+            textView.setText(getString(R.string.text_param_gearing_custom,
+                    frontGearingString, rearGearingString));
+        }
     }
 }
