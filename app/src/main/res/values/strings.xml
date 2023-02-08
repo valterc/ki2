@@ -101,5 +101,11 @@
     <string name="text_param_gearing_detect_automatically">Detect automatically\nFront: %s\nRear: %s</string>
     <string name="text_param_gearing_custom">Custom\nFront: %s\nRear: %s</string>
     <string name="text_unknown">Unknown</string>
+    <string name="text_automatically_detected">Automatically detected</string>
+    <string name="text_detect_gearing_automatically_warning">Detect gearing automatically. Might not be supported in some systems.</string>
+    <string name="text_front_gears">Front gears</string>
+    <string name="text_rear_gears">Rear Gears</string>
+    <string name="text_custom_gearing">Custom Gearing</string>
+    <string name="text_number_of_gears">Number of gears:</string>
 
 </resources>
