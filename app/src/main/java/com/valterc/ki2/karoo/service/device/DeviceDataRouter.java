@@ -112,7 +112,12 @@ public class DeviceDataRouter {
                     assert preferencesA != null;
                     assert preferencesB != null;
 
-                    return preferencesA.getPriority(context) - preferencesB.getPriority(context);
+                    int priority = preferencesA.getPriority(context) - preferencesB.getPriority(context);
+                    if (priority != 0) {
+                        return priority;
+                    }
+
+                    return preferencesA.getName(context).compareToIgnoreCase(preferencesB.getName(context));
                 }).collect(Collectors.toList());
 
         for (DeviceData deviceData : sortedDeviceData) {
