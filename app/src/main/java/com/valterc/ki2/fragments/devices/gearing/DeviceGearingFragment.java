@@ -35,6 +35,9 @@ import java.util.Arrays;
 
 public class DeviceGearingFragment extends Fragment {
 
+    private static final Integer[] OPTIONS_GEAR_COUNT_FRONT = {1, 2, 3};
+    private static final Integer[] OPTIONS_GEAR_COUNT_REAR = {9, 10, 11, 12};
+
     private boolean serviceBound;
     private DeviceGearingViewModel viewModel;
 
@@ -137,21 +140,21 @@ public class DeviceGearingFragment extends Fragment {
         });
 
         Spinner spinnerNumberGearsFront = view.findViewById(R.id.spinner_device_gearing_number_gears_front);
-        ArrayAdapter<Integer> adapterGearCountFront = new ArrayAdapter<>(requireContext(), R.layout.view_item_gearing_spinner_text, new Integer[]{1, 2, 3});
+        ArrayAdapter<Integer> adapterGearCountFront = new ArrayAdapter<>(requireContext(), R.layout.view_item_gearing_spinner_text, OPTIONS_GEAR_COUNT_FRONT);
         adapterGearCountFront.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerNumberGearsFront.setAdapter(adapterGearCountFront);
 
         Spinner spinnerNumberGearsRear = view.findViewById(R.id.spinner_device_gearing_number_gears_rear);
-        ArrayAdapter<Integer> adapterGearCountRear = new ArrayAdapter<>(requireContext(), R.layout.view_item_gearing_spinner_text, new Integer[]{9, 10, 11, 12});
+        ArrayAdapter<Integer> adapterGearCountRear = new ArrayAdapter<>(requireContext(), R.layout.view_item_gearing_spinner_text, OPTIONS_GEAR_COUNT_REAR);
         adapterGearCountRear.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerNumberGearsRear.setAdapter(adapterGearCountRear);
 
         RecyclerView recyclerViewGearsFront = view.findViewById(R.id.recyclerview_device_gearing_front);
-        DeviceGearingItemAdapter adapterGearsFront = new DeviceGearingItemAdapter(devicePreferences::setCustomGearingFront);
+        DeviceGearingItemAdapter adapterGearsFront = new DeviceGearingItemAdapter(requireContext(), devicePreferences::setCustomGearingFront);
         recyclerViewGearsFront.setAdapter(adapterGearsFront);
 
         RecyclerView recyclerViewGearsRear = view.findViewById(R.id.recyclerview_device_gearing_rear);
-        DeviceGearingItemAdapter adapterGearsRear = new DeviceGearingItemAdapter(devicePreferences::setCustomGearingRear);
+        DeviceGearingItemAdapter adapterGearsRear = new DeviceGearingItemAdapter(requireContext(), devicePreferences::setCustomGearingRear);
         recyclerViewGearsRear.setAdapter(adapterGearsRear);
 
         int[] customGearingFront = devicePreferences.getCustomGearingFront();
@@ -234,13 +237,13 @@ public class DeviceGearingFragment extends Fragment {
 
                     if (invalid) {
                         new AlertDialog.Builder(requireContext(), R.style.AlertDialogStyle)
-                                .setTitle("Invalid gears")
-                                .setMessage("Some of the custom gears are invalid.\n\nThe latest changes might not be saved if you exit now.")
-                                .setPositiveButton("Exit", (dialog, whichButton) -> {
+                                .setTitle(R.string.text_invalid_gears)
+                                .setMessage(R.string.text_invalid_gears_message)
+                                .setPositiveButton(R.string.text_exit, (dialog, whichButton) -> {
                                     setEnabled(false);
                                     requireActivity().onBackPressed();
                                 })
-                                .setNegativeButton("Cancel", (dialog, whichButton) -> {})
+                                .setNegativeButton(R.string.text_cancel, null)
                                 .show();
                     } else {
                         setEnabled(false);

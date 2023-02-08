@@ -107,5 +107,9 @@
     <string name="text_rear_gears">Rear Gears</string>
     <string name="text_custom_gearing">Custom Gearing</string>
     <string name="text_number_of_gears">Number of gears:</string>
+    <string name="text_invalid_gears">Invalid gears</string>
+    <string name="text_invalid_gears_message">Some of the custom gears are invalid.\n\nThe latest changes might not be saved if you exit now.</string>
+    <string name="text_exit">Exit</string>
+    <string name="text_invalid_gear">Invalid gear</string>
 
 </resources>

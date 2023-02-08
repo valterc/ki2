@@ -1,6 +1,7 @@
 package com.valterc.ki2.fragments.devices.gearing;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,10 +17,17 @@ import java.util.function.Consumer;
 
 public class DeviceGearingItemAdapter extends RecyclerView.Adapter<DeviceGearingItemViewHolder> {
 
-    private String[] gears;
+    private static final int GEAR_MIN_VALUE = 5;
+    private static final int GEAR_MAX_VALUE = 90;
+
+    private final Context context;
     private final Consumer<int[]> onValidatedGears;
 
-    public DeviceGearingItemAdapter(Consumer<int[]> onValidatedGears) {
+    private String[] gears;
+
+
+    public DeviceGearingItemAdapter(Context context, Consumer<int[]> onValidatedGears) {
+        this.context = context;
         this.onValidatedGears = onValidatedGears;
     }
 
@@ -58,7 +66,7 @@ public class DeviceGearingItemAdapter extends RecyclerView.Adapter<DeviceGearing
     private void updateGear(int position, String gear) throws Exception {
         if (isGearInvalid(gear)) {
             gears[position] = gear;
-            throw new Exception("Invalid gear");
+            throw new Exception(context.getString(R.string.text_invalid_gear));
         }
 
         if (gears == null) {
@@ -81,7 +89,7 @@ public class DeviceGearingItemAdapter extends RecyclerView.Adapter<DeviceGearing
             return true;
         }
 
-        return gearInt < 5 || gearInt > 90;
+        return gearInt < GEAR_MIN_VALUE || gearInt > GEAR_MAX_VALUE;
     }
 
     public boolean validateGears() {
