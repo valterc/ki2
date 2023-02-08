@@ -1,5 +1,7 @@
 package com.valterc.ki2.data.shifting;
 
+import com.valterc.ki2.utils.ArrayUtils;
+
 import java.util.Arrays;
 
 public enum FrontTeethPattern {
@@ -67,7 +69,7 @@ public enum FrontTeethPattern {
     }
 
     public int[] getGears() {
-        return Arrays.copyOf(gearTeethCount, gearTeethCount.length);
+        return ArrayUtils.reverse(Arrays.copyOf(gearTeethCount, gearTeethCount.length));
     }
 
     public String getName() {

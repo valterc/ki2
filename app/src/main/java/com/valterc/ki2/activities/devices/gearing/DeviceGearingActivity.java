@@ -37,7 +37,7 @@ public class DeviceGearingActivity extends AppCompatActivity {
         }
 
         ExtendedFloatingActionButton buttonBack = findViewById(R.id.button_back);
-        buttonBack.setOnClickListener(view -> finish());
+        buttonBack.setOnClickListener(view -> onBackPressed());
 
         ImageView imageViewIcon = findViewById(R.id.imageview_device_gearing_icon);
         switch (deviceId.getDeviceType()) {

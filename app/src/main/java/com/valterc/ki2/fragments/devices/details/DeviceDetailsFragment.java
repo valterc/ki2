@@ -457,13 +457,13 @@ public class DeviceDetailsFragment extends Fragment implements IKarooKeyListener
             String rearGearingString;
 
             if (frontGearing != null) {
-                frontGearingString = frontGearing.length == 1 ? String.valueOf(frontGearing[0]) : frontGearing[0] + "-" + frontGearing[frontGearing.length - 1];
+                frontGearingString = frontGearing.length == 1 ? String.valueOf(frontGearing[0]) :  frontGearing[frontGearing.length - 1] + "-" + frontGearing[0];
             } else {
                 frontGearingString = getString(R.string.text_unknown);
             }
 
             if (rearGearing != null) {
-                rearGearingString = rearGearing.length == 1 ? String.valueOf(rearGearing[0]) : rearGearing[0] + "-" + rearGearing[rearGearing.length - 1];
+                rearGearingString = rearGearing.length == 1 ? String.valueOf(rearGearing[0]) : rearGearing[rearGearing.length - 1] + "-" + rearGearing[0];
             } else {
                 rearGearingString = getString(R.string.text_unknown);
             }
