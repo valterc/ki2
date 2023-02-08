@@ -95,7 +95,17 @@ public class ListDevicesFragment extends Fragment implements IKarooKeyListener {
             if (service != null) {
                 try {
                     List<DeviceId> devices = viewModel.getSavedDevices();
-                    devices.sort((a, b) -> new DevicePreferences(requireContext(), a).getPriority() - new DevicePreferences(requireContext(), b).getPriority());
+                    devices.sort((a, b) -> {
+                        DevicePreferences devicePreferencesA = new DevicePreferences(requireContext(), a);
+                        DevicePreferences devicePreferencesB = new DevicePreferences(requireContext(), b);
+
+                        int priority = devicePreferencesA.getPriority() - devicePreferencesB.getPriority();
+                        if (priority != 0) {
+                            return priority;
+                        }
+
+                        return devicePreferencesA.getName().compareToIgnoreCase(devicePreferencesB.getName());
+                    });
                     listDevicesAdapter.setDevices(devices);
                     textViewNoSavedDevices.setVisibility(viewModel.anyDevicesSaved() ? View.GONE : View.VISIBLE);
                     viewModel.startReceivingData();
