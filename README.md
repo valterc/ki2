@@ -90,19 +90,15 @@ This app utilizes the Android environment along with the ANT service and the Kar
 
 ### Supported Karoo software versions
 
-Karoo software may change with new updates, for best experience please use the latest Ki2 version or the version tested with your Karoo software version.
+Karoo software may change with new updates, for best experience please use the lastest _tested_ Karoo version with the [latest Ki2 version](https://github.com/valterc/ki2/releases/latest/).
 
-| Version                   | Supported | Tested Ki2 Version |
-|---------------------------|-----------|--------------------|
-| 1.297.1231 (May 19, 2022) | ✅         | 0.4                |
-| 1.333.1345 (Oct 06, 2022) | ✅         | 0.5                |
-| 1.335.1353 (Oct 20, 2022) | ✅         | 0.5                |
-| 1.342.1374 (Nov 17, 2022) | ✅         | 0.6                |
-| 1.344.1384 (Nov 18, 2022) | ✅         | 0.6                |
-| 1.346.1384 (Dec 01, 2022) | ✅         | 0.7                |
-| 1.349.1396 (Dec 15, 2022) | ✅         | 0.7                |
-| 1.352.1409 (Jan 12, 2023) | ✅         | 0.8                |
-| 1.355.1428 (Jan 25, 2023) | ✅         | 1.0                |
+| Version                   | Supported |
+|---------------------------|-----------|
+| 1.297.1231 (May 19, 2022) | ✅         |
+| 1.333.1345 (Oct 06, 2022) | ✅         |
+| _all versions in between_ | ✅         |
+| 1.355.1428 (Jan 25, 2023) | ✅         |
+| 1.357.1435 (Feb 09, 2023) | ✅         |
 
 ## Known issues
 
