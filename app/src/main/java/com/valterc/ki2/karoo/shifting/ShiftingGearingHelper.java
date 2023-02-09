@@ -44,7 +44,7 @@ public class ShiftingGearingHelper {
             return;
         }
 
-        customGearing = devicePreferences.isGearingDetectedAutomatically(context);
+        customGearing = !devicePreferences.isGearingDetectedAutomatically(context);
         if (customGearing) {
             customGearingFront = devicePreferences.getCustomGearingFront(context);
             customGearingRear = devicePreferences.getCustomGearingRear(context);

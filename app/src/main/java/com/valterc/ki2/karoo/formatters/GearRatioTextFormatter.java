@@ -5,10 +5,10 @@ import androidx.annotation.NonNull;
 import com.valterc.ki2.data.connection.ConnectionInfo;
 import com.valterc.ki2.data.connection.ConnectionStatus;
 import com.valterc.ki2.data.device.DeviceId;
-import com.valterc.ki2.data.shifting.FrontTeethPattern;
-import com.valterc.ki2.data.shifting.RearTeethPattern;
+import com.valterc.ki2.data.preferences.device.DevicePreferencesView;
 import com.valterc.ki2.data.shifting.ShiftingInfo;
 import com.valterc.ki2.karoo.Ki2Context;
+import com.valterc.ki2.karoo.shifting.ShiftingGearingHelper;
 
 import java.text.DecimalFormat;
 import java.util.function.BiConsumer;
@@ -19,22 +19,26 @@ public class GearRatioTextFormatter extends SdkFormatter {
 
     private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#.00");
 
-    @SuppressWarnings("FieldCanBeLocal")
-    private final BiConsumer<DeviceId, ConnectionInfo> connectionInfoConsumer = (deviceId, connectionInfo) -> {
-        connectionStatus = connectionInfo.getConnectionStatus();
-    };
-
-    @SuppressWarnings("FieldCanBeLocal")
-    private final BiConsumer<DeviceId, ShiftingInfo> shiftingInfoConsumer = (deviceId, shiftingInfo) -> {
-        this.shiftingInfo = shiftingInfo;
-    };
-
+    private ShiftingGearingHelper shiftingGearingHelper;
     private ConnectionStatus connectionStatus;
-    private ShiftingInfo shiftingInfo;
+
+    @SuppressWarnings("FieldCanBeLocal")
+    private final BiConsumer<DeviceId, ConnectionInfo> connectionInfoConsumer = (deviceId, connectionInfo) ->
+            connectionStatus = connectionInfo.getConnectionStatus();
+
+    @SuppressWarnings("FieldCanBeLocal")
+    private final BiConsumer<DeviceId, ShiftingInfo> shiftingInfoConsumer = (deviceId, shiftingInfo) ->
+            shiftingGearingHelper.setShiftingInfo(shiftingInfo);
+
+    @SuppressWarnings("FieldCanBeLocal")
+    private final BiConsumer<DeviceId, DevicePreferencesView> devicePreferencesConsumer = (deviceId, devicePreferences) ->
+            shiftingGearingHelper.setDevicePreferences(devicePreferences);
 
     public GearRatioTextFormatter(Ki2Context ki2Context) {
+        shiftingGearingHelper = new ShiftingGearingHelper(ki2Context.getSdkContext());
         ki2Context.getServiceClient().registerConnectionInfoWeakListener(connectionInfoConsumer);
         ki2Context.getServiceClient().registerShiftingInfoWeakListener(shiftingInfoConsumer);
+        ki2Context.getServiceClient().registerDevicePreferencesWeakListener(devicePreferencesConsumer);
     }
 
     @NonNull
@@ -44,18 +48,17 @@ public class GearRatioTextFormatter extends SdkFormatter {
             return NumericTextFormatterConstants.NOT_AVAILABLE;
         }
 
-        if (shiftingInfo == null) {
+        if (!shiftingGearingHelper.hasGearingInfo()) {
             return NumericTextFormatterConstants.WAITING_FOR_DATA;
         }
 
-        if (shiftingInfo.getFrontTeethPattern() == FrontTeethPattern.UNKNOWN ||
-                shiftingInfo.getRearTeethPattern() == RearTeethPattern.UNKNOWN) {
+        if (shiftingGearingHelper.getFrontGearTeethCount() == 0 ||
+                shiftingGearingHelper.getRearGearTeethCount() == 0) {
             return NumericTextFormatterConstants.UNKNOWN;
         }
 
-        int frontTeethCount = shiftingInfo.getFrontTeethPattern().getTeethCount(shiftingInfo.getFrontGear());
-        int rearTeethCount = shiftingInfo.getRearTeethPattern().getTeethCount(shiftingInfo.getRearGear());
-
+        int frontTeethCount = shiftingGearingHelper.getFrontGearTeethCount();
+        int rearTeethCount = shiftingGearingHelper.getRearGearTeethCount();
         return DECIMAL_FORMAT.format((float) frontTeethCount / rearTeethCount);
     }
 }

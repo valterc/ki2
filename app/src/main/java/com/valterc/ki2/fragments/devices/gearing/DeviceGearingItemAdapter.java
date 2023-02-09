@@ -25,7 +25,6 @@ public class DeviceGearingItemAdapter extends RecyclerView.Adapter<DeviceGearing
 
     private String[] gears;
 
-
     public DeviceGearingItemAdapter(Context context, Consumer<int[]> onValidatedGears) {
         this.context = context;
         this.onValidatedGears = onValidatedGears;
