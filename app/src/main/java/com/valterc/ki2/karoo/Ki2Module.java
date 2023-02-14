@@ -1,6 +1,8 @@
 package com.valterc.ki2.karoo;
 
 import android.annotation.SuppressLint;
+import android.os.Handler;
+import android.os.Looper;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -30,6 +32,7 @@ import com.valterc.ki2.karoo.datatypes.ShiftModeTextDataType;
 import com.valterc.ki2.karoo.handlers.HandlerManager;
 import com.valterc.ki2.karoo.hooks.ActivityServiceHook;
 import com.valterc.ki2.karoo.hooks.RideActivityHook;
+import com.valterc.ki2.karoo.overlay.Overlay;
 import com.valterc.ki2.karoo.service.ServiceClient;
 import com.valterc.ki2.karoo.shifting.ShiftingAudioAlertHandler;
 import com.valterc.ki2.karoo.update.UpdateAvailableHandler;
@@ -57,6 +60,8 @@ public class Ki2Module extends Module {
     private final Ki2Context ki2Context;
     private final HandlerManager handlerManager;
 
+    private Overlay overlay;
+
     public Ki2Module(@NonNull SdkContext context) {
         super(context);
 
@@ -73,6 +78,8 @@ public class Ki2Module extends Module {
         } else {
             handlerManager = null;
         }
+
+        overlay = new Overlay(ki2Context);
     }
 
     @NonNull
