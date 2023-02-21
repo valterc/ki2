@@ -117,4 +117,38 @@
         <item>15000</item>
     </string-array>
 
+    <string-array name="preference_titles_overlay_triggers">
+        <item>Connection</item>
+        <item>Shifting</item>
+        <item>Battery</item>
+    </string-array>
+
+    <string-array name="preference_values_overlay_triggers">
+        <item>connection</item>
+        <item>shifting</item>
+        <item>battery</item>
+    </string-array>
+
+    <string-array name="preference_titles_overlay_duration">
+        <item>1 Second</item>
+        <item>2 Seconds</item>
+        <item>5 Seconds</item>
+    </string-array>
+
+    <string-array name="preference_values_overlay_duration">
+        <item>1000</item>
+        <item>2000</item>
+        <item>5000</item>
+    </string-array>
+
+    <string-array name="preference_titles_overlay_theme">
+        <item>Light</item>
+        <item>Dark</item>
+    </string-array>
+
+    <string-array name="preference_values_overlay_theme">
+        <item>default_light</item>
+        <item>default_dark</item>
+    </string-array>
+
 </resources>

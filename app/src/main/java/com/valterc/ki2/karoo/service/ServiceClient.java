@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.ServiceConnection;
 import android.os.Handler;
 import android.os.IBinder;
-import android.os.Looper;
 import android.os.RemoteException;
 import android.util.Log;
 
@@ -20,6 +19,7 @@ import com.valterc.ki2.data.message.Message;
 import com.valterc.ki2.data.preferences.PreferencesView;
 import com.valterc.ki2.data.preferences.device.DevicePreferencesView;
 import com.valterc.ki2.data.shifting.ShiftingInfo;
+import com.valterc.ki2.karoo.Ki2Context;
 import com.valterc.ki2.karoo.service.device.DeviceDataFrontend;
 import com.valterc.ki2.karoo.service.listeners.DataStreamWeakListenerList;
 import com.valterc.ki2.karoo.service.listeners.ServiceCallbackRegistration;
@@ -31,8 +31,6 @@ import com.valterc.ki2.services.callbacks.IPreferencesCallback;
 
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
-
-import io.hammerhead.sdk.v0.SdkContext;
 
 @SuppressLint("LogNotTimber")
 public class ServiceClient {
@@ -102,11 +100,11 @@ public class ServiceClient {
         }
     }, callback -> service.registerPreferencesListener(callback), callback -> service.unregisterPreferencesListener(callback));
 
-    public ServiceClient(SdkContext context) {
-        this.context = context;
+    public ServiceClient(Ki2Context context) {
+        this.context = context.getSdkContext();
 
-        handler = new Handler(Looper.getMainLooper());
-        deviceDataFrontend = new DeviceDataFrontend(context, handler);
+        handler = context.getHandler();
+        deviceDataFrontend = new DeviceDataFrontend(context);
 
         messageListeners = new DataStreamWeakListenerList<>();
         preferencesListeners = new DataStreamWeakListenerList<>();

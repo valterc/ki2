@@ -1,0 +1,45 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:title="@string/category_preference_overlay">
+
+    <com.valterc.ki2.views.MultiLinePreferenceCategory app:title="@string/category_preference_overlay"
+        app:summary="@string/summary_preference_overlay">
+
+        <SwitchPreference
+            app:defaultValue="@bool/default_preference_overlay_enabled"
+            app:key="@string/preference_overlay_enabled"
+            app:summary="@string/summary_preference_overlay_enabled"
+            app:title="@string/title_preference_overlay_enabled" />
+
+        <MultiSelectListPreference
+            app:defaultValue="@array/preference_values_overlay_triggers"
+            app:entries="@array/preference_titles_overlay_triggers"
+            app:entryValues="@array/preference_values_overlay_triggers"
+            app:key="@string/preference_overlay_triggers"
+            app:summary="@string/summary_preference_overlay_triggers"
+            app:title="@string/title_preference_overlay_triggers"
+            app:useSimpleSummaryProvider="true"
+            app:dependency="@string/preference_overlay_enabled"/>
+
+        <ListPreference
+            app:defaultValue="@string/default_preference_overlay_duration"
+            app:entries="@array/preference_titles_overlay_duration"
+            app:entryValues="@array/preference_values_overlay_duration"
+            app:key="@string/preference_overlay_duration"
+            app:summary="@string/summary_preference_overlay_duration"
+            app:title="@string/title_preference_overlay_duration"
+            app:useSimpleSummaryProvider="true"
+            app:dependency="@string/preference_overlay_enabled"/>
+
+        <ListPreference
+            app:defaultValue="@string/default_preference_overlay_theme"
+            app:entries="@array/preference_titles_overlay_theme"
+            app:entryValues="@array/preference_values_overlay_theme"
+            app:key="@string/preference_overlay_theme"
+            app:summary="@string/summary_preference_overlay_theme"
+            app:title="@string/title_preference_overlay_theme"
+            app:useSimpleSummaryProvider="true"
+            app:dependency="@string/preference_overlay_enabled"/>
+
+    </com.valterc.ki2.views.MultiLinePreferenceCategory>
+
+</PreferenceScreen>

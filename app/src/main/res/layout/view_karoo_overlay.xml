@@ -1,18 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/red_faded"
-    android:elevation="100dp">
+    android:layout_margin="5dp"
+    android:background="@drawable/background_overlay_light"
+    android:elevation="100dp"
+    android:orientation="vertical"
+    android:paddingBottom="5dp">
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/linearlayout_karoo_overlay_top_bar"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="HELLO"
-        android:textSize="32sp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"/>
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:background="@drawable/background_overlay_light_top"
+        android:orientation="horizontal"
+        android:padding="5dp">
+
+        <TextView
+            android:id="@+id/textView_karoo_overlay_device_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            tools:text="Di2 69420" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical">
+
+            <com.valterc.ki2.views.battery.BatteryView
+                android:id="@+id/batteryview_karoo_overlay_battery"
+                android:layout_width="35dp"
+                android:layout_height="15dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginHorizontal="5dp"
+                app:backgroundColor="#40606060"
+                app:borderColor="#A0606060"
+                app:foregroundColor="@color/hh_green"
+                app:orientation="horizontal_left"
+                app:value=".4" />
+
+            <TextView
+                android:id="@+id/textview_karoo_overlay_battery"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:textSize="14sp"
+                tools:text="40%" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <com.valterc.ki2.views.GearsView
+        android:id="@+id/gearsview_karoo_overlay_gearing"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginVertical="5dp"
+        android:paddingHorizontal="5dp"
+        app:unselectedGearBorderColor="@color/hh_black" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:paddingHorizontal="5dp">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            tools:ignore="UseCompoundDrawables">
+
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_gravity="center_vertical"
+                android:paddingTop="2dp"
+                android:src="@drawable/ic_hh_gear"
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                android:id="@+id/textview_karoo_overlay_gearing"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:textSize="18sp"
+                tools:text="F50 - R30 | 1.5" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/textview_karoo_overlay_gearing_extra"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginHorizontal="3dp"
+            android:textSize="14sp"
+            android:textStyle="italic"
+            tools:text="SYNCHRO" />
+
+    </LinearLayout>
+
+</LinearLayout>

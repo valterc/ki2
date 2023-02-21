@@ -2,7 +2,6 @@ package com.valterc.ki2.karoo.battery;
 
 import android.annotation.SuppressLint;
 import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 import android.view.Gravity;
 import android.widget.Toast;
@@ -43,7 +42,7 @@ public class LowBatteryHandler implements IRideHandler {
     public LowBatteryHandler(Ki2Context context) {
         this.context = context;
         this.deviceNotificationMap = new HashMap<>();
-        this.handler = new Handler(Looper.getMainLooper());
+        this.handler = context.getHandler();
 
         context.getServiceClient().registerPreferencesWeakListener(onPreferences);
         context.getServiceClient().registerUnfilteredBatteryInfoWeakListener(onBattery);
