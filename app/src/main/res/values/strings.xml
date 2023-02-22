@@ -22,6 +22,7 @@
     <string name="text_no_devices_saved">No devices saved</string>
     <string name="text_connecting">Connecting…</string>
     <string name="text_connected">Connected</string>
+    <string name="text_disconnected">Disconnected</string>
     <string name="text_not_found">Not found</string>
     <string name="text_failed">Failed</string>
     <string name="text_devices">Devices</string>
@@ -114,6 +115,8 @@
     <string name="text_param_gearing">F%02d - R%02d</string>
     <string name="text_param_gearing_and_ratio">F%02d - R%02d | %01.2f</string>
     <string name="text_synchro">SYNCHRO</string>
+    <string name="text_synchro_up">SYNCHRO ↑</string>
+    <string name="text_synchro_down">SYNCHRO ↓</string>
     <string name="text_limit">LIMIT</string>
 
 </resources>

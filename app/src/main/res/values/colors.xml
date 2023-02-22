@@ -24,6 +24,7 @@
     <color name="hh_yellow_dark">#cbba00</color>
     <color name="hh_yellow_darker">#baa900</color>
     <color name="hh_black">#1b2d2d</color>
+    <color name="hh_black_dark">#102020</color>
     <color name="hh_dark_grey">#636363</color>
     <color name="hh_divider_color">#dddddd</color>
     <color name="hh_faded_gray">#898989</color>

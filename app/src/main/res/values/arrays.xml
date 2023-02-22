@@ -9,6 +9,7 @@
         <item>Map/Graph Zoom Out</item>
         <item>Map/Graph Zoom In</item>
         <item>Switch to map page</item>
+        <item>Show overlay</item>
     </string-array>
 
     <string-array name="preference_values_switch_single_press_action">
@@ -21,6 +22,7 @@
         <item>press_map_graph_zoom_out</item>
         <item>press_map_graph_zoom_in</item>
         <item>press_switch_to_map_page</item>
+        <item>show_overlay</item>
     </string-array>
 
     <string-array name="preference_titles_switch_double_press_action">
@@ -34,6 +36,7 @@
         <item>Map/Graph Zoom In</item>
         <item>Switch to map page</item>
         <item>Duplicate Single Press</item>
+        <item>Show overlay</item>
     </string-array>
 
     <string-array name="preference_values_switch_double_press_action">
@@ -47,6 +50,7 @@
         <item>press_map_graph_zoom_in</item>
         <item>press_switch_to_map_page</item>
         <item>double_press_duplicate_single_press</item>
+        <item>show_overlay</item>
     </string-array>
 
     <string-array name="preference_titles_switch_hold_action">
@@ -57,6 +61,7 @@
         <item>Pause/Resume Ride/Confirm</item>
         <item>Mark Lap</item>
         <item>Switch to map page</item>
+        <item>Show overlay</item>
     </string-array>
 
     <string-array name="preference_values_switch_hold_action">
@@ -67,6 +72,7 @@
         <item>hold_short_single_pause_resume_confirm</item>
         <item>hold_short_single_lap</item>
         <item>hold_short_single_switch_to_map_page</item>
+        <item>show_overlay</item>
     </string-array>
 
     <string-array name="preference_titles_battery_level_low">
@@ -119,14 +125,16 @@
 
     <string-array name="preference_titles_overlay_triggers">
         <item>Connection</item>
-        <item>Shifting</item>
         <item>Battery</item>
+        <item>Shifting</item>
+        <item>Upcoming Synchro Shift</item>
     </string-array>
 
     <string-array name="preference_values_overlay_triggers">
         <item>connection</item>
-        <item>shifting</item>
         <item>battery</item>
+        <item>shifting</item>
+        <item>upcoming-synchro-shift</item>
     </string-array>
 
     <string-array name="preference_titles_overlay_duration">
