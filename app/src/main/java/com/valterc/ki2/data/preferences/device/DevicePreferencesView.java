@@ -6,11 +6,13 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.valterc.ki2.R;
 import com.valterc.ki2.data.device.DeviceId;
 import com.valterc.ki2.data.device.DeviceName;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -202,10 +204,54 @@ public class DevicePreferencesView implements Parcelable {
     /**
      * Get the priority of the device. Top priority is given to devices with lower priority value, a priority of 0 is the first.
      *
+     * @param context Ki2 application context. Cannot be a context generated from another package.
      * @return Priority of the device.
      */
     public int getPriority(Context context) {
         return getInt(context.getString(R.string.preference_device_priority), Integer.MAX_VALUE);
+    }
+
+    /**
+     * Indicates if the device gearing is detected automatically.
+     *
+     * @param context Ki2 application context. Cannot be a context generated from another package.
+     * @return True if gearing is automatically detected, False to use custom gearing.
+     */
+    public boolean isGearingDetectedAutomatically(Context context) {
+        return getBoolean(context.getString(R.string.preference_device_gearing_detected_automatically),
+                () -> context.getResources().getBoolean(R.bool.default_preference_device_gearing_detected_automatically));
+    }
+
+    /**
+     * Get custom front gearing.
+     *
+     * @param context Ki2 application context. Cannot be a context generated from another package.
+     * @return Array with front gearing values. Might be <code>null</code>.
+     */
+    @Nullable
+    public int[] getCustomGearingFront(Context context) {
+        String gearing = getString(context.getString(R.string.preference_device_gearing_custom_front), (String) null);
+        if (gearing == null) {
+            return null;
+        }
+
+        return Arrays.stream(gearing.split("-")).mapToInt(Integer::parseInt).toArray();
+    }
+
+    /**
+     * Get custom rear gearing.
+     *
+     * @param context Ki2 application context. Cannot be a context generated from another package.
+     * @return Array with rear gearing values. Might be <code>null</code>.
+     */
+    @Nullable
+    public int[] getCustomGearingRear(Context context) {
+        String gearing = getString(context.getString(R.string.preference_device_gearing_custom_rear), (String) null);
+        if (gearing == null) {
+            return null;
+        }
+
+        return Arrays.stream(gearing.split("-")).mapToInt(Integer::parseInt).toArray();
     }
 
 }

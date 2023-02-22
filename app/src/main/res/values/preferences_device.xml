@@ -9,11 +9,15 @@
 
     <bool name="default_preference_device_enabled">true</bool>
     <bool name="default_preference_device_switch_events_only">false</bool>
+    <bool name="default_preference_device_gearing_detected_automatically">true</bool>
     <string name="default_preference_device_name">@null</string>
 
     <string name="preference_device_enabled">ENABLED</string>
     <string name="preference_device_switch_events_only">SWITCH_EVENTS_ONLY</string>
     <string name="preference_device_name">NAME</string>
     <string name="preference_device_priority">PRIORITY</string>
+    <string name="preference_device_gearing_detected_automatically">GEARING_DETECTED_AUTOMATICALLY</string>
+    <string name="preference_device_gearing_custom_front">GEARING_CUSTOM_FRONT</string>
+    <string name="preference_device_gearing_custom_rear">GEARING_CUSTOM_REAR</string>
 
 </resources>

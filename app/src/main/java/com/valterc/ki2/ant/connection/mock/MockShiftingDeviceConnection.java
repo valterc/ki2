@@ -87,10 +87,10 @@ public class MockShiftingDeviceConnection implements IAntDeviceConnection {
 
                     shiftingInfoBuilder = new ShiftingInfoBuilder();
                     shiftingInfoBuilder.setBuzzerType(BuzzerType.DEFAULT);
-                    shiftingInfoBuilder.setFrontTeethPattern(FrontTeethPattern.UNKNOWN);
-                    shiftingInfoBuilder.setRearTeethPattern(RearTeethPattern.UNKNOWN);
-                    shiftingInfoBuilder.setFrontGearMax(2);
-                    shiftingInfoBuilder.setRearGearMax(12);
+                    shiftingInfoBuilder.setFrontTeethPattern(FrontTeethPattern.P52_36);
+                    shiftingInfoBuilder.setRearTeethPattern(RearTeethPattern.S12_P11_34);
+                    shiftingInfoBuilder.setFrontGearMax(shiftingInfoBuilder.getFrontTeethPattern().getGearCount());
+                    shiftingInfoBuilder.setRearGearMax(shiftingInfoBuilder.getRearTeethPattern().getGearCount());
                     shiftingInfoBuilder.setFrontGear(2);
                     shiftingInfoBuilder.setRearGear(1);
                     shiftingInfoBuilder.setShiftingMode(ShiftingMode.SYNCHRONIZED_SHIFT_MODE_2);

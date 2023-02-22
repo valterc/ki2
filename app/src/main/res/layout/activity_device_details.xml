@@ -11,8 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".activities.devices.details.DeviceDetailsActivity"
-        android:name="com.valterc.ki2.fragments.devices.add.AddDeviceFragment"
-        tools:layout="@layout/fragment_add_device" />
+        tools:layout="@layout/fragment_device_details" />
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/button_back"

@@ -96,5 +96,20 @@
     <string name="text_device_disable">Ki2 will not connect to disabled devices.</string>
     <string name="text_question_device_disable">Disable device?</string>
     <string name="text_drag">Drag</string>
+    <string name="text_gearing">Gearing</string>
+    <string name="text_detect_automatically">Detect automatically</string>
+    <string name="text_param_gearing_detect_automatically">Detect automatically\nFront: %s\nRear: %s</string>
+    <string name="text_param_gearing_custom">Custom\nFront: %s\nRear: %s</string>
+    <string name="text_unknown">Unknown</string>
+    <string name="text_automatically_detected">Automatically detected</string>
+    <string name="text_detect_gearing_automatically_warning">Detect gearing automatically. Might not be supported in some systems.</string>
+    <string name="text_front_gears">Front gears</string>
+    <string name="text_rear_gears">Rear Gears</string>
+    <string name="text_custom_gearing">Custom Gearing</string>
+    <string name="text_number_of_gears">Number of gears:</string>
+    <string name="text_invalid_gears">Invalid gears</string>
+    <string name="text_invalid_gears_message">Some of the custom gears are invalid.\n\nThe latest changes might not be saved if you exit now.</string>
+    <string name="text_exit">Exit</string>
+    <string name="text_invalid_gear">Invalid gear</string>
 
 </resources>

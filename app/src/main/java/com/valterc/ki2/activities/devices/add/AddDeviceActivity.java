@@ -19,7 +19,7 @@ public class AddDeviceActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_device);
+        setContentView(R.layout.activity_device_add);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.container, AddDeviceFragment.newInstance())

@@ -41,7 +41,7 @@ public class SearchDevicesAdapter extends RecyclerView.Adapter<SearchDevicesView
     @Override
     public SearchDevicesViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.view_add_device_item, parent, false);
+                .inflate(R.layout.view_item_add_device, parent, false);
         return new SearchDevicesViewHolder(view);
     }
 

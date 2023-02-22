@@ -1,12 +1,16 @@
 package com.valterc.ki2.data.shifting;
 
+import com.valterc.ki2.utils.ArrayUtils;
+
+import java.util.Arrays;
+
 public enum RearTeethPattern {
 
     /*
      * 10 Speed
      */
 
-    S10_P11_43(32, new int[]{11, 13, 15, 17, 20, 23, 26, 30, 36, 43}, "11_43"),
+    S10_P11_43(32, new int[]{11, 13, 15, 17, 20, 23, 26, 30, 36, 43}, "11-43"),
 
     /*
      * 11 Speed
@@ -24,7 +28,7 @@ public enum RearTeethPattern {
     S11_P14_28(9, new int[]{14, 15, 16, 17, 18, 19, 20, 21, 23, 25, 28}, "14-28"),
     S11_P11_46(10, new int[]{11, 13, 15, 17, 19, 21, 24, 28, 32, 37, 46}, "11-46"),
     S11_P11_34(11, new int[]{11, 13, 15, 17, 19, 21, 23, 25, 27, 30, 34}, "11-34"),
-    S11_P11_50(12, new int[]{11, 13, 15, 17, 20, 23, 26, 30, 36, 43, 50}, "11_50"),
+    S11_P11_50(12, new int[]{11, 13, 15, 17, 20, 23, 26, 30, 36, 43, 50}, "11-50"),
 
     /*
      * 12 Speed
@@ -33,9 +37,9 @@ public enum RearTeethPattern {
     S12_P11_28(16, new int[]{11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 24, 28}, "11-28"),
     S12_P11_30(17, new int[]{11, 12, 13, 14, 15, 16, 17, 19, 21, 24, 27, 30}, "11-30"),
     S12_P11_34(18, new int[]{11, 12, 13, 14, 15, 17, 19, 21, 24, 27, 30, 34}, "11-34"),
-    S12_P14_34(19, new int[]{14, 15, 16, 17, 18, 19, 20, 22, 24, 27, 30, 34}, "14_34"),
+    S12_P14_34(19, new int[]{14, 15, 16, 17, 18, 19, 20, 22, 24, 27, 30, 34}, "14-34"),
     S12_P11_36(20, new int[]{11, 12, 13, 14, 15, 17, 19, 21, 24, 28, 32, 36}, "11-36"),
-    S12_P10_51(21, new int[]{10, 12, 14, 16, 18, 21, 24, 28, 33, 39, 45, 51}, "10_51"),
+    S12_P10_51(21, new int[]{10, 12, 14, 16, 18, 21, 24, 28, 33, 39, 45, 51}, "10-51"),
 
     UNKNOWN(255, new int[0], "Unknown");
 
@@ -81,6 +85,10 @@ public enum RearTeethPattern {
 
     public int getGearCount() {
         return gearTeethCount.length;
+    }
+
+    public int[] getGears() {
+        return ArrayUtils.reverse(Arrays.copyOf(gearTeethCount, gearTeethCount.length));
     }
 
     public String getName() {

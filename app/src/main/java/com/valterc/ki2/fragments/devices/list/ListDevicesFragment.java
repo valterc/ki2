@@ -68,7 +68,7 @@ public class ListDevicesFragment extends Fragment implements IKarooKeyListener {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_list_devices, container, false);
+        return inflater.inflate(R.layout.fragment_devices_list, container, false);
     }
 
     @Override
