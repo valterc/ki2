@@ -5,6 +5,8 @@ import android.util.Log;
 
 import com.valterc.ki2.data.input.KarooKey;
 import com.valterc.ki2.data.input.KarooKeyEvent;
+import com.valterc.ki2.data.message.ShowOverlayMessage;
+import com.valterc.ki2.karoo.Ki2Context;
 import com.valterc.ki2.karoo.hooks.RideActivityHook;
 
 import java.util.HashMap;
@@ -15,7 +17,7 @@ public class VirtualInputAdapter {
 
     private final HashMap<KarooKey, Consumer<KarooKeyEvent>> keyMapping;
 
-    public VirtualInputAdapter() {
+    public VirtualInputAdapter(Ki2Context ki2Context) {
         this.keyMapping = new HashMap<>();
         this.keyMapping.put(KarooKey.VIRTUAL_SWITCH_TO_MAP_PAGE, karooKeyEvent -> {
             boolean result = RideActivityHook.switchToMapPage();
@@ -23,6 +25,7 @@ public class VirtualInputAdapter {
                 Log.w("KI2", "Unable to switch to map page");
             }
         });
+        this.keyMapping.put(KarooKey.VIRTUAL_SHOW_OVERLAY, karooKeyEvent -> ki2Context.getServiceClient().sendMessage(new ShowOverlayMessage()));
     }
 
     public void handleVirtualKeyEvent(KarooKeyEvent keyEvent) {

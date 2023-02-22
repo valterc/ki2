@@ -5,6 +5,7 @@ import android.os.Handler;
 import com.valterc.ki2.data.message.Message;
 import com.valterc.ki2.data.message.MessageType;
 import com.valterc.ki2.data.message.RideStatusMessage;
+import com.valterc.ki2.data.message.ShowOverlayMessage;
 import com.valterc.ki2.data.message.UpdateAvailableMessage;
 import com.valterc.ki2.karoo.service.ServiceClient;
 
@@ -26,6 +27,7 @@ public class CustomMessageClient {
         customMessageHandlers = new HashMap<>();
         customMessageHandlers.put(MessageType.RIDE_STATUS, new CustomMessageHandler<>(MessageType.RIDE_STATUS, RideStatusMessage::parse));
         customMessageHandlers.put(MessageType.UPDATE_AVAILABLE, new CustomMessageHandler<>(MessageType.UPDATE_AVAILABLE, UpdateAvailableMessage::parse));
+        customMessageHandlers.put(MessageType.SHOW_OVERLAY, new CustomMessageHandler<>(MessageType.SHOW_OVERLAY, ShowOverlayMessage::parse));
 
         serviceClient.registerMessageWeakListener(onMessage);
     }
@@ -61,6 +63,21 @@ public class CustomMessageClient {
         handler.post(() -> {
             CustomMessageHandler<UpdateAvailableMessage> customMessageHandler =
                     (CustomMessageHandler<UpdateAvailableMessage>) customMessageHandlers.get(MessageType.UPDATE_AVAILABLE);
+            if (customMessageHandler != null) {
+                customMessageHandler.addListener(consumer);
+            }
+        });
+    }
+
+    /**
+     * Register a weak referenced listener that will receive show overlay messages.
+     *
+     * @param consumer Consumer that will receive show overlay messages. It will be referenced using a weak reference so the owner must keep a strong reference.
+     */
+    public void registerShowOverlayWeakListener(Consumer<ShowOverlayMessage> consumer) {
+        handler.post(() -> {
+            CustomMessageHandler<ShowOverlayMessage> customMessageHandler =
+                    (CustomMessageHandler<ShowOverlayMessage>) customMessageHandlers.get(MessageType.SHOW_OVERLAY);
             if (customMessageHandler != null) {
                 customMessageHandler.addListener(consumer);
             }

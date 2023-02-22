@@ -86,11 +86,11 @@ public class DeviceDataFrontend {
         }
     }, callback -> service.registerDevicePreferencesListener(callback), callback -> service.unregisterDevicePreferencesListener(callback));
 
-    public DeviceDataFrontend(Ki2Context context) {
-        this.handler = context.getHandler();
+    public DeviceDataFrontend(Ki2Context ki2Context) {
+        this.handler = ki2Context.getHandler();
 
-        inputAdapter = new InputAdapter(context.getSdkContext());
-        dataRouter = new DeviceDataRouter(context.getSdkContext());
+        inputAdapter = new InputAdapter(ki2Context);
+        dataRouter = new DeviceDataRouter(ki2Context.getSdkContext());
     }
 
     public void setService(IKi2Service service) {

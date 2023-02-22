@@ -36,6 +36,7 @@ public class InputManager {
          * Any switch event
          */
         preferenceToSwitchKeyMap.put("none", (switchEvent, converter) -> null);
+        preferenceToSwitchKeyMap.put("show_overlay", (switchEvent, converter) -> new KarooKeyEvent(KarooKey.VIRTUAL_SHOW_OVERLAY, KeyAction.SINGLE_PRESS, switchEvent.getRepeat()));
 
         /*
          *   Single / Double press events
