@@ -48,7 +48,7 @@ public class GearRatioTextFormatter extends SdkFormatter {
             return NumericTextFormatterConstants.NOT_AVAILABLE;
         }
 
-        if (!shiftingGearingHelper.hasGearingInfo()) {
+        if (shiftingGearingHelper.hasInvalidGearingInfo()) {
             return NumericTextFormatterConstants.WAITING_FOR_DATA;
         }
 
@@ -57,8 +57,6 @@ public class GearRatioTextFormatter extends SdkFormatter {
             return NumericTextFormatterConstants.UNKNOWN;
         }
 
-        int frontTeethCount = shiftingGearingHelper.getFrontGearTeethCount();
-        int rearTeethCount = shiftingGearingHelper.getRearGearTeethCount();
-        return DECIMAL_FORMAT.format((float) frontTeethCount / rearTeethCount);
+        return DECIMAL_FORMAT.format(shiftingGearingHelper.getGearRatio());
     }
 }

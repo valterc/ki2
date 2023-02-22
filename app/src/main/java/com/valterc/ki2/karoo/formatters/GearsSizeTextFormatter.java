@@ -48,7 +48,7 @@ public class GearsSizeTextFormatter extends SdkFormatter {
             return NumericTextFormatterConstants.NOT_AVAILABLE;
         }
 
-        if (!shiftingGearingHelper.hasGearingInfo()) {
+        if (shiftingGearingHelper.hasInvalidGearingInfo()) {
             return NumericTextFormatterConstants.WAITING_FOR_DATA;
         }
 

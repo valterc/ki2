@@ -8,7 +8,6 @@ import com.valterc.ki2.data.shifting.ShiftingInfo;
 public class ShiftingGearingHelper {
 
     private final Context context;
-
     private ShiftingInfo shiftingInfo;
     private DevicePreferencesView devicePreferences;
 
@@ -52,18 +51,30 @@ public class ShiftingGearingHelper {
     }
 
     public void setShiftingInfo(ShiftingInfo shiftingInfo) {
+        if (this.shiftingInfo == shiftingInfo) {
+            return;
+        }
+
         this.shiftingInfo = shiftingInfo;
         updateGearing();
     }
 
     public void setDevicePreferences(DevicePreferencesView devicePreferences) {
+        if (this.devicePreferences == devicePreferences) {
+            return;
+        }
+
         this.devicePreferences = devicePreferences;
         updateGearingPreferences();
         updateGearing();
     }
 
-    public boolean hasGearingInfo() {
-        return shiftingInfo != null && devicePreferences != null;
+    public boolean hasInvalidGearingInfo() {
+        return shiftingInfo == null || devicePreferences == null;
+    }
+
+    public boolean hasGearSizes() {
+        return gearTeethCountFront != 0 && gearTeethCountRear != 0;
     }
 
     public int getFrontGearTeethCount() {
@@ -72,6 +83,10 @@ public class ShiftingGearingHelper {
 
     public int getRearGearTeethCount() {
         return gearTeethCountRear;
+    }
+
+    public float getGearRatio() {
+        return gearTeethCountRear == 0 ? 0 : (float) gearTeethCountFront / gearTeethCountRear;
     }
 
     public int getFrontGear() {

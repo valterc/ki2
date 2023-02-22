@@ -77,7 +77,7 @@ public class GearsSizeSdkView extends Ki2SdkView {
 
     @Override
     public void onUpdate(@NonNull View view, double value, @Nullable String formattedValue) {
-        if (connectionStatus != ConnectionStatus.ESTABLISHED || !shiftingGearingHelper.hasGearingInfo()) {
+        if (connectionStatus != ConnectionStatus.ESTABLISHED || shiftingGearingHelper.hasInvalidGearingInfo()) {
             gearsView.setVisibility(View.INVISIBLE);
             textView.setVisibility(View.VISIBLE);
         } else {
@@ -88,7 +88,7 @@ public class GearsSizeSdkView extends Ki2SdkView {
     }
 
     private void updateGearsView() {
-        if (gearsView == null || !shiftingGearingHelper.hasGearingInfo()) {
+        if (gearsView == null || shiftingGearingHelper.hasInvalidGearingInfo()) {
             return;
         }
 
