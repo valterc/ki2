@@ -1,7 +1,8 @@
 package com.valterc.ki2.update.post;
 
+import androidx.annotation.NonNull;
+
 import com.valterc.ki2.data.update.PostUpdateActionsStore;
-import com.valterc.ki2.update.PostUpdateContext;
 import com.valterc.ki2.update.post.actions.IPostInitPostUpdateAction;
 import com.valterc.ki2.update.post.actions.IPostUpdateAction;
 import com.valterc.ki2.update.post.actions.IPreInitPostUpdateAction;
@@ -29,13 +30,13 @@ public final class PostUpdateActions {
         postInitActionMap.put(InitializeDevicesPriority.class.getSimpleName(), new InitializeDevicesPriority());
     }
 
-    public static void executePreInit(PostUpdateContext context) {
+    public static void executePreInit(@NonNull PostUpdateContext context) {
         for (String actionName : preInitActionMap.keySet()) {
             executeAction(context, actionName, preInitActionMap.get(actionName));
         }
     }
 
-    public static void executePostInit(PostUpdateContext context) {
+    public static void executePostInit(@NonNull PostUpdateContext context) {
         for (String actionName : postInitActionMap.keySet()) {
             executeAction(context, actionName, postInitActionMap.get(actionName));
         }
