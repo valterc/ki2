@@ -9,7 +9,7 @@ import com.google.gson.reflect.TypeToken;
 import com.valterc.ki2.data.device.DeviceId;
 import com.valterc.ki2.data.device.DeviceStore;
 import com.valterc.ki2.data.device.DeviceType;
-import com.valterc.ki2.update.PostUpdateContext;
+import com.valterc.ki2.update.post.PostUpdateContext;
 
 import java.util.HashSet;
 import java.util.Objects;
