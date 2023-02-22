@@ -36,6 +36,7 @@ import com.valterc.ki2.karoo.update.UpdateAvailableHandler;
 import com.valterc.ki2.karoo.update.UpdateAvailableNotification;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import io.hammerhead.sdk.v0.Module;
@@ -56,8 +57,6 @@ public class Ki2Module extends Module {
     private final Ki2Context ki2Context;
     private final HandlerManager handlerManager;
 
-    private OverlayManager overlay;
-
     public Ki2Module(@NonNull SdkContext context) {
         super(context);
 
@@ -70,11 +69,11 @@ public class Ki2Module extends Module {
                     new UpdateAvailableHandler(ki2Context),
                     new LowBatteryHandler(ki2Context),
                     new ShiftingAudioAlertHandler(ki2Context)));
+        } else if (RideActivityHook.isRideActivityProcess()) {
+            handlerManager = new HandlerManager(ki2Context, Collections.singletonList(new OverlayManager(ki2Context)));
         } else {
             handlerManager = null;
         }
-
-        overlay = new OverlayManager(ki2Context);
     }
 
     @NonNull

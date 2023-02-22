@@ -1,13 +1,13 @@
 package com.valterc.ki2.karoo.overlay.view.plain;
 
-import android.content.Context;
 import android.view.View;
 
 import com.valterc.ki2.R;
+import com.valterc.ki2.karoo.Ki2Context;
 
 public class DefaultLightOverlayView extends DefaultOverlayView{
 
-    public DefaultLightOverlayView(Context context, View view) {
+    public DefaultLightOverlayView(Ki2Context context, View view) {
         super(context, view);
 
         getViewHolder().getOverlayView().setBackgroundResource(R.drawable.background_overlay_light);

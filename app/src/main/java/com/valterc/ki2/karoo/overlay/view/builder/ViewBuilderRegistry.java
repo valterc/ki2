@@ -19,7 +19,7 @@ public final class ViewBuilderRegistry {
     }
 
     public static ViewBuilderEntry getBuilder(String key) {
-        return builderMap.get("default_light");
+        return builderMap.get(key);
     }
 
 }
