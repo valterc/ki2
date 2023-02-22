@@ -9,7 +9,9 @@ import androidx.preference.PreferenceManager;
 
 import com.valterc.ki2.R;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Supplier;
@@ -263,6 +265,46 @@ public class PreferencesView implements Parcelable {
     public int getDelayBetweenAudioAlerts(Context context) {
         return Integer.parseInt(getString(context.getString(R.string.preference_audio_alert_delay),
                 context.getString(R.string.default_preference_audio_alert_delay)));
+    }
+
+    /**
+     * Indicates if the overlay is enabled.
+     *
+     * @param context Ki2 application context. Cannot be a context generated from another package.
+     * @return True if the overlay is enabled, False otherwise.
+     */
+    public boolean isOverlayEnabled(Context context) {
+        return getBoolean(context.getString(R.string.preference_overlay_enabled), () -> context.getResources().getBoolean(R.bool.default_preference_overlay_enabled));
+    }
+
+    /**
+     * Get overlay triggers.
+     *
+     * @param context Ki2 application context. Cannot be a context generated from another package.
+     * @return Set with overlay triggers, can be empty.
+     */
+    public Set<String> getOverlayTriggers(Context context) {
+        return getStringSet(context.getString(R.string.preference_overlay_triggers), () -> new HashSet<>(Arrays.asList(context.getResources().getStringArray(R.array.preference_values_overlay_triggers))));
+    }
+
+    /**
+     * Get the display duration of the overlay.
+     *
+     * @param context Ki2 application context. Cannot be a context generated from another package.
+     * @return Overlay display duration in milliseconds.
+     */
+    public int getOverlayDuration(Context context) {
+        return Integer.parseInt(getString(context.getString(R.string.preference_overlay_duration), () -> context.getString(R.string.default_preference_overlay_duration)));
+    }
+
+    /**
+     * Get the overlay theme.
+     *
+     * @param context Ki2 application context. Cannot be a context generated from another package.
+     * @return Overlay theme.
+     */
+    public String getOverlayTheme(Context context) {
+        return getString(context.getString(R.string.preference_overlay_theme), () -> context.getString(R.string.default_preference_overlay_theme));
     }
 
 }
