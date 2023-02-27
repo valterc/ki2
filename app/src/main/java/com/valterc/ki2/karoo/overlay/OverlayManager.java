@@ -18,8 +18,8 @@ import com.valterc.ki2.data.shifting.ShiftingInfo;
 import com.valterc.ki2.karoo.Ki2Context;
 import com.valterc.ki2.karoo.handlers.IRideHandler;
 import com.valterc.ki2.karoo.overlay.view.IOverlayView;
-import com.valterc.ki2.karoo.overlay.view.builder.ViewBuilderEntry;
-import com.valterc.ki2.karoo.overlay.view.builder.ViewBuilderRegistry;
+import com.valterc.ki2.karoo.overlay.view.builder.OverlayViewBuilderEntry;
+import com.valterc.ki2.karoo.overlay.view.builder.OverlayViewBuilderRegistry;
 import com.valterc.ki2.utils.ActivityUtils;
 
 import java.util.function.BiConsumer;
@@ -132,7 +132,7 @@ public class OverlayManager implements IRideHandler {
         }
 
         ViewGroup viewGroupBase = (ViewGroup) viewBase;
-        ViewBuilderEntry viewBuilder = ViewBuilderRegistry.getBuilder(preferences.getOverlayTheme(ki2Context.getSdkContext()));
+        OverlayViewBuilderEntry viewBuilder = OverlayViewBuilderRegistry.getBuilder(preferences.getOverlayTheme(ki2Context.getSdkContext()));
 
         if (viewBuilder != null) {
             View viewOverlay = layoutInflater.inflate(viewBuilder.getLayoutId(), viewGroupBase, false);
@@ -157,13 +157,13 @@ public class OverlayManager implements IRideHandler {
             return;
         }
 
-        if (connectionInfo == null || devicePreferences == null ||
+        if (preferences == null || connectionInfo == null || devicePreferences == null ||
                 (!force && !overlayTriggers.queryAndClearShouldShowOverlay())) {
             return;
         }
 
         timestampLastTrigger = System.currentTimeMillis();
-        view.updateView(connectionInfo, devicePreferences, batteryInfo, shiftingInfo);
+        view.updateView(preferences, connectionInfo, devicePreferences, batteryInfo, shiftingInfo);
         view.show();
 
         handler.postDelayed(() -> {

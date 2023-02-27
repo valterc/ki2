@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 import com.valterc.ki2.R;
 import com.valterc.ki2.data.connection.ConnectionInfo;
 import com.valterc.ki2.data.device.BatteryInfo;
+import com.valterc.ki2.data.preferences.PreferencesView;
 import com.valterc.ki2.data.preferences.device.DevicePreferencesView;
 import com.valterc.ki2.data.shifting.BuzzerType;
 import com.valterc.ki2.data.shifting.ShiftingInfo;
@@ -22,7 +23,7 @@ public abstract class DefaultOverlayView extends BaseOverlayView<DefaultOverlayV
 
     private static final int TIME_MS_BLINKING = 500;
 
-    private final ShiftingGearingHelper shiftingGearingHelper;
+    protected final ShiftingGearingHelper shiftingGearingHelper;
     private final SynchroShiftTracking synchroShiftTracking;
     private final Handler handler;
     private Runnable blinkMethod;
@@ -41,7 +42,8 @@ public abstract class DefaultOverlayView extends BaseOverlayView<DefaultOverlayV
     }
 
     @Override
-    public void updateView(@NonNull ConnectionInfo connectionInfo,
+    public void updateView(@NonNull PreferencesView preferences,
+                           @NonNull ConnectionInfo connectionInfo,
                            @NonNull DevicePreferencesView devicePreferences,
                            @Nullable BatteryInfo batteryInfo,
                            @Nullable ShiftingInfo shiftingInfo) {
@@ -58,6 +60,19 @@ public abstract class DefaultOverlayView extends BaseOverlayView<DefaultOverlayV
             getViewHolder().getBatteryView().setValue((float) batteryInfo.getValue() / 100);
             getViewHolder().getTextViewBattery().setText(getContext().getString(R.string.text_param_percentage, batteryInfo.getValue()));
 
+            if (preferences.getBatteryLevelCritical(getContext()) != null &&
+                    batteryInfo.getValue() <= preferences.getBatteryLevelCritical(getContext())) {
+                getViewHolder().getBatteryView().setForegroundColor(getContext().getColor(R.color.hh_red));
+                getViewHolder().getBatteryView().setBorderColor(getContext().getColor(R.color.hh_red));
+            } else if (preferences.getBatteryLevelLow(getContext()) != null &&
+                    batteryInfo.getValue() <= preferences.getBatteryLevelLow(getContext())) {
+                getViewHolder().getBatteryView().setForegroundColor(getContext().getColor(R.color.hh_red));
+                getViewHolder().getBatteryView().setBorderColor(getBatteryBorderColor());
+            } else {
+                getViewHolder().getBatteryView().setForegroundColor(getContext().getColor(R.color.hh_green));
+                getViewHolder().getBatteryView().setBorderColor(getBatteryBorderColor());
+            }
+
             getViewHolder().getBatteryView().setVisibility(View.VISIBLE);
             getViewHolder().getTextViewBattery().setVisibility(View.VISIBLE);
         }
@@ -65,6 +80,7 @@ public abstract class DefaultOverlayView extends BaseOverlayView<DefaultOverlayV
         if (shiftingGearingHelper.hasInvalidGearingInfo() || !connectionInfo.isConnected()) {
             getViewHolder().getGearsView().setVisibility(View.GONE);
             getViewHolder().getTextViewGearingExtra().setVisibility(View.GONE);
+            getViewHolder().getLinearLayoutGearingRatio().setVisibility(View.GONE);
 
             switch (connectionInfo.getConnectionStatus()) {
                 case NEW:
@@ -86,19 +102,6 @@ public abstract class DefaultOverlayView extends BaseOverlayView<DefaultOverlayV
                     shiftingGearingHelper.getFrontGear(),
                     shiftingGearingHelper.getRearGearMax(),
                     shiftingGearingHelper.getRearGear());
-
-            if (shiftingGearingHelper.hasGearSizes()) {
-                getViewHolder().getTextViewGearing().setText(
-                        getContext().getString(R.string.text_param_gearing_and_ratio,
-                                shiftingGearingHelper.getFrontGearTeethCount(),
-                                shiftingGearingHelper.getRearGearTeethCount(),
-                                shiftingGearingHelper.getGearRatio()));
-            } else {
-                getViewHolder().getTextViewGearing().setText(
-                        getContext().getString(R.string.text_param_gearing,
-                                shiftingGearingHelper.getFrontGear(),
-                                shiftingGearingHelper.getRearGear()));
-            }
 
             if (shiftingInfo == null) {
                 stopBlinking();
@@ -153,5 +156,7 @@ public abstract class DefaultOverlayView extends BaseOverlayView<DefaultOverlayV
             handler.postDelayed(blinkMethod, TIME_MS_BLINKING);
         }
     }
+
+    protected abstract int getBatteryBorderColor();
 
 }

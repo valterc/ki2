@@ -65,7 +65,7 @@ public class GearsSizeSdkView extends Ki2SdkView {
         if (karooTheme == KarooTheme.WHITE) {
             textView.setTextColor(getContext().getColor(R.color.hh_black));
             gearsView.setTextColor(getContext().getColor(R.color.hh_black));
-            gearsView.setUnselectedGearBorderColor(getContext().getColor(R.color.hh_gears_border_dark));
+            gearsView.setUnselectedGearBorderColor(getContext().getColor(R.color.hh_gears_border_light));
         }
 
         return inflatedView;

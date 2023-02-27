@@ -17,7 +17,7 @@
         app:title="@string/category_preference_audio_alerts" />
 
     <Preference
-        app:fragment="com.valterc.ki2.fragments.settings.OverlaySettingsFragment"
+        app:fragment="com.valterc.ki2.fragments.settings.overlay.OverlaySettingsFragment"
         app:icon="@drawable/ic_overlay"
         app:title="@string/category_preference_overlay" />
 

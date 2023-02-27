@@ -14,8 +14,8 @@
     <color name="hh_gears_active_blue">#617f8f</color>
     <color name="hh_gears_active_red_bottom">#9f041b</color>
     <color name="hh_gears_active_red_top">#f5515f</color>
-    <color name="hh_gears_border_white">#F0F0F0</color>
-    <color name="hh_gears_border_dark">#707070</color>
+    <color name="hh_gears_border_dark">#F0F0F0</color>
+    <color name="hh_gears_border_light">#707070</color>
 
     <color name="hh_green">#209f13</color>
     <color name="hh_orange">#fd7919</color>
@@ -47,5 +47,11 @@
     <color name="white_100">#FFFAFAFA</color>
     <color name="grey">#777777</color>
     <color name="grey_100">#F0F0F0</color>
+
+    <color name="battery_border_light">#A0606060</color>
+    <color name="battery_background_light">#40606060</color>
+
+    <color name="battery_border_dark">#FFD0D0D0</color>
+    <color name="battery_background_dark">#70E0E0E0</color>
 
 </resources>

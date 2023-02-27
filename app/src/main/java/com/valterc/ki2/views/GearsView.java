@@ -117,7 +117,7 @@ public class GearsView extends View {
             if (unselectedGearBorderColor != -1) {
                 setUnselectedGearBorderColor(unselectedGearBorderColor);
             } else {
-                setUnselectedGearBorderColor(context.getColor(R.color.hh_gears_border_white));
+                setUnselectedGearBorderColor(context.getColor(R.color.hh_gears_border_dark));
             }
         } finally {
             array.recycle();

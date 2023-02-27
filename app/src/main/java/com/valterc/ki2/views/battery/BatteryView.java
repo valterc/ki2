@@ -14,6 +14,7 @@ import androidx.annotation.Nullable;
 
 import com.valterc.ki2.R;
 
+@SuppressWarnings("unused")
 public class BatteryView extends View {
 
     public enum Orientation {

@@ -60,7 +60,7 @@
     <bool name="default_preference_pre_load">true</bool>
     <bool name="default_preference_overlay_enabled">false</bool>
     <string name="default_preference_overlay_duration">2000</string>
-    <string name="default_preference_overlay_theme">default_dark</string>
+    <string name="default_preference_overlay_theme">default_dark_gear_index</string>
 
     <string name="value_preference_battery_level_off">off</string>
 

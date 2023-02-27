@@ -20,6 +20,8 @@ public class DefaultOverlayViewHolder extends BaseOverlayViewHolder {
     private final GearsView gearsView;
     private final TextView textViewGearing;
     private final TextView textViewGearingExtra;
+    private final LinearLayout linearLayoutGearingRatio;
+    private final TextView textViewGearingRatio;
 
     public DefaultOverlayViewHolder(@NonNull View overlayView) {
         super(overlayView);
@@ -31,6 +33,9 @@ public class DefaultOverlayViewHolder extends BaseOverlayViewHolder {
         this.gearsView = overlayView.findViewById(R.id.gearsview_karoo_overlay_gearing);
         this.textViewGearing = overlayView.findViewById(R.id.textview_karoo_overlay_gearing);
         this.textViewGearingExtra = overlayView.findViewById(R.id.textview_karoo_overlay_gearing_extra);
+        this.linearLayoutGearingRatio = overlayView.findViewById(R.id.linearlayout_karoo_overlay_gearing_extra);
+        this.textViewGearingRatio = overlayView.findViewById(R.id.textview_karoo_overlay_gearing_ratio);
+
     }
 
     public LinearLayout getLinearLayoutTopBar() {
@@ -59,6 +64,14 @@ public class DefaultOverlayViewHolder extends BaseOverlayViewHolder {
 
     public TextView getTextViewGearingExtra() {
         return textViewGearingExtra;
+    }
+
+    public LinearLayout getLinearLayoutGearingRatio() {
+        return linearLayoutGearingRatio;
+    }
+
+    public TextView getTextViewGearingRatio() {
+        return textViewGearingRatio;
     }
 
 }

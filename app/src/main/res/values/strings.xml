@@ -113,7 +113,7 @@
     <string name="text_exit">Exit</string>
     <string name="text_invalid_gear">Invalid gear</string>
     <string name="text_param_gearing">F%02d - R%02d</string>
-    <string name="text_param_gearing_and_ratio">F%02d - R%02d | %01.2f</string>
+    <string name="text_param_ratio">%01.2f</string>
     <string name="text_synchro">SYNCHRO</string>
     <string name="text_synchro_up">SYNCHRO ↑</string>
     <string name="text_synchro_down">SYNCHRO ↓</string>
