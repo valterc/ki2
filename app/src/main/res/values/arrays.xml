@@ -141,19 +141,21 @@
         <item>1 Second</item>
         <item>2 Seconds</item>
         <item>5 Seconds</item>
+        <item>10 Seconds</item>
     </string-array>
 
     <string-array name="preference_values_overlay_duration">
         <item>1000</item>
         <item>2000</item>
         <item>5000</item>
+        <item>10000</item>
     </string-array>
 
     <string-array name="preference_titles_overlay_theme">
         <item>Dark - Default view with gear index</item>
         <item>Light - Default view with gear index</item>
-        <item>Dark - Default view with gear size with ratio</item>
-        <item>Light - Default view with gear size with ratio</item>
+        <item>Dark - Default view with gear size and ratio</item>
+        <item>Light - Default view with gear size and ratio</item>
     </string-array>
 
     <string-array name="preference_values_overlay_theme">
