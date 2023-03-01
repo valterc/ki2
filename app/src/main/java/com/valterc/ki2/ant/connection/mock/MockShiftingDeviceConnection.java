@@ -105,7 +105,7 @@ public class MockShiftingDeviceConnection implements IAntDeviceConnection {
 
                     deviceConnectionListener.onData(deviceId, DataType.BATTERY, new BatteryInfo(battery));
                     deviceConnectionListener.onData(deviceId, DataType.MANUFACTURER_INFO, manufacturerInfoBuilder.build());
-                    runDataFlow();
+                    handler.postDelayed(this::runDataFlow, TIME_MS_INIT_CONNECT);
                 }, (long) (TIME_MS_INIT_CONNECT + TIME_MS_INIT_CONNECT * random.nextDouble()));
             }
         });
