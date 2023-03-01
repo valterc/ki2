@@ -16,10 +16,15 @@ public class SynchroShiftTracking {
 
     public void setShiftingInfo(ShiftingInfo shiftingInfo) {
         try {
-            if (shiftingInfo == null
-                    || lastShiftingInfo == null
-                    || shiftingInfo.getBuzzerType() != BuzzerType.UPCOMING_SYNCHRO_SHIFT) {
+            if (shiftingInfo == null || lastShiftingInfo == null) {
                 upcomingSynchroShiftType = UpcomingSynchroShiftType.NONE;
+                return;
+            }
+
+            if (shiftingInfo.getBuzzerType() != BuzzerType.UPCOMING_SYNCHRO_SHIFT) {
+                if (lastShiftingInfo.getRearGear() != shiftingInfo.getRearGear() || lastShiftingInfo.getFrontGear() != shiftingInfo.getFrontGear()) {
+                    upcomingSynchroShiftType = UpcomingSynchroShiftType.NONE;
+                }
                 return;
             }
 
