@@ -141,7 +141,7 @@ While the implementation is fairly tidy and optimized, this app will be yet anot
 
 Tested in the same route in different days. Similar profile in Karoo with the original shifting data elements and then the equivalent ones from Ki2.
 
-While it may seem that the battery consumption actually got a little bit better, I would say that battery gain/loss is marginal and negligible for this particular test given the differences in temperature, ride duration, radar alerts and the number of shifts. It is encouraging that the battery consumption did not _vastly_ increase, that was what I looking for 🙂
+I would say that battery gain/loss is marginal and negligible for this particular test given the differences in temperature, ride duration, radar alerts and the number of shifts. It is encouraging that the battery consumption did not _vastly_ increase, that was what I looking for 🙂
 
 ## How can I help?
 
