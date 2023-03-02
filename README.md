@@ -32,6 +32,7 @@ These screenshots have been _slightly_ edited.
   - Gear size (teeth count) in graphical format
   - Drivetrain view in graphical format
   - Drivetrain size (teeth count) in graphical format
+  - Change shift mode graphical control
 - While in a ride, control Karoo from the Hood buttons:
   - Navigate page left/right
   - Pause/Resume ride
@@ -52,7 +53,7 @@ This app utilizes the Android environment along with the ANT service and the Kar
 
 ## How can I try this app?
 
-1. Download Ki2 APK file from the lastest [release page](https://github.com/valterc/ki2/releases/latest/) (or [here](https://github.com/valterc/ki2/releases/tag/0.8-karoo1) for Karoo 1)
+1. Download Ki2 APK file from the latest [release page](https://github.com/valterc/ki2/releases/latest/) (or [here](https://github.com/valterc/ki2/releases/tag/0.8-karoo1) for Karoo 1)
 2. Sideload Ki2 into Karoo
 3. Connect to shifting devices from Ki2 and use Ki2 data elements in Karoo profiles
 
@@ -60,7 +61,7 @@ This app utilizes the Android environment along with the ANT service and the Kar
 <summary>Full Instructions</summary>
 
 1. Check and download the _APK_ file on the latest release found on the [release page](https://github.com/valterc/ki2/releases/latest/)
-   - **Karoo 1 users:** The lastest release is supported by Karoo 2, for Karoo 1 use [this release](https://github.com/valterc/ki2/releases/tag/0.8-karoo1)
+   - **Karoo 1 users:** The latest release is supported by Karoo 2, for Karoo 1 use [this release](https://github.com/valterc/ki2/releases/tag/0.8-karoo1)
 2. Install/Update the APK file on your Karoo:
     - (Recommended) [Follow this guide from DC Rainmaker](https://www.dcrainmaker.com/2021/02/how-to-sideload-android-apps-on-your-hammerhead-karoo-1-karoo-2.html)
    1. Activate Karoo developer options:
@@ -90,15 +91,15 @@ This app utilizes the Android environment along with the ANT service and the Kar
 
 ### Supported Karoo software versions
 
-Karoo software may change with new updates, for best experience please use the lastest _tested_ Karoo version with the [latest Ki2 version](https://github.com/valterc/ki2/releases/latest/).
+Karoo software may change with new updates, for best experience please use the latest _tested_ Karoo version with the [latest Ki2 version](https://github.com/valterc/ki2/releases/latest/).
 
 | Version                   | Supported |
 |---------------------------|-----------|
 | 1.297.1231 (May 19, 2022) | ✅         |
 | 1.333.1345 (Oct 06, 2022) | ✅         |
 | _all versions in between_ | ✅         |
-| 1.355.1428 (Jan 25, 2023) | ✅         |
 | 1.357.1435 (Feb 09, 2023) | ✅         |
+| 1.360.1448 (Feb 23, 2023) | ✅         |
 
 ## Known issues
 
@@ -140,7 +141,7 @@ While the implementation is fairly tidy and optimized, this app will be yet anot
 
 Tested in the same route in different days. Similar profile in Karoo with the original shifting data elements and then the equivalent ones from Ki2.
 
-While it may seem that the battery consumption actually got a little bit better, I would say that battery gain/loss is marginal and negligible for this particular test given the differences in temperature, ride duration, radar alerts and the number of shifts. It is encouraging that the battery consumption did not _vastly_ increase, that was what I looking for :)
+I would say that battery gain/loss is marginal and negligible for this particular test given the differences in temperature, ride duration, radar alerts and the number of shifts. It is encouraging that the battery consumption did not _noticeable_ increase, that was what I looking for 🙂
 
 ## How can I help?
 
