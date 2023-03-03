@@ -154,10 +154,7 @@ public class MainActivity extends AppCompatActivity {
             Fragment fragment = getSupportFragmentManager().findFragmentByTag("f" + viewPagerAdapter.getItemId(viewPager.getCurrentItem()));
             if (fragment instanceof IKarooKeyListener) {
                 if (e.getAction() == KeyEvent.ACTION_UP && e.getRepeatCount() == 0) {
-                    boolean result = ((IKarooKeyListener) fragment).onKarooKeyPressed(karooKey);
-                    if (result) {
-                        return true;
-                    }
+                    return ((IKarooKeyListener) fragment).onKarooKeyPressed(karooKey);
                 }
             }
         }
