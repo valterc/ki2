@@ -5,7 +5,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.Button;
+import android.view.inputmethod.BaseInputConnection;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,14 +26,18 @@ import com.valterc.ki2.fragments.update.overlay.UpdateOverlayFragment;
 public class MainActivity extends AppCompatActivity {
 
     private static final int TIME_MS_CHECK_FOR_UPDATES = 3500;
+    private static final int KEY_EVENT_SOURCE_OWN = 0x6667;
 
     private final Handler handler = new Handler(Looper.getMainLooper());
+    private BaseInputConnection baseInputConnection;
+    private boolean longPressOngoing;
     private ViewPager2 viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        baseInputConnection = new BaseInputConnection(findViewById(android.R.id.content), true);
 
         TextView textViewVersion = findViewById(R.id.textview_main_version);
         if (BuildConfig.DEBUG) {
@@ -95,27 +99,70 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean dispatchKeyEvent(KeyEvent e) {
         View currentFocus = getCurrentFocus();
+        KarooKey karooKey = KarooKey.fromKeyCode(e.getKeyCode());
+        Adapter<?> viewPagerAdapter = viewPager.getAdapter();
 
-        if ((currentFocus == null) || !currentFocus.isClickable() && !(currentFocus instanceof Button)) {
-            KarooKey karooKey = KarooKey.fromKeyCode(e.getKeyCode());
+        if (e.getSource() == KEY_EVENT_SOURCE_OWN) {
+            return super.dispatchKeyEvent(e);
+        }
 
-            if (karooKey != KarooKey.NONE) {
-                Adapter<?> viewPagerAdapter = viewPager.getAdapter();
-                if (viewPagerAdapter != null) {
-                    Fragment fragment = getSupportFragmentManager().findFragmentByTag("f" + viewPagerAdapter.getItemId(viewPager.getCurrentItem()));
+        if (viewPagerAdapter != null) {
+            if (handleFocusNavigation(e, karooKey)) {
+                return true;
+            }
 
-                    if (fragment instanceof IKarooKeyListener) {
-                        if (e.getAction() == KeyEvent.ACTION_UP && e.getRepeatCount() == 0) {
-                            boolean result = ((IKarooKeyListener) fragment).onKarooKeyPressed(karooKey);
-                            if (result) {
-                                return true;
-                            }
-                        }
+            if (handleKeyEvent(e, currentFocus, karooKey, viewPagerAdapter)) {
+                return true;
+            }
+        }
+
+        return super.dispatchKeyEvent(e);
+    }
+
+    private boolean handleFocusNavigation(KeyEvent e, KarooKey karooKey) {
+        if (karooKey == KarooKey.LEFT || karooKey == KarooKey.RIGHT) {
+            if (e.getAction() == KeyEvent.ACTION_DOWN) {
+                if (e.getRepeatCount() > 0) {
+                    if (karooKey == KarooKey.LEFT) {
+                        viewPager.setCurrentItem(viewPager.getCurrentItem() - 1);
+                    } else {
+                        viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
+                    }
+                    longPressOngoing = true;
+                } else {
+                    longPressOngoing = false;
+                }
+            } else if (e.getAction() == KeyEvent.ACTION_UP) {
+                if (!longPressOngoing) {
+                    KeyEvent ke = KeyEvent.changeAction(e, KeyEvent.ACTION_DOWN);
+                    ke.setSource(KEY_EVENT_SOURCE_OWN);
+                    handler.post(() -> baseInputConnection.sendKeyEvent(ke));
+                }
+                longPressOngoing = false;
+            }
+            return true;
+        }
+        return false;
+    }
+
+    private boolean handleKeyEvent(KeyEvent e, View currentFocus, KarooKey karooKey, Adapter<?> viewPagerAdapter) {
+        if (karooKey != KarooKey.NONE &&
+                (karooKey == KarooKey.BACK
+                        || currentFocus == null
+                        || !currentFocus.isClickable())) {
+
+            Fragment fragment = getSupportFragmentManager().findFragmentByTag("f" + viewPagerAdapter.getItemId(viewPager.getCurrentItem()));
+            if (fragment instanceof IKarooKeyListener) {
+                if (e.getAction() == KeyEvent.ACTION_UP && e.getRepeatCount() == 0) {
+                    boolean result = ((IKarooKeyListener) fragment).onKarooKeyPressed(karooKey);
+                    if (result) {
+                        return true;
                     }
                 }
             }
         }
-        return super.dispatchKeyEvent(e);
+
+        return false;
     }
 
 }

@@ -6,7 +6,6 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.valterc.ki2.fragments.devices.list.ListDevicesFragment;
-import com.valterc.ki2.fragments.settings.SettingsFragment;
 import com.valterc.ki2.fragments.settings.SettingsHostFragment;
 
 public class MainViewPagerAdapter extends FragmentStateAdapter {
