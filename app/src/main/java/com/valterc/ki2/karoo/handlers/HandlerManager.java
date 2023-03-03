@@ -2,7 +2,7 @@ package com.valterc.ki2.karoo.handlers;
 
 import com.valterc.ki2.data.message.RideStatusMessage;
 import com.valterc.ki2.data.ride.RideStatus;
-import com.valterc.ki2.karoo.service.ServiceClient;
+import com.valterc.ki2.karoo.Ki2Context;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,11 +16,11 @@ public class HandlerManager {
 
     private final Consumer<RideStatusMessage> onRideStatusMessage = this::onRideStatusMessage;
 
-    public HandlerManager(ServiceClient serviceClient, List<IRideHandler> rideHandlerList) {
+    public HandlerManager(Ki2Context context, List<IRideHandler> rideHandlerList) {
         this.rideHandlerList = new ArrayList<>(rideHandlerList);
         this.rideStatus = RideStatus.NEW;
 
-        serviceClient.getCustomMessageClient().registerRideStatusWeakListener(onRideStatusMessage);
+        context.getServiceClient().getCustomMessageClient().registerRideStatusWeakListener(onRideStatusMessage);
     }
 
     private void onRideStatusMessage(RideStatusMessage rideStatusMessage) {

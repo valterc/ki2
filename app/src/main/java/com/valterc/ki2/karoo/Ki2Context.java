@@ -1,6 +1,8 @@
 package com.valterc.ki2.karoo;
 
 import android.annotation.SuppressLint;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import com.valterc.ki2.data.message.RideStatusMessage;
@@ -16,6 +18,7 @@ import io.hammerhead.sdk.v0.SdkContext;
 @SuppressLint("LogNotTimber")
 public class Ki2Context {
 
+    private final Handler handler;
     private final InstanceManager instanceManager;
     private final SdkContext sdkContext;
     private final ServiceClient serviceClient;
@@ -23,18 +26,22 @@ public class Ki2Context {
 
     private final Consumer<RideStatusMessage> onRideStatusMessage = this::onRideStatusMessage;
 
-    public Ki2Context(SdkContext sdkContext, ServiceClient serviceClient) {
+    public Ki2Context(SdkContext sdkContext) {
         this.sdkContext = sdkContext;
-        this.serviceClient = serviceClient;
-        this.instanceManager = new InstanceManager();
         this.rideStatus = RideStatus.NEW;
-
-        serviceClient.getCustomMessageClient().registerRideStatusWeakListener(onRideStatusMessage);
+        this.handler = new Handler(Looper.getMainLooper());
+        this.instanceManager = new InstanceManager();
+        this.serviceClient = new ServiceClient(this);
+        this.serviceClient.getCustomMessageClient().registerRideStatusWeakListener(onRideStatusMessage);
     }
 
     private void onRideStatusMessage(RideStatusMessage rideStatusMessage) {
         rideStatus = rideStatusMessage.getRideStatus();
         Log.d("KI2", "Updated ride status: " + rideStatus);
+    }
+
+    public Handler getHandler() {
+        return handler;
     }
 
     public SdkContext getSdkContext() {

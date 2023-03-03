@@ -12,6 +12,7 @@ import com.valterc.ki2.data.input.KarooKeyEvent;
 import com.valterc.ki2.data.preferences.device.DevicePreferencesView;
 import com.valterc.ki2.data.shifting.ShiftingInfo;
 import com.valterc.ki2.input.InputAdapter;
+import com.valterc.ki2.karoo.Ki2Context;
 import com.valterc.ki2.karoo.hooks.RideActivityHook;
 import com.valterc.ki2.karoo.service.listeners.ServiceCallbackRegistration;
 import com.valterc.ki2.services.IKi2Service;
@@ -22,8 +23,6 @@ import com.valterc.ki2.services.callbacks.IKeyCallback;
 import com.valterc.ki2.services.callbacks.IShiftingCallback;
 
 import java.util.function.BiConsumer;
-
-import io.hammerhead.sdk.v0.SdkContext;
 
 @SuppressLint("LogNotTimber")
 public class DeviceDataFrontend {
@@ -87,11 +86,11 @@ public class DeviceDataFrontend {
         }
     }, callback -> service.registerDevicePreferencesListener(callback), callback -> service.unregisterDevicePreferencesListener(callback));
 
-    public DeviceDataFrontend(SdkContext context, Handler handler) {
-        this.handler = handler;
+    public DeviceDataFrontend(Ki2Context ki2Context) {
+        this.handler = ki2Context.getHandler();
 
-        inputAdapter = new InputAdapter(context);
-        dataRouter = new DeviceDataRouter(context);
+        inputAdapter = new InputAdapter(ki2Context);
+        dataRouter = new DeviceDataRouter(ki2Context.getSdkContext());
     }
 
     public void setService(IKi2Service service) {

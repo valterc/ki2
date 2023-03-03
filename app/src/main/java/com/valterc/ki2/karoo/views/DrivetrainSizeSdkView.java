@@ -77,7 +77,7 @@ public class DrivetrainSizeSdkView extends Ki2SdkView {
 
     @Override
     public void onUpdate(@NonNull View view, double value, @Nullable String formattedValue) {
-        if (connectionStatus != ConnectionStatus.ESTABLISHED || !shiftingGearingHelper.hasGearingInfo()) {
+        if (connectionStatus != ConnectionStatus.ESTABLISHED || shiftingGearingHelper.hasInvalidGearingInfo()) {
             drivetrainView.setVisibility(View.INVISIBLE);
             textView.setVisibility(View.VISIBLE);
         } else {
@@ -88,7 +88,7 @@ public class DrivetrainSizeSdkView extends Ki2SdkView {
     }
 
     private void updateDrivetrainView(){
-        if (drivetrainView == null || !shiftingGearingHelper.hasGearingInfo()) {
+        if (drivetrainView == null || shiftingGearingHelper.hasInvalidGearingInfo()) {
             return;
         }
 

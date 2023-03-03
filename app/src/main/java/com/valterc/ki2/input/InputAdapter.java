@@ -11,6 +11,7 @@ import android.view.ViewConfiguration;
 
 import com.valterc.ki2.data.input.KarooKeyEvent;
 import com.valterc.ki2.data.input.KarooKey;
+import com.valterc.ki2.karoo.Ki2Context;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -24,10 +25,10 @@ public class InputAdapter {
     private InputManager inputManager;
     private Method injectInputMethod;
 
-    public InputAdapter(Context context) {
-        this.context = context;
+    public InputAdapter(Ki2Context ki2Context) {
+        this.context = ki2Context.getSdkContext();
         this.keyDownTimeMap = new HashMap<>();
-        this.virtualInputAdapter = new VirtualInputAdapter();
+        this.virtualInputAdapter = new VirtualInputAdapter(ki2Context);
         initInputManager();
     }
 

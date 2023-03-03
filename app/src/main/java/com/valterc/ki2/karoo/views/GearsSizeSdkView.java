@@ -65,7 +65,7 @@ public class GearsSizeSdkView extends Ki2SdkView {
         if (karooTheme == KarooTheme.WHITE) {
             textView.setTextColor(getContext().getColor(R.color.hh_black));
             gearsView.setTextColor(getContext().getColor(R.color.hh_black));
-            gearsView.setUnselectedGearBorderColor(getContext().getColor(R.color.hh_gears_border_dark));
+            gearsView.setUnselectedGearBorderColor(getContext().getColor(R.color.hh_gears_border_light));
         }
 
         return inflatedView;
@@ -77,7 +77,7 @@ public class GearsSizeSdkView extends Ki2SdkView {
 
     @Override
     public void onUpdate(@NonNull View view, double value, @Nullable String formattedValue) {
-        if (connectionStatus != ConnectionStatus.ESTABLISHED || !shiftingGearingHelper.hasGearingInfo()) {
+        if (connectionStatus != ConnectionStatus.ESTABLISHED || shiftingGearingHelper.hasInvalidGearingInfo()) {
             gearsView.setVisibility(View.INVISIBLE);
             textView.setVisibility(View.VISIBLE);
         } else {
@@ -88,7 +88,7 @@ public class GearsSizeSdkView extends Ki2SdkView {
     }
 
     private void updateGearsView() {
-        if (gearsView == null || !shiftingGearingHelper.hasGearingInfo()) {
+        if (gearsView == null || shiftingGearingHelper.hasInvalidGearingInfo()) {
             return;
         }
 

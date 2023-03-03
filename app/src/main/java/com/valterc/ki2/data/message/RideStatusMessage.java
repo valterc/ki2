@@ -4,7 +4,7 @@ import android.os.Bundle;
 
 import com.valterc.ki2.data.ride.RideStatus;
 
-public class RideStatusMessage extends Message{
+public class RideStatusMessage extends Message {
     private static final String KEY_RIDE_STATUS = "rideStatus";
     public static final String KEY = "ride-status";
 

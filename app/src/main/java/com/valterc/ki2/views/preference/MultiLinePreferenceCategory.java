@@ -1,4 +1,4 @@
-package com.valterc.ki2.views;
+package com.valterc.ki2.views.preference;
 
 import android.content.Context;
 import android.util.AttributeSet;

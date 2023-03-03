@@ -10,6 +10,7 @@
     <string name="category_preference_update">Update</string>
     <string name="category_preference_audio_alerts">Audio Alerts</string>
     <string name="category_preference_general_settings">General Settings</string>
+    <string name="category_preference_overlay">Overlay</string>
 
     <string name="title_preference_left_single_press">Left Single Press</string>
     <string name="title_preference_left_double_press">Left Double Press</string>
@@ -26,6 +27,10 @@
     <string name="title_preference_audio_alert_shifting_limit">Shifting Limit</string>
     <string name="title_preference_audio_alert_upcoming_synchro_shift">Upcoming Synchro Shift</string>
     <string name="title_preference_audio_alert_delay">Delay between audio alerts</string>
+    <string name="title_preference_overlay_enabled">Enable Overlay</string>
+    <string name="title_preference_overlay_triggers">Triggers</string>
+    <string name="title_preference_overlay_duration">Duration</string>
+    <string name="title_preference_overlay_theme">Theme</string>
 
     <string name="summary_preference_pre_load">Pre load the ride application to avoid data elements not showing after startup</string>
     <string name="summary_preference_battery_notification">Show notifications when the shifting battery level is at or below a certain value</string>
@@ -35,6 +40,11 @@
     <string name="summary_preference_audio_alert_shifting_limit">Audio alert when attempting to shift while already on the gear limit</string>
     <string name="summary_preference_audio_alert_upcoming_synchro_shift">Audio alert when the next shift can trigger a synchronized shift (on S2 mode)</string>
     <string name="summary_preference_audio_alert_delay">Minimum delay between audio alerts</string>
+    <string name="summary_preference_overlay">Show an Overlay with shifting information in Ride</string>
+    <string name="summary_preference_overlay_enabled">Enable Overlay in Ride</string>
+    <string name="summary_preference_overlay_triggers">Which events cause the overlay to appear</string>
+    <string name="summary_preference_overlay_duration">Duration that the overlay is visible</string>
+    <string name="summary_preference_overlay_theme">Visual theme</string>
 
     <string name="default_preference_left_switch_single_press">navigate_left</string>
     <string name="default_preference_left_switch_double_press">lap_map_back</string>
@@ -48,6 +58,9 @@
     <bool name="default_preference_auto_update">true</bool>
     <bool name="default_preference_audio_alert">false</bool>
     <bool name="default_preference_pre_load">true</bool>
+    <bool name="default_preference_overlay_enabled">false</bool>
+    <string name="default_preference_overlay_duration">2000</string>
+    <string name="default_preference_overlay_theme">default_dark_gear_index</string>
 
     <string name="value_preference_battery_level_off">off</string>
 
@@ -66,5 +79,9 @@
     <string name="preference_audio_alert_shifting_limit">AUDIO_ALERT_SHIFTING_LIMIT</string>
     <string name="preference_audio_alert_upcoming_synchro_shift">AUDIO_ALERT_UPCOMING_SYNCHRO_SHIFT</string>
     <string name="preference_audio_alert_delay">AUDIO_ALERT_DELAY</string>
+    <string name="preference_overlay_enabled">OVERLAY_ENABLED</string>
+    <string name="preference_overlay_triggers">OVERLAY_TRIGGERS</string>
+    <string name="preference_overlay_duration">OVERLAY_DURATION</string>
+    <string name="preference_overlay_theme">OVERLAY_THEME</string>
 
 </resources>

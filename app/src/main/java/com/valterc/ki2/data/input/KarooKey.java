@@ -40,7 +40,12 @@ public enum KarooKey {
     /**
      * Virtual key to switch the ride activity to the map page.
      */
-    VIRTUAL_SWITCH_TO_MAP_PAGE(VIRTUAL_NONE.keyCode + 1);
+    VIRTUAL_SWITCH_TO_MAP_PAGE(VIRTUAL_NONE.keyCode + 1),
+
+    /**
+     * Virtual key to show ride overlay.
+     */
+    VIRTUAL_SHOW_OVERLAY(VIRTUAL_NONE.keyCode + 2);
 
     public static KarooKey fromKeyCode(int keyCode) {
         for (KarooKey karooKey : values()) {
