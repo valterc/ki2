@@ -32,7 +32,7 @@ public class Ki2Context {
         this.handler = new Handler(Looper.getMainLooper());
         this.instanceManager = new InstanceManager();
         this.serviceClient = new ServiceClient(this);
-        serviceClient.getCustomMessageClient().registerRideStatusWeakListener(onRideStatusMessage);
+        this.serviceClient.getCustomMessageClient().registerRideStatusWeakListener(onRideStatusMessage);
     }
 
     private void onRideStatusMessage(RideStatusMessage rideStatusMessage) {
