@@ -1,7 +1,6 @@
 package com.valterc.ki2.views.battery;
 
 import android.graphics.Matrix;
-import android.graphics.Path;
 
 public class VerticalTopRenderer extends BaseRenderer {
 

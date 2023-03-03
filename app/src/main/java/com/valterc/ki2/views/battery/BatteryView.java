@@ -24,7 +24,6 @@ public class BatteryView extends View {
         VERTICAL_BOTTOM
     }
 
-
     private final boolean initialized;
 
     private Picture picture;
@@ -200,8 +199,8 @@ public class BatteryView extends View {
     }
 
     private void setOrientation(int orientation) {
-        for (Orientation value: Orientation.values()) {
-            if (value.ordinal() == orientation){
+        for (Orientation value : Orientation.values()) {
+            if (value.ordinal() == orientation) {
                 setOrientation(value);
                 return;
             }
