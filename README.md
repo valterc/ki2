@@ -55,7 +55,7 @@ This app utilizes the Android environment along with the ANT service and the Kar
 
 1. Download Ki2 APK file from the latest [release page](https://github.com/valterc/ki2/releases/latest/) (or [here](https://github.com/valterc/ki2/releases/tag/0.8-karoo1) for Karoo 1)
 2. Sideload Ki2 into Karoo
-3. Connect to shifting devices from Ki2 and use Ki2 data elements in Karoo profiles
+3. Connect to shifting devices from Ki2 ([Video](https://user-images.githubusercontent.com/1299179/204136334-c8a5a395-c6b5-4d16-a8d5-ff1fa2dd726d.mp4)) and use Ki2 data elements in Karoo profiles ([Video](https://user-images.githubusercontent.com/1299179/204136325-69bcbf7a-b69f-45ed-96c4-3d9a52112089.mp4))
 
 <details>
 <summary>Full Instructions</summary>
@@ -149,13 +149,7 @@ Is this useful for you? [Buy me a coffee](https://www.paypal.com/donate/?busines
 
 **Do you have experience with Android development?** Review the code, point out any problems and feel free to open issues or submit PRs with improvements. Submissions that are outside the _scope_ of the project may be rejected.
 
-**Do you work for Hammerhead?** Love my Karoo 2, thanks for making it awesome! Please don't get involved with this project directly, however please work to improve the Karoo SDK:
-
-- Fix the problem with SDK data elements in the ride app. SDK data elements don't load the first time that the ride app is opened after boot.
-- Add support to send custom input Keys from SDK module.
-- Allow to control the Numeric data view when for example there is no data available. At the moment it is only possible to set the Text, not the size, style, color, etc.
-- Add support for more SDK data views, for example add smaller graphical data views.
-- Add support for reading/writing data streams, for example to provide shifting data to existing Karoo data elements. Maybe add virtual/SDK sensors.
+**Do you work for Hammerhead?** Love my Karoo 2, thanks for making it awesome! Please don't get involved with this project directly, however please work to support and improve the Karoo SDK. If you want feedback/ideas feel free to reach out.
 
 **Do you do UI/art?** Feel free to create/suggest a new icon for the app.
 
