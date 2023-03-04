@@ -13,6 +13,7 @@ Ki2 is an _app_/_addon_/_plugin_ for Hammerhead Karoo 2 devices. It is a compani
 ![Edit Karoo profile with Ki2 items](media/image_4.png?raw=true "Edit Karoo profile with Ki2 items")
 ![Ride profile with Ki2 data elements](media/image_5.png?raw=true "Ride profile with Ki2 data elements")
 ![Ride profile with Ki2 data elements](media/image_6.png?raw=true "Ride profile with Ki2 data elements")
+![Overlay in Ride](media/image_7.png?raw=true "Overlay in Ride")
 
 These screenshots have been _slightly_ edited.
 
@@ -39,6 +40,7 @@ These screenshots have been _slightly_ edited.
   - Mark lap
   - Zoom map
   - Switch to map page
+- Overlay with shifting information while in Ride
 - Receive notifications when shifting battery is low
 - Audio alerts before upcoming synchro shift or when reaching shifting limits
 - Self update
