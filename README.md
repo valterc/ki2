@@ -45,14 +45,6 @@ These screenshots have been _slightly_ edited.
 - Audio alerts before upcoming synchro shift or when reaching shifting limits
 - Self update
 
-## How does it work?
-
-This app utilizes the Android environment along with the ANT service and the Karoo SDK. It contains 3 main components:
-
-- Device management + settings activity
-- Background service that integrates with ANT and communicates with the shifting device wirelessly
-- Integration with Karoo profiles via the Karoo SDK
-
 ## How can I try this app?
 
 1. Download Ki2 APK file from the latest [release page](https://github.com/valterc/ki2/releases/latest/) (or [here](https://github.com/valterc/ki2/releases/tag/0.8-karoo1) for Karoo 1)
@@ -117,6 +109,14 @@ This is a limitation of the Karoo SDK and a restriction of Android. Unfortunatel
 
 **Workaround:** There is no known workaround, hood buttons only work in the ride app.
 
+## How does it work?
+
+This app utilizes the Android environment along with the ANT service and the Karoo SDK. It contains 3 main components:
+
+- Device management + settings activity
+- Background service that integrates with ANT and communicates with the shifting device wirelessly
+- Integration with Karoo via Karoo SDK
+
 ## Limitations
 
 Karoo SDK is very limited, here are some things that are not possible:
@@ -143,7 +143,7 @@ While the implementation is fairly tidy and optimized, this app will be yet anot
 
 Tested in the same route in different days. Similar profile in Karoo with the original shifting data elements and then the equivalent ones from Ki2.
 
-I would say that battery gain/loss is marginal and negligible for this particular test given the differences in temperature, ride duration, radar alerts and the number of shifts. It is encouraging that the battery consumption did not _noticeable_ increase, that was what I looking for 🙂
+Battery gain/loss is marginal and negligible for this particular test given the differences in temperature, ride duration, radar alerts and the number of shifts. It is encouraging that the battery consumption did not _noticeable_ increase, that was what I looking for 🙂
 
 ## How can I help?
 
@@ -151,7 +151,7 @@ Is this useful for you? [Buy me a coffee](https://www.paypal.com/donate/?busines
 
 **Do you have experience with Android development?** Review the code, point out any problems and feel free to open issues or submit PRs with improvements. Submissions that are outside the _scope_ of the project may be rejected.
 
-**Do you work for Hammerhead?** Love my Karoo 2, thanks for making it awesome! Please don't get involved with this project directly, however please work to support and improve the Karoo SDK. If you want feedback/ideas feel free to reach out.
+**Do you work for Hammerhead?** Love my Karoo 2, thanks for making it awesome! Don't get involved with this project directly, however please support and improve the Karoo SDK. If you want feedback/ideas feel free to reach out.
 
 **Do you do UI/art?** Feel free to create/suggest a new icon for the app.
 
@@ -175,11 +175,7 @@ Maybe, it might or might not be possible. As previously stated there are plenty 
 
 ### I tried cloning the repo but the build fails on my machine
 
-Yes, this is by design. There is a particular file missing from this repo and unfortunately I cannot add it here. It is however available on public locations or through official ways.
-
-### I thought it used a proprietary ANT profile
-
-All information is publicly available on the internet.
+Yes, this is by design. There is a particular file missing from this repo and unfortunately I cannot add it here.
 
 ### The UI looks similar to other Karoo applications, do you work for Hammerhead or have access to their code?
 
@@ -187,15 +183,15 @@ No! I don't work for hammerhead and I don't have access to their code. I'm just 
 
 ### Hood buttons are inverted or don't work as expected?
 
-It might be because your shifting configuration has a different action assigned to the hood buttons. Ki2 expects _Channel 1_ for left button and _Channel 2_ for right button. If your shifting configuration is different, you might experience weird behavior. Please double check the configuration via the manufacturer's official shifting app available on smartphones. _Channel 3_ and _Channel 4_ are currently not supported.
+It might be because your shifting configuration has a different action assigned to the hood buttons. Ki2 expects _Channel 1_ for left button and _Channel 2_ for right button. If your shifting configuration is different, you might experience weird behavior. Please double check the configuration via the manufacturer official shifting app available on smartphones. _Channel 3_ and _Channel 4_ are currently not supported.
 
 ### The app disconnects from the shifting unit while riding
 
-Make sure you are using the [latest Ki2 version](https://github.com/valterc/ki2/releases/latest/). It could be a signal issue, verify the signal between the wireless unit and Karoo. To do that, tap on the shifting device on the list of devices in Ki2. The signal value is displayed on the top when the shifting unit is connected. Signal values between -30 to -50dBm offer best and stable connectivity while a signal in range of -75 to -90dBm is degraded and can cause connectivity issues. There is nothing that can be done in the app/software to improve the signal. Recommendation is to move or rotate the shifting wireless unit, perhaps moving it a small amount could be enough or in some cases it may require relocating the wireless unit to another location in the bicycle.
+Make sure you are using the [latest Ki2 version](https://github.com/valterc/ki2/releases/latest/). It could be a signal issue, verify the signal between the wireless unit and Karoo. To do that, tap on the shifting device on the list of devices in Ki2. The signal value is displayed on the top when the shifting unit is connected. Signal values between -30 to -60dBm offer best and stable connectivity while a signal in range of -75 to -90dBm is degraded and can cause connectivity issues. There is nothing that can be done in the app/software to improve the signal. Recommendation is to move or rotate the shifting wireless unit, perhaps moving it a small amount could be enough or in some cases it may require relocating the wireless unit to another location in the bicycle closer to Karoo.
 
 ### Gear size (teeth count) or gear ratio unknown or not correct
 
-The gear size (teeth count) is obtained from the shifting unit. If the shifting unit is misconfigured then the wrong information will be displayed in Ki2. Please use the official mobile application from the shifting unit manufacturer to configure the correct chainring information. This might not be supported in all bicycles or shifting systems.
+The gear size (teeth count) is automatically obtained from the shifting unit, when supported. If the shifting unit is misconfigured then the wrong information will be displayed in Ki2. Please use the official mobile application from the shifting unit manufacturer to configure the correct chainring information. This might not be supported in all bicycles or shifting systems. It is also possible to use custom gearing information, open the device details in Ki2 to edit custom gearing.
 
 ### It does not work or I have a problem
 
