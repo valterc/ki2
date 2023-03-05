@@ -7,6 +7,10 @@ import android.util.Log;
 
 import com.valterc.ki2.data.message.RideStatusMessage;
 import com.valterc.ki2.data.ride.RideStatus;
+import com.valterc.ki2.karoo.audio.IAudioAlertManager;
+import com.valterc.ki2.karoo.audio.LocalAudioAlertManager;
+import com.valterc.ki2.karoo.audio.RemoteAudioAlertManager;
+import com.valterc.ki2.karoo.hooks.ActivityServiceHook;
 import com.valterc.ki2.karoo.instance.InstanceManager;
 import com.valterc.ki2.karoo.service.ServiceClient;
 
@@ -22,6 +26,7 @@ public class Ki2Context {
     private final InstanceManager instanceManager;
     private final SdkContext sdkContext;
     private final ServiceClient serviceClient;
+    private final IAudioAlertManager audioAlertManager;
     private RideStatus rideStatus;
 
     private final Consumer<RideStatusMessage> onRideStatusMessage = this::onRideStatusMessage;
@@ -32,6 +37,8 @@ public class Ki2Context {
         this.handler = new Handler(Looper.getMainLooper());
         this.instanceManager = new InstanceManager();
         this.serviceClient = new ServiceClient(this);
+        this.audioAlertManager = ActivityServiceHook.isInActivityService() ? new LocalAudioAlertManager(this) : new RemoteAudioAlertManager(this);
+
         this.serviceClient.getCustomMessageClient().registerRideStatusWeakListener(onRideStatusMessage);
     }
 
@@ -54,6 +61,10 @@ public class Ki2Context {
 
     public InstanceManager getInstanceManager() {
         return instanceManager;
+    }
+
+    public IAudioAlertManager getAudioAlertManager() {
+        return audioAlertManager;
     }
 
     public RideStatus getRideStatus() {

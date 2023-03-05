@@ -6,7 +6,9 @@ public enum MessageType {
     LOW_BATTERY(1),
     RIDE_STATUS(2),
     UPDATE_AVAILABLE(3),
-    SHOW_OVERLAY(4);
+    SHOW_OVERLAY(4),
+    AUDIO_ALERT(5),
+    AUDIO_ALERT_EVENT(6);
 
     public static MessageType fromValue(int value) {
         for (MessageType messageType : values()) {

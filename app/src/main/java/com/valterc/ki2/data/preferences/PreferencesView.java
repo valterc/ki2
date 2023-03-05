@@ -213,47 +213,47 @@ public class PreferencesView implements Parcelable {
     }
 
     /**
-     * Indicates if the audio alert for when shifting into the lowest gear is enabled.
+     * Get the audio alert for when shifting into the lowest gear.
      *
      * @param context Ki2 application context. Cannot be a context generated from another package.
-     * @return True if the audio alert for when shifting into the lowest gear is enabled, False otherwise.
+     * @return Audio alert name for when shifting into the lowest gear.
      */
-    public boolean isAudioAlertLowestGearEnabled(Context context) {
-        return getBoolean(context.getString(R.string.preference_audio_alert_lowest_gear),
-                context.getResources().getBoolean(R.bool.default_preference_audio_alert));
+    public String getAudioAlertLowestGearEnabled(Context context) {
+        return getString(context.getString(R.string.preference_audio_alert_lowest_gear),
+                context.getString(R.string.default_preference_audio_alert_shifting_limit));
     }
 
     /**
-     * Indicates if the audio alert for when shifting into the highest gear is enabled.
+     * Get the audio alert for when shifting into the highest gear.
      *
      * @param context Ki2 application context. Cannot be a context generated from another package.
-     * @return True if the audio alert for when shifting into the highest gear is enabled, False otherwise.
+     * @return Audio alert name for when shifting into the highest gear.
      */
-    public boolean isAudioAlertHighestGearEnabled(Context context) {
-        return getBoolean(context.getString(R.string.preference_audio_alert_highest_gear),
-                context.getResources().getBoolean(R.bool.default_preference_audio_alert));
+    public String getAudioAlertHighestGearEnabled(Context context) {
+        return getString(context.getString(R.string.preference_audio_alert_highest_gear),
+                context.getString(R.string.default_preference_audio_alert_shifting_limit));
     }
 
     /**
-     * Indicates if the audio alert for when attempting to shift over the gear limit is enabled.
+     * Get the audio alert for when attempting to shift over the gear limit.
      *
      * @param context Ki2 application context. Cannot be a context generated from another package.
-     * @return True if the audio alert for when attempting to shift over the gear limit is enabled, False otherwise.
+     * @return Audio alert name for shifting limit.
      */
-    public boolean isAudioAlertShiftingLimit(Context context) {
-        return getBoolean(context.getString(R.string.preference_audio_alert_shifting_limit),
-                context.getResources().getBoolean(R.bool.default_preference_audio_alert));
+    public String getAudioAlertShiftingLimit(Context context) {
+        return getString(context.getString(R.string.preference_audio_alert_shifting_limit),
+                context.getString(R.string.default_preference_audio_alert_shifting_limit));
     }
 
     /**
-     * Indicates if the audio alert for when the next shift can trigger a synchronized shift is enabled.
+     * Get the audio alert for when the next shift can trigger a synchronized shift.
      *
      * @param context Ki2 application context. Cannot be a context generated from another package.
-     * @return True if the audio alert for when the next shift can trigger a synchronized shift is enabled, False otherwise.
+     * @return Audio alert name for synchronized shift.
      */
-    public boolean isAudioAlertUpcomingSynchroShift(Context context) {
-        return getBoolean(context.getString(R.string.preference_audio_alert_upcoming_synchro_shift),
-                context.getResources().getBoolean(R.bool.default_preference_audio_alert));
+    public String getAudioAlertUpcomingSynchroShift(Context context) {
+        return getString(context.getString(R.string.preference_audio_alert_upcoming_synchro_shift),
+                context.getString(R.string.default_preference_audio_alert_upcoming_synchro_shift));
     }
 
     /**
