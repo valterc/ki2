@@ -364,7 +364,7 @@
                     android:layout_marginBottom="15dp"
                     android:drawablePadding="15dp"
                     android:text="@string/text_update_restart"
-                    android:gravity="center" />
+                    android:textSize="15sp" />
 
                 <TextView
                     android:layout_width="wrap_content"
