@@ -29,6 +29,7 @@ public class LocalAudioAlertManager implements IAudioAlertManager {
     private final Consumer<PreferencesView> onPreferences = this::onPreferences;
     private final Consumer<AudioAlertMessage> onAudioAlertMessage = this::onAudioAlertMessage;
     private final Consumer<AudioAlertEventMessage> onAudioAlertEventMessage = this::onAudioAlertEventMessage;
+
     public LocalAudioAlertManager(Ki2Context context) {
         this.context = context;
 

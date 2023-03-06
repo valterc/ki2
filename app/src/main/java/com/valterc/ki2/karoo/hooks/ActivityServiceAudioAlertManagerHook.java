@@ -182,7 +182,7 @@ public class ActivityServiceAudioAlertManagerHook {
         return null;
     });
 
-    private static final Lazy<Object> AUDIO_ALERT_SINGLE = LazyKt.lazy(() -> {
+    private static final Lazy<Object> AUDIO_ALERT_AUTO_LAP = LazyKt.lazy(() -> {
         try {
             return AudioAlertHook.getAudioAlert("AUTO_LAP");
         } catch (Exception e) {
@@ -192,7 +192,7 @@ public class ActivityServiceAudioAlertManagerHook {
         return null;
     });
 
-    private static final Lazy<Object> AUDIO_ALERT_DOUBLE = LazyKt.lazy(() -> {
+    private static final Lazy<Object> AUDIO_ALERT_WORKOUT_NEW_INTERVAL = LazyKt.lazy(() -> {
         try {
             return AudioAlertHook.getAudioAlert("WORKOUT_NEW_INTERVAL");
         } catch (Exception e) {
@@ -365,7 +365,7 @@ public class ActivityServiceAudioAlertManagerHook {
      * @return True if the alert was triggered, False otherwise.
      */
     public static boolean beepKarooAutoLap(SdkContext context) {
-        return beep(context, BEEP_PATTERN_AUTO_LAP.getValue(), AUDIO_ALERT_SINGLE.getValue());
+        return beep(context, BEEP_PATTERN_AUTO_LAP.getValue(), AUDIO_ALERT_AUTO_LAP.getValue());
     }
 
     /**
@@ -375,7 +375,7 @@ public class ActivityServiceAudioAlertManagerHook {
      * @return True if the alert was triggered, False otherwise.
      */
     public static boolean beepKarooWorkoutInterval(SdkContext context) {
-        return beep(context, BEEP_PATTERN_WORKOUT_INTERVAL.getValue(), AUDIO_ALERT_DOUBLE.getValue());
+        return beep(context, BEEP_PATTERN_WORKOUT_INTERVAL.getValue(), AUDIO_ALERT_WORKOUT_NEW_INTERVAL.getValue());
     }
 
     /**
@@ -385,7 +385,7 @@ public class ActivityServiceAudioAlertManagerHook {
      * @return True if the alert was triggered, False otherwise.
      */
     public static boolean beepSingle(SdkContext context) {
-        return beep(context, BEEP_PATTERN_SINGLE.getValue(), AUDIO_ALERT_SINGLE.getValue());
+        return beep(context, BEEP_PATTERN_SINGLE.getValue(), AUDIO_ALERT_AUTO_LAP.getValue());
     }
 
     /**
@@ -395,7 +395,7 @@ public class ActivityServiceAudioAlertManagerHook {
      * @return True if the alert was triggered, False otherwise.
      */
     public static boolean beepDouble(SdkContext context) {
-        return beep(context, BEEP_PATTERN_DOUBLE.getValue(), AUDIO_ALERT_DOUBLE.getValue());
+        return beep(context, BEEP_PATTERN_DOUBLE.getValue(), AUDIO_ALERT_WORKOUT_NEW_INTERVAL.getValue());
     }
 
 }

@@ -1,6 +1,10 @@
 package com.valterc.ki2.views.preference;
 
 import android.content.Context;
+import android.graphics.Typeface;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.StyleSpan;
 import android.util.AttributeSet;
 
 import androidx.annotation.NonNull;
@@ -28,7 +32,15 @@ public class SummaryAndValueListPreference extends ListPreference {
     @Nullable
     @Override
     public CharSequence getSummary() {
-        return super.getSummary() + "\n" + getEntry();
+        CharSequence originalSummary = super.getSummary();
+
+        if (originalSummary == null) {
+            return getEntry();
+        }
+
+        SpannableString spannableString = new SpannableString(originalSummary + "\n" + getEntry());
+        spannableString.setSpan(new StyleSpan(Typeface.BOLD), originalSummary.length(), spannableString.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return spannableString;
     }
 
 }
