@@ -20,7 +20,7 @@ public class AudioAlertEventMessage extends Message {
 
     private AudioAlertEventMessage(Message message) {
         super(message);
-        event = AudioAlertEvent.fromOrdinal( getBundle().getInt(KEY_EVENT));
+        event = AudioAlertEvent.fromOrdinal(getBundle().getInt(KEY_EVENT));
     }
 
     public AudioAlertEventMessage(AudioAlertEvent event) {
