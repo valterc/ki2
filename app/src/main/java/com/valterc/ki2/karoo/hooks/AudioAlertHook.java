@@ -39,7 +39,7 @@ public class AudioAlertHook {
 
             Method[] methodsAudioAlert = audioAlertClass.getMethods();
 
-            for (Method methodBroadcast: methodsAudioAlert) {
+            for (Method methodBroadcast : methodsAudioAlert) {
                 if (methodBroadcast.getParameterCount() == 2) {
                     Class<?>[] parameterTypes = methodBroadcast.getParameterTypes();
                     if (parameterTypes[0] == Context.class && parameterTypes[1] == String.class) {
@@ -49,7 +49,7 @@ public class AudioAlertHook {
                 }
             }
         } catch (Exception e) {
-            Log.e("KI2", "Unable to trigger audio alert using method 1: " + e);
+            Log.e("KI2", "Unable to trigger audio alert using method 1", e);
         }
 
         return false;
@@ -70,7 +70,7 @@ public class AudioAlertHook {
             context.sendBroadcast(intent);
             return true;
         } catch (Exception e) {
-            Log.e("KI2", "Unable to trigger audio alert using method 2: " + e);
+            Log.e("KI2", "Unable to trigger audio alert using method 2", e);
         }
 
         return false;
@@ -82,6 +82,21 @@ public class AudioAlertHook {
         intent.putExtra("type", enumValue);
         context.sendBroadcast(intent);
         return true;
+    }
+
+    public static Object getAudioAlert(String name) {
+        Class<? extends Enum> audioAlertClass = ENUM_AUDIO_ALERT.getValue();
+        if (audioAlertClass == null) {
+            return null;
+        }
+
+        try {
+            return Enum.valueOf(audioAlertClass, name);
+        } catch (Exception e) {
+            Log.e("KI2", "Unable to get audio alert with name '" + name + "'", e);
+        }
+
+        return null;
     }
 
     /**
@@ -97,24 +112,24 @@ public class AudioAlertHook {
     }
 
     /**
-     * Trigger a shifting limit audio alert.
+     * Trigger an Auto Lap audio alert.
      *
      * @param context Sdk context.
      * @return True if the alert was triggered, False otherwise.
      */
-    public static boolean triggerShiftingLimitAudioAlert(SdkContext context) {
+    public static boolean triggerAutoLap(SdkContext context) {
         return triggerAudioAlert_1(context, "AUTO_LAP") ||
                 triggerAudioAlert_2(context, "AUTO_LAP") ||
-                triggerAudioAlert_3(context, 17);
+                triggerAudioAlert_3(context, 19);
     }
 
     /**
-     * Trigger a synchronized shift audio alert.
+     * Trigger a Workout New Interval audio alert.
      *
      * @param context Sdk context.
      * @return True if the alert was triggered, False otherwise.
      */
-    public static boolean triggerSynchroShiftAudioAlert(SdkContext context) {
+    public static boolean triggerWorkoutNewInterval(SdkContext context) {
         return triggerAudioAlert_1(context, "WORKOUT_NEW_INTERVAL") ||
                 triggerAudioAlert_2(context, "WORKOUT_NEW_INTERVAL") ||
                 triggerAudioAlert_3(context, 12);

@@ -55,14 +55,16 @@
     <string name="default_preference_battery_level_low">20</string>
     <string name="default_preference_battery_level_critical">10</string>
     <string name="default_preference_audio_alert_delay">0</string>
+    <string name="default_preference_audio_alert_shifting_limit">@string/value_preference_audio_alert_disabled</string>
+    <string name="default_preference_audio_alert_upcoming_synchro_shift">@string/value_preference_audio_alert_disabled</string>
     <bool name="default_preference_auto_update">true</bool>
-    <bool name="default_preference_audio_alert">false</bool>
     <bool name="default_preference_pre_load">true</bool>
     <bool name="default_preference_overlay_enabled">false</bool>
     <string name="default_preference_overlay_duration">2000</string>
     <string name="default_preference_overlay_theme">default_dark_gear_index</string>
 
     <string name="value_preference_battery_level_off">off</string>
+    <string name="value_preference_audio_alert_disabled">disabled</string>
 
     <string name="preference_left_switch_single_press">LEFT_SWITCH_SINGLE_PRESS</string>
     <string name="preference_left_switch_double_press">LEFT_SWITCH_DOUBLE_PRESS</string>

@@ -123,6 +123,22 @@
         <item>15000</item>
     </string-array>
 
+    <string-array name="preference_titles_audio_alert_type">
+        <item>Disabled</item>
+        <item>Karoo - Workout Interval</item>
+        <item>Karoo - Auto Lap</item>
+        <item>Custom - Single Beep</item>
+        <item>Custom - Double Beep</item>
+    </string-array>
+
+    <string-array name="preference_values_audio_alert_type">
+        <item>@string/value_preference_audio_alert_disabled</item>
+        <item>karoo_workout_interval</item>
+        <item>karoo_auto_lap</item>
+        <item>custom_single_beep</item>
+        <item>custom_double_beep</item>
+    </string-array>
+
     <string-array name="preference_titles_overlay_triggers">
         <item>Connection</item>
         <item>Battery</item>

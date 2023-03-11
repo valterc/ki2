@@ -12,29 +12,37 @@
             app:title="@string/title_preference_audio_alert_delay"
             app:useSimpleSummaryProvider="true" />
 
-        <SwitchPreference
-            app:defaultValue="@bool/default_preference_audio_alert"
+        <com.valterc.ki2.views.preference.AudioAlertPreference
+            app:defaultValue="@string/default_preference_audio_alert_shifting_limit"
+            app:entries="@array/preference_titles_audio_alert_type"
+            app:entryValues="@array/preference_values_audio_alert_type"
             app:key="@string/preference_audio_alert_lowest_gear"
             app:summary="@string/summary_preference_audio_alert_lowest_gear"
             app:title="@string/title_preference_audio_alert_lowest_gear" />
 
-        <SwitchPreference
-            app:defaultValue="@bool/default_preference_audio_alert"
+        <com.valterc.ki2.views.preference.AudioAlertPreference
+            app:defaultValue="@string/default_preference_audio_alert_shifting_limit"
+            app:entries="@array/preference_titles_audio_alert_type"
+            app:entryValues="@array/preference_values_audio_alert_type"
             app:key="@string/preference_audio_alert_highest_gear"
             app:summary="@string/summary_preference_audio_alert_highest_gear"
             app:title="@string/title_preference_audio_alert_highest_gear" />
 
-        <SwitchPreference
-            app:defaultValue="@bool/default_preference_audio_alert"
+        <com.valterc.ki2.views.preference.AudioAlertPreference
+            app:defaultValue="@string/default_preference_audio_alert_shifting_limit"
+            app:entries="@array/preference_titles_audio_alert_type"
+            app:entryValues="@array/preference_values_audio_alert_type"
             app:key="@string/preference_audio_alert_shifting_limit"
             app:summary="@string/summary_preference_audio_alert_shifting_limit"
             app:title="@string/title_preference_audio_alert_shifting_limit" />
 
-        <SwitchPreference
-            app:defaultValue="@bool/default_preference_audio_alert"
+        <com.valterc.ki2.views.preference.AudioAlertPreference
+            app:defaultValue="@string/default_preference_audio_alert_upcoming_synchro_shift"
+            app:entries="@array/preference_titles_audio_alert_type"
+            app:entryValues="@array/preference_values_audio_alert_type"
             app:key="@string/preference_audio_alert_upcoming_synchro_shift"
             app:summary="@string/summary_preference_audio_alert_upcoming_synchro_shift"
-            app:title="@string/title_preference_audio_alert_upcoming_synchro_shift" />
+            app:title="@string/title_preference_audio_alert_upcoming_synchro_shift"/>
 
     </PreferenceCategory>
 
