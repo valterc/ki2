@@ -85,7 +85,7 @@
     <string name="text_cancel">Cancel</string>
     <string name="text_next">Next</string>
     <string name="text_start_update">Start update</string>
-    <string name="text_update_restart">Please <b>restart Karoo</b> before riding.</string>
+    <string name="text_update_restart"><b>Restart Karoo</b> before riding.</string>
     <string name="text_rename">Rename</string>
     <string name="text_manage_device">Manage device</string>
     <string name="text_device_details">Device details</string>
