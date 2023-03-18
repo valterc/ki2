@@ -25,7 +25,6 @@ import com.valterc.ki2.karoo.overlay.view.IOverlayView;
 import com.valterc.ki2.karoo.overlay.view.builder.OverlayViewBuilderEntry;
 import com.valterc.ki2.karoo.overlay.view.builder.OverlayViewBuilderRegistry;
 
-import java.util.Arrays;
 import java.util.function.Consumer;
 
 import io.hammerhead.sdk.v0.SdkContext;
@@ -89,8 +88,12 @@ public class OverlayThemeAdapter extends RecyclerView.Adapter<OverlayThemeViewHo
     }
 
     public int getItemIndex(String key) {
-        int result = Arrays.binarySearch(themeValues, key);
-        return Math.max(result, 0);
+        for (int i = 0; i < themeValues.length; i++) {
+            if (themeValues[i].equals(key)) {
+                return i;
+            }
+        }
+        return 0;
     }
 
 }
