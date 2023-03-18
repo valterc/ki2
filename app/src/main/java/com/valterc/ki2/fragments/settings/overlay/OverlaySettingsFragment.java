@@ -1,6 +1,5 @@
 package com.valterc.ki2.fragments.settings.overlay;
 
-import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.TypedValue;
@@ -8,14 +7,15 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.FragmentResultListener;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
-import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.valterc.ki2.R;
+import com.valterc.ki2.fragments.settings.overlay.opacity.OpacityPreference;
+import com.valterc.ki2.fragments.settings.overlay.opacity.OverlayOpacityDialogFragment;
+import com.valterc.ki2.fragments.settings.overlay.theme.OverlayThemeDialogFragment;
 
 import java.util.Objects;
 
@@ -41,6 +41,10 @@ public class OverlaySettingsFragment extends PreferenceFragmentCompat {
             getParentFragmentManager().setFragmentResultListener(getString(R.string.preference_overlay_theme), getViewLifecycleOwner(), (requestKey, result) ->
                     ((ListPreference)preference).setValue(result.getString(OverlayThemeDialogFragment.RESULT_VALUE)));
             OverlayThemeDialogFragment.newInstance(preference.getKey()).show(getParentFragmentManager(), null);
+        } else if (Objects.equals(preference.getKey(), getString(R.string.preference_overlay_opacity))) {
+            getParentFragmentManager().setFragmentResultListener(getString(R.string.preference_overlay_opacity), getViewLifecycleOwner(), (requestKey, result) ->
+                    ((OpacityPreference)preference).setValue(result.getFloat(OverlayOpacityDialogFragment.RESULT_VALUE)));
+            OverlayOpacityDialogFragment.newInstance(preference.getKey()).show(getParentFragmentManager(), null);
         } else {
             super.onDisplayPreferenceDialog(preference);
         }

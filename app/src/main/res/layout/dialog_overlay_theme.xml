@@ -19,6 +19,7 @@
 
     <Button
         android:id="@+id/button_overlay_theme_cancel"
+        style="?android:attr/buttonBarButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"

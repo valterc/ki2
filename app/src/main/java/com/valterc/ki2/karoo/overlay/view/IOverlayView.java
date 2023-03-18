@@ -32,6 +32,13 @@ public interface IOverlayView {
     void hide();
 
     /**
+     * Set overlay view alpha.
+     *
+     * @param value Overlay alpha.
+     */
+    void setAlpha(float value);
+
+    /**
      * Update overlay view state.
      *
      * @param preferences Preferences view.
@@ -45,5 +52,6 @@ public interface IOverlayView {
                     @NonNull DevicePreferencesView devicePreferences,
                     @Nullable BatteryInfo batteryInfo,
                     @Nullable ShiftingInfo shiftingInfo);
+
 
 }

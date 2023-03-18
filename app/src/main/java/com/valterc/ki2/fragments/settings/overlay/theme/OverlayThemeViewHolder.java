@@ -1,4 +1,4 @@
-package com.valterc.ki2.fragments.settings.overlay;
+package com.valterc.ki2.fragments.settings.overlay.theme;
 
 import android.view.View;
 import android.widget.LinearLayout;

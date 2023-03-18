@@ -135,6 +135,7 @@ public class OverlayManager implements IRideHandler {
             viewGroupBase.addView(viewOverlay);
             view = viewBuilder.createOverlayView(ki2Context, viewOverlay);
             view.setupInRide();
+            view.setAlpha(preferences.getOverlayOpacity(ki2Context.getSdkContext()));
             view.hide();
         }
 
