@@ -36,6 +36,12 @@ public abstract class DefaultOverlayView extends BaseOverlayView<DefaultOverlayV
     }
 
     @Override
+    public void setupInRide() {
+        getViewHolder().getOverlayView().setClickable(true);
+        getViewHolder().getOverlayView().setOnClickListener(v -> hide());
+    }
+
+    @Override
     public void hide() {
         super.hide();
         stopBlinking();

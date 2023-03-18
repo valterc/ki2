@@ -11,12 +11,35 @@ import com.valterc.ki2.data.shifting.ShiftingInfo;
 
 public interface IOverlayView {
 
+    /**
+     * Setup the overlay in ride.
+     */
+    void setupInRide();
+
+    /**
+     * Remove overlay from view hierarchy.
+     */
     void remove();
 
+    /**
+     * Show overlay.
+     */
     void show();
 
+    /**
+     * Hide overlay.
+     */
     void hide();
 
+    /**
+     * Update overlay view state.
+     *
+     * @param preferences Preferences view.
+     * @param connectionInfo Device connection info.
+     * @param devicePreferences Device preferences view.
+     * @param batteryInfo Device battery info.
+     * @param shiftingInfo Device shifting info.
+     */
     void updateView(@NonNull PreferencesView preferences,
                     @NonNull ConnectionInfo connectionInfo,
                     @NonNull DevicePreferencesView devicePreferences,

@@ -103,10 +103,6 @@ public class OverlayManager implements IRideHandler {
     }
 
     private boolean ensureView() {
-        if (!overlayEnabled){
-            return false;
-        }
-
         Activity activity = ActivityUtils.getRunningActivity();
         if (activity == null) {
             removeView();
@@ -138,6 +134,7 @@ public class OverlayManager implements IRideHandler {
             View viewOverlay = layoutInflater.inflate(viewBuilder.getLayoutId(), viewGroupBase, false);
             viewGroupBase.addView(viewOverlay);
             view = viewBuilder.createOverlayView(ki2Context, viewOverlay);
+            view.setupInRide();
             view.hide();
         }
 
@@ -153,6 +150,10 @@ public class OverlayManager implements IRideHandler {
     }
 
     private void showOverlay(boolean force) {
+        if (!overlayEnabled){
+            return;
+        }
+
         if (!ensureView()) {
             return;
         }

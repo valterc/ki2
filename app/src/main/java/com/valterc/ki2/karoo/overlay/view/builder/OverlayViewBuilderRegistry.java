@@ -3,10 +3,8 @@ package com.valterc.ki2.karoo.overlay.view.builder;
 import com.valterc.ki2.R;
 import com.valterc.ki2.karoo.overlay.view.plain.DefaultDarkGearIndexOverlayView;
 import com.valterc.ki2.karoo.overlay.view.plain.DefaultDarkGearSizeRatioOverlayView;
-import com.valterc.ki2.karoo.overlay.view.plain.DefaultDarkOverlayView;
 import com.valterc.ki2.karoo.overlay.view.plain.DefaultLightGearIndexOverlayView;
 import com.valterc.ki2.karoo.overlay.view.plain.DefaultLightGearSizeRatioOverlayView;
-import com.valterc.ki2.karoo.overlay.view.plain.DefaultLightOverlayView;
 
 import java.util.HashMap;
 
