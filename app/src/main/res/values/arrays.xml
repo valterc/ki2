@@ -156,6 +156,8 @@
     <string-array name="preference_titles_overlay_duration">
         <item>1 Second</item>
         <item>2 Seconds</item>
+        <item>3 Seconds</item>
+        <item>4 Seconds</item>
         <item>5 Seconds</item>
         <item>10 Seconds</item>
     </string-array>
@@ -163,6 +165,8 @@
     <string-array name="preference_values_overlay_duration">
         <item>1000</item>
         <item>2000</item>
+        <item>3000</item>
+        <item>4000</item>
         <item>5000</item>
         <item>10000</item>
     </string-array>
