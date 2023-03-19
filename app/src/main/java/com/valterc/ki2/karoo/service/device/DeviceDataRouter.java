@@ -123,7 +123,7 @@ public class DeviceDataRouter {
         for (DeviceData deviceData : sortedDeviceData) {
             ConnectionInfo connectionInfo = deviceData.getConnectionInfo();
             if (connectionInfo != null && connectionInfo.getConnectionStatus() == ConnectionStatus.ESTABLISHED) {
-                if (currentDeviceId != deviceData.getDeviceId()) {
+                if (!Objects.equals(currentDeviceId, deviceData.getDeviceId())) {
                     currentDeviceId = deviceData.getDeviceId();
                     return true;
                 }
@@ -142,7 +142,7 @@ public class DeviceDataRouter {
         }
 
         for (DeviceData deviceData : sortedDeviceData) {
-            if (currentDeviceId != deviceData.getDeviceId()) {
+            if (!Objects.equals(currentDeviceId, deviceData.getDeviceId())) {
                 currentDeviceId = deviceData.getDeviceId();
                 return true;
             }
