@@ -35,7 +35,6 @@ public class DefaultOverlayViewHolder extends BaseOverlayViewHolder {
         this.textViewGearingExtra = overlayView.findViewById(R.id.textview_karoo_overlay_gearing_extra);
         this.linearLayoutGearingRatio = overlayView.findViewById(R.id.linearlayout_karoo_overlay_gearing_extra);
         this.textViewGearingRatio = overlayView.findViewById(R.id.textview_karoo_overlay_gearing_ratio);
-
     }
 
     public LinearLayout getLinearLayoutTopBar() {
