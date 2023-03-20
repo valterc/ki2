@@ -17,21 +17,21 @@ import com.valterc.ki2.data.shifting.UpcomingSynchroShiftType;
 import com.valterc.ki2.karoo.Ki2Context;
 import com.valterc.ki2.karoo.overlay.view.BaseOverlayView;
 import com.valterc.ki2.karoo.shifting.ShiftingGearingHelper;
-import com.valterc.ki2.karoo.shifting.SynchroShiftTracking;
+import com.valterc.ki2.karoo.shifting.BuzzerTracking;
 
 public abstract class DefaultOverlayView extends BaseOverlayView<DefaultOverlayViewHolder> {
 
     private static final int TIME_MS_BLINKING = 500;
 
     protected final ShiftingGearingHelper shiftingGearingHelper;
-    private final SynchroShiftTracking synchroShiftTracking;
+    private final BuzzerTracking buzzerTracking;
     private final Handler handler;
     private Runnable blinkMethod;
 
     public DefaultOverlayView(Ki2Context ki2Context, View view) {
         super(ki2Context.getSdkContext(), new DefaultOverlayViewHolder(view));
         shiftingGearingHelper = new ShiftingGearingHelper(ki2Context.getSdkContext());
-        synchroShiftTracking = new SynchroShiftTracking();
+        buzzerTracking = new BuzzerTracking();
         handler = ki2Context.getHandler();
     }
 
@@ -55,7 +55,7 @@ public abstract class DefaultOverlayView extends BaseOverlayView<DefaultOverlayV
                            @Nullable ShiftingInfo shiftingInfo) {
         shiftingGearingHelper.setShiftingInfo(shiftingInfo);
         shiftingGearingHelper.setDevicePreferences(devicePreferences);
-        synchroShiftTracking.setShiftingInfo(shiftingInfo);
+        buzzerTracking.setShiftingInfo(shiftingInfo);
 
         getViewHolder().getTextViewDeviceName().setText(devicePreferences.getName(getContext()));
 
@@ -113,15 +113,15 @@ public abstract class DefaultOverlayView extends BaseOverlayView<DefaultOverlayV
                 stopBlinking();
                 getViewHolder().getTextViewGearingExtra().setVisibility(View.GONE);
             } else {
-                if (synchroShiftTracking.isUpcomingSynchroShift()) {
+                if (buzzerTracking.isUpcomingSynchroShift()) {
                     startBlinking();
 
-                    if (synchroShiftTracking.getUpcomingSynchroShiftType() == UpcomingSynchroShiftType.UPCOMING_UP) {
+                    if (buzzerTracking.getUpcomingSynchroShiftType() == UpcomingSynchroShiftType.UPCOMING_UP) {
                         getViewHolder().getTextViewGearingExtra().setText(R.string.text_synchro_up);
-                    } else if (synchroShiftTracking.getUpcomingSynchroShiftType() == UpcomingSynchroShiftType.UPCOMING_DOWN) {
+                    } else if (buzzerTracking.getUpcomingSynchroShiftType() == UpcomingSynchroShiftType.UPCOMING_DOWN) {
                         getViewHolder().getTextViewGearingExtra().setText(R.string.text_synchro_down);
                     }
-                } else if (shiftingInfo.getBuzzerType() == BuzzerType.OVERLIMIT_PROTECTION) {
+                } else if (buzzerTracking.isShiftingLimit()) {
                     startBlinking();
                     getViewHolder().getTextViewGearingExtra().setText(R.string.text_limit);
                 } else {
