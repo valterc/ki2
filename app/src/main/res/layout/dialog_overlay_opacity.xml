@@ -28,6 +28,7 @@
             android:id="@+id/viewstub_overlay_opacity_view_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:orientation="horizontal"
             android:paddingVertical="5dp"
             app:layout_constraintLeft_toLeftOf="parent"
