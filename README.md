@@ -48,7 +48,7 @@ These screenshots have been _slightly_ edited.
 ## How can I try this app?
 
 1. Download Ki2 APK file from the latest [release page](https://github.com/valterc/ki2/releases/latest/) (or [here](https://github.com/valterc/ki2/releases/tag/0.8-karoo1) for Karoo 1)
-2. Sideload Ki2 into Karoo
+2. Sideload Ki2 into Karoo ([Video](https://www.youtube.com/watch?v=qp7H_ZPQEJY))
 3. Connect to shifting devices from Ki2 ([Video](https://user-images.githubusercontent.com/1299179/204136334-c8a5a395-c6b5-4d16-a8d5-ff1fa2dd726d.mp4)) and use Ki2 data elements in Karoo profiles ([Video](https://user-images.githubusercontent.com/1299179/204136325-69bcbf7a-b69f-45ed-96c4-3d9a52112089.mp4))
 
 <details>
@@ -92,8 +92,8 @@ Karoo software may change with new updates, for best experience please use the l
 | 1.297.1231 (May 19, 2022) | ✅         |
 | 1.333.1345 (Oct 06, 2022) | ✅         |
 | _all versions in between_ | ✅         |
-| 1.357.1435 (Feb 09, 2023) | ✅         |
 | 1.360.1448 (Feb 23, 2023) | ✅         |
+| 1.367.1462 (Mar 09, 2023) | ✅         |
 
 ## Known issues
 
