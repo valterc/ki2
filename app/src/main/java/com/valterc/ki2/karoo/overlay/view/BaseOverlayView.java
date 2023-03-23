@@ -44,6 +44,11 @@ public abstract class BaseOverlayView<TViewHolder extends BaseOverlayViewHolder>
         viewHolder.getOverlayView().setVisibility(View.GONE);
     }
 
+    @Override
+    public void setAlpha(float value) {
+        viewHolder.getOverlayView().setAlpha(value);
+    }
+
     public abstract void updateView(@NonNull PreferencesView preferences,
                                     @NonNull ConnectionInfo connectionInfo,
                                     @NonNull DevicePreferencesView devicePreferences,

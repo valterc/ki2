@@ -134,6 +134,7 @@ public class OverlayManager implements IRideHandler {
             View viewOverlay = layoutInflater.inflate(viewBuilder.getLayoutId(), viewGroupBase, false);
             viewGroupBase.addView(viewOverlay);
             view = viewBuilder.createOverlayView(ki2Context, viewOverlay);
+            view.applyPreferences(ki2Context, preferences);
             view.setupInRide();
             view.hide();
         }

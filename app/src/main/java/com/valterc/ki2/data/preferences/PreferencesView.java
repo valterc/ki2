@@ -307,4 +307,15 @@ public class PreferencesView implements Parcelable {
         return getString(context.getString(R.string.preference_overlay_theme), () -> context.getString(R.string.default_preference_overlay_theme));
     }
 
+    /**
+     * Get the overlay opacity.
+     *
+     * @param context Ki2 application context. Cannot be a context generated from another package.
+     * @return Overlay opacity.
+     */
+    public float getOverlayOpacity(Context context) {
+        float opacity = getFloat(context.getString(R.string.preference_overlay_opacity), () -> (float)context.getResources().getInteger(R.integer.default_preference_overlay_opacity));
+        return Math.min(1, Math.max(opacity, 0));
+    }
+
 }

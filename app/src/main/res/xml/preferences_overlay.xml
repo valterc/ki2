@@ -41,6 +41,14 @@
             app:useSimpleSummaryProvider="true"
             app:dependency="@string/preference_overlay_enabled"/>
 
+        <com.valterc.ki2.fragments.settings.overlay.opacity.OpacityPreference
+            app:defaultValue="@integer/default_preference_overlay_opacity"
+            app:key="@string/preference_overlay_opacity"
+            app:summary="@string/summary_preference_overlay_opacity"
+            app:title="@string/title_preference_overlay_opacity"
+            app:useSimpleSummaryProvider="true"
+            app:dependency="@string/preference_overlay_enabled"/>
+
     </com.valterc.ki2.views.preference.MultiLinePreferenceCategory>
 
 </PreferenceScreen>

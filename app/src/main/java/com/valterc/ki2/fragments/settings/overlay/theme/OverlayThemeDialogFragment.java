@@ -1,4 +1,4 @@
-package com.valterc.ki2.fragments.settings.overlay;
+package com.valterc.ki2.fragments.settings.overlay.theme;
 
 import android.app.Dialog;
 import android.os.Bundle;
@@ -15,6 +15,9 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.valterc.ki2.R;
+import com.valterc.ki2.karoo.overlay.view.IOverlayView;
+import com.valterc.ki2.karoo.overlay.view.builder.OverlayViewBuilderEntry;
+import com.valterc.ki2.karoo.overlay.view.builder.OverlayViewBuilderRegistry;
 
 public class OverlayThemeDialogFragment extends DialogFragment {
 
@@ -36,7 +39,7 @@ public class OverlayThemeDialogFragment extends DialogFragment {
 
         RecyclerView recyclerViewOptions = view.findViewById(R.id.recyclerview_overlay_theme_options);
         OverlayThemeAdapter adapter = new OverlayThemeAdapter(requireContext(), value -> {
-            Bundle bundle = new Bundle(2);
+            Bundle bundle = new Bundle(1);
             bundle.putString(RESULT_VALUE, value);
             getParentFragmentManager().setFragmentResult(requireArguments().getString(PREFERENCE_KEY), bundle);
             dismiss();
