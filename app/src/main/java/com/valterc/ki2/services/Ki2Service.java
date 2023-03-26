@@ -465,7 +465,15 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
         @Override
         public void saveDevice(DeviceId deviceId) {
             deviceStore.saveDevice(deviceId);
-            serviceHandler.postRetriableAction(Ki2Service.this::processConnections);
+            serviceHandler.postRetriableAction(() -> {
+                processConnections();
+
+                DevicePreferencesView devicePreferencesView = devicePreferencesStore.getDevicePreferences(deviceId);
+                if (devicePreferencesView != null) {
+                    serviceHandler.postRetriableAction(() -> broadcastData(callbackListDevicePreferences,
+                            () -> devicePreferencesView, (callback, devicePreferences) -> callback.onDevicePreferences(deviceId, devicePreferences)));
+                }
+            });
         }
 
         @Override
