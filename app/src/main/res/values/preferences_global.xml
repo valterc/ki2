@@ -62,7 +62,7 @@
     <bool name="default_preference_auto_update">true</bool>
     <bool name="default_preference_pre_load">true</bool>
     <bool name="default_preference_overlay_enabled">false</bool>
-    <string name="default_preference_overlay_duration">3000</string>
+    <string name="default_preference_overlay_duration">2000</string>
     <string name="default_preference_overlay_theme">default_dark_gear_index</string>
     <integer name="default_preference_overlay_opacity">1</integer>
 
