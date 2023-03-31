@@ -28,6 +28,8 @@ import java.util.function.Consumer;
 @SuppressLint("LogNotTimber")
 public class OverlayManager implements IRideHandler {
 
+    private static final int DURATION_ALWAYS_VISIBLE = -1;
+
     private final Ki2Context ki2Context;
     private final LayoutInflater layoutInflater;
     private final Handler handler;
@@ -168,13 +170,15 @@ public class OverlayManager implements IRideHandler {
         view.updateView(preferences, connectionInfo, devicePreferences, batteryInfo, shiftingInfo);
         view.show();
 
-        handler.postDelayed(() -> {
-            if (System.currentTimeMillis() - timestampLastTrigger >= overlayDuration) {
-                if (view != null) {
-                    view.hide();
+        if (overlayDuration != DURATION_ALWAYS_VISIBLE) {
+            handler.postDelayed(() -> {
+                if (System.currentTimeMillis() - timestampLastTrigger >= overlayDuration) {
+                    if (view != null) {
+                        view.hide();
+                    }
                 }
-            }
-        }, overlayDuration);
+            }, overlayDuration);
+        }
     }
 
 }
