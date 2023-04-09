@@ -42,7 +42,7 @@ public class RearGearSizeTextDataType extends Ki2DataType {
     @NonNull
     @Override
     public String getDisplayName() {
-        return "Rear Gear T";
+        return "R Gear T";
     }
 
     @NonNull

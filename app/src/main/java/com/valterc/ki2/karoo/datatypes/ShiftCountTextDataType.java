@@ -42,7 +42,7 @@ public class ShiftCountTextDataType extends Ki2DataType {
     @NonNull
     @Override
     public String getDisplayName() {
-        return "Shift Count";
+        return "Shf Count";
     }
 
     @NonNull

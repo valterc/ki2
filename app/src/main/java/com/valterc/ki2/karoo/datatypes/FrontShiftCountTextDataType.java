@@ -42,7 +42,7 @@ public class FrontShiftCountTextDataType extends Ki2DataType {
     @NonNull
     @Override
     public String getDisplayName() {
-        return "Front Shift Count";
+        return "F Shf Cnt";
     }
 
     @NonNull
