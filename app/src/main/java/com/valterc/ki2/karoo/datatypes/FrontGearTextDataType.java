@@ -42,7 +42,7 @@ public class FrontGearTextDataType extends Ki2DataType {
     @NonNull
     @Override
     public String getDisplayName() {
-        return "Front Gear";
+        return "F Gear";
     }
 
     @NonNull

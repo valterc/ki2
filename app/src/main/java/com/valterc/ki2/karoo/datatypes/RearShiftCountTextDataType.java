@@ -42,7 +42,7 @@ public class RearShiftCountTextDataType extends Ki2DataType {
     @NonNull
     @Override
     public String getDisplayName() {
-        return "Rear Shift Count";
+        return "R Shf Cnt";
     }
 
     @NonNull
