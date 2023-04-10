@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginVertical="5dp"
+    android:background="@drawable/background_overlay_light"
+    android:elevation="100dp"
+    android:orientation="vertical"
+    android:paddingBottom="5dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="5dp"
+        android:paddingTop="5dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:ignore="UseCompoundDrawables">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/ic_hh_gear"
+                    tools:ignore="ContentDescription" />
+
+                <TextView
+                    android:id="@+id/textview_karoo_overlay_compact_gearing"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="2dp"
+                    android:fontFamily="monospace"
+                    android:paddingTop="4dp"
+                    android:textSize="28sp"
+                    tools:text="F50 - R30" />
+
+            </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearlayout_karoo_overlay_compact_gearing_ratio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:ignore="UseCompoundDrawables">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/ic_ratio"
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                android:id="@+id/textview_karoo_overlay_compact_gearing_ratio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="2dp"
+                android:fontFamily="monospace"
+                android:paddingTop="4dp"
+                android:textSize="24sp"
+                tools:text="1.25" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/textview_karoo_overlay_compact_gearing_extra"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="3dp"
+            android:textSize="14sp"
+            android:textStyle="italic"
+            android:visibility="gone"
+            tools:text="SYNCHRO ↑"
+            tools:visibility="visible" />
+
+    </LinearLayout>
+
+</LinearLayout>

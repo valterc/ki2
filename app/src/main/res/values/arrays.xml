@@ -174,12 +174,18 @@
     </string-array>
 
     <string-array name="preference_titles_overlay_theme">
-        <item>Dark - Default view with gear index</item>
-        <item>Light - Default view with gear index</item>
-        <item>Dark - Default view with gear size and ratio</item>
-        <item>Light - Default view with gear size and ratio</item>
-        <item>Dark - Simple view</item>
-        <item>Light - Simple view</item>
+        <item>Dark - Default (gear index)</item>
+        <item>Light - Default (gear index)</item>
+        <item>Dark - Default (gear size and ratio)</item>
+        <item>Light - Default (gear size and ratio)</item>
+        <item>Dark - Simple</item>
+        <item>Light - Simple</item>
+        <item>Dark - Compact (gear index)</item>
+        <item>Light - Compact (gear index)</item>
+        <item>Dark - Compact (gear size)</item>
+        <item>Light - Compact (gear size)</item>
+        <item>Dark - Compact (gear size and ratio)</item>
+        <item>Light - Compact (gear size and ratio)</item>
     </string-array>
 
     <string-array name="preference_values_overlay_theme">
@@ -189,6 +195,12 @@
         <item>default_light_gear_size_ratio</item>
         <item>simple_dark</item>
         <item>simple_light</item>
+        <item>compact_dark_gear_index</item>
+        <item>compact_light_gear_index</item>
+        <item>compact_dark_gear_size</item>
+        <item>compact_light_gear_size</item>
+        <item>compact_dark_gear_size_ratio</item>
+        <item>compact_light_gear_size_ratio</item>
     </string-array>
 
 </resources>
