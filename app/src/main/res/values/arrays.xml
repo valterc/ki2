@@ -176,6 +176,8 @@
     <string-array name="preference_titles_overlay_theme">
         <item>Dark - Default (gear index)</item>
         <item>Light - Default (gear index)</item>
+        <item>Dark - Default (gear size)</item>
+        <item>Light - Default (gear size)</item>
         <item>Dark - Default (gear size and ratio)</item>
         <item>Light - Default (gear size and ratio)</item>
         <item>Dark - Simple</item>
@@ -191,6 +193,8 @@
     <string-array name="preference_values_overlay_theme">
         <item>default_dark_gear_index</item>
         <item>default_light_gear_index</item>
+        <item>default_dark_gear_size</item>
+        <item>default_light_gear_size</item>
         <item>default_dark_gear_size_ratio</item>
         <item>default_light_gear_size_ratio</item>
         <item>simple_dark</item>
