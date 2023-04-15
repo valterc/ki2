@@ -8,8 +8,10 @@ import com.valterc.ki2.karoo.overlay.view.compact.CompactLightGearIndexOverlayVi
 import com.valterc.ki2.karoo.overlay.view.compact.CompactLightGearSizeOverlayView;
 import com.valterc.ki2.karoo.overlay.view.compact.CompactLightGearSizeRatioOverlayView;
 import com.valterc.ki2.karoo.overlay.view.plain.DefaultDarkGearIndexOverlayView;
+import com.valterc.ki2.karoo.overlay.view.plain.DefaultDarkGearSizeOverlayView;
 import com.valterc.ki2.karoo.overlay.view.plain.DefaultDarkGearSizeRatioOverlayView;
 import com.valterc.ki2.karoo.overlay.view.plain.DefaultLightGearIndexOverlayView;
+import com.valterc.ki2.karoo.overlay.view.plain.DefaultLightGearSizeOverlayView;
 import com.valterc.ki2.karoo.overlay.view.plain.DefaultLightGearSizeRatioOverlayView;
 import com.valterc.ki2.karoo.overlay.view.simple.SimpleDarkOverlayView;
 import com.valterc.ki2.karoo.overlay.view.simple.SimpleLightOverlayView;
@@ -26,6 +28,8 @@ public final class OverlayViewBuilderRegistry {
     static {
         builderMap.put("default_dark_gear_index", new OverlayViewBuilderEntry(R.layout.view_karoo_overlay, DefaultDarkGearIndexOverlayView::new));
         builderMap.put("default_light_gear_index", new OverlayViewBuilderEntry(R.layout.view_karoo_overlay, DefaultLightGearIndexOverlayView::new));
+        builderMap.put("default_dark_gear_size", new OverlayViewBuilderEntry(R.layout.view_karoo_overlay, DefaultDarkGearSizeOverlayView::new));
+        builderMap.put("default_light_gear_size", new OverlayViewBuilderEntry(R.layout.view_karoo_overlay, DefaultLightGearSizeOverlayView::new));
         builderMap.put("default_dark_gear_size_ratio", new OverlayViewBuilderEntry(R.layout.view_karoo_overlay, DefaultDarkGearSizeRatioOverlayView::new));
         builderMap.put("default_light_gear_size_ratio", new OverlayViewBuilderEntry(R.layout.view_karoo_overlay, DefaultLightGearSizeRatioOverlayView::new));
         builderMap.put("simple_dark", new OverlayViewBuilderEntry(R.layout.view_karoo_overlay, SimpleDarkOverlayView::new));
