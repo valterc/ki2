@@ -65,8 +65,8 @@ android {
         unitTests.all {
             useJUnitPlatform()
             reports {
-                junitXml.enabled = true
-                html.enabled = false
+                junitXml.required = true
+                html.required = false
             }
             testLogging {
                 events "passed", "skipped", "failed"
@@ -74,6 +74,9 @@ android {
         }
     }
 
+    buildFeatures {
+        aidl true
+    }
 }
 
 configurations {
