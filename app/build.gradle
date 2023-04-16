@@ -73,6 +73,9 @@ android {
             }
         }
     }
+    buildFeatures {
+        aidl true
+    }
 
 }
 
