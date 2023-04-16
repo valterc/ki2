@@ -64,6 +64,9 @@ android {
         unitTests.includeAndroidResources = true
         unitTests.all {
             useJUnitPlatform()
+            reports {
+                html.enabled = false
+            }
             testLogging {
                 events "passed", "skipped", "failed"
             }
