@@ -92,8 +92,8 @@ Karoo software may change with new updates, for best experience please use the l
 | 1.297.1231 (May 19, 2022) | ✅        |
 | 1.333.1345 (Oct 06, 2022) | ✅        |
 | _all versions in between_ | ✅        |
-| 1.367.1462 (Mar 09, 2023) | ✅        |
 | 1.374.1480 (Apr 06, 2023) | ✅        |
+| 1.380.1494 (Apr 20, 2023) | ✅        |
 
 ## Known issues
 
