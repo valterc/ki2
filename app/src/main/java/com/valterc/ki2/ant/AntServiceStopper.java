@@ -5,6 +5,7 @@ import android.content.Context;
 
 import java.lang.reflect.Method;
 
+@SuppressWarnings({"SameParameterValue", "JavaReflectionMemberAccess", "unused"})
 public final class AntSocketService {
 
     private static final String ANT_SOCKET_SERVICE = "com.dsi.ant.service.socket";
