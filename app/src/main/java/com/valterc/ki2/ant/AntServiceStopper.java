@@ -5,10 +5,12 @@ import android.content.Context;
 
 import java.lang.reflect.Method;
 
-@SuppressWarnings({"SameParameterValue", "JavaReflectionMemberAccess", "unused"})
-public final class AntSocketService {
+@SuppressWarnings({"JavaReflectionMemberAccess", "unused"})
+public final class AntServiceStopper {
 
     private static final String ANT_SOCKET_SERVICE = "com.dsi.ant.service.socket";
+    private static final String ANT_PLUS_PLUGIN = "com.dsi.ant.plugins.antplus";
+
 
     private static void invokeForceStopPackageMethod(ActivityManager activityManager, String packageName) throws Exception {
         Method method = ActivityManager.class.getMethod("forceStopPackage", String.class);
@@ -21,12 +23,23 @@ public final class AntSocketService {
      * @param context Context of the current caller.
      * @throws Exception Exception if some error occurs during the force stop.
      */
-    public static void ForceStop(Context context) throws Exception {
+    public static void ForceStopSocketService(Context context) throws Exception {
         ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         invokeForceStopPackageMethod(activityManager, ANT_SOCKET_SERVICE);
     }
 
-    private AntSocketService() {
+    /**
+     * Forces the Ant+ Plugin service to be stopped.
+     *
+     * @param context Context of the current caller.
+     * @throws Exception Exception if some error occurs during the force stop.
+     */
+    public static void ForceStopAntPlugin(Context context) throws Exception {
+        ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        invokeForceStopPackageMethod(activityManager, ANT_PLUS_PLUGIN);
+    }
+
+    private AntServiceStopper() {
     }
 
 }

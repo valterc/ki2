@@ -626,10 +626,10 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
     @Override
     public void onAntStateChange(boolean ready) {
         serviceHandler.postAction(() -> {
-            if (!ready) {
-                antScanner.stopScan();
-                antConnectionManager.disconnectAll();
-            } else {
+            antScanner.stopScan();
+            antConnectionManager.disconnectAll();
+
+            if (ready) {
                 serviceHandler.postRetriableAction(Ki2Service.this::processScan);
                 serviceHandler.postRetriableAction(Ki2Service.this::processConnections);
             }
