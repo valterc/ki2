@@ -70,7 +70,7 @@ public class AntConnectionManager {
 
     public void restartClosedConnections(IDeviceConnectionListener deviceConnectionListener) {
         for (DeviceId deviceId : connectionMap.keySet()) {
-            connect(deviceId,deviceConnectionListener, false);
+            connect(deviceId, deviceConnectionListener, false);
         }
     }
 
