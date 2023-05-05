@@ -29,7 +29,7 @@ import timber.log.Timber;
 
 public class AntDeviceConnection implements IAntDeviceConnection, IDeviceConnectionListener {
 
-    private static final int MAX_RECONNECT_ATTEMPTS = 15;
+    private static final int MAX_RECONNECT_ATTEMPTS = 10;
     private static final int TIME_MS_MESSAGE_TIMEOUT = 30_000;
     private static final int TIME_S_CONNECTION_TRACKER_INTERVAL = 30;
 
