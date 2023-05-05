@@ -780,7 +780,14 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
         if (message.getMessageType() == MessageType.RIDE_STATUS) {
             RideStatusMessage rideStatusMessage = RideStatusMessage.parse(message);
             if (rideStatusMessage != null) {
-                if (rideStatusMessage.getRideStatus() == RideStatus.FINISHED) {
+                if (rideStatusMessage.getRideStatus() == RideStatus.ONGOING) {
+                    serviceHandler.postRetriableAction(() -> {
+                        if (antConnectionManager.isNoConnectionEstablished()) {
+                            antConnectionManager.restartClosedConnections(Ki2Service.this);
+                        }
+                    });
+                }
+                else if (rideStatusMessage.getRideStatus() == RideStatus.FINISHED) {
                     backgroundUpdateChecker.tryCheckForUpdates();
                 }
             }

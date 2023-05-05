@@ -27,6 +27,17 @@ public class AntConnectionManager {
         this.connectionMap = new HashMap<>();
     }
 
+    public boolean isNoConnectionEstablished() {
+        for (DeviceId deviceId : connectionMap.keySet()) {
+            IAntDeviceConnection connection = connectionMap.get(deviceId);
+            if (connection != null && connection.getConnectionStatus() == ConnectionStatus.ESTABLISHED) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     public void connectOnly(Collection<DeviceId> devices, IDeviceConnectionListener deviceConnectionListener) throws Exception {
         Collection<DeviceId> devicesToDisconnect = connectionMap.keySet()
                 .stream()
