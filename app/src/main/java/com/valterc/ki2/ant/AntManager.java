@@ -5,7 +5,9 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.os.RemoteException;
 
 import com.dsi.ant.AntService;
@@ -22,6 +24,7 @@ import com.dsi.ant.message.ExtendedAssignment;
 import com.dsi.ant.message.HighPrioritySearchTimeout;
 import com.dsi.ant.message.LibConfig;
 import com.dsi.ant.message.LowPrioritySearchTimeout;
+import com.valterc.ki2.BuildConfig;
 import com.valterc.ki2.ant.channel.AntChannelWrapper;
 import com.valterc.ki2.ant.channel.ChannelConfiguration;
 import com.valterc.ki2.ant.channel.ScanChannelConfiguration;
@@ -30,11 +33,18 @@ import timber.log.Timber;
 
 public class AntManager {
 
-    private static final LibConfig libConfig = new LibConfig(true, true, false);
+    private static final LibConfig LIB_CONFIG = new LibConfig(true, true, false);
+
+    private static final int TIME_MS_ATTEMPT_BIND = 500;
+    private static final int TIME_MS_ATTEMPT_REBIND_DEBUG = 15_000;
+    private static final int TIME_MS_ATTEMPT_REBIND_RELEASE = 3_000;
+    private static final int TIME_MS_ATTEMPT_REBIND = BuildConfig.DEBUG ? TIME_MS_ATTEMPT_REBIND_DEBUG : TIME_MS_ATTEMPT_REBIND_RELEASE;
 
     private final Context context;
+    private final Handler handler;
     private final IAntStateListener stateListener;
 
+    private boolean disposed;
     private boolean antServiceBound;
     private AntService antService;
     private AntChannelProvider antChannelProvider;
@@ -58,6 +68,17 @@ public class AntManager {
             antService = null;
             antChannelProvider = null;
             Timber.w("ANT service disconnected");
+
+            if (!disposed) {
+                handler.postDelayed(() -> {
+                    if (!disposed && antService == null) {
+                        Timber.w("Attempting to re-bind to ANT service");
+                        context.unbindService(antServiceConnection);
+                        attemptBindToAntService();
+                    }
+                }, TIME_MS_ATTEMPT_REBIND);
+            }
+
             triggerStateChange();
         }
     };
@@ -76,12 +97,17 @@ public class AntManager {
     public AntManager(Context context, IAntStateListener stateListener) {
         this.context = context;
         this.stateListener = stateListener;
+        this.handler = new Handler(Looper.getMainLooper());
 
+        attemptBindToAntService();
+    }
+
+    private void attemptBindToAntService() {
         antServiceBound = AntService.bindService(context, antServiceConnection);
         Timber.i("ANT service bound: %s", antServiceBound);
 
         if (!antServiceBound) {
-            throw new RuntimeException("Unable to bound to ANT service");
+            handler.postDelayed(this::attemptBindToAntService, (int) (TIME_MS_ATTEMPT_BIND * (1 + 2 * Math.random())));
         }
     }
 
@@ -92,6 +118,8 @@ public class AntManager {
     }
 
     public void dispose() {
+        disposed = true;
+
         try {
             context.unregisterReceiver(channelProviderStateChangedReceiver);
         } catch (IllegalArgumentException e) {
@@ -171,7 +199,7 @@ public class AntManager {
                 antChannel.setSearchTimeout(lowPrioritySearchTimeout, HighPrioritySearchTimeout.DISABLED);
             }
 
-            antChannel.setAdapterWideLibConfig(libConfig);
+            antChannel.setAdapterWideLibConfig(LIB_CONFIG);
             antChannel.setChannelId(channelConfiguration.getChannelId());
 
             return new AntChannelWrapper(antChannel);
@@ -235,7 +263,7 @@ public class AntManager {
                 antChannel.setPeriod(period);
             }
 
-            antChannel.setAdapterWideLibConfig(libConfig);
+            antChannel.setAdapterWideLibConfig(LIB_CONFIG);
             antChannel.setChannelId(new ChannelId(0, 0, 0));
 
             return new AntChannelWrapper(antChannel);

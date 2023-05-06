@@ -3,8 +3,6 @@ package com.valterc.ki2.ant.connection;
 import android.content.Context;
 
 import com.valterc.ki2.ant.AntManager;
-import com.valterc.ki2.ant.channel.ChannelConfiguration;
-import com.valterc.ki2.data.configuration.ConfigurationStore;
 import com.valterc.ki2.data.connection.ConnectionStatus;
 import com.valterc.ki2.data.device.DeviceId;
 
@@ -27,6 +25,17 @@ public class AntConnectionManager {
         this.context = context;
         this.antManager = antManager;
         this.connectionMap = new HashMap<>();
+    }
+
+    public boolean isNoConnectionEstablished() {
+        for (DeviceId deviceId : connectionMap.keySet()) {
+            IAntDeviceConnection connection = connectionMap.get(deviceId);
+            if (connection != null && connection.getConnectionStatus() == ConnectionStatus.ESTABLISHED) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public void connectOnly(Collection<DeviceId> devices, IDeviceConnectionListener deviceConnectionListener) throws Exception {
@@ -55,12 +64,11 @@ public class AntConnectionManager {
     public void connect(DeviceId deviceId, IDeviceConnectionListener deviceConnectionListener, boolean forceReconnect) {
         IAntDeviceConnection existingConnection = connectionMap.get(deviceId);
         if (existingConnection != null) {
-            if (forceReconnect ||
-                    existingConnection.getConnectionStatus() == ConnectionStatus.INVALID) {
-                existingConnection.disconnect();
-            } else {
+            if (!forceReconnect && existingConnection.getConnectionStatus() == ConnectionStatus.ESTABLISHED) {
                 return;
             }
+
+            existingConnection.disconnect();
         }
 
         try {
@@ -73,22 +81,7 @@ public class AntConnectionManager {
 
     public void restartClosedConnections(IDeviceConnectionListener deviceConnectionListener) {
         for (DeviceId deviceId : connectionMap.keySet()) {
-            IAntDeviceConnection existingConnection = connectionMap.get(deviceId);
-            if (existingConnection != null) {
-                if (existingConnection.getConnectionStatus() == ConnectionStatus.INVALID ||
-                        existingConnection.getConnectionStatus() == ConnectionStatus.CLOSED) {
-                    existingConnection.disconnect();
-                } else {
-                    continue;
-                }
-            }
-
-            try {
-                IAntDeviceConnection connection = DeviceConnectionFactory.buildDeviceConnection(context, antManager, deviceId, deviceConnectionListener);
-                connectionMap.put(deviceId, connection);
-            } catch (Exception e) {
-                Timber.e(e, "Unable to create ANT connection for deviceId %s", deviceId);
-            }
+            connect(deviceId, deviceConnectionListener, false);
         }
     }
 

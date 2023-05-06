@@ -626,10 +626,10 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
     @Override
     public void onAntStateChange(boolean ready) {
         serviceHandler.postAction(() -> {
-            if (!ready) {
-                antScanner.stopScan();
-                antConnectionManager.disconnectAll();
-            } else {
+            antScanner.stopScan();
+            antConnectionManager.disconnectAll();
+
+            if (ready) {
                 serviceHandler.postRetriableAction(Ki2Service.this::processScan);
                 serviceHandler.postRetriableAction(Ki2Service.this::processConnections);
             }
@@ -780,7 +780,14 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
         if (message.getMessageType() == MessageType.RIDE_STATUS) {
             RideStatusMessage rideStatusMessage = RideStatusMessage.parse(message);
             if (rideStatusMessage != null) {
-                if (rideStatusMessage.getRideStatus() == RideStatus.FINISHED) {
+                if (rideStatusMessage.getRideStatus() == RideStatus.ONGOING) {
+                    serviceHandler.postRetriableAction(() -> {
+                        if (antConnectionManager.isNoConnectionEstablished()) {
+                            antConnectionManager.restartClosedConnections(Ki2Service.this);
+                        }
+                    });
+                }
+                else if (rideStatusMessage.getRideStatus() == RideStatus.FINISHED) {
                     backgroundUpdateChecker.tryCheckForUpdates();
                 }
             }

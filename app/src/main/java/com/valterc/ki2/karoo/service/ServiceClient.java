@@ -12,6 +12,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.valterc.ki2.BuildConfig;
 import com.valterc.ki2.data.connection.ConnectionInfo;
 import com.valterc.ki2.data.device.BatteryInfo;
 import com.valterc.ki2.data.device.DeviceId;
@@ -36,7 +37,9 @@ import java.util.function.Consumer;
 public class ServiceClient {
 
     private static final int TIME_MS_ATTEMPT_BIND = 500;
-    private static final int TIME_MS_ATTEMPT_REBIND = 15_000;
+    private static final int TIME_MS_ATTEMPT_REBIND_DEBUG = 15_000;
+    private static final int TIME_MS_ATTEMPT_REBIND_RELEASE = 3_000;
+    private static final int TIME_MS_ATTEMPT_REBIND = BuildConfig.DEBUG ? TIME_MS_ATTEMPT_REBIND_DEBUG : TIME_MS_ATTEMPT_REBIND_RELEASE;
 
     @SuppressWarnings("FieldCanBeLocal")
     private final ServiceConnection serviceConnection = new ServiceConnection() {

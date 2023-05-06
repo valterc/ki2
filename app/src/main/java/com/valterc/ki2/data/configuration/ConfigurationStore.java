@@ -41,7 +41,7 @@ public final class ConfigurationStore {
         return new ChannelConfiguration(
                 new ChannelId(deviceId.getDeviceNumber(), deviceId.getDeviceTypeValue(), deviceId.getTransmissionType()),
                 ChannelType.BIDIRECTIONAL_SLAVE,
-                LowPrioritySearchTimeout.FIVE_SECONDS,
+                LowPrioritySearchTimeout.TEN_SECONDS,
                 new NetworkKey(networkKey),
                 8198,
                 57,
