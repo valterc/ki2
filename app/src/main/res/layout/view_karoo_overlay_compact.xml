@@ -44,7 +44,7 @@
 
         <LinearLayout
             android:id="@+id/linearlayout_karoo_overlay_compact_gearing_ratio"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:ignore="UseCompoundDrawables">
 
@@ -74,7 +74,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="3dp"
             android:textSize="14sp"
-            android:textStyle="italic"
+            android:textStyle="italic|bold"
             android:visibility="gone"
             tools:text="SYNCHRO ↑"
             tools:visibility="visible" />

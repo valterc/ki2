@@ -188,6 +188,12 @@
         <item>Light - Compact (gear size)</item>
         <item>Dark - Compact (gear size and ratio)</item>
         <item>Light - Compact (gear size and ratio)</item>
+        <item>Dark - Compact (rear gear index)</item>
+        <item>Light - Compact (rear gear index)</item>
+        <item>Dark - Compact (rear gear size)</item>
+        <item>Light - Compact (rear gear size)</item>
+        <item>Dark - Compact (rear gear size and ratio)</item>
+        <item>Light - Compact (rear gear size and ratio)</item>
     </string-array>
 
     <string-array name="preference_values_overlay_theme">
@@ -205,6 +211,12 @@
         <item>compact_light_gear_size</item>
         <item>compact_dark_gear_size_ratio</item>
         <item>compact_light_gear_size_ratio</item>
+        <item>compact_dark_rear_gear_index</item>
+        <item>compact_light_rear_gear_index</item>
+        <item>compact_dark_rear_gear_size</item>
+        <item>compact_light_rear_gear_size</item>
+        <item>compact_dark_rear_gear_size_ratio</item>
+        <item>compact_light_rear_gear_size_ratio</item>
     </string-array>
 
 </resources>
