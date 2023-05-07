@@ -64,7 +64,10 @@ public class AntConnectionManager {
     public void connect(DeviceId deviceId, IDeviceConnectionListener deviceConnectionListener, boolean forceReconnect) {
         IAntDeviceConnection existingConnection = connectionMap.get(deviceId);
         if (existingConnection != null) {
-            if (!forceReconnect && existingConnection.getConnectionStatus() == ConnectionStatus.ESTABLISHED) {
+            if (!forceReconnect &&
+                    (existingConnection.getConnectionStatus() == ConnectionStatus.ESTABLISHED ||
+                            existingConnection.getConnectionStatus() == ConnectionStatus.CONNECTING ||
+                            existingConnection.getConnectionStatus() == ConnectionStatus.CLOSED)) {
                 return;
             }
 
@@ -81,7 +84,11 @@ public class AntConnectionManager {
 
     public void restartClosedConnections(IDeviceConnectionListener deviceConnectionListener) {
         for (DeviceId deviceId : connectionMap.keySet()) {
-            connect(deviceId, deviceConnectionListener, false);
+            IAntDeviceConnection existingConnection = connectionMap.get(deviceId);
+            if (existingConnection == null ||
+                    existingConnection.getConnectionStatus() != ConnectionStatus.ESTABLISHED) {
+                connect(deviceId, deviceConnectionListener, true);
+            }
         }
     }
 
