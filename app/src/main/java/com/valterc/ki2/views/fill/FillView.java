@@ -17,17 +17,28 @@ import androidx.annotation.Nullable;
 
 import com.valterc.ki2.R;
 
+@SuppressWarnings("unused")
 public class FillView extends View {
 
-    private static final float[] CORNER_RADIUS_FILL = new float[]{2, 2, 0, 0, 0, 0, 2, 2};
+    private static final float[] CORNER_RADIUS_FILL = new float[]{5, 5, 5, 5, 5, 5, 5, 5};
+    private static final float LINE_STEP = 15;
 
+    private final Paint paintForegroundFill;
+    private final Paint paintForegroundStroke;
     private final boolean initialized;
     private Picture picture;
     private float value;
-    private int colorForeground;
 
     public FillView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+
+        paintForegroundFill = new Paint(Paint.ANTI_ALIAS_FLAG);
+        paintForegroundFill.setStyle(Paint.Style.FILL);
+
+        paintForegroundStroke = new Paint(Paint.ANTI_ALIAS_FLAG);
+        paintForegroundStroke.setStyle(Paint.Style.STROKE);
+        paintForegroundStroke.setAlpha(128);
+        paintForegroundStroke.setStrokeWidth(4f);
 
         TypedArray array = context.getTheme().obtainStyledAttributes(attrs, R.styleable.FillView, 0, 0);
         try {
@@ -58,19 +69,24 @@ public class FillView extends View {
         int internalWidth = getWidth() - (getPaddingStart() + getPaddingEnd());
         int internalHeight = getHeight() - (getPaddingTop() + getPaddingBottom());
 
-        RectF rect = new RectF(getPaddingStart(), getPaddingTop(),getPaddingStart() + internalWidth, getPaddingTop() + internalHeight);
+        RectF rect = new RectF(getPaddingStart(), getPaddingTop(), getPaddingStart() + internalWidth, getPaddingTop() + internalHeight);
 
         Path path = new Path();
         path.addRoundRect(rect, CORNER_RADIUS_FILL, Path.Direction.CW);
 
         canvas.clipPath(path);
 
-        Paint paintForeground = new Paint(Paint.FILTER_BITMAP_FLAG);
-        paintForeground.setStyle(Paint.Style.FILL);
-        paintForeground.setColor(colorForeground);
+        canvas.drawRect(getPaddingStart(), getPaddingTop(), getPaddingStart() + internalWidth * value, getPaddingTop() + internalHeight, paintForegroundFill);
 
-        canvas.drawRect(getPaddingStart(), getPaddingTop(),getPaddingStart() + internalWidth * value, getPaddingTop() + internalHeight, paintForeground);
+        if (value < 1) {
+            canvas.clipRect(getPaddingStart() + internalWidth * value, getPaddingTop(), getPaddingStart() + internalWidth, getPaddingTop() + internalHeight);
 
+            float x = -internalHeight;
+            while (x < getPaddingStart() + internalWidth) {
+                canvas.drawLine(x, getPaddingTop(), x + internalHeight, getPaddingTop() + internalHeight, paintForegroundStroke);
+                x += LINE_STEP;
+            }
+        }
         picture.endRecording();
     }
 
@@ -85,7 +101,7 @@ public class FillView extends View {
 
     @ColorInt
     public int getForegroundColor() {
-        return colorForeground;
+        return paintForegroundFill.getColor();
     }
 
     public void setForegroundColor(Color color) {
@@ -93,11 +109,13 @@ public class FillView extends View {
     }
 
     public void setForegroundColor(@ColorInt int color) {
-        if (this.colorForeground == color) {
+        if (this.paintForegroundFill.getColor() == color) {
             return;
         }
 
-        colorForeground = color;
+        paintForegroundFill.setColor(color);
+        paintForegroundStroke.setColor(color);
+        paintForegroundStroke.setAlpha(128);
 
         if (initialized) {
             invalidate();
