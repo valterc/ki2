@@ -37,7 +37,7 @@ public class BatterySdkView extends Ki2SdkView {
     @SuppressWarnings("FieldCanBeLocal")
     private final Consumer<PreferencesView> preferencesConsumer = (preferencesView) -> {
         batteryLevelLow = preferencesView.getBatteryLevelLow(getContext());
-        batteryLevelCritical = preferencesView.getBatteryLevelLow(getContext());
+        batteryLevelCritical = preferencesView.getBatteryLevelCritical(getContext());
         updateValue();
     };
 

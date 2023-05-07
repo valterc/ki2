@@ -37,6 +37,5 @@
             android:textSize="24sp" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
-
-
+    
 </androidx.constraintlayout.widget.ConstraintLayout>
