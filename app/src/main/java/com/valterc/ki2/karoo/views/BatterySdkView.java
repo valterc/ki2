@@ -67,6 +67,7 @@ public class BatterySdkView extends Ki2SdkView {
 
         if (karooTheme == KarooTheme.WHITE) {
             textView.setTextColor(getContext().getColor(R.color.hh_black));
+            textView.setBackgroundColor(getContext().getColor(R.color.white));
         }
 
         return inflatedView;
