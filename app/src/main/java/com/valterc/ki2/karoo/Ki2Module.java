@@ -9,6 +9,7 @@ import com.valterc.ki2.BuildConfig;
 import com.valterc.ki2.data.message.RideStatusMessage;
 import com.valterc.ki2.data.ride.RideStatus;
 import com.valterc.ki2.karoo.battery.LowBatteryHandler;
+import com.valterc.ki2.karoo.datatypes.BatteryGraphicalDataType;
 import com.valterc.ki2.karoo.datatypes.BatteryTextDataType;
 import com.valterc.ki2.karoo.datatypes.DeviceNameTextDataType;
 import com.valterc.ki2.karoo.datatypes.FrontGearSizeTextDataType;
@@ -109,7 +110,8 @@ public class Ki2Module extends Module {
                 new GearsSizeDrivetrainDataType(ki2Context),
                 new GearsGearsDataType(ki2Context),
                 new GearsSizeGearsDataType(ki2Context),
-                new ShiftModeDataType(ki2Context));
+                new ShiftModeDataType(ki2Context),
+                new BatteryGraphicalDataType(ki2Context));
     }
 
     @Nullable

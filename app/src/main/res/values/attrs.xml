@@ -5,6 +5,9 @@
 
     <attr name="drivetrainColor" format="color" />
     <attr name="selectedGearColor" format="color" />
+    <attr name="foregroundColor" format="color" />
+
+    <attr name="value" format="float" />
 
     <attr name="frontGearMax" format="integer" />
     <attr name="rearGearMax" format="integer" />
@@ -58,14 +61,19 @@
     <declare-styleable name="BatteryView">
         <attr name="borderColor" format="color" />
         <attr name="backgroundColor" format="color" />
-        <attr name="foregroundColor" format="color" />
-        <attr name="value" format="float" />
+        <attr name="foregroundColor" />
+        <attr name="value" />
         <attr name="orientation" format="enum">
             <enum name="horizontal_left" value="0" />
             <enum name="horizontal_right" value="1" />
             <enum name="vertical_top" value="2" />
             <enum name="vertical_bottom" value="3" />
         </attr>
+    </declare-styleable>
+
+    <declare-styleable name="FillView">
+        <attr name="foregroundColor" />
+        <attr name="value" />
     </declare-styleable>
 
 </resources>
