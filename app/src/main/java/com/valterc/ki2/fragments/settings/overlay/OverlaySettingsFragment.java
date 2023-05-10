@@ -15,6 +15,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.valterc.ki2.R;
 import com.valterc.ki2.fragments.settings.overlay.opacity.OpacityPreference;
 import com.valterc.ki2.fragments.settings.overlay.opacity.OverlayOpacityDialogFragment;
+import com.valterc.ki2.fragments.settings.overlay.position.OverlayPositionDialogFragment;
+import com.valterc.ki2.fragments.settings.overlay.position.PositionPreference;
 import com.valterc.ki2.fragments.settings.overlay.theme.OverlayThemeDialogFragment;
 
 import java.util.Objects;
@@ -45,6 +47,10 @@ public class OverlaySettingsFragment extends PreferenceFragmentCompat {
             getParentFragmentManager().setFragmentResultListener(getString(R.string.preference_overlay_opacity), getViewLifecycleOwner(), (requestKey, result) ->
                     ((OpacityPreference)preference).setValue(result.getFloat(OverlayOpacityDialogFragment.RESULT_VALUE)));
             OverlayOpacityDialogFragment.newInstance(preference.getKey()).show(getParentFragmentManager(), null);
+        } else if (preference instanceof PositionPreference) {
+            getParentFragmentManager().setFragmentResultListener(OverlayPositionDialogFragment.DEFAULT_REQUEST_KEY, getViewLifecycleOwner(), (requestKey, result) ->
+                    ((PositionPreference) preference).setValue(result.getInt(OverlayPositionDialogFragment.RESULT_POSITION_X), result.getInt(OverlayPositionDialogFragment.RESULT_POSITION_Y)));
+            OverlayPositionDialogFragment.newInstance(OverlayPositionDialogFragment.DEFAULT_REQUEST_KEY).show(getParentFragmentManager(), null);
         } else {
             super.onDisplayPreferenceDialog(preference);
         }

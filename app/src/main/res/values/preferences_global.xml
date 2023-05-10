@@ -32,6 +32,7 @@
     <string name="title_preference_overlay_duration">Duration</string>
     <string name="title_preference_overlay_theme">Theme</string>
     <string name="title_preference_overlay_opacity">Opacity</string>
+    <string name="title_preference_overlay_position">Position</string>
 
     <string name="summary_preference_pre_load">Pre load the ride application to avoid data elements not showing after startup</string>
     <string name="summary_preference_battery_notification">Show notifications when the shifting battery level is at or below a certain value</string>
@@ -47,6 +48,7 @@
     <string name="summary_preference_overlay_duration">Duration that the overlay is visible</string>
     <string name="summary_preference_overlay_theme">Visual theme</string>
     <string name="summary_preference_overlay_opacity">Overlay view opacity, a low opacity will make the overlay translucent.</string>
+    <string name="summary_preference_overlay_position">Overlay position in the Ride screen.</string>
 
     <string name="default_preference_left_switch_single_press">navigate_left</string>
     <string name="default_preference_left_switch_double_press">lap_map_back</string>
@@ -65,6 +67,7 @@
     <string name="default_preference_overlay_duration">3000</string>
     <string name="default_preference_overlay_theme">default_dark_gear_index</string>
     <integer name="default_preference_overlay_opacity">1</integer>
+    <integer name="default_preference_overlay_position">0</integer>
 
     <string name="value_preference_battery_level_off">off</string>
     <string name="value_preference_audio_alert_disabled">disabled</string>
@@ -89,5 +92,7 @@
     <string name="preference_overlay_duration">OVERLAY_DURATION</string>
     <string name="preference_overlay_theme">OVERLAY_THEME</string>
     <string name="preference_overlay_opacity">OVERLAY_OPACITY</string>
+    <string name="preference_overlay_position_x">OVERLAY_POSITION_X</string>
+    <string name="preference_overlay_position_y">OVERLAY_POSITION_Y</string>
 
 </resources>

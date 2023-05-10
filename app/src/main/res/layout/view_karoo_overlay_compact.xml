@@ -6,7 +6,6 @@
     android:layout_height="wrap_content"
     android:layout_marginVertical="5dp"
     android:background="@drawable/background_overlay_light"
-    android:elevation="100dp"
     android:orientation="vertical"
     android:paddingBottom="5dp">
 
@@ -17,30 +16,30 @@
         android:paddingHorizontal="5dp"
         android:paddingTop="5dp">
 
-            <LinearLayout
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:ignore="UseCompoundDrawables">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/ic_hh_gear"
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                android:id="@+id/textview_karoo_overlay_compact_gearing"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:ignore="UseCompoundDrawables">
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="2dp"
+                android:fontFamily="monospace"
+                android:paddingTop="4dp"
+                android:textSize="28sp"
+                tools:text="F50 - R30" />
 
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_gravity="center_vertical"
-                    android:src="@drawable/ic_hh_gear"
-                    tools:ignore="ContentDescription" />
-
-                <TextView
-                    android:id="@+id/textview_karoo_overlay_compact_gearing"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="2dp"
-                    android:fontFamily="monospace"
-                    android:paddingTop="4dp"
-                    android:textSize="28sp"
-                    tools:text="F50 - R30" />
-
-            </LinearLayout>
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/linearlayout_karoo_overlay_compact_gearing_ratio"

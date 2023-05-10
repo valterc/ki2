@@ -7,7 +7,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
+import android.widget.RelativeLayout;
 
+import com.valterc.ki2.R;
 import com.valterc.ki2.data.connection.ConnectionInfo;
 import com.valterc.ki2.data.device.BatteryInfo;
 import com.valterc.ki2.data.device.DeviceId;
@@ -17,6 +20,7 @@ import com.valterc.ki2.data.preferences.device.DevicePreferencesView;
 import com.valterc.ki2.data.shifting.ShiftingInfo;
 import com.valterc.ki2.karoo.Ki2Context;
 import com.valterc.ki2.karoo.handlers.IRideHandler;
+import com.valterc.ki2.karoo.overlay.position.PositionManager;
 import com.valterc.ki2.karoo.overlay.view.IOverlayView;
 import com.valterc.ki2.karoo.overlay.view.builder.OverlayViewBuilderEntry;
 import com.valterc.ki2.karoo.overlay.view.builder.OverlayViewBuilderRegistry;
@@ -34,6 +38,8 @@ public class OverlayManager implements IRideHandler {
     private final LayoutInflater layoutInflater;
     private final Handler handler;
 
+    private RelativeLayout parentLayout;
+    private PositionManager positionManager;
     private int activityHashCode;
     private IOverlayView view;
 
@@ -133,11 +139,18 @@ public class OverlayManager implements IRideHandler {
         OverlayViewBuilderEntry viewBuilder = OverlayViewBuilderRegistry.getBuilder(preferences.getOverlayTheme(ki2Context.getSdkContext()));
 
         if (viewBuilder != null) {
-            View viewOverlay = layoutInflater.inflate(viewBuilder.getLayoutId(), viewGroupBase, false);
-            viewGroupBase.addView(viewOverlay);
+            parentLayout = (RelativeLayout) layoutInflater.inflate(R.layout.view_karoo_overlay_parent, viewGroupBase, false);
+            viewGroupBase.addView(parentLayout);
+
+            View viewOverlay = layoutInflater.inflate(viewBuilder.getLayoutId(), parentLayout, false);
+            parentLayout.addView(viewOverlay);
+
             view = viewBuilder.createOverlayView(ki2Context, viewOverlay);
             view.applyPreferences(ki2Context, preferences);
             view.setupInRide();
+            positionManager = new PositionManager(ki2Context.getSdkContext(), preferences, viewOverlay);
+            positionManager.updatePosition();
+
             view.hide();
         }
 
@@ -146,6 +159,13 @@ public class OverlayManager implements IRideHandler {
     }
 
     private void removeView() {
+        if (parentLayout != null) {
+            ViewParent parent = parentLayout.getParent();
+            if (parent != null) {
+                ((ViewGroup) parent).removeView(parentLayout);
+            }
+        }
+
         if (view != null) {
             view.remove();
             view = null;
@@ -153,7 +173,7 @@ public class OverlayManager implements IRideHandler {
     }
 
     private void showOverlay(boolean force) {
-        if (!overlayEnabled){
+        if (!overlayEnabled) {
             return;
         }
 
@@ -168,6 +188,7 @@ public class OverlayManager implements IRideHandler {
 
         timestampLastTrigger = System.currentTimeMillis();
         view.updateView(preferences, connectionInfo, devicePreferences, batteryInfo, shiftingInfo);
+        positionManager.updatePosition();
         view.show();
 
         if (overlayDuration != DURATION_ALWAYS_VISIBLE) {
