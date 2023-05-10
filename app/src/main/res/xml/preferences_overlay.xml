@@ -49,6 +49,12 @@
             app:useSimpleSummaryProvider="true"
             app:dependency="@string/preference_overlay_enabled"/>
 
+        <com.valterc.ki2.fragments.settings.overlay.position.PositionPreference
+            app:summary="@string/summary_preference_overlay_position"
+            app:title="@string/title_preference_overlay_position"
+            app:useSimpleSummaryProvider="true"
+            app:dependency="@string/preference_overlay_enabled"/>
+
     </com.valterc.ki2.views.preference.MultiLinePreferenceCategory>
 
 </PreferenceScreen>

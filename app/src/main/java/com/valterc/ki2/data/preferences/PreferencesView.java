@@ -318,4 +318,24 @@ public class PreferencesView implements Parcelable {
         return Math.min(1, Math.max(opacity, 0));
     }
 
+    /**
+     * Get the overlay X position.
+     *
+     * @param context Ki2 application context. Cannot be a context generated from another package.
+     * @return Overlay X position.
+     */
+    public int getOverlayPositionX(Context context) {
+        return getInt(context.getString(R.string.preference_overlay_position_x), () -> context.getResources().getInteger(R.integer.default_preference_overlay_position));
+    }
+
+    /**
+     * Get the overlay Y position.
+     *
+     * @param context Ki2 application context. Cannot be a context generated from another package.
+     * @return Overlay Y position.
+     */
+    public int getOverlayPositionY(Context context) {
+        return getInt(context.getString(R.string.preference_overlay_position_y), () -> context.getResources().getInteger(R.integer.default_preference_overlay_position));
+    }
+
 }
