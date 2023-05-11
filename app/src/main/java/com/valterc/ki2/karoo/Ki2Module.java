@@ -1,10 +1,26 @@
 package com.valterc.ki2.karoo;
 
 import android.annotation.SuppressLint;
+import android.app.Application;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.garmin.fit.DateTime;
+import com.garmin.fit.Decode;
+import com.garmin.fit.DeveloperDataIdMesg;
+import com.garmin.fit.DeveloperFieldDescription;
+import com.garmin.fit.DeveloperFieldDescriptionListener;
+import com.garmin.fit.Event;
+import com.garmin.fit.EventMesg;
+import com.garmin.fit.EventType;
+import com.garmin.fit.FileEncoder;
+import com.garmin.fit.FitDecoder;
+import com.garmin.fit.Mesg;
+import com.garmin.fit.MesgDefinition;
+import com.garmin.fit.MesgDefinitionListener;
+import com.garmin.fit.MesgListener;
 import com.valterc.ki2.BuildConfig;
 import com.valterc.ki2.data.message.RideStatusMessage;
 import com.valterc.ki2.data.ride.RideStatus;
@@ -30,11 +46,13 @@ import com.valterc.ki2.karoo.datatypes.ShiftModeDataType;
 import com.valterc.ki2.karoo.datatypes.ShiftModeTextDataType;
 import com.valterc.ki2.karoo.handlers.HandlerManager;
 import com.valterc.ki2.karoo.hooks.ActivityServiceHook;
+import com.valterc.ki2.karoo.hooks.DataSyncServiceHook;
 import com.valterc.ki2.karoo.hooks.RideActivityHook;
 import com.valterc.ki2.karoo.overlay.OverlayManager;
 import com.valterc.ki2.karoo.shifting.ShiftingAudioAlertHandler;
 import com.valterc.ki2.karoo.update.UpdateAvailableHandler;
 import com.valterc.ki2.karoo.update.UpdateAvailableNotification;
+import com.valterc.ki2.utils.ProcessUtils;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -43,6 +61,7 @@ import java.util.List;
 import io.hammerhead.sdk.v0.Module;
 import io.hammerhead.sdk.v0.ModuleFactoryI;
 import io.hammerhead.sdk.v0.SdkContext;
+import io.hammerhead.sdk.v0.card.FitFileListener;
 import io.hammerhead.sdk.v0.card.PostRideCard;
 import io.hammerhead.sdk.v0.card.RideDetailsI;
 import io.hammerhead.sdk.v0.datatype.SdkDataType;
@@ -74,6 +93,13 @@ public class Ki2Module extends Module {
             handlerManager = new HandlerManager(ki2Context, Collections.singletonList(new OverlayManager(ki2Context)));
         } else {
             handlerManager = null;
+        }
+
+
+        if (DataSyncServiceHook.isInDataSyncService()) {
+            ki2Context.getHandler().postDelayed(() -> DataSyncServiceHook.init(context), 15_000);
+            ki2Context.getHandler().postDelayed(() -> DataSyncServiceHook.init(context), 20_000);
+            ki2Context.getHandler().postDelayed(() -> DataSyncServiceHook.init(context), 25_000);
         }
     }
 
@@ -117,6 +143,20 @@ public class Ki2Module extends Module {
     @Nullable
     @Override
     public PostRideCard postRideCard(@NonNull RideDetailsI details) {
+        Log.i("KI2", "Ride name:" + details.getName());
+        Log.i("KI2", "Id:" + details.getId());
+        Log.i("KI2", "Process:" + ProcessUtils.getProcessName());
+
+        /*
+
+        FileEncoder fileEncoder = new FileEncoder();
+        EventMesg eventMesg = new EventMesg();
+        eventMesg.setLocalNum(4);
+        eventMesg.setTimestamp(new DateTime(0));
+        eventMesg.setEvent(Event.FRONT_GEAR_CHANGE); // eventMesg.setEvent(Event.REAR_GEAR_CHANGE);
+        eventMesg.setEventType(EventType.MARKER);
+        fileEncoder.write(a);
+        */
         return super.postRideCard(details);
     }
 
