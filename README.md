@@ -117,13 +117,6 @@ This app utilizes the Android environment along with the ANT service and the Kar
 - Background service that integrates with ANT and communicates with the shifting device wirelessly
 - Integration with Karoo via Karoo SDK
 
-## Limitations
-
-Karoo SDK is very limited, here are some things that are not possible:
-
-- Include shifting information in the FIT file
-- Control lights from the hood buttons/switches
-
 ## Battery usage
 
 While the implementation is fairly tidy and optimized, this app will be yet another process running on the Karoo. This means that there is _some_ battery impact. I did some non-scientific testing.
