@@ -28,19 +28,15 @@ public class ShiftingReportingManager implements IRideHandler {
 
     private void onShifting(DeviceId deviceId, ShiftingInfo shiftingInfo) {
         shiftingGearingHelper.setShiftingInfo(shiftingInfo);
-
-        if (riding && shiftingGearingHelper.hasValidGearingInfo()) {
-            DataSyncServiceHook.reportGearShift(
-                    shiftingGearingHelper.getFrontGear(),
-                    shiftingGearingHelper.getFrontGearTeethCount(),
-                    shiftingGearingHelper.getRearGear(),
-                    shiftingGearingHelper.getRearGearTeethCount());
-        }
+        tryReportShiftingInfo();
     }
 
     private void onDevicePreferences(DeviceId deviceId, DevicePreferencesView devicePreferencesView) {
         shiftingGearingHelper.setDevicePreferences(devicePreferencesView);
+        tryReportShiftingInfo();
+    }
 
+    private void tryReportShiftingInfo() {
         if (riding && shiftingGearingHelper.hasValidGearingInfo()) {
             DataSyncServiceHook.reportGearShift(
                     shiftingGearingHelper.getFrontGear(),
@@ -50,17 +46,11 @@ public class ShiftingReportingManager implements IRideHandler {
         }
     }
 
+
     @Override
     public void onRideStart() {
         riding = true;
-
-        if (shiftingGearingHelper.hasValidGearingInfo()) {
-            DataSyncServiceHook.reportGearShift(
-                    shiftingGearingHelper.getFrontGear(),
-                    shiftingGearingHelper.getFrontGearTeethCount(),
-                    shiftingGearingHelper.getRearGear(),
-                    shiftingGearingHelper.getRearGearTeethCount());
-        }
+        tryReportShiftingInfo();
     }
 
     @Override
