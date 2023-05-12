@@ -50,6 +50,7 @@ import com.valterc.ki2.karoo.hooks.DataSyncServiceHook;
 import com.valterc.ki2.karoo.hooks.RideActivityHook;
 import com.valterc.ki2.karoo.overlay.OverlayManager;
 import com.valterc.ki2.karoo.shifting.ShiftingAudioAlertHandler;
+import com.valterc.ki2.karoo.shifting.ShiftingReportingManager;
 import com.valterc.ki2.karoo.update.UpdateAvailableHandler;
 import com.valterc.ki2.karoo.update.UpdateAvailableNotification;
 import com.valterc.ki2.utils.ProcessUtils;
@@ -91,15 +92,10 @@ public class Ki2Module extends Module {
                     new ShiftingAudioAlertHandler(ki2Context)));
         } else if (RideActivityHook.isRideActivityProcess()) {
             handlerManager = new HandlerManager(ki2Context, Collections.singletonList(new OverlayManager(ki2Context)));
+        } else if (DataSyncServiceHook.isInDataSyncService()) {
+            handlerManager = new HandlerManager(ki2Context, Collections.singletonList(new ShiftingReportingManager(ki2Context)));
         } else {
             handlerManager = null;
-        }
-
-
-        if (DataSyncServiceHook.isInDataSyncService()) {
-            ki2Context.getHandler().postDelayed(() -> DataSyncServiceHook.init(context), 15_000);
-            ki2Context.getHandler().postDelayed(() -> DataSyncServiceHook.init(context), 20_000);
-            ki2Context.getHandler().postDelayed(() -> DataSyncServiceHook.init(context), 25_000);
         }
     }
 
@@ -143,20 +139,6 @@ public class Ki2Module extends Module {
     @Nullable
     @Override
     public PostRideCard postRideCard(@NonNull RideDetailsI details) {
-        Log.i("KI2", "Ride name:" + details.getName());
-        Log.i("KI2", "Id:" + details.getId());
-        Log.i("KI2", "Process:" + ProcessUtils.getProcessName());
-
-        /*
-
-        FileEncoder fileEncoder = new FileEncoder();
-        EventMesg eventMesg = new EventMesg();
-        eventMesg.setLocalNum(4);
-        eventMesg.setTimestamp(new DateTime(0));
-        eventMesg.setEvent(Event.FRONT_GEAR_CHANGE); // eventMesg.setEvent(Event.REAR_GEAR_CHANGE);
-        eventMesg.setEventType(EventType.MARKER);
-        fileEncoder.write(a);
-        */
         return super.postRideCard(details);
     }
 

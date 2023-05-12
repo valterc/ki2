@@ -1,6 +1,6 @@
 package com.valterc.ki2.karoo.hooks;
 
-import android.app.Service;
+import android.annotation.SuppressLint;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -8,20 +8,18 @@ import android.content.ServiceConnection;
 import android.os.Binder;
 import android.os.IBinder;
 import android.os.IInterface;
-import android.os.RemoteException;
 import android.util.Log;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 import io.hammerhead.sdk.v0.SdkContext;
@@ -30,7 +28,12 @@ import kotlin.LazyKt;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 
+@SuppressWarnings({"UnusedReturnValue", "unchecked", "rawtypes"})
+@SuppressLint("LogNotTimber")
 public class DataSyncServiceHook {
+
+    private DataSyncServiceHook() {
+    }
 
     private static final Lazy<Boolean> IN_ACTIVITY_SERVICE =
             LazyKt.lazy(() -> {
@@ -41,10 +44,6 @@ public class DataSyncServiceHook {
                     return false;
                 }
             });
-
-    public static boolean isInDataSyncService() {
-        return IN_ACTIVITY_SERVICE.getValue();
-    }
 
     private static final Lazy<Class<?>> TYPE_DATA_POINT = LazyKt.lazy(() -> {
         try {
@@ -98,7 +97,7 @@ public class DataSyncServiceHook {
                         if (parameterizedType.getActualTypeArguments().length == 2 &&
                                 parameterizedType.getActualTypeArguments()[0] == String.class) {
                             ConcurrentHashMap<String, ?> map = (ConcurrentHashMap<String, ?>) fieldDataPointInnerClass.get(null);
-                            Object dataTypeShiftingGear = map.get("TYPE_SHIFTING_GEARS_ID");
+                            Object dataTypeShiftingGear = Objects.requireNonNull(map).get("TYPE_SHIFTING_GEARS_ID");
                             Log.w("KI2", "Got data type:" + dataTypeShiftingGear);
                             return dataTypeShiftingGear;
                         }
@@ -304,12 +303,102 @@ public class DataSyncServiceHook {
         return null;
     });
 
+    private static final int MAX_ERRORS = 30;
+
+    private static boolean initialized;
+    private static int errors;
+
+    private static Object ACTIVITY_DATA_CONTROLLER;
+    private static Class<?> TYPE_FIT_ENCODER;
+
+    /**
+     * Initialize DataSyncService hook.
+     * @param context SDK Context.
+     */
+    public static void init(SdkContext context) {
+        if (!isInDataSyncService()) {
+            return;
+        }
+
+        if (initialized) {
+            return;
+        }
+
+        try {
+            ServiceConnection serviceConnection = new ServiceConnection() {
+                @Override
+                public void onServiceConnected(ComponentName name, IBinder service) {
+                    try {
+                        Field[] databaseOperationsFields = service.getClass().getDeclaredFields();
+                        for (Field field : databaseOperationsFields) {
+                            if (Binder.class.isAssignableFrom(field.getType())) {
+                                Binder b = (Binder) field.get(service);
+                                if (b != null) {
+                                    IInterface localInterface = b.queryLocalInterface("io.hammerhead.datasyncservice.v2.ActivityDataControllerAIDL");
+                                    if (localInterface != null) {
+                                        ACTIVITY_DATA_CONTROLLER = localInterface;
+                                        return;
+                                    }
+                                }
+                            }
+                        }
+                        Log.w("KI2", "Unable to find ActivityDataController");
+                    } catch (Exception e) {
+                        Log.w("KI2", "Unable to obtain ActivityDataController", e);
+                    } finally {
+                        context.unbindService(this);
+                    }
+                }
+
+                @Override
+                public void onServiceDisconnected(ComponentName name) {
+                }
+            };
+
+            Intent intent = new Intent(context, Class.forName("io.hammerhead.datasyncservice.v2.DataSyncService"));
+            intent.setAction("databaseOperationsController");
+            boolean result = context.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+            Log.w("Ki2", "DataSyncService bind: " + result);
+        } catch (Exception e) {
+            Log.e("Ki2", "Unable to initialize DataSyncService hook", e);
+        }
+
+        initialized = true;
+    }
+
+    private static final Lazy<Method> METHOD_ACTIVITY_CONTROLLER_FORWARD_DATA_POINT = LazyKt.lazy(() -> {
+        Method[] declaredMethods = ACTIVITY_DATA_CONTROLLER.getClass().getDeclaredMethods();
+        for (Method m : declaredMethods) {
+            Class<?> returnType = m.getReturnType();
+            Class<?>[] parameterTypes = m.getParameterTypes();
+
+            if (returnType.equals(Void.TYPE) && parameterTypes.length == 1 && parameterTypes[0].equals(Function1.class)) {
+                return m;
+            }
+        }
+        return null;
+    });
+
+    private static final Lazy<Method> METHOD_FIT_ENCODER_ON_DATA_POINT = LazyKt.lazy(() -> {
+        Method[] declaredMethodsFileEncoder = TYPE_FIT_ENCODER.getDeclaredMethods();
+        for (Method m : declaredMethodsFileEncoder) {
+            Class<?> returnTypeOnDataPointMethod = m.getReturnType();
+            Class<?>[] parameterTypesOnDataPointMethod = m.getParameterTypes();
+
+            if (returnTypeOnDataPointMethod.equals(Void.TYPE) &&
+                    parameterTypesOnDataPointMethod.length == 1 &&
+                    parameterTypesOnDataPointMethod[0].isAssignableFrom(TYPE_DATA_POINT.getValue())) {
+                return m;
+            }
+        }
+        return null;
+    });
+
     private static Object getIntValue(int value) throws Exception {
         return CONSTRUCTOR_VALUE.getValue().newInstance(value, 0);
     }
 
     private static Object getDataPoint(int gearFrontIndex, int gearFrontTeeth, int gearRearIndex, int gearRearTeeth) throws Exception {
-
         Map map = new HashMap();
         map.put(FIELD_SHIFTING_FRONT_GEAR.getValue(), getIntValue(gearFrontIndex));
         map.put(FIELD_SHIFTING_FRONT_GEAR_TEETH.getValue(), getIntValue(gearFrontTeeth));
@@ -325,124 +414,50 @@ public class DataSyncServiceHook {
                 Collections.emptyMap());
     }
 
-    private static boolean initialized;
+    /**
+     * Indicates if the running code is inside the Data Sync service application.
+     *
+     * @return True if the running process is the Data Sync service application, False otherwise.
+     */
+    public static boolean isInDataSyncService() {
+        return IN_ACTIVITY_SERVICE.getValue();
+    }
 
-    public static void init(SdkContext context) {
-        if (initialized) {
-            return;
+    /**
+     * Report gear shift event to be stored in the FIT file.
+     *
+     * @param frontGearIndex Front gear index.
+     * @param frontGearTeeth Front gear teeth count.
+     * @param rearGearIndex Rear gear index.
+     * @param rearGearTeeth Rear gear teeth count.
+     * @return True when report is expected to work, false otherwise.
+     */
+    public static boolean reportGearShift(int frontGearIndex, int frontGearTeeth, int rearGearIndex, int rearGearTeeth) {
+        if (!initialized || ACTIVITY_DATA_CONTROLLER == null || errors >= MAX_ERRORS) {
+            return false;
         }
 
         try {
-
-            Log.w("KI2", "Data Point: " + TYPE_DATA_POINT.getValue());
-            Log.w("KI2", "Data Type: " + DATA_TYPE_SHIFTING_GEARS.getValue());
-
-            Log.w("KI2", "Type device info: " + TYPE_DEVICE_INFO.getValue());
-            Log.w("KI2", "Device info: " + DEVICE_INFO.getValue());
-
-            Log.w("KI2", "Type connection type: " + TYPE_CONNECTION_TYPE.getValue());
-            Log.w("KI2", "Connection type: " + CONNECTION_TYPE.getValue());
-
-            Log.w("KI2", "Type device: " + TYPE_DEVICE.getValue());
-            Log.w("KI2", "Device: " + DEVICE.getValue());
-
-            Log.w("KI2", "Type data source: " + TYPE_DATA_SOURCE.getValue());
-            Log.w("KI2", "Data source: " + DATA_SOURCE.getValue());
-
-            Log.w("KI2", "Value: " + getIntValue(15));
-            Log.w("KI2", "Data Point: " + getDataPoint(1,50, 1, 11));
-
-            Intent intent = new Intent(context, Class.forName("io.hammerhead.datasyncservice.v2.DataSyncService"));
-            intent.setAction("databaseOperationsController");
-
-            ServiceConnection serviceConnection = new ServiceConnection() {
-                @Override
-                public void onServiceConnected(ComponentName name, IBinder service) {
-
-                    try {
-                        Log.i("Ki2", "Service connected: " + name);
-                        Log.i("Ki2", "Service instance: " + service + " - " + service.getInterfaceDescriptor() + " - " + service.getClass());
-
-                        Object activityDataController = null;
-                        Field[] databaseOperationsFields = service.getClass().getDeclaredFields();
-                        for (Field field :
-                                databaseOperationsFields) {
-                            Log.i("Ki2", "Field: " + field + " - " + field.getType());
-
-                            if (Binder.class.isAssignableFrom(field.getType())) {
-                                Binder b = (Binder) field.get(service);
-                                IInterface localInterface = b.queryLocalInterface("io.hammerhead.datasyncservice.v2.ActivityDataControllerAIDL");
-                                Log.i("Ki2", "Local interface: " + localInterface);
-                                if (localInterface != null) {
-                                    activityDataController = localInterface;
-                                    break;
-                                }
-                            }
-                        }
-
-                        if (activityDataController != null) {
-                            Method[] declaredMethods = activityDataController.getClass().getDeclaredMethods();
-                            for (Method m : declaredMethods) {
-                                Class<?> returnType = m.getReturnType();
-                                Class<?>[] parameterTypes = m.getParameterTypes();
-
-                                if (returnType.equals(Void.TYPE) && parameterTypes.length == 1 && parameterTypes[0].equals(Function1.class)) {
-                                    Class<?> parameterType = parameterTypes[0];
-                                    Log.w("KI2", String.valueOf(parameterType));
-                                    Log.w("KI2", String.valueOf(parameterType.getTypeParameters()[0]));
-
-                                    m.invoke(activityDataController, new Function1<Object, Unit>() {
-                                        @Override
-                                        public Unit invoke(Object o) {
-
-                                            Log.w("KI2", "Invoke object: " + o + " - " + o.getClass());
-
-                                            Method[] declaredMethodsFileEncoder = o.getClass().getDeclaredMethods();
-                                            for (Method m : declaredMethodsFileEncoder) {
-                                                Class<?> returnTypeOnDataPointMethod = m.getReturnType();
-                                                Class<?>[] parameterTypesOnDataPointMethod = m.getParameterTypes();
-
-                                                if (returnTypeOnDataPointMethod.equals(Void.TYPE) &&
-                                                        parameterTypesOnDataPointMethod.length == 1 &&
-                                                        parameterTypesOnDataPointMethod[0].isAssignableFrom(TYPE_DATA_POINT.getValue())) {
-                                                    try {
-                                                        m.invoke(o, getDataPoint((int)(Math.random() * 10), 34,1, 11));
-                                                    } catch (Exception e) {
-                                                        throw new RuntimeException(e);
-                                                    }
-                                                }
-
-
-                                            }
-
-                                            return Unit.INSTANCE;
-                                        }
-                                    });
-                                }
-                            }
-                        }
-
-                    } catch (RemoteException e) {
-                        throw new RuntimeException(e);
-                    } catch (IllegalAccessException e) {
-                        throw new RuntimeException(e);
-                    } catch (InvocationTargetException e) {
-                        throw new RuntimeException(e);
-                    }
+            METHOD_ACTIVITY_CONTROLLER_FORWARD_DATA_POINT.getValue().invoke(ACTIVITY_DATA_CONTROLLER, (Function1<Object, Unit>) o -> {
+                if (TYPE_FIT_ENCODER == null) {
+                    TYPE_FIT_ENCODER = o.getClass();
                 }
 
-                @Override
-                public void onServiceDisconnected(ComponentName name) {
-
+                try {
+                    METHOD_FIT_ENCODER_ON_DATA_POINT.getValue().invoke(o, getDataPoint(frontGearIndex, frontGearTeeth, rearGearIndex, rearGearTeeth));
+                } catch (Exception e) {
+                    Log.w("KI2", "Unable to push data point", e);
+                    errors++;
                 }
-            };
 
-            boolean result = context.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
-            Log.w("Ki2", "Service bind: " + result);
-
+                return Unit.INSTANCE;
+            });
         } catch (Exception e) {
-            Log.e("Ki2", "Service exception: " + e);
+            Log.w("KI2", "Unable to report gear shifting", e);
+            errors++;
         }
+
+        return true;
     }
 
 }
