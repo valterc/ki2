@@ -1,26 +1,10 @@
 package com.valterc.ki2.karoo;
 
 import android.annotation.SuppressLint;
-import android.app.Application;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.garmin.fit.DateTime;
-import com.garmin.fit.Decode;
-import com.garmin.fit.DeveloperDataIdMesg;
-import com.garmin.fit.DeveloperFieldDescription;
-import com.garmin.fit.DeveloperFieldDescriptionListener;
-import com.garmin.fit.Event;
-import com.garmin.fit.EventMesg;
-import com.garmin.fit.EventType;
-import com.garmin.fit.FileEncoder;
-import com.garmin.fit.FitDecoder;
-import com.garmin.fit.Mesg;
-import com.garmin.fit.MesgDefinition;
-import com.garmin.fit.MesgDefinitionListener;
-import com.garmin.fit.MesgListener;
 import com.valterc.ki2.BuildConfig;
 import com.valterc.ki2.data.message.RideStatusMessage;
 import com.valterc.ki2.data.ride.RideStatus;
@@ -53,7 +37,6 @@ import com.valterc.ki2.karoo.shifting.ShiftingAudioAlertHandler;
 import com.valterc.ki2.karoo.shifting.ShiftingReportingManager;
 import com.valterc.ki2.karoo.update.UpdateAvailableHandler;
 import com.valterc.ki2.karoo.update.UpdateAvailableNotification;
-import com.valterc.ki2.utils.ProcessUtils;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -62,7 +45,6 @@ import java.util.List;
 import io.hammerhead.sdk.v0.Module;
 import io.hammerhead.sdk.v0.ModuleFactoryI;
 import io.hammerhead.sdk.v0.SdkContext;
-import io.hammerhead.sdk.v0.card.FitFileListener;
 import io.hammerhead.sdk.v0.card.PostRideCard;
 import io.hammerhead.sdk.v0.card.RideDetailsI;
 import io.hammerhead.sdk.v0.datatype.SdkDataType;
