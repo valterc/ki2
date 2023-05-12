@@ -313,6 +313,7 @@ public class DataSyncServiceHook {
 
     /**
      * Initialize DataSyncService hook.
+     *
      * @param context SDK Context.
      */
     public static void init(SdkContext context) {
@@ -358,9 +359,9 @@ public class DataSyncServiceHook {
             Intent intent = new Intent(context, Class.forName("io.hammerhead.datasyncservice.v2.DataSyncService"));
             intent.setAction("databaseOperationsController");
             boolean result = context.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
-            Log.w("Ki2", "DataSyncService bind: " + result);
+            Log.w("KI2", "DataSyncService bind: " + result);
         } catch (Exception e) {
-            Log.e("Ki2", "Unable to initialize DataSyncService hook", e);
+            Log.e("KI2", "Unable to initialize DataSyncService hook", e);
         }
 
         initialized = true;
@@ -428,8 +429,8 @@ public class DataSyncServiceHook {
      *
      * @param frontGearIndex Front gear index.
      * @param frontGearTeeth Front gear teeth count.
-     * @param rearGearIndex Rear gear index.
-     * @param rearGearTeeth Rear gear teeth count.
+     * @param rearGearIndex  Rear gear index.
+     * @param rearGearTeeth  Rear gear teeth count.
      * @return True when report is expected to work, false otherwise.
      */
     public static boolean reportGearShift(int frontGearIndex, int frontGearTeeth, int rearGearIndex, int rearGearTeeth) {
