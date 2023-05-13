@@ -119,5 +119,6 @@
     <string name="text_synchro_up">SYNCHRO ↑</string>
     <string name="text_synchro_down">SYNCHRO ↓</string>
     <string name="text_limit">LIMIT</string>
+    <string name="text_default">Default</string>
 
 </resources>

@@ -58,7 +58,10 @@ public class OverlayPositionDialogFragment extends DialogFragment {
 
         RelativeLayout relativeLayout = view.findViewById(R.id.relativelayout_overlay_position);
         Ki2Context ki2Context = new Ki2Context(SdkContext.buildSdkContext(requireContext()));
+
         OverlayViewBuilderEntry entry = OverlayViewBuilderRegistry.getBuilder(preferencesView.getOverlayTheme(requireContext()));
+        assert entry != null;
+
         View viewOverlay = inflater.inflate(entry.getLayoutId(), relativeLayout, false);
 
         DeviceId deviceId = new DeviceId(67726, 1, 5);
@@ -80,6 +83,9 @@ public class OverlayPositionDialogFragment extends DialogFragment {
             return false;
         });
 
+        Button buttonDefault = view.findViewById(R.id.button_overlay_position_default);
+        buttonDefault.setOnClickListener(v -> positionManager.applyPosition(entry.getDefaultPositionX(), entry.getDefaultPositionY(), viewOverlay));
+
         Button buttonCancel = view.findViewById(R.id.button_overlay_position_cancel);
         buttonCancel.setOnClickListener(v -> dismiss());
 
@@ -87,8 +93,8 @@ public class OverlayPositionDialogFragment extends DialogFragment {
         buttonOk.setOnClickListener(v -> {
             RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams)viewOverlay.getLayoutParams();
             Bundle bundle = new Bundle(2);
-            bundle.putInt(RESULT_POSITION_X, (int)(layoutParams.leftMargin));
-            bundle.putInt(RESULT_POSITION_Y, (int)(layoutParams.topMargin));
+            bundle.putInt(RESULT_POSITION_X, layoutParams.leftMargin);
+            bundle.putInt(RESULT_POSITION_Y, layoutParams.topMargin);
             getParentFragmentManager().setFragmentResult(requireArguments().getString(REQUEST_KEY), bundle);
             dismiss();
         });

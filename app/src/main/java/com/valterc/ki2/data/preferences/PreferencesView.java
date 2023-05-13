@@ -8,6 +8,8 @@ import android.os.Parcelable;
 import androidx.preference.PreferenceManager;
 
 import com.valterc.ki2.R;
+import com.valterc.ki2.karoo.overlay.view.builder.OverlayViewBuilderEntry;
+import com.valterc.ki2.karoo.overlay.view.builder.OverlayViewBuilderRegistry;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -314,7 +316,7 @@ public class PreferencesView implements Parcelable {
      * @return Overlay opacity.
      */
     public float getOverlayOpacity(Context context) {
-        float opacity = getFloat(context.getString(R.string.preference_overlay_opacity), () -> (float)context.getResources().getInteger(R.integer.default_preference_overlay_opacity));
+        float opacity = getFloat(context.getString(R.string.preference_overlay_opacity), () -> (float) context.getResources().getInteger(R.integer.default_preference_overlay_opacity));
         return Math.min(1, Math.max(opacity, 0));
     }
 
@@ -325,7 +327,15 @@ public class PreferencesView implements Parcelable {
      * @return Overlay X position.
      */
     public int getOverlayPositionX(Context context) {
-        return getInt(context.getString(R.string.preference_overlay_position_x), () -> context.getResources().getInteger(R.integer.default_preference_overlay_position));
+        return getInt(context.getString(R.string.preference_overlay_position_x), () -> {
+            OverlayViewBuilderEntry overlayBuilder = OverlayViewBuilderRegistry.getBuilder(getOverlayTheme(context));
+
+            if (overlayBuilder != null) {
+                return overlayBuilder.getDefaultPositionX();
+            }
+
+            return context.getResources().getInteger(R.integer.default_preference_overlay_position);
+        });
     }
 
     /**
@@ -335,7 +345,15 @@ public class PreferencesView implements Parcelable {
      * @return Overlay Y position.
      */
     public int getOverlayPositionY(Context context) {
-        return getInt(context.getString(R.string.preference_overlay_position_y), () -> context.getResources().getInteger(R.integer.default_preference_overlay_position));
+        return getInt(context.getString(R.string.preference_overlay_position_y), () -> {
+            OverlayViewBuilderEntry overlayBuilder = OverlayViewBuilderRegistry.getBuilder(getOverlayTheme(context));
+
+            if (overlayBuilder != null) {
+                return overlayBuilder.getDefaultPositionY();
+            }
+
+            return context.getResources().getInteger(R.integer.default_preference_overlay_position);
+        });
     }
 
 }
