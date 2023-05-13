@@ -63,6 +63,10 @@
             android:layout_gravity="end"
             android:layout_marginTop="5dp"
             android:background="?attr/selectableItemBackground"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="5dp"
             android:text="@android:string/cancel" />
 
         <Button
@@ -73,6 +77,10 @@
             android:layout_gravity="end"
             android:layout_marginTop="5dp"
             android:background="?attr/selectableItemBackground"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="5dp"
             android:text="@android:string/ok" />
 
     </LinearLayout>

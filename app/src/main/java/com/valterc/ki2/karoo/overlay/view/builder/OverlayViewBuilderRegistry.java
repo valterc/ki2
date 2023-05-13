@@ -1,5 +1,9 @@
 package com.valterc.ki2.karoo.overlay.view.builder;
 
+import android.util.Pair;
+
+import androidx.annotation.Nullable;
+
 import com.valterc.ki2.R;
 import com.valterc.ki2.karoo.overlay.view.compact.CompactDarkGearIndexOverlayView;
 import com.valterc.ki2.karoo.overlay.view.compact.CompactDarkGearSizeOverlayView;
@@ -32,37 +36,38 @@ public final class OverlayViewBuilderRegistry {
     private static final HashMap<String, OverlayViewBuilderEntry> builderMap = new HashMap<>();
 
     static {
-        builderMap.put("default_dark_gear_index", new OverlayViewBuilderEntry(R.layout.view_karoo_overlay, DefaultDarkGearIndexOverlayView::new));
-        builderMap.put("default_light_gear_index", new OverlayViewBuilderEntry(R.layout.view_karoo_overlay, DefaultLightGearIndexOverlayView::new));
+        builderMap.put("default_dark_gear_index", new OverlayViewBuilderEntry(R.layout.view_karoo_overlay, new Pair<>(0, 5), DefaultDarkGearIndexOverlayView::new));
+        builderMap.put("default_light_gear_index", new OverlayViewBuilderEntry(R.layout.view_karoo_overlay, new Pair<>(0, 5), DefaultLightGearIndexOverlayView::new));
 
-        builderMap.put("default_dark_gear_size", new OverlayViewBuilderEntry(R.layout.view_karoo_overlay, DefaultDarkGearSizeOverlayView::new));
-        builderMap.put("default_light_gear_size", new OverlayViewBuilderEntry(R.layout.view_karoo_overlay, DefaultLightGearSizeOverlayView::new));
+        builderMap.put("default_dark_gear_size", new OverlayViewBuilderEntry(R.layout.view_karoo_overlay, new Pair<>(0, 5), DefaultDarkGearSizeOverlayView::new));
+        builderMap.put("default_light_gear_size", new OverlayViewBuilderEntry(R.layout.view_karoo_overlay, new Pair<>(0, 5), DefaultLightGearSizeOverlayView::new));
 
-        builderMap.put("default_dark_gear_size_ratio", new OverlayViewBuilderEntry(R.layout.view_karoo_overlay, DefaultDarkGearSizeRatioOverlayView::new));
-        builderMap.put("default_light_gear_size_ratio", new OverlayViewBuilderEntry(R.layout.view_karoo_overlay, DefaultLightGearSizeRatioOverlayView::new));
+        builderMap.put("default_dark_gear_size_ratio", new OverlayViewBuilderEntry(R.layout.view_karoo_overlay, new Pair<>(0, 5), DefaultDarkGearSizeRatioOverlayView::new));
+        builderMap.put("default_light_gear_size_ratio", new OverlayViewBuilderEntry(R.layout.view_karoo_overlay, new Pair<>(0, 5), DefaultLightGearSizeRatioOverlayView::new));
 
-        builderMap.put("simple_dark", new OverlayViewBuilderEntry(R.layout.view_karoo_overlay, SimpleDarkOverlayView::new));
-        builderMap.put("simple_light", new OverlayViewBuilderEntry(R.layout.view_karoo_overlay, SimpleLightOverlayView::new));
+        builderMap.put("simple_dark", new OverlayViewBuilderEntry(R.layout.view_karoo_overlay, new Pair<>(0, 5), SimpleDarkOverlayView::new));
+        builderMap.put("simple_light", new OverlayViewBuilderEntry(R.layout.view_karoo_overlay, new Pair<>(0, 5), SimpleLightOverlayView::new));
 
-        builderMap.put("compact_dark_gear_index", new OverlayViewBuilderEntry(R.layout.view_karoo_overlay_compact, CompactDarkGearIndexOverlayView::new));
-        builderMap.put("compact_light_gear_index", new OverlayViewBuilderEntry(R.layout.view_karoo_overlay_compact, CompactLightGearIndexOverlayView::new));
+        builderMap.put("compact_dark_gear_index", new OverlayViewBuilderEntry(R.layout.view_karoo_overlay_compact, new Pair<>(5, 65), CompactDarkGearIndexOverlayView::new));
+        builderMap.put("compact_light_gear_index", new OverlayViewBuilderEntry(R.layout.view_karoo_overlay_compact, new Pair<>(5, 65), CompactLightGearIndexOverlayView::new));
 
-        builderMap.put("compact_dark_gear_size", new OverlayViewBuilderEntry(R.layout.view_karoo_overlay_compact, CompactDarkGearSizeOverlayView::new));
-        builderMap.put("compact_light_gear_size", new OverlayViewBuilderEntry(R.layout.view_karoo_overlay_compact, CompactLightGearSizeOverlayView::new));
+        builderMap.put("compact_dark_gear_size", new OverlayViewBuilderEntry(R.layout.view_karoo_overlay_compact, new Pair<>(5, 65), CompactDarkGearSizeOverlayView::new));
+        builderMap.put("compact_light_gear_size", new OverlayViewBuilderEntry(R.layout.view_karoo_overlay_compact, new Pair<>(5, 65), CompactLightGearSizeOverlayView::new));
 
-        builderMap.put("compact_dark_gear_size_ratio", new OverlayViewBuilderEntry(R.layout.view_karoo_overlay_compact, CompactDarkGearSizeRatioOverlayView::new));
-        builderMap.put("compact_light_gear_size_ratio", new OverlayViewBuilderEntry(R.layout.view_karoo_overlay_compact, CompactLightGearSizeRatioOverlayView::new));
+        builderMap.put("compact_dark_gear_size_ratio", new OverlayViewBuilderEntry(R.layout.view_karoo_overlay_compact, new Pair<>(5, 65), CompactDarkGearSizeRatioOverlayView::new));
+        builderMap.put("compact_light_gear_size_ratio", new OverlayViewBuilderEntry(R.layout.view_karoo_overlay_compact, new Pair<>(5, 65), CompactLightGearSizeRatioOverlayView::new));
 
-        builderMap.put("compact_dark_rear_gear_index", new OverlayViewBuilderEntry(R.layout.view_karoo_overlay_compact, CompactDarkRearGearIndexOverlayView::new));
-        builderMap.put("compact_light_rear_gear_index", new OverlayViewBuilderEntry(R.layout.view_karoo_overlay_compact, CompactLightRearGearIndexOverlayView::new));
+        builderMap.put("compact_dark_rear_gear_index", new OverlayViewBuilderEntry(R.layout.view_karoo_overlay_compact, new Pair<>(5, 65), CompactDarkRearGearIndexOverlayView::new));
+        builderMap.put("compact_light_rear_gear_index", new OverlayViewBuilderEntry(R.layout.view_karoo_overlay_compact, new Pair<>(5, 65), CompactLightRearGearIndexOverlayView::new));
 
-        builderMap.put("compact_dark_rear_gear_size", new OverlayViewBuilderEntry(R.layout.view_karoo_overlay_compact, CompactDarkRearGearSizeOverlayView::new));
-        builderMap.put("compact_light_rear_gear_size", new OverlayViewBuilderEntry(R.layout.view_karoo_overlay_compact, CompactLightRearGearSizeOverlayView::new));
+        builderMap.put("compact_dark_rear_gear_size", new OverlayViewBuilderEntry(R.layout.view_karoo_overlay_compact, new Pair<>(5, 65), CompactDarkRearGearSizeOverlayView::new));
+        builderMap.put("compact_light_rear_gear_size", new OverlayViewBuilderEntry(R.layout.view_karoo_overlay_compact, new Pair<>(5, 65), CompactLightRearGearSizeOverlayView::new));
 
-        builderMap.put("compact_dark_rear_gear_size_ratio", new OverlayViewBuilderEntry(R.layout.view_karoo_overlay_compact, CompactDarkRearGearSizeRatioOverlayView::new));
-        builderMap.put("compact_light_rear_gear_size_ratio", new OverlayViewBuilderEntry(R.layout.view_karoo_overlay_compact, CompactLightRearGearSizeRatioOverlayView::new));
+        builderMap.put("compact_dark_rear_gear_size_ratio", new OverlayViewBuilderEntry(R.layout.view_karoo_overlay_compact, new Pair<>(5, 65), CompactDarkRearGearSizeRatioOverlayView::new));
+        builderMap.put("compact_light_rear_gear_size_ratio", new OverlayViewBuilderEntry(R.layout.view_karoo_overlay_compact, new Pair<>(5, 65), CompactLightRearGearSizeRatioOverlayView::new));
     }
 
+    @Nullable
     public static OverlayViewBuilderEntry getBuilder(String key) {
         return builderMap.get(key);
     }
