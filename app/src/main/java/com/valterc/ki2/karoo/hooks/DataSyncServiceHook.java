@@ -10,11 +10,14 @@ import android.os.IBinder;
 import android.os.IInterface;
 import android.util.Log;
 
+import com.valterc.ki2.data.device.DeviceId;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -47,7 +50,7 @@ public class DataSyncServiceHook {
 
     private static final Lazy<Class<?>> TYPE_DATA_POINT = LazyKt.lazy(() -> {
         try {
-            return (Class<?>) Class.forName("io.hammerhead.datamodels.timeseriesData.models.DataPoint");
+            return Class.forName("io.hammerhead.datamodels.timeseriesData.models.DataPoint");
         } catch (Exception e) {
             Log.w("KI2", "Unable to get data point type", e);
         }
@@ -97,15 +100,109 @@ public class DataSyncServiceHook {
                         if (parameterizedType.getActualTypeArguments().length == 2 &&
                                 parameterizedType.getActualTypeArguments()[0] == String.class) {
                             ConcurrentHashMap<String, ?> map = (ConcurrentHashMap<String, ?>) fieldDataPointInnerClass.get(null);
-                            Object dataTypeShiftingGear = Objects.requireNonNull(map).get("TYPE_SHIFTING_GEARS_ID");
-                            Log.w("KI2", "Got data type:" + dataTypeShiftingGear);
-                            return dataTypeShiftingGear;
+                            return Objects.requireNonNull(map).get("TYPE_SHIFTING_GEARS_ID");
                         }
                     }
                 }
             }
         } catch (Exception e) {
-            Log.w("KI2", "Unable to get data point type", e);
+            Log.w("KI2", "Unable to get data type type", e);
+        }
+
+        return null;
+    });
+
+    private static final Lazy<Object> DATA_TYPE_SHIFTING_FRONT_GEAR = LazyKt.lazy(() -> {
+        try {
+            Class<?>[] declaredClasses = TYPE_DATA_TYPE.getValue().getDeclaredClasses();
+            for (Class<?> c : declaredClasses) {
+                Field[] declaredFieldsDataPointInnerClass = c.getDeclaredFields();
+                for (Field fieldDataPointInnerClass : declaredFieldsDataPointInnerClass) {
+                    if (Modifier.isStatic(fieldDataPointInnerClass.getModifiers()) &&
+                            fieldDataPointInnerClass.getType().isAssignableFrom(ConcurrentHashMap.class) &&
+                            fieldDataPointInnerClass.getGenericType() instanceof ParameterizedType) {
+                        ParameterizedType parameterizedType = (ParameterizedType) fieldDataPointInnerClass.getGenericType();
+                        if (parameterizedType.getActualTypeArguments().length == 2 &&
+                                parameterizedType.getActualTypeArguments()[0] == String.class) {
+                            ConcurrentHashMap<String, ?> map = (ConcurrentHashMap<String, ?>) fieldDataPointInnerClass.get(null);
+                            return Objects.requireNonNull(map).get("TYPE_SHIFTING_FRONT_GEAR_ID");
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            Log.w("KI2", "Unable to get data type type", e);
+        }
+
+        return null;
+    });
+
+    private static final Lazy<Object> DATA_TYPE_SHIFTING_REAR_GEAR = LazyKt.lazy(() -> {
+        try {
+            Class<?>[] declaredClasses = TYPE_DATA_TYPE.getValue().getDeclaredClasses();
+            for (Class<?> c : declaredClasses) {
+                Field[] declaredFieldsDataPointInnerClass = c.getDeclaredFields();
+                for (Field fieldDataPointInnerClass : declaredFieldsDataPointInnerClass) {
+                    if (Modifier.isStatic(fieldDataPointInnerClass.getModifiers()) &&
+                            fieldDataPointInnerClass.getType().isAssignableFrom(ConcurrentHashMap.class) &&
+                            fieldDataPointInnerClass.getGenericType() instanceof ParameterizedType) {
+                        ParameterizedType parameterizedType = (ParameterizedType) fieldDataPointInnerClass.getGenericType();
+                        if (parameterizedType.getActualTypeArguments().length == 2 &&
+                                parameterizedType.getActualTypeArguments()[0] == String.class) {
+                            ConcurrentHashMap<String, ?> map = (ConcurrentHashMap<String, ?>) fieldDataPointInnerClass.get(null);
+                            return Objects.requireNonNull(map).get("TYPE_SHIFTING_REAR_GEAR_ID");
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            Log.w("KI2", "Unable to get data type type", e);
+        }
+
+        return null;
+    });
+
+    @SuppressWarnings("unused")
+    private static final Lazy<Object> DATA_TYPE_SHIFTING_BATTERY = LazyKt.lazy(() -> {
+        try {
+            Class<?>[] declaredClasses = TYPE_DATA_TYPE.getValue().getDeclaredClasses();
+            for (Class<?> c : declaredClasses) {
+                Field[] declaredFieldsDataPointInnerClass = c.getDeclaredFields();
+                for (Field fieldDataPointInnerClass : declaredFieldsDataPointInnerClass) {
+                    if (Modifier.isStatic(fieldDataPointInnerClass.getModifiers()) &&
+                            fieldDataPointInnerClass.getType().isAssignableFrom(ConcurrentHashMap.class) &&
+                            fieldDataPointInnerClass.getGenericType() instanceof ParameterizedType) {
+                        ParameterizedType parameterizedType = (ParameterizedType) fieldDataPointInnerClass.getGenericType();
+                        if (parameterizedType.getActualTypeArguments().length == 2 &&
+                                parameterizedType.getActualTypeArguments()[0] == String.class) {
+                            ConcurrentHashMap<String, ?> map = (ConcurrentHashMap<String, ?>) fieldDataPointInnerClass.get(null);
+                            return Objects.requireNonNull(map).get("TYPE_SHIFTING_BATTERY_ID");
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            Log.w("KI2", "Unable to get data type type", e);
+        }
+
+        return null;
+    });
+
+    private static final Lazy<Class<?>> TYPE_MANUFACTURER_INFO = LazyKt.lazy(() -> {
+        try {
+            return Class.forName("io.hammerhead.datamodels.timeseriesData.models.ManufacturerInfo");
+        } catch (Exception e) {
+            Log.w("KI2", "Unable to get manufacturer info type", e);
+        }
+
+        return null;
+    });
+
+    private static final Lazy<Class<?>> TYPE_BATTERY_VALUE = LazyKt.lazy(() -> {
+        try {
+            return Class.forName("io.hammerhead.datamodels.timeseriesData.models.BatteryValue");
+        } catch (Exception e) {
+            Log.w("KI2", "Unable to get battery value type", e);
         }
 
         return null;
@@ -113,19 +210,9 @@ public class DataSyncServiceHook {
 
     private static final Lazy<Class<?>> TYPE_DEVICE_INFO = LazyKt.lazy(() -> {
         try {
-            return (Class<?>) Class.forName("io.hammerhead.datamodels.timeseriesData.models.DeviceInfo");
+            return Class.forName("io.hammerhead.datamodels.timeseriesData.models.DeviceInfo");
         } catch (Exception e) {
             Log.w("KI2", "Unable to get device info type", e);
-        }
-
-        return null;
-    });
-
-    private static final Lazy<Object> DEVICE_INFO = LazyKt.lazy(() -> {
-        try {
-            return TYPE_DEVICE_INFO.getValue().getConstructor(String.class, Integer.TYPE).newInstance("Di2", 6);
-        } catch (Exception e) {
-            Log.w("KI2", "Unable to get device info", e);
         }
 
         return null;
@@ -161,33 +248,11 @@ public class DataSyncServiceHook {
         return null;
     });
 
-    private static final Lazy<Object> DEVICE = LazyKt.lazy(() -> {
-        try {
-            return TYPE_DEVICE.getValue().getConstructor(String.class, TYPE_DEVICE_INFO.getValue(), List.class, TYPE_CONNECTION_TYPE.getValue())
-                    .newInstance("DEVICE_DI2", DEVICE_INFO.getValue(), Collections.singletonList(DATA_TYPE_SHIFTING_GEARS), CONNECTION_TYPE.getValue());
-        } catch (Exception e) {
-            Log.w("KI2", "Unable to get device", e);
-        }
-
-        return null;
-    });
-
     private static final Lazy<Class<?>> TYPE_DATA_SOURCE = LazyKt.lazy(() -> {
         try {
             return Class.forName("io.hammerhead.datamodels.timeseriesData.models.DataSource");
         } catch (Exception e) {
             Log.w("KI2", "Unable to get data source type", e);
-        }
-
-        return null;
-    });
-
-    private static final Lazy<Object> DATA_SOURCE = LazyKt.lazy(() -> {
-        try {
-            return TYPE_DATA_SOURCE.getValue().getConstructor(String.class, String.class, TYPE_DATA_TYPE.getValue(), TYPE_DEVICE.getValue())
-                    .newInstance("SOURCE_DI2", "Di2", DATA_TYPE_SHIFTING_GEARS.getValue(), DEVICE.getValue());
-        } catch (Exception e) {
-            Log.w("KI2", "Unable to get data source", e);
         }
 
         return null;
@@ -359,7 +424,9 @@ public class DataSyncServiceHook {
             Intent intent = new Intent(context, Class.forName("io.hammerhead.datasyncservice.v2.DataSyncService"));
             intent.setAction("databaseOperationsController");
             boolean result = context.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
-            Log.w("KI2", "DataSyncService bind: " + result);
+            if (!result) {
+                throw new Exception("Unable to bind to service");
+            }
         } catch (Exception e) {
             Log.e("KI2", "Unable to initialize DataSyncService hook", e);
         }
@@ -395,11 +462,69 @@ public class DataSyncServiceHook {
         return null;
     });
 
+    private static final ConcurrentHashMap<DeviceId, Object> DEVICE_INFO_MAP = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<DeviceId, Object> DEVICE_MAP = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<DeviceId, Object> DATA_SOURCE_MAP = new ConcurrentHashMap<>();
+
+    private static Object getDeviceInfo(DeviceId deviceId) {
+        if (DEVICE_INFO_MAP.containsKey(deviceId)){
+            return DEVICE_INFO_MAP.get(deviceId);
+        }
+
+        try {
+            Object deviceInfo = TYPE_DEVICE_INFO.getValue().getConstructor(String.class, Integer.TYPE, String.class, Boolean.TYPE, TYPE_BATTERY_VALUE.getValue(), TYPE_MANUFACTURER_INFO.getValue())
+                    .newInstance("Di2 " + deviceId.getDeviceNumber(), -1, "", false, null, null);
+            DEVICE_INFO_MAP.put(deviceId, deviceInfo);
+            return deviceInfo;
+        } catch (Exception e) {
+            Log.w("KI2", "Unable to get device info", e);
+        }
+
+        return null;
+    }
+
+    private static Object getDevice(DeviceId deviceId) {
+        if (DEVICE_MAP.containsKey(deviceId)){
+            return DEVICE_MAP.get(deviceId);
+        }
+
+        try {
+            Object device = TYPE_DEVICE.getValue().getConstructor(String.class, TYPE_DEVICE_INFO.getValue(), List.class, TYPE_CONNECTION_TYPE.getValue())
+                    .newInstance(deviceId.getUid(),
+                            getDeviceInfo(deviceId),
+                            Arrays.asList(DATA_TYPE_SHIFTING_GEARS.getValue(), DATA_TYPE_SHIFTING_FRONT_GEAR.getValue(), DATA_TYPE_SHIFTING_REAR_GEAR.getValue()),
+                            CONNECTION_TYPE.getValue());
+            DEVICE_MAP.put(deviceId, device);
+            return device;
+        } catch (Exception e) {
+            Log.w("KI2", "Unable to get device", e);
+        }
+
+        return null;
+    }
+
+    private static Object getDataSource(DeviceId deviceId) {
+        if (DATA_SOURCE_MAP.containsKey(deviceId)){
+            return DATA_SOURCE_MAP.get(deviceId);
+        }
+
+        try {
+            Object dataSource= TYPE_DATA_SOURCE.getValue().getConstructor(String.class, String.class, TYPE_DATA_TYPE.getValue(), TYPE_DEVICE.getValue())
+                    .newInstance("SOURCE_DI2_" + deviceId.getDeviceNumber(), "Di2 " + deviceId.getDeviceNumber(), DATA_TYPE_SHIFTING_GEARS.getValue(), getDevice(deviceId));
+            DATA_SOURCE_MAP.put(deviceId, dataSource);
+            return dataSource;
+        } catch (Exception e) {
+            Log.w("KI2", "Unable to get data source", e);
+        }
+
+        return null;
+    }
+
     private static Object getIntValue(int value) throws Exception {
         return CONSTRUCTOR_VALUE.getValue().newInstance(value, 0);
     }
 
-    private static Object getDataPoint(int gearFrontIndex, int gearFrontTeeth, int gearRearIndex, int gearRearTeeth) throws Exception {
+    private static Object getDataPoint(DeviceId deviceId, int gearFrontIndex, int gearFrontTeeth, int gearRearIndex, int gearRearTeeth) throws Exception {
         Map map = new HashMap();
         map.put(FIELD_SHIFTING_FRONT_GEAR.getValue(), getIntValue(gearFrontIndex));
         map.put(FIELD_SHIFTING_FRONT_GEAR_TEETH.getValue(), getIntValue(gearFrontTeeth));
@@ -409,7 +534,7 @@ public class DataSyncServiceHook {
         return CONSTRUCTOR_DATA_POINT.getValue().newInstance(3000,
                 System.currentTimeMillis(),
                 DATA_TYPE_SHIFTING_GEARS.getValue(),
-                Collections.singletonList(DATA_SOURCE.getValue()),
+                Collections.singletonList(getDataSource(deviceId)),
                 map,
                 Collections.emptyMap(),
                 Collections.emptyMap());
@@ -427,13 +552,14 @@ public class DataSyncServiceHook {
     /**
      * Report gear shift event to be stored in the FIT file.
      *
+     * @param deviceId       Device identifier.
      * @param frontGearIndex Front gear index.
      * @param frontGearTeeth Front gear teeth count.
      * @param rearGearIndex  Rear gear index.
      * @param rearGearTeeth  Rear gear teeth count.
      * @return True when report is expected to work, false otherwise.
      */
-    public static boolean reportGearShift(int frontGearIndex, int frontGearTeeth, int rearGearIndex, int rearGearTeeth) {
+    public static boolean reportGearShift(DeviceId deviceId, int frontGearIndex, int frontGearTeeth, int rearGearIndex, int rearGearTeeth) {
         if (!initialized || ACTIVITY_DATA_CONTROLLER == null || errors >= MAX_ERRORS) {
             return false;
         }
@@ -445,7 +571,7 @@ public class DataSyncServiceHook {
                 }
 
                 try {
-                    METHOD_FIT_ENCODER_ON_DATA_POINT.getValue().invoke(o, getDataPoint(frontGearIndex, frontGearTeeth, rearGearIndex, rearGearTeeth));
+                    METHOD_FIT_ENCODER_ON_DATA_POINT.getValue().invoke(o, getDataPoint(deviceId, frontGearIndex, frontGearTeeth, rearGearIndex, rearGearTeeth));
                 } catch (Exception e) {
                     Log.w("KI2", "Unable to push data point", e);
                     errors++;

@@ -13,6 +13,7 @@ import java.util.function.BiConsumer;
 public class ShiftingReportingManager implements IRideHandler {
 
     private boolean riding;
+    private DeviceId deviceId;
     private final ShiftingGearingHelper shiftingGearingHelper;
 
     private final BiConsumer<DeviceId, ShiftingInfo> onShifting = this::onShifting;
@@ -27,11 +28,13 @@ public class ShiftingReportingManager implements IRideHandler {
     }
 
     private void onShifting(DeviceId deviceId, ShiftingInfo shiftingInfo) {
+        this.deviceId = deviceId;
         shiftingGearingHelper.setShiftingInfo(shiftingInfo);
         tryReportShiftingInfo();
     }
 
     private void onDevicePreferences(DeviceId deviceId, DevicePreferencesView devicePreferencesView) {
+        this.deviceId = deviceId;
         shiftingGearingHelper.setDevicePreferences(devicePreferencesView);
         tryReportShiftingInfo();
     }
@@ -39,6 +42,7 @@ public class ShiftingReportingManager implements IRideHandler {
     private void tryReportShiftingInfo() {
         if (riding && shiftingGearingHelper.hasValidGearingInfo()) {
             DataSyncServiceHook.reportGearShift(
+                    deviceId,
                     shiftingGearingHelper.getFrontGear(),
                     shiftingGearingHelper.getFrontGearTeethCount(),
                     shiftingGearingHelper.getRearGear(),
