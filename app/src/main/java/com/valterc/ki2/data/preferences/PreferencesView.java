@@ -181,6 +181,17 @@ public class PreferencesView implements Parcelable {
     }
 
     /**
+     * Indicates if FIT Recording setting is enabled.
+     *
+     * @param context Ki2 application context. Cannot be a context generated from another package.
+     * @return True if FIT Recording setting is enabled, false otherwise.
+     */
+    public boolean isFITRecordingEnabled(Context context) {
+        return getBoolean(context.getString(R.string.preference_fit_recording),
+                () -> context.getResources().getBoolean(R.bool.default_preference_fit_recording));
+    }
+
+    /**
      * Get the battery level that should be considered as low battery.
      *
      * @param context Ki2 application context. Cannot be a context generated from another package.

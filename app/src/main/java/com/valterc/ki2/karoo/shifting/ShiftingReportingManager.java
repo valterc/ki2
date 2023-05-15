@@ -1,6 +1,9 @@
 package com.valterc.ki2.karoo.shifting;
 
+import android.content.Context;
+
 import com.valterc.ki2.data.device.DeviceId;
+import com.valterc.ki2.data.preferences.PreferencesView;
 import com.valterc.ki2.data.preferences.device.DevicePreferencesView;
 import com.valterc.ki2.data.shifting.ShiftingInfo;
 import com.valterc.ki2.karoo.Ki2Context;
@@ -8,23 +11,35 @@ import com.valterc.ki2.karoo.handlers.IRideHandler;
 import com.valterc.ki2.karoo.hooks.DataSyncServiceHook;
 
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 @SuppressWarnings("FieldCanBeLocal")
 public class ShiftingReportingManager implements IRideHandler {
 
+
+    private final Context context;
+    private final ShiftingGearingHelper shiftingGearingHelper;
     private boolean riding;
     private DeviceId deviceId;
-    private final ShiftingGearingHelper shiftingGearingHelper;
+    private boolean fitRecordingEnabled;
 
+    private final Consumer<PreferencesView> onPreferences = this::onPreferences;
     private final BiConsumer<DeviceId, ShiftingInfo> onShifting = this::onShifting;
     private final BiConsumer<DeviceId, DevicePreferencesView> onDevicePreferences = this::onDevicePreferences;
 
     public ShiftingReportingManager(Ki2Context ki2Context) {
         DataSyncServiceHook.init(ki2Context.getSdkContext());
+        context = ki2Context.getSdkContext();
         shiftingGearingHelper = new ShiftingGearingHelper(ki2Context.getSdkContext());
 
+        ki2Context.getServiceClient().registerPreferencesWeakListener(onPreferences);
         ki2Context.getServiceClient().registerShiftingInfoWeakListener(onShifting);
         ki2Context.getServiceClient().registerDevicePreferencesWeakListener(onDevicePreferences);
+    }
+
+    private void onPreferences(PreferencesView preferencesView) {
+        fitRecordingEnabled = preferencesView.isFITRecordingEnabled(context);
+        tryReportShiftingInfo();
     }
 
     private void onShifting(DeviceId deviceId, ShiftingInfo shiftingInfo) {
@@ -40,7 +55,7 @@ public class ShiftingReportingManager implements IRideHandler {
     }
 
     private void tryReportShiftingInfo() {
-        if (riding && shiftingGearingHelper.hasValidGearingInfo()) {
+        if (fitRecordingEnabled && riding && shiftingGearingHelper.hasValidGearingInfo()) {
             DataSyncServiceHook.reportGearShift(
                     deviceId,
                     shiftingGearingHelper.getFrontGear(),
