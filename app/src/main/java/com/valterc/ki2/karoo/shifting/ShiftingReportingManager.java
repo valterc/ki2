@@ -15,8 +15,7 @@ import java.util.function.Consumer;
 
 @SuppressWarnings("FieldCanBeLocal")
 public class ShiftingReportingManager implements IRideHandler {
-
-
+    
     private final Context context;
     private final ShiftingGearingHelper shiftingGearingHelper;
     private boolean riding;
