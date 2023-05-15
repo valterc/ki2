@@ -64,7 +64,6 @@ public class ShiftingReportingManager implements IRideHandler {
         }
     }
 
-
     @Override
     public void onRideStart() {
         riding = true;
