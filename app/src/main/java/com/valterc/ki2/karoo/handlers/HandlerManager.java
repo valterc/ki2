@@ -46,6 +46,4 @@ public class HandlerManager {
 
         rideStatus = newRideStatus;
     }
-
-
 }

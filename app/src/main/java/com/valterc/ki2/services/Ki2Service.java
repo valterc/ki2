@@ -497,6 +497,14 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
         }
     };
 
+    private final BroadcastReceiver receiverInRide = new BroadcastReceiver() {
+        @Override
+        public void onReceive(final Context context, final Intent intent) {
+            Timber.d("Received In Ride broadcast");
+            serviceHandler.postRetriableAction(() -> onMessage(new RideStatusMessage(RideStatus.ONGOING)));
+        }
+    };
+
     private MessageManager messageManager;
     private AntManager antManager;
     private AntScanner antScanner;
@@ -535,6 +543,7 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
         devicePreferencesStore.setDevices(deviceStore.getDevices());
 
         registerReceiver(receiverReconnectDevices, new IntentFilter("io.hammerhead.action.RECONNECT_DEVICES"));
+        registerReceiver(receiverInRide, new IntentFilter("io.hammerhead.action.IN_RIDE"));
         Timber.i("Service created");
     }
 

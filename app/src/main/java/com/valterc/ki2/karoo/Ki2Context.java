@@ -3,7 +3,6 @@ package com.valterc.ki2.karoo;
 import android.annotation.SuppressLint;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 
 import com.valterc.ki2.data.message.RideStatusMessage;
 import com.valterc.ki2.data.ride.RideStatus;
@@ -44,7 +43,6 @@ public class Ki2Context {
 
     private void onRideStatusMessage(RideStatusMessage rideStatusMessage) {
         rideStatus = rideStatusMessage.getRideStatus();
-        Log.d("KI2", "Updated ride status: " + rideStatus);
     }
 
     public Handler getHandler() {
