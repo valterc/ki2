@@ -174,9 +174,9 @@ Yes, this is by design. There is a particular file missing from this repo and un
 
 No! I don't work for hammerhead and I don't have access to their code. I'm just a programmer with a dusty experience in Android development and an eye for UI. I tried to replicate the Karoo interface (look and feel, colors, etc.) to make the app fit in. You can find the [Karoo SDK with design guidelines here](https://github.com/hammerheadnav/karoo-sdk).
 
-### Hood buttons are inverted or don't work as expected?
+### How to configure hood buttons/switches?
 
-It might be because your shifting configuration has a different action assigned to the hood buttons. Ki2 expects _Channel 1_ for left button and _Channel 2_ for right button. If your shifting configuration is different, you might experience weird behavior. Please double check the configuration via the manufacturer official shifting app available on smartphones. _Channel 3_ and _Channel 4_ are currently not supported.
+Typically _Channel 1_ is used for the left hood button and _Channel 2_ for the right hood button. Set the channels via the manufacturer official shifting app available on smartphones. You can use the device details in Ki2, by pressing on a device name, to verify the corresponding switch action.
 
 ### The app disconnects from the shifting unit while riding
 

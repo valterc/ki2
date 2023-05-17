@@ -98,18 +98,33 @@ public class InputManager {
         this.preferences = PreferenceManager.getDefaultSharedPreferences(context);
 
         this.preferenceMap = new HashMap<>();
-        this.preferenceMap.put(new Pair<>(SwitchType.LEFT, SwitchCommandType.SINGLE_PRESS),
-                new Pair<>(context.getString(R.string.preference_left_switch_single_press), context.getString(R.string.default_preference_left_switch_single_press)));
-        this.preferenceMap.put(new Pair<>(SwitchType.LEFT, SwitchCommandType.DOUBLE_PRESS),
-                new Pair<>(context.getString(R.string.preference_left_switch_double_press), context.getString(R.string.default_preference_left_switch_double_press)));
-        this.preferenceMap.put(new Pair<>(SwitchType.LEFT, SwitchCommandType.HOLD),
-                new Pair<>(context.getString(R.string.preference_left_switch_hold), context.getString(R.string.default_preference_left_switch_hold)));
-        this.preferenceMap.put(new Pair<>(SwitchType.RIGHT, SwitchCommandType.SINGLE_PRESS),
-                new Pair<>(context.getString(R.string.preference_right_switch_single_press), context.getString(R.string.default_preference_right_switch_single_press)));
-        this.preferenceMap.put(new Pair<>(SwitchType.RIGHT, SwitchCommandType.DOUBLE_PRESS),
-                new Pair<>(context.getString(R.string.preference_right_switch_double_press), context.getString(R.string.default_preference_right_switch_double_press)));
-        this.preferenceMap.put(new Pair<>(SwitchType.RIGHT, SwitchCommandType.HOLD),
-                new Pair<>(context.getString(R.string.preference_right_switch_hold), context.getString(R.string.default_preference_right_switch_hold)));
+        this.preferenceMap.put(new Pair<>(SwitchType.D_FLY_CH1, SwitchCommandType.SINGLE_PRESS),
+                new Pair<>(context.getString(R.string.preference_switch_ch1_single_press), context.getString(R.string.default_preference_switch_ch1_single_press)));
+        this.preferenceMap.put(new Pair<>(SwitchType.D_FLY_CH1, SwitchCommandType.DOUBLE_PRESS),
+                new Pair<>(context.getString(R.string.preference_switch_ch1_double_press), context.getString(R.string.default_preference_switch_ch1_double_press)));
+        this.preferenceMap.put(new Pair<>(SwitchType.D_FLY_CH1, SwitchCommandType.HOLD),
+                new Pair<>(context.getString(R.string.preference_switch_ch1_hold), context.getString(R.string.default_preference_switch_ch1_hold)));
+
+        this.preferenceMap.put(new Pair<>(SwitchType.D_FLY_CH2, SwitchCommandType.SINGLE_PRESS),
+                new Pair<>(context.getString(R.string.preference_switch_ch2_single_press), context.getString(R.string.default_preference_switch_ch2_single_press)));
+        this.preferenceMap.put(new Pair<>(SwitchType.D_FLY_CH2, SwitchCommandType.DOUBLE_PRESS),
+                new Pair<>(context.getString(R.string.preference_switch_ch2_double_press), context.getString(R.string.default_preference_switch_ch2_double_press)));
+        this.preferenceMap.put(new Pair<>(SwitchType.D_FLY_CH2, SwitchCommandType.HOLD),
+                new Pair<>(context.getString(R.string.preference_switch_ch2_hold), context.getString(R.string.default_preference_switch_ch2_hold)));
+
+        this.preferenceMap.put(new Pair<>(SwitchType.D_FLY_CH3, SwitchCommandType.SINGLE_PRESS),
+                new Pair<>(context.getString(R.string.preference_switch_ch3_single_press), context.getString(R.string.default_preference_switch)));
+        this.preferenceMap.put(new Pair<>(SwitchType.D_FLY_CH3, SwitchCommandType.DOUBLE_PRESS),
+                new Pair<>(context.getString(R.string.preference_switch_ch3_double_press), context.getString(R.string.default_preference_switch)));
+        this.preferenceMap.put(new Pair<>(SwitchType.D_FLY_CH3, SwitchCommandType.HOLD),
+                new Pair<>(context.getString(R.string.preference_switch_ch3_hold), context.getString(R.string.default_preference_switch)));
+
+        this.preferenceMap.put(new Pair<>(SwitchType.D_FLY_CH4, SwitchCommandType.SINGLE_PRESS),
+                new Pair<>(context.getString(R.string.preference_switch_ch4_single_press), context.getString(R.string.default_preference_switch)));
+        this.preferenceMap.put(new Pair<>(SwitchType.D_FLY_CH4, SwitchCommandType.DOUBLE_PRESS),
+                new Pair<>(context.getString(R.string.preference_switch_ch4_double_press), context.getString(R.string.default_preference_switch)));
+        this.preferenceMap.put(new Pair<>(SwitchType.D_FLY_CH4, SwitchCommandType.HOLD),
+                new Pair<>(context.getString(R.string.preference_switch_ch4_hold), context.getString(R.string.default_preference_switch)));
     }
 
     @Nullable

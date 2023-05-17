@@ -47,8 +47,10 @@ public class DeviceDetailsFragment extends Fragment implements IKarooKeyListener
     private final Handler handler = new Handler();
     private boolean serviceBound;
     private DeviceDetailsViewModel viewModel;
-    private long timestampLeftSwitch;
-    private long timestampRightSwitch;
+    private long timestampSwitchCH1;
+    private long timestampSwitchCH2;
+    private long timestampSwitchCH3;
+    private long timestampSwitchCH4;
 
     public static DeviceDetailsFragment newInstance(DeviceId deviceId) {
         DeviceDetailsFragment deviceDetailsFragment = new DeviceDetailsFragment();
@@ -172,8 +174,10 @@ public class DeviceDetailsFragment extends Fragment implements IKarooKeyListener
             }
         });
 
-        TextView textViewLeftSwitch = view.findViewById(R.id.textview_device_details_left_switch);
-        TextView textViewRightSwitch = view.findViewById(R.id.textview_device_details_right_switch);
+        TextView textViewSwitchCH1 = view.findViewById(R.id.textview_device_details_switch_ch1);
+        TextView textViewSwitchCH2 = view.findViewById(R.id.textview_device_details_switch_ch2);
+        TextView textViewSwitchCH3 = view.findViewById(R.id.textview_device_details_switch_ch3);
+        TextView textViewSwitchCH4 = view.findViewById(R.id.textview_device_details_switch_ch4);
 
         Button buttonRemove = view.findViewById(R.id.button_device_details_remove);
         buttonRemove.setOnClickListener(v -> new AlertDialog.Builder(requireContext(), R.style.AlertDialogStyle)
@@ -385,12 +389,20 @@ public class DeviceDetailsFragment extends Fragment implements IKarooKeyListener
         viewModel.getSwitchEvent().observe(getViewLifecycleOwner(), switchEvent -> {
             TextView textViewSwitch;
 
-            if (switchEvent.getType() == SwitchType.LEFT) {
-                textViewSwitch = textViewLeftSwitch;
-                timestampLeftSwitch = System.currentTimeMillis();
+            if (switchEvent.getType() == SwitchType.D_FLY_CH1) {
+                textViewSwitch = textViewSwitchCH1;
+                timestampSwitchCH1 = System.currentTimeMillis();
+            } else if (switchEvent.getType() == SwitchType.D_FLY_CH2) {
+                textViewSwitch = textViewSwitchCH2;
+                timestampSwitchCH2 = System.currentTimeMillis();
+            } else if (switchEvent.getType() == SwitchType.D_FLY_CH3) {
+                textViewSwitch = textViewSwitchCH3;
+                timestampSwitchCH3 = System.currentTimeMillis();
+            } else if (switchEvent.getType() == SwitchType.D_FLY_CH4) {
+                textViewSwitch = textViewSwitchCH4;
+                timestampSwitchCH4 = System.currentTimeMillis();
             } else {
-                textViewSwitch = textViewRightSwitch;
-                timestampRightSwitch = System.currentTimeMillis();
+                return;
             }
 
             boolean autoClear = false;
@@ -419,13 +431,21 @@ public class DeviceDetailsFragment extends Fragment implements IKarooKeyListener
 
             if (autoClear) {
                 handler.postDelayed(() -> {
-                    if (switchEvent.getType() == SwitchType.LEFT) {
-                        if (System.currentTimeMillis() - timestampLeftSwitch > SWITCH_AUTO_CLEAR_DELAY_MS * 0.8) {
-                            textViewLeftSwitch.setText(R.string.text_no_action);
+                    if (switchEvent.getType() == SwitchType.D_FLY_CH1) {
+                        if (System.currentTimeMillis() - timestampSwitchCH1 > SWITCH_AUTO_CLEAR_DELAY_MS * 0.8) {
+                            textViewSwitchCH1.setText(R.string.text_no_action);
                         }
-                    } else {
-                        if (System.currentTimeMillis() - timestampRightSwitch > SWITCH_AUTO_CLEAR_DELAY_MS * 0.8) {
-                            textViewRightSwitch.setText(R.string.text_no_action);
+                    } else if (switchEvent.getType() == SwitchType.D_FLY_CH2) {
+                        if (System.currentTimeMillis() - timestampSwitchCH2 > SWITCH_AUTO_CLEAR_DELAY_MS * 0.8) {
+                            textViewSwitchCH2.setText(R.string.text_no_action);
+                        }
+                    } else if (switchEvent.getType() == SwitchType.D_FLY_CH3) {
+                        if (System.currentTimeMillis() - timestampSwitchCH3 > SWITCH_AUTO_CLEAR_DELAY_MS * 0.8) {
+                            textViewSwitchCH3.setText(R.string.text_no_action);
+                        }
+                    } else if (switchEvent.getType() == SwitchType.D_FLY_CH4) {
+                        if (System.currentTimeMillis() - timestampSwitchCH4 > SWITCH_AUTO_CLEAR_DELAY_MS * 0.8) {
+                            textViewSwitchCH4.setText(R.string.text_no_action);
                         }
                     }
                 }, SWITCH_AUTO_CLEAR_DELAY_MS);

@@ -44,6 +44,10 @@
     <string name="text_change_mode">Change Mode</string>
     <string name="text_left_switch">Left Switch</string>
     <string name="text_right_switch">Right Switch</string>
+    <string name="text_dfly_ch1">D-Fly Ch. 1</string>
+    <string name="text_dfly_ch2">D-Fly Ch. 2</string>
+    <string name="text_dfly_ch3">D-Fly Ch. 3</string>
+    <string name="text_dfly_ch4">D-Fly Ch. 4</string>
     <string name="text_waiting_for_data">Waiting for data…</string>
     <string name="text_reconnect">Reconnect</string>
     <string name="text_param_percentage">%d%%</string>

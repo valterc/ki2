@@ -757,9 +757,10 @@
                     android:layout_height="1dp"
                     android:background="@color/hh_divider_color" />
 
-                <androidx.constraintlayout.widget.ConstraintLayout
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -767,9 +768,7 @@
                         android:baselineAligned="false"
                         android:orientation="horizontal"
                         android:paddingHorizontal="20dp"
-                        android:paddingVertical="10dp"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintTop_toTopOf="parent">
+                        android:paddingVertical="10dp">
 
                         <LinearLayout
                             android:layout_width="0dp"
@@ -779,7 +778,7 @@
                             android:paddingTop="5dp">
 
                             <TextView
-                                android:id="@+id/textview_device_details_left_switch"
+                                android:id="@+id/textview_device_details_switch_ch1"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/text_no_action"
@@ -789,7 +788,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/text_left_switch"
+                                android:text="@string/text_dfly_ch1"
                                 android:textColor="@color/hh_light_grey"
                                 android:textSize="13sp" />
 
@@ -803,7 +802,7 @@
                             android:paddingTop="5dp">
 
                             <TextView
-                                android:id="@+id/textview_device_details_right_switch"
+                                android:id="@+id/textview_device_details_switch_ch2"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/text_no_action"
@@ -813,7 +812,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/text_right_switch"
+                                android:text="@string/text_dfly_ch2"
                                 android:textColor="@color/hh_light_grey"
                                 android:textSize="13sp" />
 
@@ -821,7 +820,65 @@
 
                     </LinearLayout>
 
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:baselineAligned="false"
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="20dp"
+                        android:paddingVertical="10dp">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:paddingTop="5dp">
+
+                            <TextView
+                                android:id="@+id/textview_device_details_switch_ch3"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/text_no_action"
+                                android:textColor="@color/hh_black"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/text_dfly_ch3"
+                                android:textColor="@color/hh_light_grey"
+                                android:textSize="13sp" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:paddingTop="5dp">
+
+                            <TextView
+                                android:id="@+id/textview_device_details_switch_ch4"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/text_no_action"
+                                android:textColor="@color/hh_black"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/text_dfly_ch4"
+                                android:textColor="@color/hh_light_grey"
+                                android:textSize="13sp" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
