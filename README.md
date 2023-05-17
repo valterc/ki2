@@ -176,7 +176,7 @@ No! I don't work for hammerhead and I don't have access to their code. I'm just 
 
 ### How to configure hood buttons/switches?
 
-Typically _Channel 1_ is used for the left hood button and _Channel 2_ for the right hood button. Set the channels via the manufacturer official shifting app available on smartphones. You can use the device details in Ki2, by pressing on a device name, to verify the corresponding switch action.
+Typically _Channel 1_ is used for the left hood button and _Channel 2_ for the right hood button. Set the channels via the manufacturer official shifting app available on smartphones. You can use the device details in Ki2, by pressing on a device name, to verify the channel actions.
 
 ### The app disconnects from the shifting unit while riding
 
