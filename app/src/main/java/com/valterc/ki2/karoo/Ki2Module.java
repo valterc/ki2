@@ -30,9 +30,11 @@ import com.valterc.ki2.karoo.datatypes.ShiftModeDataType;
 import com.valterc.ki2.karoo.datatypes.ShiftModeTextDataType;
 import com.valterc.ki2.karoo.handlers.HandlerManager;
 import com.valterc.ki2.karoo.hooks.ActivityServiceHook;
+import com.valterc.ki2.karoo.hooks.DataSyncServiceHook;
 import com.valterc.ki2.karoo.hooks.RideActivityHook;
 import com.valterc.ki2.karoo.overlay.OverlayManager;
 import com.valterc.ki2.karoo.shifting.ShiftingAudioAlertHandler;
+import com.valterc.ki2.karoo.shifting.ShiftingReportingManager;
 import com.valterc.ki2.karoo.update.UpdateAvailableHandler;
 import com.valterc.ki2.karoo.update.UpdateAvailableNotification;
 
@@ -72,6 +74,8 @@ public class Ki2Module extends Module {
                     new ShiftingAudioAlertHandler(ki2Context)));
         } else if (RideActivityHook.isRideActivityProcess()) {
             handlerManager = new HandlerManager(ki2Context, Collections.singletonList(new OverlayManager(ki2Context)));
+        } else if (DataSyncServiceHook.isInDataSyncService()) {
+            handlerManager = new HandlerManager(ki2Context, Collections.singletonList(new ShiftingReportingManager(ki2Context)));
         } else {
             handlerManager = null;
         }

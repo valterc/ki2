@@ -11,6 +11,7 @@
     <string name="category_preference_audio_alerts">Audio Alerts</string>
     <string name="category_preference_general_settings">General Settings</string>
     <string name="category_preference_overlay">Overlay</string>
+    <string name="category_preference_fit_recording">FIT Recording</string>
 
     <string name="title_preference_left_single_press">Left Single Press</string>
     <string name="title_preference_left_double_press">Left Double Press</string>
@@ -33,6 +34,7 @@
     <string name="title_preference_overlay_theme">Theme</string>
     <string name="title_preference_overlay_opacity">Opacity</string>
     <string name="title_preference_overlay_position">Position</string>
+    <string name="title_preference_fit_recording">FIT Recording</string>
 
     <string name="summary_preference_pre_load">Pre load the ride application to avoid data elements not showing after startup</string>
     <string name="summary_preference_battery_notification">Show notifications when the shifting battery level is at or below a certain value</string>
@@ -49,6 +51,7 @@
     <string name="summary_preference_overlay_theme">Visual theme</string>
     <string name="summary_preference_overlay_opacity">Overlay view opacity, a low opacity will make the overlay translucent.</string>
     <string name="summary_preference_overlay_position">Overlay position in the Ride screen.</string>
+    <string name="summary_preference_fit_recording">Record gear shift events in the Ride FIT file.</string>
 
     <string name="default_preference_left_switch_single_press">navigate_left</string>
     <string name="default_preference_left_switch_double_press">lap_map_back</string>
@@ -68,6 +71,7 @@
     <string name="default_preference_overlay_theme">default_dark_gear_index</string>
     <integer name="default_preference_overlay_opacity">1</integer>
     <integer name="default_preference_overlay_position">0</integer>
+    <bool name="default_preference_fit_recording">false</bool>
 
     <string name="value_preference_battery_level_off">off</string>
     <string name="value_preference_audio_alert_disabled">disabled</string>
@@ -94,5 +98,6 @@
     <string name="preference_overlay_opacity">OVERLAY_OPACITY</string>
     <string name="preference_overlay_position_x">OVERLAY_POSITION_X</string>
     <string name="preference_overlay_position_y">OVERLAY_POSITION_Y</string>
+    <string name="preference_fit_recording">FIT_RECORDING</string>
 
 </resources>
