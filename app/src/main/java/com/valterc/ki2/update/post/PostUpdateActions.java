@@ -9,6 +9,7 @@ import com.valterc.ki2.update.post.actions.IPreInitPostUpdateAction;
 import com.valterc.ki2.update.post.actions.InitializeDevicesPriority;
 import com.valterc.ki2.update.post.actions.UpdateAudioAlertPreferences;
 import com.valterc.ki2.update.post.actions.UpdateDeviceIds;
+import com.valterc.ki2.update.post.actions.UpdateSwitchPreferences;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,6 +28,7 @@ public final class PostUpdateActions {
         preInitActionMap = new HashMap<>();
         preInitActionMap.put(UpdateDeviceIds.class.getSimpleName(), new UpdateDeviceIds());
         preInitActionMap.put(UpdateAudioAlertPreferences.class.getSimpleName(), new UpdateAudioAlertPreferences());
+        preInitActionMap.put(UpdateSwitchPreferences.class.getSimpleName(), new UpdateSwitchPreferences());
 
         postInitActionMap = new HashMap<>();
         postInitActionMap.put(InitializeDevicesPriority.class.getSimpleName(), new InitializeDevicesPriority());

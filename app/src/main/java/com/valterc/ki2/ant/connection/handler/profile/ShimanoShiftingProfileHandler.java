@@ -52,8 +52,10 @@ public class ShimanoShiftingProfileHandler implements IDeviceProfileHandler {
 
     private final ShiftingInfoBuilder shiftingInfoBuilder;
     private final ManufacturerInfoBuilder manufacturerInfoBuilder;
-    private final SwitchData switchDataLeft;
-    private final SwitchData switchDataRight;
+    private final SwitchData switchDataCH1;
+    private final SwitchData switchDataCH2;
+    private final SwitchData switchDataCH3;
+    private final SwitchData switchDataCH4;
     private final BuzzerData buzzerData;
 
 
@@ -79,8 +81,10 @@ public class ShimanoShiftingProfileHandler implements IDeviceProfileHandler {
         this.manufacturerInfoBuilder = new ManufacturerInfoBuilder();
         this.manufacturerInfoBuilder.setComponentId(null);
 
-        this.switchDataLeft = new SwitchData();
-        this.switchDataRight = new SwitchData();
+        this.switchDataCH1 = new SwitchData();
+        this.switchDataCH2 = new SwitchData();
+        this.switchDataCH3 = new SwitchData();
+        this.switchDataCH4 = new SwitchData();
         this.buzzerData = new BuzzerData();
     }
 
@@ -200,18 +204,28 @@ public class ShimanoShiftingProfileHandler implements IDeviceProfileHandler {
     private void handleSwitchStatusPage(byte[] payload) {
         this.missingIndicators.remove(SlaveStatusIndicator.SWITCH_COMMAND_NUMBER);
 
-        int sequenceNumberRight = (int) (MessageUtils.numberFromBytes(payload, 1, 1) & 15);
-        SwitchCommand switchCommandRight = SwitchCommand.fromCommandNumber((int) MessageUtils.numberFromBytes(payload, 1, 1) & 240);
-        handleSwitch(switchCommandRight, switchDataRight, sequenceNumberRight, SwitchType.RIGHT);
+        int sequenceNumberCH2 = (int) (MessageUtils.numberFromBytes(payload, 1, 1) & 15);
+        SwitchCommand switchCommandCH2 = SwitchCommand.fromCommandNumber((int) MessageUtils.numberFromBytes(payload, 1, 1) & 240);
+        handleSwitch(switchCommandCH2, switchDataCH2, sequenceNumberCH2, SwitchType.D_FLY_CH2);
 
-        int sequenceNumberLeft = (int) (MessageUtils.numberFromBytes(payload, 2, 1) & 15);
-        SwitchCommand switchCommandLeft = SwitchCommand.fromCommandNumber((int) MessageUtils.numberFromBytes(payload, 2, 1) & 240);
-        handleSwitch(switchCommandLeft, switchDataLeft, sequenceNumberLeft, SwitchType.LEFT);
+        int sequenceNumberCH1 = (int) (MessageUtils.numberFromBytes(payload, 2, 1) & 15);
+        SwitchCommand switchCommandCH1 = SwitchCommand.fromCommandNumber((int) MessageUtils.numberFromBytes(payload, 2, 1) & 240);
+        handleSwitch(switchCommandCH1, switchDataCH1, sequenceNumberCH1, SwitchType.D_FLY_CH1);
 
-        Timber.d("[%s] Received switch info: {left={command=%s, sequence=%s}, right={command=%s, sequence=%s}}",
+        int sequenceNumberCH4 = (int) (MessageUtils.numberFromBytes(payload, 3, 1) & 15);
+        SwitchCommand switchCommandCH4 = SwitchCommand.fromCommandNumber((int) MessageUtils.numberFromBytes(payload, 3, 1) & 240);
+        handleSwitch(switchCommandCH4, switchDataCH4, sequenceNumberCH4, SwitchType.D_FLY_CH4);
+
+        int sequenceNumberCH3 = (int) (MessageUtils.numberFromBytes(payload, 4, 1) & 15);
+        SwitchCommand switchCommandCH3 = SwitchCommand.fromCommandNumber((int) MessageUtils.numberFromBytes(payload, 4, 1) & 240);
+        handleSwitch(switchCommandCH3, switchDataCH3, sequenceNumberCH3, SwitchType.D_FLY_CH3);
+
+        Timber.d("[%s] Received switch info: {CH1={command=%s, sequence=%s}, CH2={command=%s, sequence=%s}, CH3={command=%s, sequence=%s}, CH4={command=%s, sequence=%s}}",
                 deviceId,
-                switchCommandLeft, sequenceNumberLeft,
-                switchCommandRight, sequenceNumberRight);
+                switchCommandCH1, sequenceNumberCH1,
+                switchCommandCH2, sequenceNumberCH2,
+                switchCommandCH3, sequenceNumberCH3,
+                switchCommandCH4, sequenceNumberCH4);
     }
 
     private void handleSwitch(SwitchCommand switchCommand, SwitchData switchData, int sequenceNumber, SwitchType type) {

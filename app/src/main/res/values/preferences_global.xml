@@ -2,8 +2,10 @@
 <resources>
 
     <string name="category_preference_switches">Switches</string>
-    <string name="category_preference_left_switch">Left Switch</string>
-    <string name="category_preference_right_switch">Right Switch</string>
+    <string name="category_preference_switch_ch1">D-Fly Ch. 1</string>
+    <string name="category_preference_switch_ch2">D-Fly Ch. 2</string>
+    <string name="category_preference_switch_ch3">D-Fly Ch. 3</string>
+    <string name="category_preference_switch_ch4">D-Fly Ch. 4</string>
     <string name="category_preference_pre_load">Pre load</string>
     <string name="category_preference_battery">Battery</string>
     <string name="category_preference_battery_notification">Battery Notification</string>
@@ -13,12 +15,9 @@
     <string name="category_preference_overlay">Overlay</string>
     <string name="category_preference_fit_recording">FIT Recording</string>
 
-    <string name="title_preference_left_single_press">Left Single Press</string>
-    <string name="title_preference_left_double_press">Left Double Press</string>
-    <string name="title_preference_left_hold">Left Hold</string>
-    <string name="title_preference_right_single_press">Right Single Press</string>
-    <string name="title_preference_right_double_press">Right Double Press</string>
-    <string name="title_preference_right_hold">Right Hold</string>
+    <string name="title_preference_switch_single_press">Single Press</string>
+    <string name="title_preference_switch_double_press">Double Press</string>
+    <string name="title_preference_switch_hold">Hold</string>
     <string name="title_preference_pre_load">Pre load ride application</string>
     <string name="title_preference_battery_level_low">Battery low</string>
     <string name="title_preference_battery_level_critical">Battery critical</string>
@@ -53,12 +52,13 @@
     <string name="summary_preference_overlay_position">Overlay position in the Ride screen.</string>
     <string name="summary_preference_fit_recording">Record gear shift events in the Ride FIT file.</string>
 
-    <string name="default_preference_left_switch_single_press">navigate_left</string>
-    <string name="default_preference_left_switch_double_press">lap_map_back</string>
-    <string name="default_preference_left_switch_hold">map_graph_zoom_out</string>
-    <string name="default_preference_right_switch_single_press">navigate_right</string>
-    <string name="default_preference_right_switch_double_press">pause_resume_confirm</string>
-    <string name="default_preference_right_switch_hold">map_graph_zoom_in</string>
+    <string name="default_preference_switch_ch1_single_press">navigate_left</string>
+    <string name="default_preference_switch_ch1_double_press">lap_map_back</string>
+    <string name="default_preference_switch_ch1_hold">map_graph_zoom_out</string>
+    <string name="default_preference_switch_ch2_single_press">navigate_right</string>
+    <string name="default_preference_switch_ch2_double_press">pause_resume_confirm</string>
+    <string name="default_preference_switch_ch2_hold">map_graph_zoom_in</string>
+    <string name="default_preference_switch">none</string>
     <string name="default_preference_battery_level_low">20</string>
     <string name="default_preference_battery_level_critical">10</string>
     <string name="default_preference_audio_alert_delay">0</string>
@@ -76,12 +76,18 @@
     <string name="value_preference_battery_level_off">off</string>
     <string name="value_preference_audio_alert_disabled">disabled</string>
 
-    <string name="preference_left_switch_single_press">LEFT_SWITCH_SINGLE_PRESS</string>
-    <string name="preference_left_switch_double_press">LEFT_SWITCH_DOUBLE_PRESS</string>
-    <string name="preference_left_switch_hold">LEFT_SWITCH_HOLD</string>
-    <string name="preference_right_switch_single_press">RIGHT_SWITCH_SINGLE_PRESS</string>
-    <string name="preference_right_switch_double_press">RIGHT_SWITCH_DOUBLE_PRESS</string>
-    <string name="preference_right_switch_hold">RIGHT_SWITCH_HOLD</string>
+    <string name="preference_switch_ch1_single_press">SWITCH_CH1_SINGLE_PRESS</string>
+    <string name="preference_switch_ch1_double_press">SWITCH_CH1_DOUBLE_PRESS</string>
+    <string name="preference_switch_ch1_hold">SWITCH_CH1_HOLD</string>
+    <string name="preference_switch_ch2_single_press">SWITCH_CH2_SINGLE_PRESS</string>
+    <string name="preference_switch_ch2_double_press">SWITCH_CH2_DOUBLE_PRESS</string>
+    <string name="preference_switch_ch2_hold">SWITCH_CH2_HOLD</string>
+    <string name="preference_switch_ch3_single_press">SWITCH_CH3_SINGLE_PRESS</string>
+    <string name="preference_switch_ch3_double_press">SWITCH_CH3_DOUBLE_PRESS</string>
+    <string name="preference_switch_ch3_hold">SWITCH_CH3_HOLD</string>
+    <string name="preference_switch_ch4_single_press">SWITCH_CH4_SINGLE_PRESS</string>
+    <string name="preference_switch_ch4_double_press">SWITCH_CH4_DOUBLE_PRESS</string>
+    <string name="preference_switch_ch4_hold">SWITCH_CH4_HOLD</string>
     <string name="preference_pre_load">PRE_LOAD</string>
     <string name="preference_battery_level_low">BATTERY_LEVEL_LOW</string>
     <string name="preference_battery_level_critical">BATTERY_LEVEL_CRITICAL</string>
