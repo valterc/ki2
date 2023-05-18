@@ -1,6 +1,7 @@
 package com.valterc.ki2.karoo.shifting;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.valterc.ki2.data.device.DeviceId;
 import com.valterc.ki2.data.preferences.PreferencesView;
@@ -8,15 +9,19 @@ import com.valterc.ki2.data.preferences.device.DevicePreferencesView;
 import com.valterc.ki2.data.shifting.ShiftingInfo;
 import com.valterc.ki2.karoo.Ki2Context;
 import com.valterc.ki2.karoo.handlers.IRideHandler;
-import com.valterc.ki2.karoo.hooks.DataSyncServiceHook;
+import com.valterc.ki2.karoo.hooks.ActivityServiceActivityDataControllerClientHook;
+import com.valterc.ki2.karoo.hooks.DataSyncServiceHookV2;
+import com.valterc.ki2.karoo.hooks.GearShiftReport;
 
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
+import io.hammerhead.sdk.v0.SdkContext;
+
 @SuppressWarnings("FieldCanBeLocal")
 public class ShiftingReportingManager implements IRideHandler {
 
-    private final Context context;
+    private final SdkContext context;
     private final ShiftingGearingHelper shiftingGearingHelper;
     private boolean riding;
     private DeviceId deviceId;
@@ -27,7 +32,7 @@ public class ShiftingReportingManager implements IRideHandler {
     private final BiConsumer<DeviceId, DevicePreferencesView> onDevicePreferences = this::onDevicePreferences;
 
     public ShiftingReportingManager(Ki2Context ki2Context) {
-        DataSyncServiceHook.init(ki2Context.getSdkContext());
+        ki2Context.getHandler().post(() -> GearShiftReport.init(ki2Context.getSdkContext()));
         context = ki2Context.getSdkContext();
         shiftingGearingHelper = new ShiftingGearingHelper(ki2Context.getSdkContext());
 
@@ -55,7 +60,7 @@ public class ShiftingReportingManager implements IRideHandler {
 
     private void tryReportShiftingInfo() {
         if (fitRecordingEnabled && riding && shiftingGearingHelper.hasValidGearingInfo()) {
-            DataSyncServiceHook.reportGearShift(
+            GearShiftReport.reportGearShift(context,
                     deviceId,
                     shiftingGearingHelper.getFrontGear(),
                     shiftingGearingHelper.getFrontGearTeethCount(),
