@@ -4,7 +4,13 @@ import com.valterc.ki2.data.device.DeviceId;
 
 import io.hammerhead.sdk.v0.SdkContext;
 
-public class GearShiftReport {
+/**
+ * FIT file encoder gear shift report hook.
+ */
+public class FitGearShiftReportHook {
+
+    private FitGearShiftReportHook() {
+    }
 
     /**
      * Initialize DataSyncService hook.
@@ -13,7 +19,7 @@ public class GearShiftReport {
      */
     public static void init(SdkContext context){
         ActivityServiceActivityDataControllerClientHook.preInit(context);
-        DataSyncServiceHookV2.init(context);
+        DataSyncServiceHook.init(context);
     }
 
     /**
@@ -32,7 +38,7 @@ public class GearShiftReport {
             return;
         }
 
-        DataSyncServiceHookV2.reportGearShift(deviceId, frontGearIndex, frontGearTeeth, rearGearIndex, rearGearTeeth);
+        DataSyncServiceHook.reportGearShift(deviceId, frontGearIndex, frontGearTeeth, rearGearIndex, rearGearTeeth);
     }
 
 }

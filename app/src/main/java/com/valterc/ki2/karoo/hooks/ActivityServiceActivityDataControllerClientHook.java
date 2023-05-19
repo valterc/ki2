@@ -25,6 +25,11 @@ import kotlin.LazyKt;
 @SuppressLint("LogNotTimber")
 public class ActivityServiceActivityDataControllerClientHook {
 
+    private ActivityServiceActivityDataControllerClientHook() {
+    }
+
+    private static final int MAX_ERRORS = 15;
+
     private static final Lazy<Class<?>> TYPE_DATA_POINT = LazyKt.lazy(() -> {
         try {
             return Class.forName("io.hammerhead.datamodels.timeseriesData.models.DataPoint");
@@ -199,7 +204,6 @@ public class ActivityServiceActivityDataControllerClientHook {
         return null;
     });
 
-    private static final int MAX_ERRORS = 30;
     private static int errors;
 
     private static Object ACTIVITY_DATA_CONTROLLER_CLIENT;
@@ -256,8 +260,7 @@ public class ActivityServiceActivityDataControllerClientHook {
                                 for (Method methodOnDataPoint : methodsActivityDataControllerClient) {
                                     Class<?>[] parameterTypes = methodOnDataPoint.getParameterTypes();
                                     if (methodOnDataPoint.getReturnType() == Boolean.TYPE &&
-                                            parameterTypes.length == 1 &&
-                                            parameterTypes[0] == TYPE_DATA_POINT.getValue()) {
+                                            parameterTypes.length == 1 && parameterTypes[0] == TYPE_DATA_POINT.getValue()) {
                                         ACTIVITY_DATA_CONTROLLER_CLIENT = methodGetActivityDataControllerClient.invoke(fieldDataSyncControllerClient.get(activitySyncManager));
                                         METHOD_ON_DATA_POINT = methodOnDataPoint;
                                         return;
@@ -303,7 +306,7 @@ public class ActivityServiceActivityDataControllerClientHook {
             try {
                 init(context);
             } catch (Exception e) {
-                Log.w("KI2", "Unable to pre-initialize activity data controller hook", e);
+                Log.w("KI2", "Unable to pre-initialize activity data controller client hook", e);
             }
         }
     }
@@ -335,6 +338,10 @@ public class ActivityServiceActivityDataControllerClientHook {
         } catch (Exception e) {
             Log.w("KI2", "Unable to report gear shifting", e);
             errors++;
+
+            if (errors >= MAX_ERRORS) {
+                Log.e("KI2", "Max error count reached, stopping further attempts", e);
+            }
         }
 
         return false;

@@ -1,17 +1,12 @@
 package com.valterc.ki2.karoo.shifting;
 
-import android.content.Context;
-import android.util.Log;
-
 import com.valterc.ki2.data.device.DeviceId;
 import com.valterc.ki2.data.preferences.PreferencesView;
 import com.valterc.ki2.data.preferences.device.DevicePreferencesView;
 import com.valterc.ki2.data.shifting.ShiftingInfo;
 import com.valterc.ki2.karoo.Ki2Context;
 import com.valterc.ki2.karoo.handlers.IRideHandler;
-import com.valterc.ki2.karoo.hooks.ActivityServiceActivityDataControllerClientHook;
-import com.valterc.ki2.karoo.hooks.DataSyncServiceHookV2;
-import com.valterc.ki2.karoo.hooks.GearShiftReport;
+import com.valterc.ki2.karoo.hooks.FitGearShiftReportHook;
 
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -32,7 +27,7 @@ public class ShiftingReportingManager implements IRideHandler {
     private final BiConsumer<DeviceId, DevicePreferencesView> onDevicePreferences = this::onDevicePreferences;
 
     public ShiftingReportingManager(Ki2Context ki2Context) {
-        ki2Context.getHandler().post(() -> GearShiftReport.init(ki2Context.getSdkContext()));
+        ki2Context.getHandler().post(() -> FitGearShiftReportHook.init(ki2Context.getSdkContext()));
         context = ki2Context.getSdkContext();
         shiftingGearingHelper = new ShiftingGearingHelper(ki2Context.getSdkContext());
 
@@ -60,7 +55,7 @@ public class ShiftingReportingManager implements IRideHandler {
 
     private void tryReportShiftingInfo() {
         if (fitRecordingEnabled && riding && shiftingGearingHelper.hasValidGearingInfo()) {
-            GearShiftReport.reportGearShift(context,
+            FitGearShiftReportHook.reportGearShift(context,
                     deviceId,
                     shiftingGearingHelper.getFrontGear(),
                     shiftingGearingHelper.getFrontGearTeethCount(),
