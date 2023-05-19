@@ -55,7 +55,8 @@ public class BatteryStatusTextFormatter extends SdkFormatter {
             return "LOW";
         }
 
-        return "CRITICAL";
+        return "CRIT";
+
     }
 
 }
