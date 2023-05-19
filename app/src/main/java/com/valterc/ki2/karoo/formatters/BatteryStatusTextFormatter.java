@@ -56,7 +56,7 @@ public class BatteryStatusTextFormatter extends SdkFormatter {
         }
 
         return "CRIT";
-
     }
+
 
 }
