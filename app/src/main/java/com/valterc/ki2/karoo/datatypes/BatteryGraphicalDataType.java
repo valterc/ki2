@@ -9,7 +9,6 @@ import androidx.appcompat.content.res.AppCompatResources;
 import com.valterc.ki2.R;
 import com.valterc.ki2.karoo.Ki2Context;
 import com.valterc.ki2.karoo.views.BatterySdkView;
-import com.valterc.ki2.karoo.views.DrivetrainSdkView;
 import com.valterc.ki2.utils.function.FunctionUtils;
 
 import java.util.Arrays;

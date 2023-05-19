@@ -10,6 +10,8 @@ import com.valterc.ki2.data.message.RideStatusMessage;
 import com.valterc.ki2.data.ride.RideStatus;
 import com.valterc.ki2.karoo.battery.LowBatteryHandler;
 import com.valterc.ki2.karoo.datatypes.BatteryGraphicalDataType;
+import com.valterc.ki2.karoo.datatypes.BatteryPercentageTextDataType;
+import com.valterc.ki2.karoo.datatypes.BatteryStatusTextDataType;
 import com.valterc.ki2.karoo.datatypes.BatteryTextDataType;
 import com.valterc.ki2.karoo.datatypes.DeviceNameTextDataType;
 import com.valterc.ki2.karoo.datatypes.FrontGearSizeTextDataType;
@@ -97,6 +99,8 @@ public class Ki2Module extends Module {
         return Arrays.asList(
                 new DeviceNameTextDataType(ki2Context),
                 new BatteryTextDataType(ki2Context),
+                new BatteryPercentageTextDataType(ki2Context),
+                new BatteryStatusTextDataType(ki2Context),
                 new GearsTextDataType(ki2Context),
                 new GearsSizeTextDataType(ki2Context),
                 new GearRatioTextDataType(ki2Context),
