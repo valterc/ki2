@@ -19,14 +19,14 @@ import java.util.HashMap;
 @SuppressLint("LogNotTimber")
 public class InputAdapter {
 
-    private final Context context;
+    private final Ki2Context ki2Context;
     private final HashMap<KarooKey, Long> keyDownTimeMap;
     private final VirtualInputAdapter virtualInputAdapter;
     private InputManager inputManager;
     private Method injectInputMethod;
 
     public InputAdapter(Ki2Context ki2Context) {
-        this.context = ki2Context.getSdkContext();
+        this.ki2Context = ki2Context;
         this.keyDownTimeMap = new HashMap<>();
         this.virtualInputAdapter = new VirtualInputAdapter(ki2Context);
         initInputManager();
@@ -34,7 +34,7 @@ public class InputAdapter {
 
     @SuppressWarnings({"rawtypes", "JavaReflectionMemberAccess"})
     private void initInputManager() {
-        Object systemService = context.getSystemService(Context.INPUT_SERVICE);
+        Object systemService = ki2Context.getSdkContext().getSystemService(Context.INPUT_SERVICE);
         if (systemService != null) {
             inputManager = (InputManager) systemService;
         }
@@ -138,36 +138,36 @@ public class InputAdapter {
     public void executeKeyEvent(KarooKeyEvent keyEvent) {
         if (keyEvent.getKey().isVirtual()) {
             virtualInputAdapter.handleVirtualKeyEvent(keyEvent);
-            return;
-        }
+        } else {
+            for (int i = 0; i < keyEvent.getReplicate(); i++) {
+                long eventTime = SystemClock.uptimeMillis() + (long) ViewConfiguration.getKeyRepeatTimeout() * i;
+                switch (keyEvent.getAction()) {
+                    case SINGLE_PRESS:
+                        keyPressed(keyEvent.getKey(), eventTime);
+                        break;
 
-        for (int i = 0; i < keyEvent.getReplicate(); i++) {
-            long eventTime = SystemClock.uptimeMillis() + (long) ViewConfiguration.getKeyRepeatTimeout() * i;
-            switch (keyEvent.getAction()) {
-                case SINGLE_PRESS:
-                    keyPressed(keyEvent.getKey(), eventTime);
-                    break;
+                    case DOUBLE_PRESS:
+                        keyPressed(keyEvent.getKey(), eventTime);
+                        keyPressed(keyEvent.getKey(), eventTime);
+                        break;
 
-                case DOUBLE_PRESS:
-                    keyPressed(keyEvent.getKey(), eventTime);
-                    keyPressed(keyEvent.getKey(), eventTime);
-                    break;
+                    case LONG_PRESS_DOWN:
+                    case LONG_PRESS_CONTINUE:
+                        setKeyDown(keyEvent.getKey(), keyEvent.getRepeat());
+                        break;
 
-                case LONG_PRESS_DOWN:
-                case LONG_PRESS_CONTINUE:
-                    setKeyDown(keyEvent.getKey(), keyEvent.getRepeat());
-                    break;
+                    case LONG_PRESS_UP:
+                        setKeyUp(keyEvent.getKey());
+                        break;
 
-                case LONG_PRESS_UP:
-                    setKeyUp(keyEvent.getKey());
-                    break;
-
-                case SIMULATE_LONG_PRESS:
-                    simulateLongKeyPress(keyEvent.getKey(), eventTime);
-                    break;
-
+                    case SIMULATE_LONG_PRESS:
+                        simulateLongKeyPress(keyEvent.getKey(), eventTime);
+                        break;
+                }
             }
         }
+
+        ki2Context.getScreenHelper().switchTurnScreenOn();
     }
 
 }

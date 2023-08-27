@@ -2,6 +2,7 @@
 <resources>
 
     <string name="category_preference_switches">Switches</string>
+    <string name="category_preference_switch_preferences">Switch preferences</string>
     <string name="category_preference_switch_ch1">D-Fly Ch. 1</string>
     <string name="category_preference_switch_ch2">D-Fly Ch. 2</string>
     <string name="category_preference_switch_ch3">D-Fly Ch. 3</string>
@@ -34,6 +35,7 @@
     <string name="title_preference_overlay_opacity">Opacity</string>
     <string name="title_preference_overlay_position">Position</string>
     <string name="title_preference_fit_recording">FIT Recording</string>
+    <string name="title_preference_switch_turn_screen_on">Turn screen on</string>
 
     <string name="summary_preference_pre_load">Pre load the ride application to avoid data elements not showing after startup</string>
     <string name="summary_preference_battery_notification">Show notifications when the shifting battery level is at or below a certain value</string>
@@ -51,6 +53,7 @@
     <string name="summary_preference_overlay_opacity">Overlay view opacity, a low opacity will make the overlay translucent.</string>
     <string name="summary_preference_overlay_position">Overlay position in the Ride screen.</string>
     <string name="summary_preference_fit_recording">Record gear shift events in the Ride FIT file.</string>
+    <string name="summary_preference_switch_turn_screen_on">Turn screen on when a switch is pressed.</string>
 
     <string name="default_preference_switch_ch1_single_press">navigate_left</string>
     <string name="default_preference_switch_ch1_double_press">lap_map_back</string>
@@ -59,6 +62,7 @@
     <string name="default_preference_switch_ch2_double_press">pause_resume_confirm</string>
     <string name="default_preference_switch_ch2_hold">map_graph_zoom_in</string>
     <string name="default_preference_switch">none</string>
+    <bool name="default_preference_switch_turn_screen_on">false</bool>
     <string name="default_preference_battery_level_low">20</string>
     <string name="default_preference_battery_level_critical">10</string>
     <string name="default_preference_audio_alert_delay">0</string>
@@ -88,6 +92,7 @@
     <string name="preference_switch_ch4_single_press">SWITCH_CH4_SINGLE_PRESS</string>
     <string name="preference_switch_ch4_double_press">SWITCH_CH4_DOUBLE_PRESS</string>
     <string name="preference_switch_ch4_hold">SWITCH_CH4_HOLD</string>
+    <string name="preference_switch_turn_screen_on">SWITCH_TURN_SCREEN_ON</string>
     <string name="preference_pre_load">PRE_LOAD</string>
     <string name="preference_battery_level_low">BATTERY_LEVEL_LOW</string>
     <string name="preference_battery_level_critical">BATTERY_LEVEL_CRITICAL</string>
