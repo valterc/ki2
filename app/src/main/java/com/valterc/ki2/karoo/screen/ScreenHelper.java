@@ -3,7 +3,6 @@ package com.valterc.ki2.karoo.screen;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.PowerManager;
-import android.os.SystemClock;
 
 import com.valterc.ki2.data.preferences.PreferencesView;
 import com.valterc.ki2.karoo.Ki2Context;
@@ -19,7 +18,7 @@ public class ScreenHelper {
     private final Ki2Context ki2Context;
     private final Consumer<PreferencesView> onPreferences = this::onPreferences;
 
-    private boolean canTurnScreenOn;
+    private boolean switchesTurnScreenOn;
 
     public ScreenHelper(Ki2Context ki2Context) {
         this.ki2Context = ki2Context;
@@ -27,13 +26,11 @@ public class ScreenHelper {
     }
 
     private void onPreferences(PreferencesView preferencesView) {
-        canTurnScreenOn = preferencesView.isSwitchTurnScreenOn(ki2Context.getSdkContext());
+        switchesTurnScreenOn = preferencesView.isSwitchTurnScreenOn(ki2Context.getSdkContext());
     }
 
-    /**
-     * @noinspection deprecation
-     */
-    public void turnScreenOn(Ki2Context ki2Context) {
+    @SuppressWarnings("deprecation")
+    public void turnScreenOn() {
         PowerManager powerManager = (PowerManager) ki2Context.getSdkContext().getSystemService(Context.POWER_SERVICE);
         PowerManager.WakeLock wakeLock = powerManager.newWakeLock(
                 PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP | PowerManager.ON_AFTER_RELEASE,
@@ -44,8 +41,8 @@ public class ScreenHelper {
     }
 
     public void switchTurnScreenOn() {
-        if (canTurnScreenOn) {
-            turnScreenOn(ki2Context);
+        if (switchesTurnScreenOn) {
+            turnScreenOn();
         }
     }
 

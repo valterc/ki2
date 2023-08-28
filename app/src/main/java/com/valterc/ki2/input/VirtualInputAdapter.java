@@ -26,7 +26,7 @@ public class VirtualInputAdapter {
             }
         });
         this.keyMapping.put(KarooKey.VIRTUAL_SHOW_OVERLAY, karooKeyEvent -> ki2Context.getServiceClient().sendMessage(new ShowOverlayMessage()));
-        this.keyMapping.put(KarooKey.VIRTUAL_TURN_SCREEN_ON, karooKeyEvent -> ki2Context.getScreenHelper().switchTurnScreenOn());
+        this.keyMapping.put(KarooKey.VIRTUAL_TURN_SCREEN_ON, karooKeyEvent -> ki2Context.getScreenHelper().turnScreenOn());
     }
 
     public void handleVirtualKeyEvent(KarooKeyEvent keyEvent) {
