@@ -192,6 +192,17 @@ public class PreferencesView implements Parcelable {
     }
 
     /**
+     * Indicates if a switch press should turn screen on.
+     *
+     * @param context Ki2 application context. Cannot be a context generated from another package.
+     * @return True a switch press should turn screen on, false otherwise.
+     */
+    public boolean isSwitchTurnScreenOn(Context context) {
+        return getBoolean(context.getString(R.string.preference_switch_turn_screen_on),
+                () -> context.getResources().getBoolean(R.bool.default_preference_switch_turn_screen_on));
+    }
+
+    /**
      * Get the battery level that should be considered as low battery.
      *
      * @param context Ki2 application context. Cannot be a context generated from another package.

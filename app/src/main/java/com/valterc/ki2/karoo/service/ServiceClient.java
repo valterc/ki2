@@ -107,11 +107,10 @@ public class ServiceClient {
         this.context = context.getSdkContext();
 
         handler = context.getHandler();
-        deviceDataFrontend = new DeviceDataFrontend(context);
-
         messageListeners = new DataStreamWeakListenerList<>();
         preferencesListeners = new DataStreamWeakListenerList<>();
         customMessageClient = new CustomMessageClient(this, handler);
+        deviceDataFrontend = new DeviceDataFrontend(context);
 
         attemptBindToService();
     }

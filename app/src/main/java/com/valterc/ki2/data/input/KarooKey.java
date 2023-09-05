@@ -45,7 +45,12 @@ public enum KarooKey {
     /**
      * Virtual key to show ride overlay.
      */
-    VIRTUAL_SHOW_OVERLAY(VIRTUAL_NONE.keyCode + 2);
+    VIRTUAL_SHOW_OVERLAY(VIRTUAL_NONE.keyCode + 2),
+
+    /**
+     * Virtual key to turn screen on.
+     */
+    VIRTUAL_TURN_SCREEN_ON(VIRTUAL_NONE.keyCode + 3);
 
     public static KarooKey fromKeyCode(int keyCode) {
         for (KarooKey karooKey : values()) {
