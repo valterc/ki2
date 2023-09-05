@@ -148,6 +148,10 @@ public class InputAdapter {
     }
 
     public void executeKeyEvent(KarooKeyEvent keyEvent) {
+        if (switchesTurnScreenOn) {
+            ki2Context.getScreenHelper().turnScreenOn();
+        }
+
         if (keyEvent.getKey().isVirtual()) {
             virtualInputAdapter.handleVirtualKeyEvent(keyEvent);
         } else {
@@ -177,10 +181,6 @@ public class InputAdapter {
                         break;
                 }
             }
-        }
-
-        if (switchesTurnScreenOn) {
-            ki2Context.getScreenHelper().turnScreenOn();
         }
     }
 
