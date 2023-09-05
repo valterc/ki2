@@ -795,8 +795,7 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
                             antConnectionManager.restartClosedConnections(Ki2Service.this);
                         }
                     });
-                }
-                else if (rideStatusMessage.getRideStatus() == RideStatus.FINISHED) {
+                } else if (rideStatusMessage.getRideStatus() == RideStatus.FINISHED) {
                     backgroundUpdateChecker.tryCheckForUpdates();
                 }
             }

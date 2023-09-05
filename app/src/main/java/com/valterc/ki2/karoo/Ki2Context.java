@@ -28,6 +28,7 @@ public class Ki2Context {
     private final ServiceClient serviceClient;
     private final IAudioAlertManager audioAlertManager;
     private final ScreenHelper screenHelper;
+    private final boolean fullyInitialized;
 
     private RideStatus rideStatus;
 
@@ -43,10 +44,19 @@ public class Ki2Context {
         this.screenHelper = new ScreenHelper(this);
 
         this.serviceClient.getCustomMessageClient().registerRideStatusWeakListener(onRideStatusMessage);
+        this.fullyInitialized = true;
     }
 
     private void onRideStatusMessage(RideStatusMessage rideStatusMessage) {
         rideStatus = rideStatusMessage.getRideStatus();
+    }
+
+    public void whenFullyInitialized(Runnable runnable) {
+        if (fullyInitialized) {
+            runnable.run();
+        } else {
+            handler.postDelayed(() -> whenFullyInitialized(runnable), 250);
+        }
     }
 
     public Handler getHandler() {

@@ -11,12 +11,15 @@ import android.view.ViewConfiguration;
 
 import com.valterc.ki2.data.input.KarooKeyEvent;
 import com.valterc.ki2.data.input.KarooKey;
+import com.valterc.ki2.data.preferences.PreferencesView;
 import com.valterc.ki2.karoo.Ki2Context;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.function.Consumer;
 
 @SuppressLint("LogNotTimber")
+@SuppressWarnings("FieldCanBeLocal")
 public class InputAdapter {
 
     private final Ki2Context ki2Context;
@@ -24,12 +27,21 @@ public class InputAdapter {
     private final VirtualInputAdapter virtualInputAdapter;
     private InputManager inputManager;
     private Method injectInputMethod;
+    private boolean switchesTurnScreenOn;
+
+    private final Consumer<PreferencesView> onPreferences = this::onPreferences;
 
     public InputAdapter(Ki2Context ki2Context) {
         this.ki2Context = ki2Context;
         this.keyDownTimeMap = new HashMap<>();
         this.virtualInputAdapter = new VirtualInputAdapter(ki2Context);
         initInputManager();
+
+        ki2Context.whenFullyInitialized(() -> ki2Context.getServiceClient().registerPreferencesWeakListener(onPreferences));
+    }
+
+    private void onPreferences(PreferencesView preferencesView) {
+        switchesTurnScreenOn = preferencesView.isSwitchTurnScreenOn(ki2Context.getSdkContext());
     }
 
     @SuppressWarnings({"rawtypes", "JavaReflectionMemberAccess"})
@@ -167,7 +179,9 @@ public class InputAdapter {
             }
         }
 
-        ki2Context.getScreenHelper().switchTurnScreenOn();
+        if (switchesTurnScreenOn) {
+            ki2Context.getScreenHelper().turnScreenOn();
+        }
     }
 
 }
