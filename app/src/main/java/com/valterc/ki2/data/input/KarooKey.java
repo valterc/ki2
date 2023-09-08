@@ -50,7 +50,12 @@ public enum KarooKey {
     /**
      * Virtual key to turn screen on.
      */
-    VIRTUAL_TURN_SCREEN_ON(VIRTUAL_NONE.keyCode + 3);
+    VIRTUAL_TURN_SCREEN_ON(VIRTUAL_NONE.keyCode + 3),
+
+    /**
+     * Virtual key to take screenshot.
+     */
+    VIRTUAL_TAKE_SCREENSHOT(VIRTUAL_NONE.keyCode + 4);
 
     public static KarooKey fromKeyCode(int keyCode) {
         for (KarooKey karooKey : values()) {

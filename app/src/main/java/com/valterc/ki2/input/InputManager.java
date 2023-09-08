@@ -49,6 +49,7 @@ public class InputManager {
         preferenceToSwitchKeyMap.put("press_map_graph_zoom_out", (switchEvent, converter) -> new KarooKeyEvent(KarooKey.LEFT, KeyAction.SIMULATE_LONG_PRESS, switchEvent.getRepeat()));
         preferenceToSwitchKeyMap.put("press_map_graph_zoom_in", (switchEvent, converter) -> new KarooKeyEvent(KarooKey.RIGHT, KeyAction.SIMULATE_LONG_PRESS, switchEvent.getRepeat()));
         preferenceToSwitchKeyMap.put("press_switch_to_map_page", (switchEvent, converter) -> new KarooKeyEvent(KarooKey.VIRTUAL_SWITCH_TO_MAP_PAGE, KeyAction.SINGLE_PRESS, switchEvent.getRepeat()));
+        preferenceToSwitchKeyMap.put("press_take_screenshot", (switchEvent, converter) -> new KarooKeyEvent(KarooKey.VIRTUAL_TAKE_SCREENSHOT, KeyAction.SINGLE_PRESS, switchEvent.getRepeat()));
         preferenceToSwitchKeyMap.put("press_turn_screen_on", (switchEvent, converter) -> new KarooKeyEvent(KarooKey.VIRTUAL_TURN_SCREEN_ON, KeyAction.SINGLE_PRESS, switchEvent.getRepeat()));
 
         /*
@@ -85,6 +86,12 @@ public class InputManager {
                 return null;
             }
             return new KarooKeyEvent(KarooKey.VIRTUAL_SWITCH_TO_MAP_PAGE, KeyAction.SINGLE_PRESS, switchEvent.getRepeat());
+        });
+        preferenceToSwitchKeyMap.put("hold_short_single_take_screenshot", (switchEvent, converter) -> {
+            if (switchEvent.getCommand() != SwitchCommand.LONG_PRESS_DOWN) {
+                return null;
+            }
+            return new KarooKeyEvent(KarooKey.VIRTUAL_TAKE_SCREENSHOT, KeyAction.SINGLE_PRESS, switchEvent.getRepeat());
         });
         preferenceToSwitchKeyMap.put("hold_short_single_turn_screen_on", (switchEvent, converter) -> {
             if (switchEvent.getCommand() != SwitchCommand.LONG_PRESS_DOWN) {
