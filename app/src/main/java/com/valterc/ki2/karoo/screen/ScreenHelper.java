@@ -22,11 +22,10 @@ import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.Date;
 
-@SuppressLint("LogNotTimber")
+@SuppressLint({"LogNotTimber", "SimpleDateFormat"})
 @SuppressWarnings("FieldCanBeLocal")
 public class ScreenHelper {
 
-    @SuppressLint("SimpleDateFormat")
     private final static DateFormat DATE_FORMAT_FILE_NAME = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
     private final static int TIME_MS_ACQUIRE_LOCK_TIMEOUT = 1000;
 
