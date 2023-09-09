@@ -51,6 +51,11 @@ public class InputManager {
         preferenceToSwitchKeyMap.put("press_switch_to_map_page", (switchEvent, converter) -> new KarooKeyEvent(KarooKey.VIRTUAL_SWITCH_TO_MAP_PAGE, KeyAction.SINGLE_PRESS, switchEvent.getRepeat()));
         preferenceToSwitchKeyMap.put("press_take_screenshot", (switchEvent, converter) -> new KarooKeyEvent(KarooKey.VIRTUAL_TAKE_SCREENSHOT, KeyAction.SINGLE_PRESS, switchEvent.getRepeat()));
         preferenceToSwitchKeyMap.put("press_turn_screen_on", (switchEvent, converter) -> new KarooKeyEvent(KarooKey.VIRTUAL_TURN_SCREEN_ON, KeyAction.SINGLE_PRESS, switchEvent.getRepeat()));
+        preferenceToSwitchKeyMap.put("press_toggle_audio_alerts", (switchEvent, converter) -> new KarooKeyEvent(KarooKey.VIRTUAL_TOGGLE_AUDIO_ALERTS, KeyAction.SINGLE_PRESS, switchEvent.getRepeat()));
+        preferenceToSwitchKeyMap.put("press_disable_audio_alerts", (switchEvent, converter) -> new KarooKeyEvent(KarooKey.VIRTUAL_DISABLE_AUDIO_ALERTS, KeyAction.SINGLE_PRESS, switchEvent.getRepeat()));
+        preferenceToSwitchKeyMap.put("press_enable_audio_alerts", (switchEvent, converter) -> new KarooKeyEvent(KarooKey.VIRTUAL_ENABLE_AUDIO_ALERTS, KeyAction.SINGLE_PRESS, switchEvent.getRepeat()));
+        preferenceToSwitchKeyMap.put("press_single_beep", (switchEvent, converter) -> new KarooKeyEvent(KarooKey.VIRTUAL_SINGLE_BEEP, KeyAction.SINGLE_PRESS, switchEvent.getRepeat()));
+        preferenceToSwitchKeyMap.put("press_double_beep", (switchEvent, converter) -> new KarooKeyEvent(KarooKey.VIRTUAL_DOUBLE_BEEP, KeyAction.SINGLE_PRESS, switchEvent.getRepeat()));
 
         /*
          * Double press events
@@ -98,6 +103,42 @@ public class InputManager {
                 return null;
             }
             return new KarooKeyEvent(KarooKey.VIRTUAL_TURN_SCREEN_ON, KeyAction.SINGLE_PRESS, switchEvent.getRepeat());
+        });
+        preferenceToSwitchKeyMap.put("hold_short_single_toggle_audio_alerts", (switchEvent, converter) -> {
+            if (switchEvent.getCommand() != SwitchCommand.LONG_PRESS_DOWN) {
+                return null;
+            }
+            return new KarooKeyEvent(KarooKey.VIRTUAL_TOGGLE_AUDIO_ALERTS, KeyAction.SINGLE_PRESS, switchEvent.getRepeat());
+        });
+        preferenceToSwitchKeyMap.put("hold_short_single_disable_audio_alerts", (switchEvent, converter) -> {
+            if (switchEvent.getCommand() != SwitchCommand.LONG_PRESS_DOWN) {
+                return null;
+            }
+            return new KarooKeyEvent(KarooKey.VIRTUAL_DISABLE_AUDIO_ALERTS, KeyAction.SINGLE_PRESS, switchEvent.getRepeat());
+        });
+        preferenceToSwitchKeyMap.put("hold_short_single_enable_audio_alerts", (switchEvent, converter) -> {
+            if (switchEvent.getCommand() != SwitchCommand.LONG_PRESS_DOWN) {
+                return null;
+            }
+            return new KarooKeyEvent(KarooKey.VIRTUAL_ENABLE_AUDIO_ALERTS, KeyAction.SINGLE_PRESS, switchEvent.getRepeat());
+        });
+        preferenceToSwitchKeyMap.put("hold_short_single_single_beep", (switchEvent, converter) -> {
+            if (switchEvent.getCommand() != SwitchCommand.LONG_PRESS_DOWN) {
+                return null;
+            }
+            return new KarooKeyEvent(KarooKey.VIRTUAL_SINGLE_BEEP, KeyAction.SINGLE_PRESS, switchEvent.getRepeat());
+        });
+        preferenceToSwitchKeyMap.put("hold_short_single_double_beep", (switchEvent, converter) -> {
+            if (switchEvent.getCommand() != SwitchCommand.LONG_PRESS_DOWN) {
+                return null;
+            }
+            return new KarooKeyEvent(KarooKey.VIRTUAL_DOUBLE_BEEP, KeyAction.SINGLE_PRESS, switchEvent.getRepeat());
+        });
+        preferenceToSwitchKeyMap.put("hold_continuous_single_beep", (switchEvent, converter) -> {
+            if (switchEvent.getCommand() == SwitchCommand.LONG_PRESS_UP) {
+                return null;
+            }
+            return new KarooKeyEvent(KarooKey.VIRTUAL_SINGLE_BEEP, KeyAction.SINGLE_PRESS, switchEvent.getRepeat());
         });
     }
 

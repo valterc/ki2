@@ -8,7 +8,10 @@ public enum MessageType {
     UPDATE_AVAILABLE(3),
     SHOW_OVERLAY(4),
     AUDIO_ALERT(5),
-    AUDIO_ALERT_EVENT(6);
+    AUDIO_ALERT_EVENT(6),
+    AUDIO_ALERT_TOGGLE(7),
+    AUDIO_ALERT_DISABLE(8),
+    AUDIO_ALERT_ENABLE(9);
 
     public static MessageType fromValue(int value) {
         for (MessageType messageType : values()) {

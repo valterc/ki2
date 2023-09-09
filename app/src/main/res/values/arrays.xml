@@ -12,6 +12,11 @@
         <item>Show overlay</item>
         <item>Take screenshot</item>
         <item>Turn Screen On</item>
+        <item>Toggle Shifting Audio Alerts</item>
+        <item>Disable Shifting Audio Alerts</item>
+        <item>Enable Shifting Audio Alerts</item>
+        <item>Single Beep</item>
+        <item>Double Beep</item>
     </string-array>
 
     <string-array name="preference_values_switch_single_press_action">
@@ -27,6 +32,11 @@
         <item>show_overlay</item>
         <item>press_take_screenshot</item>
         <item>press_turn_screen_on</item>
+        <item>press_toggle_audio_alerts</item>
+        <item>press_disable_audio_alerts</item>
+        <item>press_enable_audio_alerts</item>
+        <item>press_single_beep</item>
+        <item>press_double_beep</item>
     </string-array>
 
     <string-array name="preference_titles_switch_double_press_action">
@@ -43,6 +53,11 @@
         <item>Show overlay</item>
         <item>Take screenshot</item>
         <item>Turn Screen On</item>
+        <item>Toggle Shifting Audio Alerts</item>
+        <item>Disable Shifting Audio Alerts</item>
+        <item>Enable Shifting Audio Alerts</item>
+        <item>Single Beep</item>
+        <item>Double Beep</item>
     </string-array>
 
     <string-array name="preference_values_switch_double_press_action">
@@ -59,6 +74,11 @@
         <item>show_overlay</item>
         <item>press_take_screenshot</item>
         <item>press_turn_screen_on</item>
+        <item>press_toggle_audio_alerts</item>
+        <item>press_disable_audio_alerts</item>
+        <item>press_enable_audio_alerts</item>
+        <item>press_single_beep</item>
+        <item>press_double_beep</item>
     </string-array>
 
     <string-array name="preference_titles_switch_hold_action">
@@ -72,6 +92,12 @@
         <item>Show overlay</item>
         <item>Take screenshot</item>
         <item>Turn Screen On</item>
+        <item>Toggle Shifting Audio Alerts</item>
+        <item>Disable Shifting Audio Alerts</item>
+        <item>Enable Shifting Audio Alerts</item>
+        <item>Single Beep</item>
+        <item>Double Beep</item>
+        <item>Continuous Single Beep</item>
     </string-array>
 
     <string-array name="preference_values_switch_hold_action">
@@ -85,6 +111,12 @@
         <item>show_overlay</item>
         <item>hold_short_single_take_screenshot</item>
         <item>hold_short_single_turn_screen_on</item>
+        <item>hold_short_single_toggle_audio_alerts</item>
+        <item>hold_short_single_disable_audio_alerts</item>
+        <item>hold_short_single_enable_audio_alerts</item>
+        <item>hold_short_single_single_beep</item>
+        <item>hold_short_single_double_beep</item>
+        <item>hold_continuous_single_beep</item>
     </string-array>
 
     <string-array name="preference_titles_battery_level_low">
@@ -149,8 +181,8 @@
         <item>@string/value_preference_audio_alert_disabled</item>
         <item>karoo_workout_interval</item>
         <item>karoo_auto_lap</item>
-        <item>custom_single_beep</item>
-        <item>custom_double_beep</item>
+        <item>@string/value_preference_audio_alert_single_beep</item>
+        <item>@string/value_preference_audio_alert_double_beep</item>
     </string-array>
 
     <string-array name="preference_titles_overlay_triggers">

@@ -6,12 +6,16 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.IBinder;
 import android.os.IInterface;
 import android.os.Parcelable;
 import android.os.RemoteCallbackList;
 import android.os.RemoteException;
 
+import androidx.preference.PreferenceManager;
+
+import com.valterc.ki2.R;
 import com.valterc.ki2.ant.AntManager;
 import com.valterc.ki2.ant.IAntStateListener;
 import com.valterc.ki2.ant.connection.AntConnectionManager;
@@ -29,7 +33,9 @@ import com.valterc.ki2.data.device.DeviceId;
 import com.valterc.ki2.data.device.DeviceStore;
 import com.valterc.ki2.data.info.DataType;
 import com.valterc.ki2.data.info.ManufacturerInfo;
+import com.valterc.ki2.data.input.KarooKey;
 import com.valterc.ki2.data.input.KarooKeyEvent;
+import com.valterc.ki2.data.input.KeyAction;
 import com.valterc.ki2.data.message.Message;
 import com.valterc.ki2.data.message.MessageManager;
 import com.valterc.ki2.data.message.MessageType;
@@ -786,19 +792,43 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
         messageManager.messageReceived(message);
         serviceHandler.postRetriableAction(() -> broadcastData(callbackListMessage, () -> message, IMessageCallback::onMessage));
 
-        if (message.getMessageType() == MessageType.RIDE_STATUS) {
-            RideStatusMessage rideStatusMessage = RideStatusMessage.parse(message);
-            if (rideStatusMessage != null) {
-                if (rideStatusMessage.getRideStatus() == RideStatus.ONGOING) {
-                    serviceHandler.postRetriableAction(() -> {
-                        if (antConnectionManager.isNoConnectionEstablished()) {
-                            antConnectionManager.restartClosedConnections(Ki2Service.this);
-                        }
-                    });
-                } else if (rideStatusMessage.getRideStatus() == RideStatus.FINISHED) {
-                    backgroundUpdateChecker.tryCheckForUpdates();
+        switch (message.getMessageType()){
+            case RIDE_STATUS:
+                RideStatusMessage rideStatusMessage = RideStatusMessage.parse(message);
+                if (rideStatusMessage != null) {
+                    if (rideStatusMessage.getRideStatus() == RideStatus.ONGOING) {
+                        serviceHandler.postRetriableAction(() -> {
+                            if (antConnectionManager.isNoConnectionEstablished()) {
+                                antConnectionManager.restartClosedConnections(this);
+                            }
+                        });
+                    } else if (rideStatusMessage.getRideStatus() == RideStatus.FINISHED) {
+                        backgroundUpdateChecker.tryCheckForUpdates();
+                    }
                 }
-            }
+                break;
+
+            case AUDIO_ALERT_TOGGLE:
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+                boolean audioAlertEnabled = preferences.getBoolean(getString(R.string.preference_audio_alert_enabled), getResources().getBoolean(R.bool.default_preference_audio_alert_enabled));
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putBoolean(getString(R.string.preference_audio_alert_enabled), !audioAlertEnabled);
+                editor.apply();
+                break;
+
+            case AUDIO_ALERT_DISABLE:
+                preferences = PreferenceManager.getDefaultSharedPreferences(this);
+                editor = preferences.edit();
+                editor.putBoolean(getString(R.string.preference_audio_alert_enabled), false);
+                editor.apply();
+                break;
+
+            case AUDIO_ALERT_ENABLE:
+                preferences = PreferenceManager.getDefaultSharedPreferences(this);
+                editor = preferences.edit();
+                editor.putBoolean(getString(R.string.preference_audio_alert_enabled), true);
+                editor.apply();
+                break;
         }
     }
 
