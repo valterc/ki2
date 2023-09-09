@@ -69,26 +69,27 @@ public class ScreenHelper {
             }
 
             View view = window.getDecorView();
-
             Bitmap bitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
+
             try {
                 Canvas canvas = new Canvas(bitmap);
                 view.draw(canvas);
 
-                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+                try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
 
-                File fileScreenshot = new File(directoryPictures, DATE_FORMAT_FILE_NAME.format(Date.from(Instant.now())) + ".png");
-                boolean fileReady = fileScreenshot.createNewFile();
-                if (!fileReady) {
-                    return false;
+                    File fileScreenshot = new File(directoryPictures, DATE_FORMAT_FILE_NAME.format(Date.from(Instant.now())) + ".png");
+                    boolean fileReady = fileScreenshot.createNewFile();
+                    if (!fileReady) {
+                        return false;
+                    }
+
+                    try (FileOutputStream fileOutputStream = new FileOutputStream(fileScreenshot)) {
+                        fileOutputStream.write(outputStream.toByteArray());
+                    }
+
+                    Log.i("KI2", "Saved screenshot in: " + fileScreenshot.getPath());
                 }
-
-                FileOutputStream fileOutputStream = new FileOutputStream(fileScreenshot);
-                fileOutputStream.write(outputStream.toByteArray());
-                fileOutputStream.close();
-
-                Log.i("KI2", "Saved screenshot in: " + fileScreenshot.getPath());
             } finally {
                 bitmap.recycle();
             }
