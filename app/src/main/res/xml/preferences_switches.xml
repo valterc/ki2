@@ -120,7 +120,7 @@
     <PreferenceCategory app:title="@string/category_preference_switch_preferences">
 
         <SwitchPreference
-            app:defaultValue="@bool/default_preference_overlay_enabled"
+            app:defaultValue="@bool/default_preference_switch_turn_screen_on"
             app:key="@string/preference_switch_turn_screen_on"
             app:summary="@string/summary_preference_switch_turn_screen_on"
             app:title="@string/title_preference_switch_turn_screen_on" />

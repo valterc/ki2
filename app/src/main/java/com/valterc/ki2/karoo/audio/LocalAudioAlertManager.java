@@ -19,6 +19,7 @@ public class LocalAudioAlertManager implements IAudioAlertManager {
 
     private final Ki2Context context;
 
+    private boolean enableAudioAlerts;
     private String audioAlertLowestGear;
     private String audioAlertHighestGear;
     private String audioAlertShiftingLimit;
@@ -39,6 +40,7 @@ public class LocalAudioAlertManager implements IAudioAlertManager {
     }
 
     private void onPreferences(PreferencesView preferences) {
+        enableAudioAlerts = preferences.isAudioAlertsEnabled(context.getSdkContext());
         audioAlertLowestGear = preferences.getAudioAlertLowestGearEnabled(context.getSdkContext());
         audioAlertHighestGear = preferences.getAudioAlertHighestGearEnabled(context.getSdkContext());
         audioAlertShiftingLimit = preferences.getAudioAlertShiftingLimit(context.getSdkContext());
@@ -104,6 +106,10 @@ public class LocalAudioAlertManager implements IAudioAlertManager {
     }
 
     private void tryTriggerAudioAlert(Runnable audioTrigger) {
+        if (!enableAudioAlerts){
+            return;
+        }
+        
         if (System.currentTimeMillis() - timestampLastAlert > delayBetweenAlerts) {
             audioTrigger.run();
             timestampLastAlert = System.currentTimeMillis();

@@ -23,6 +23,7 @@
     <string name="title_preference_battery_level_low">Battery low</string>
     <string name="title_preference_battery_level_critical">Battery critical</string>
     <string name="title_preference_auto_update">Auto update</string>
+    <string name="title_preference_audio_alerts_enabled">Enable Audio Alerts</string>
     <string name="title_preference_audio_alert_lowest_gear">Lowest Gear</string>
     <string name="title_preference_audio_alert_highest_gear">Highest Gear</string>
     <string name="title_preference_audio_alert_shifting_limit">Shifting Limit</string>
@@ -40,6 +41,7 @@
     <string name="summary_preference_pre_load">Pre load the ride application to avoid data elements not showing after startup</string>
     <string name="summary_preference_battery_notification">Show notifications when the shifting battery level is at or below a certain value</string>
     <string name="summary_preference_auto_update">Automatically check for application updates</string>
+    <string name="summary_preference_audio_alerts_enabled">Enable shifting Audio alerts</string>
     <string name="summary_preference_audio_alert_lowest_gear">Audio alert when shifting to the lowest gear</string>
     <string name="summary_preference_audio_alert_highest_gear">Audio alert when shifting to the highest gear</string>
     <string name="summary_preference_audio_alert_shifting_limit">Audio alert when attempting to shift while already on the gear limit</string>
@@ -62,9 +64,10 @@
     <string name="default_preference_switch_ch2_double_press">pause_resume_confirm</string>
     <string name="default_preference_switch_ch2_hold">map_graph_zoom_in</string>
     <string name="default_preference_switch">none</string>
-    <bool name="default_preference_switch_turn_screen_on">false</bool>
+    <bool name="default_preference_switch_turn_screen_on">true</bool>
     <string name="default_preference_battery_level_low">20</string>
     <string name="default_preference_battery_level_critical">10</string>
+    <bool name="default_preference_audio_alerts_enabled">true</bool>
     <string name="default_preference_audio_alert_delay">0</string>
     <string name="default_preference_audio_alert_shifting_limit">@string/value_preference_audio_alert_disabled</string>
     <string name="default_preference_audio_alert_upcoming_synchro_shift">@string/value_preference_audio_alert_disabled</string>
@@ -79,6 +82,8 @@
 
     <string name="value_preference_battery_level_off">off</string>
     <string name="value_preference_audio_alert_disabled">disabled</string>
+    <string name="value_preference_audio_alert_single_beep">custom_single_beep</string>
+    <string name="value_preference_audio_alert_double_beep">custom_double_beep</string>
 
     <string name="preference_switch_ch1_single_press">SWITCH_CH1_SINGLE_PRESS</string>
     <string name="preference_switch_ch1_double_press">SWITCH_CH1_DOUBLE_PRESS</string>
@@ -97,6 +102,7 @@
     <string name="preference_battery_level_low">BATTERY_LEVEL_LOW</string>
     <string name="preference_battery_level_critical">BATTERY_LEVEL_CRITICAL</string>
     <string name="preference_auto_update">AUTO_UPDATE</string>
+    <string name="preference_audio_alerts_enabled">AUDIO_ALERTS_ENABLED</string>
     <string name="preference_audio_alert_lowest_gear">AUDIO_ALERT_LOWEST_GEAR</string>
     <string name="preference_audio_alert_highest_gear">AUDIO_ALERT_HIGHEST_GEAR</string>
     <string name="preference_audio_alert_shifting_limit">AUDIO_ALERT_SHIFTING_LIMIT</string>

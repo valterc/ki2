@@ -237,6 +237,17 @@ public class PreferencesView implements Parcelable {
     }
 
     /**
+     * Indicates if audio alerts are enabled.
+     *
+     * @param context Ki2 application context. Cannot be a context generated from another package.
+     * @return True if audio alerts are enabled, False otherwise.
+     */
+    public boolean isAudioAlertsEnabled(Context context) {
+        return getBoolean(context.getString(R.string.preference_audio_alerts_enabled),
+                () -> context.getResources().getBoolean(R.bool.default_preference_audio_alerts_enabled));
+    }
+
+    /**
      * Get the audio alert for when shifting into the lowest gear.
      *
      * @param context Ki2 application context. Cannot be a context generated from another package.

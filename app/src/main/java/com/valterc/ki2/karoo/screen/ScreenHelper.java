@@ -8,6 +8,7 @@ import android.graphics.Canvas;
 import android.os.Environment;
 import android.os.PowerManager;
 import android.util.Log;
+import android.view.Display;
 import android.view.View;
 import android.view.Window;
 
@@ -38,6 +39,10 @@ public class ScreenHelper {
     @SuppressWarnings("deprecation")
     public void turnScreenOn() {
         PowerManager powerManager = (PowerManager) ki2Context.getSdkContext().getSystemService(Context.POWER_SERVICE);
+        if (powerManager.isInteractive()){
+            return;
+        }
+
         PowerManager.WakeLock wakeLock = powerManager.newWakeLock(
                 PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP | PowerManager.ON_AFTER_RELEASE,
                 "Ki2::WakeLock");
