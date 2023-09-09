@@ -126,5 +126,6 @@
     <string name="text_default">Default</string>
     <string name="text_fit_recording">FIT Recording</string>
     <string name="text_warning_fit_recording">FIT recording will save gear shift events in Ride FIT files.\n\nThis is not officially supported by Karoo, use at your own risk.</string>
+    <string name="text_screenshot_saved">Screenshot saved</string>
 
 </resources>

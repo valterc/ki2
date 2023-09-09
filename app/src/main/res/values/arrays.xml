@@ -10,6 +10,7 @@
         <item>Map/Graph Zoom In</item>
         <item>Switch to map page</item>
         <item>Show overlay</item>
+        <item>Take screenshot</item>
         <item>Turn Screen On</item>
     </string-array>
 
@@ -24,6 +25,7 @@
         <item>press_map_graph_zoom_in</item>
         <item>press_switch_to_map_page</item>
         <item>show_overlay</item>
+        <item>press_take_screenshot</item>
         <item>press_turn_screen_on</item>
     </string-array>
 
@@ -39,6 +41,7 @@
         <item>Switch to map page</item>
         <item>Duplicate Single Press</item>
         <item>Show overlay</item>
+        <item>Take screenshot</item>
         <item>Turn Screen On</item>
     </string-array>
 
@@ -54,6 +57,7 @@
         <item>press_switch_to_map_page</item>
         <item>double_press_duplicate_single_press</item>
         <item>show_overlay</item>
+        <item>press_take_screenshot</item>
         <item>press_turn_screen_on</item>
     </string-array>
 
@@ -66,6 +70,7 @@
         <item>Mark Lap</item>
         <item>Switch to map page</item>
         <item>Show overlay</item>
+        <item>Take screenshot</item>
         <item>Turn Screen On</item>
     </string-array>
 
@@ -78,6 +83,7 @@
         <item>hold_short_single_lap</item>
         <item>hold_short_single_switch_to_map_page</item>
         <item>show_overlay</item>
+        <item>hold_short_single_take_screenshot</item>
         <item>hold_short_single_turn_screen_on</item>
     </string-array>
 
