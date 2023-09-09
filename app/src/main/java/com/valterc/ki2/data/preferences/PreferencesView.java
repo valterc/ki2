@@ -242,9 +242,9 @@ public class PreferencesView implements Parcelable {
      * @param context Ki2 application context. Cannot be a context generated from another package.
      * @return True if audio alerts are enabled, False otherwise.
      */
-    public boolean isAudioAlertEnabled(Context context) {
-        return getBoolean(context.getString(R.string.preference_audio_alert_enabled),
-                () -> context.getResources().getBoolean(R.bool.default_preference_audio_alert_enabled));
+    public boolean isAudioAlertsEnabled(Context context) {
+        return getBoolean(context.getString(R.string.preference_audio_alerts_enabled),
+                () -> context.getResources().getBoolean(R.bool.default_preference_audio_alerts_enabled));
     }
 
     /**

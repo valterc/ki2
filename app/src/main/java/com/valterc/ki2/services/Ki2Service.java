@@ -33,12 +33,9 @@ import com.valterc.ki2.data.device.DeviceId;
 import com.valterc.ki2.data.device.DeviceStore;
 import com.valterc.ki2.data.info.DataType;
 import com.valterc.ki2.data.info.ManufacturerInfo;
-import com.valterc.ki2.data.input.KarooKey;
 import com.valterc.ki2.data.input.KarooKeyEvent;
-import com.valterc.ki2.data.input.KeyAction;
 import com.valterc.ki2.data.message.Message;
 import com.valterc.ki2.data.message.MessageManager;
-import com.valterc.ki2.data.message.MessageType;
 import com.valterc.ki2.data.message.RideStatusMessage;
 import com.valterc.ki2.data.message.UpdateAvailableMessage;
 import com.valterc.ki2.data.preferences.PreferencesStore;
@@ -810,23 +807,23 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
 
             case AUDIO_ALERT_TOGGLE:
                 SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-                boolean audioAlertEnabled = preferences.getBoolean(getString(R.string.preference_audio_alert_enabled), getResources().getBoolean(R.bool.default_preference_audio_alert_enabled));
+                boolean audioAlertsEnabled = preferences.getBoolean(getString(R.string.preference_audio_alerts_enabled), getResources().getBoolean(R.bool.default_preference_audio_alerts_enabled));
                 SharedPreferences.Editor editor = preferences.edit();
-                editor.putBoolean(getString(R.string.preference_audio_alert_enabled), !audioAlertEnabled);
+                editor.putBoolean(getString(R.string.preference_audio_alerts_enabled), !audioAlertsEnabled);
                 editor.apply();
                 break;
 
             case AUDIO_ALERT_DISABLE:
                 preferences = PreferenceManager.getDefaultSharedPreferences(this);
                 editor = preferences.edit();
-                editor.putBoolean(getString(R.string.preference_audio_alert_enabled), false);
+                editor.putBoolean(getString(R.string.preference_audio_alerts_enabled), false);
                 editor.apply();
                 break;
 
             case AUDIO_ALERT_ENABLE:
                 preferences = PreferenceManager.getDefaultSharedPreferences(this);
                 editor = preferences.edit();
-                editor.putBoolean(getString(R.string.preference_audio_alert_enabled), true);
+                editor.putBoolean(getString(R.string.preference_audio_alerts_enabled), true);
                 editor.apply();
                 break;
         }

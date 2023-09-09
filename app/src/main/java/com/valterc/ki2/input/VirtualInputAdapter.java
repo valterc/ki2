@@ -56,7 +56,7 @@ public class VirtualInputAdapter {
         PreferencesView preferences = ki2Context.getServiceClient().getPreferences();
         ki2Context.getServiceClient().sendMessage(new AudioAlertToggleMessage());
         if (preferences != null) {
-            showToast(ki2Context, preferences.isAudioAlertEnabled(ki2Context.getSdkContext()) ? R.string.text_disabled_audio_alerts : R.string.text_enabled_audio_alerts);
+            showToast(ki2Context, preferences.isAudioAlertsEnabled(ki2Context.getSdkContext()) ? R.string.text_disabled_audio_alerts : R.string.text_enabled_audio_alerts);
         }
     }
 

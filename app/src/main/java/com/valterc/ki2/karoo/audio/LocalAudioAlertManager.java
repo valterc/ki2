@@ -40,7 +40,7 @@ public class LocalAudioAlertManager implements IAudioAlertManager {
     }
 
     private void onPreferences(PreferencesView preferences) {
-        enableAudioAlerts = preferences.isAudioAlertEnabled(context.getSdkContext());
+        enableAudioAlerts = preferences.isAudioAlertsEnabled(context.getSdkContext());
         audioAlertLowestGear = preferences.getAudioAlertLowestGearEnabled(context.getSdkContext());
         audioAlertHighestGear = preferences.getAudioAlertHighestGearEnabled(context.getSdkContext());
         audioAlertShiftingLimit = preferences.getAudioAlertShiftingLimit(context.getSdkContext());
