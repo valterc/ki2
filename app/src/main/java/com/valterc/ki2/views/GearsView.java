@@ -95,7 +95,7 @@ public class GearsView extends View {
             }
 
             int selectedGearColor = array.getColor(R.styleable.GearsView_selectedGearColor, -1);
-            if (textColor != -1) {
+            if (selectedGearColor != -1) {
                 setSelectedGearColor(selectedGearColor);
             }
 

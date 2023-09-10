@@ -9,6 +9,9 @@ import com.valterc.ki2.data.preferences.PreferencesView;
 import com.valterc.ki2.data.preferences.device.DevicePreferencesView;
 import com.valterc.ki2.data.shifting.ShiftingInfo;
 import com.valterc.ki2.karoo.Ki2Context;
+import com.valterc.ki2.karoo.overlay.OverlayPreferences;
+
+import java.util.function.Consumer;
 
 public interface IOverlayView {
 
@@ -33,6 +36,13 @@ public interface IOverlayView {
     void hide();
 
     /**
+     * Set a listener to be notified when visibility of the overlay changes.
+     *
+     * @param visibilityListener Visibility listener or null to clear.
+     */
+    void setVisibilityListener(Consumer<Boolean> visibilityListener);
+
+    /**
      * Set overlay view alpha.
      *
      * @param value Overlay alpha.
@@ -43,10 +53,10 @@ public interface IOverlayView {
      * Apply all preferences in the overlay.
      *
      * @param ki2Context  Ki2 context.
-     * @param preferences Preferences view.
+     * @param preferences Overlay preferences.
      */
-    default void applyPreferences(@NonNull Ki2Context ki2Context, @NonNull PreferencesView preferences) {
-        setAlpha(preferences.getOverlayOpacity(ki2Context.getSdkContext()));
+    default void applyPreferences(@NonNull Ki2Context ki2Context, @NonNull OverlayPreferences preferences) {
+        setAlpha(preferences.getOpacity());
     }
 
     /**

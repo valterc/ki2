@@ -33,7 +33,7 @@ import com.valterc.ki2.karoo.datatypes.ShiftModeTextDataType;
 import com.valterc.ki2.karoo.handlers.HandlerManager;
 import com.valterc.ki2.karoo.hooks.ActivityServiceHook;
 import com.valterc.ki2.karoo.hooks.RideActivityHook;
-import com.valterc.ki2.karoo.overlay.OverlayManager;
+import com.valterc.ki2.karoo.overlay.manager.OverlayManager;
 import com.valterc.ki2.karoo.shifting.ShiftingAudioAlertHandler;
 import com.valterc.ki2.karoo.shifting.ShiftingReportingManager;
 import com.valterc.ki2.karoo.update.UpdateAvailableHandler;

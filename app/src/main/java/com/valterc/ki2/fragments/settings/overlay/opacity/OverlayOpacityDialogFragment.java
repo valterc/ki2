@@ -40,13 +40,17 @@ public class OverlayOpacityDialogFragment extends DialogFragment {
 
 
     private static final String PREFERENCE_KEY = "PreferenceKey";
+    private static final String PARAMETER_THEME = "ParameterTheme";
+    private static final String PARAMETER_OPACITY = "ParameterOpacity";
 
     public static final String RESULT_VALUE = "ResultValue";
 
-    public static OverlayOpacityDialogFragment newInstance(String preferenceKey) {
+    public static OverlayOpacityDialogFragment newInstance(String preferenceKey, String overlayTheme, float overlayOpacity) {
         OverlayOpacityDialogFragment fragment = new OverlayOpacityDialogFragment();
-        final Bundle b = new Bundle(1);
+        final Bundle b = new Bundle(3);
         b.putString(PREFERENCE_KEY, preferenceKey);
+        b.putString(PARAMETER_THEME, overlayTheme);
+        b.putFloat(PARAMETER_OPACITY, overlayOpacity);
         fragment.setArguments(b);
         return fragment;
     }
@@ -59,7 +63,7 @@ public class OverlayOpacityDialogFragment extends DialogFragment {
 
         LinearLayout linearLayoutContainer = view.findViewById(R.id.viewstub_overlay_opacity_view_container);
         Ki2Context ki2Context = new Ki2Context(SdkContext.buildSdkContext(requireContext()));
-        OverlayViewBuilderEntry entry = OverlayViewBuilderRegistry.getBuilder(preferencesView.getOverlayTheme(requireContext()));
+        OverlayViewBuilderEntry entry = OverlayViewBuilderRegistry.getBuilder(requireArguments().getString(PARAMETER_THEME));
         View viewOverlay = inflater.inflate(entry.getLayoutId(), linearLayoutContainer, false);
 
         DeviceId deviceId = new DeviceId(67726, 1, 5);
@@ -70,12 +74,12 @@ public class OverlayOpacityDialogFragment extends DialogFragment {
 
         IOverlayView overlayView = entry.createOverlayView(ki2Context, viewOverlay);
         overlayView.updateView(preferencesView, connectionInfo, devicePreferencesView, batteryInfo, shiftingInfo);
-        overlayView.setAlpha(preferencesView.getOverlayOpacity(requireContext()));
+        overlayView.setAlpha(requireArguments().getFloat(PARAMETER_OPACITY));
         viewOverlay.setElevation(0);
         linearLayoutContainer.addView(viewOverlay);
 
         Slider slider = view.findViewById(R.id.slider_overlay_opacity);
-        slider.setValue(preferencesView.getOverlayOpacity(requireContext()));
+        slider.setValue(requireArguments().getFloat(PARAMETER_OPACITY));
         slider.setLabelFormatter(value -> String.format(Locale.getDefault(), "%.0f", value * 100) + "%");
         slider.addOnChangeListener((s, value, fromUser) -> overlayView.setAlpha(value));
 

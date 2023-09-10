@@ -36,15 +36,22 @@ public class OverlayPositionDialogFragment extends DialogFragment {
 
     private static final String REQUEST_KEY = "RequestKey";
 
+    private static final String PARAMETER_THEME = "ParameterTheme";
+    private static final String PARAMETER_POSITION_X = "ParameterPositionX";
+    private static final String PARAMETER_POSITION_Y = "ParameterPositionY";
+
     public static final String DEFAULT_REQUEST_KEY = "OverlayPosition";
     public static final String RESULT_POSITION_X = "ResultPositionX";
     public static final String RESULT_POSITION_Y = "ResultPositionY";
 
 
-    public static OverlayPositionDialogFragment newInstance(String requestKey) {
+    public static OverlayPositionDialogFragment newInstance(String requestKey, String theme, int positionX, int positionY) {
         OverlayPositionDialogFragment fragment = new OverlayPositionDialogFragment();
-        final Bundle b = new Bundle(1);
+        final Bundle b = new Bundle(4);
         b.putString(REQUEST_KEY, requestKey);
+        b.putString(PARAMETER_THEME, theme);
+        b.putInt(PARAMETER_POSITION_X, positionX);
+        b.putInt(PARAMETER_POSITION_Y, positionY);
         fragment.setArguments(b);
         return fragment;
     }
@@ -54,12 +61,16 @@ public class OverlayPositionDialogFragment extends DialogFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_overlay_position, container, false);
 
+        final String theme = requireArguments().getString(PARAMETER_THEME);
+        final int positionX = requireArguments().getInt(PARAMETER_POSITION_X);
+        final int positionY = requireArguments().getInt(PARAMETER_POSITION_Y);
+
         PreferencesView preferencesView = new PreferencesView(requireContext());
 
         RelativeLayout relativeLayout = view.findViewById(R.id.relativelayout_overlay_position);
         Ki2Context ki2Context = new Ki2Context(SdkContext.buildSdkContext(requireContext()));
 
-        OverlayViewBuilderEntry entry = OverlayViewBuilderRegistry.getBuilder(preferencesView.getOverlayTheme(requireContext()));
+        OverlayViewBuilderEntry entry = OverlayViewBuilderRegistry.getBuilder(theme);
         assert entry != null;
 
         View viewOverlay = inflater.inflate(entry.getLayoutId(), relativeLayout, false);
@@ -75,7 +86,7 @@ public class OverlayPositionDialogFragment extends DialogFragment {
         relativeLayout.addView(viewOverlay);
 
         ScaledPositionManager positionManager = new ScaledPositionManager(relativeLayout);
-        positionManager.applyPosition(requireContext(), preferencesView, viewOverlay);
+        positionManager.applyPosition(positionX, positionY, viewOverlay);
 
         relativeLayout.setClickable(true);
         relativeLayout.setOnTouchListener((v, event) -> {

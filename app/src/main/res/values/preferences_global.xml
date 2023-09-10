@@ -14,6 +14,7 @@
     <string name="category_preference_audio_alerts">Audio Alerts</string>
     <string name="category_preference_general_settings">General Settings</string>
     <string name="category_preference_overlay">Overlay</string>
+    <string name="category_preference_secondary_overlay">Secondary overlay</string>
     <string name="category_preference_fit_recording">FIT Recording</string>
 
     <string name="title_preference_switch_single_press">Single Press</string>
@@ -54,6 +55,7 @@
     <string name="summary_preference_overlay_theme">Visual theme</string>
     <string name="summary_preference_overlay_opacity">Overlay view opacity, a low opacity will make the overlay translucent.</string>
     <string name="summary_preference_overlay_position">Overlay position in the Ride screen.</string>
+    <string name="summary_preference_secondary_overlay">Show a secondary Overlay with shifting information in Ride</string>
     <string name="summary_preference_fit_recording">Record gear shift events in the Ride FIT file.</string>
     <string name="summary_preference_switch_turn_screen_on">Turn screen on when a switch is pressed.</string>
 
@@ -78,6 +80,11 @@
     <string name="default_preference_overlay_theme">default_dark_gear_index</string>
     <integer name="default_preference_overlay_opacity">1</integer>
     <integer name="default_preference_overlay_position">0</integer>
+    <bool name="default_preference_secondary_overlay_enabled">false</bool>
+    <string name="default_preference_secondary_overlay_duration">-1</string>
+    <string name="default_preference_secondary_overlay_theme">slim_dark</string>
+    <integer name="default_preference_secondary_overlay_opacity">1</integer>
+    <integer name="default_preference_secondary_overlay_position">0</integer>
     <bool name="default_preference_fit_recording">false</bool>
 
     <string name="value_preference_battery_level_off">off</string>
@@ -115,6 +122,13 @@
     <string name="preference_overlay_opacity">OVERLAY_OPACITY</string>
     <string name="preference_overlay_position_x">OVERLAY_POSITION_X</string>
     <string name="preference_overlay_position_y">OVERLAY_POSITION_Y</string>
+    <string name="preference_secondary_overlay_enabled">SECONDARY_OVERLAY_ENABLED</string>
+    <string name="preference_secondary_overlay_triggers">SECONDARY_OVERLAY_TRIGGERS</string>
+    <string name="preference_secondary_overlay_duration">SECONDARY_OVERLAY_DURATION</string>
+    <string name="preference_secondary_overlay_theme">SECONDARY_OVERLAY_THEME</string>
+    <string name="preference_secondary_overlay_opacity">SECONDARY_OVERLAY_OPACITY</string>
+    <string name="preference_secondary_overlay_position_x">SECONDARY_OVERLAY_POSITION_X</string>
+    <string name="preference_secondary_overlay_position_y">SECONDARY_OVERLAY_POSITION_Y</string>
     <string name="preference_fit_recording">FIT_RECORDING</string>
 
 </resources>

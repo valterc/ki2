@@ -25,6 +25,8 @@ import com.valterc.ki2.karoo.overlay.view.plain.DefaultLightGearSizeOverlayView;
 import com.valterc.ki2.karoo.overlay.view.plain.DefaultLightGearSizeRatioOverlayView;
 import com.valterc.ki2.karoo.overlay.view.simple.SimpleDarkOverlayView;
 import com.valterc.ki2.karoo.overlay.view.simple.SimpleLightOverlayView;
+import com.valterc.ki2.karoo.overlay.view.slim.SlimDarkOverlayView;
+import com.valterc.ki2.karoo.overlay.view.slim.SlimLightOverlayView;
 
 import java.util.HashMap;
 
@@ -65,6 +67,9 @@ public final class OverlayViewBuilderRegistry {
 
         builderMap.put("compact_dark_rear_gear_size_ratio", new OverlayViewBuilderEntry(R.layout.view_karoo_overlay_compact, new Pair<>(5, 65), CompactDarkRearGearSizeRatioOverlayView::new));
         builderMap.put("compact_light_rear_gear_size_ratio", new OverlayViewBuilderEntry(R.layout.view_karoo_overlay_compact, new Pair<>(5, 65), CompactLightRearGearSizeRatioOverlayView::new));
+
+        builderMap.put("slim_dark", new OverlayViewBuilderEntry(R.layout.view_karoo_overlay_slim, new Pair<>(0, 0), SlimDarkOverlayView::new));
+        builderMap.put("slim_light", new OverlayViewBuilderEntry(R.layout.view_karoo_overlay_slim, new Pair<>(0, 0), SlimLightOverlayView::new));
     }
 
     @Nullable
