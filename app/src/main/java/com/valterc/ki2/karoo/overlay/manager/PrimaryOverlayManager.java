@@ -9,7 +9,6 @@ import java.util.function.Consumer;
 
 public class PrimaryOverlayManager extends BaseOverlayManager {
 
-
     @SuppressWarnings("FieldCanBeLocal")
     private final Consumer<ShowOverlayMessage> showOverlayListener = (showOverlayMessage) -> showOverlay(true);
 

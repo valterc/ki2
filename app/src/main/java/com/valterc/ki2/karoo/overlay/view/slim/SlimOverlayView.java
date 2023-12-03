@@ -29,7 +29,7 @@ public abstract class SlimOverlayView extends BaseOverlayView<SlimOverlayViewHol
     private Runnable blinkMethod;
 
     private long timestampBlinkStart;
-private boolean canBeShown;
+    private boolean canBeShown;
 
     public SlimOverlayView(Ki2Context ki2Context, View view) {
         super(ki2Context.getSdkContext(), new SlimOverlayViewHolder(view));

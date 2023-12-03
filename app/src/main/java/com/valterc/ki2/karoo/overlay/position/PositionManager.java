@@ -1,14 +1,10 @@
 package com.valterc.ki2.karoo.overlay.position;
 
-import android.content.Context;
 import android.content.res.Resources;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
-
-import com.valterc.ki2.data.preferences.PreferencesView;
 
 public class PositionManager {
 

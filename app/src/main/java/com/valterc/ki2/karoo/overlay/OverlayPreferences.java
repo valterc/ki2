@@ -2,12 +2,12 @@ package com.valterc.ki2.karoo.overlay;
 
 public class OverlayPreferences {
 
-    private boolean enabled;
-    private String theme;
-    private int duration;
-    private float opacity;
-    private int positionX;
-    private int positionY;
+    private final boolean enabled;
+    private final String theme;
+    private final int duration;
+    private final float opacity;
+    private final int positionX;
+    private final int positionY;
 
     public OverlayPreferences(boolean enabled, String theme, int duration, float opacity, int positionX, int positionY) {
         this.enabled = enabled;
