@@ -85,15 +85,7 @@ These screenshots have been _slightly_ edited.
 
 ### Supported Karoo software versions
 
-Karoo software may change with new updates, for best experience please use the latest _tested_ Karoo version with the [latest Ki2 version](https://github.com/valterc/ki2/releases/latest/).
-
-| Version                   | Supported |
-|---------------------------|-----------|
-| 1.297.1231 (May 19, 2022) | ✅        |
-| 1.333.1345 (Oct 06, 2022) | ✅        |
-| _all versions in between_ | ✅        |
-| 1.383.1499 (May 04, 2023) | ✅        |
-| 1.386.1509 (May 18, 2023) | ✅        |
+Karoo software may change with new updates, for best experience please use the latest Karoo software update with the [latest Ki2 version](https://github.com/valterc/ki2/releases/latest/). Please report any issues if you experience problems after updating your Karoo.
 
 ## Known issues
 
