@@ -12,11 +12,15 @@ import com.valterc.ki2.data.preferences.PreferencesView;
 import com.valterc.ki2.data.preferences.device.DevicePreferencesView;
 import com.valterc.ki2.data.shifting.ShiftingInfo;
 
+import java.util.function.Consumer;
+
 public abstract class BaseOverlayView<TViewHolder extends BaseOverlayViewHolder> implements IOverlayView {
 
     private final Context context;
 
     private final TViewHolder viewHolder;
+
+    private Consumer<Boolean> visibilityListener;
 
     public BaseOverlayView(Context context, TViewHolder viewHolder) {
         this.context = context;
@@ -38,10 +42,23 @@ public abstract class BaseOverlayView<TViewHolder extends BaseOverlayViewHolder>
 
     public void show() {
         viewHolder.getOverlayView().setVisibility(View.VISIBLE);
+
+        if (visibilityListener != null) {
+            visibilityListener.accept(true);
+        }
     }
 
     public void hide() {
         viewHolder.getOverlayView().setVisibility(View.GONE);
+
+        if (visibilityListener != null) {
+            visibilityListener.accept(false);
+        }
+    }
+
+    @Override
+    public void setVisibilityListener(Consumer<Boolean> visibilityListener) {
+        this.visibilityListener = visibilityListener;
     }
 
     @Override

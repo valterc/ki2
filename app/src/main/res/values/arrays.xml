@@ -199,8 +199,28 @@
         <item>upcoming-synchro-shift</item>
     </string-array>
 
+    <string-array name="preference_titles_secondary_overlay_triggers">
+        <item>When primary overlay is hidden</item>
+        <item>Connection</item>
+        <item>Battery</item>
+        <item>Shifting</item>
+        <item>Upcoming Synchro Shift</item>
+    </string-array>
+
+    <string-array name="preference_values_secondary_overlay_triggers">
+        <item>primary-hidden</item>
+        <item>connection</item>
+        <item>battery</item>
+        <item>shifting</item>
+        <item>upcoming-synchro-shift</item>
+    </string-array>
+
+    <string-array name="default_preference_secondary_overlay_triggers">
+        <item>primary-hidden</item>
+    </string-array>
+
     <string-array name="preference_titles_overlay_duration">
-        <item>Always visible - tap to dismiss</item>
+        <item>No timeout - tap to dismiss</item>
         <item>1 Second</item>
         <item>2 Seconds</item>
         <item>3 Seconds</item>
@@ -240,6 +260,8 @@
         <item>Light - Compact (rear gear size)</item>
         <item>Dark - Compact (rear gear size and ratio)</item>
         <item>Light - Compact (rear gear size and ratio)</item>
+        <item>Dark - Slim</item>
+        <item>Light - Slim</item>
     </string-array>
 
     <string-array name="preference_values_overlay_theme">
@@ -263,6 +285,8 @@
         <item>compact_light_rear_gear_size</item>
         <item>compact_dark_rear_gear_size_ratio</item>
         <item>compact_light_rear_gear_size_ratio</item>
+        <item>slim_dark</item>
+        <item>slim_light</item>
     </string-array>
 
 </resources>

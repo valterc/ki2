@@ -42,14 +42,14 @@ public class OpacityPreference extends DialogPreference {
     public CharSequence getSummary() {
         CharSequence originalSummary = super.getSummary();
 
-        PreferencesView preferencesView = new PreferencesView(getContext());
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
 
         if (originalSummary == null) {
-            return String.format(Locale.getDefault(), "%.0f", preferencesView.getOverlayOpacity(getContext()) * 100) + "%";
+            return String.format(Locale.getDefault(), "%.0f", sharedPreferences.getFloat(getKey(), 1) * 100) + "%";
         }
 
         SpannableString spannableString = new SpannableString(originalSummary + "\n" +
-                String.format(Locale.getDefault(), "%.0f", preferencesView.getOverlayOpacity(getContext()) * 100) + "%");
+                String.format(Locale.getDefault(), "%.0f", sharedPreferences.getFloat(getKey(), 1) * 100) + "%");
         spannableString.setSpan(new StyleSpan(Typeface.BOLD), originalSummary.length(), spannableString.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         return spannableString;
     }
@@ -57,7 +57,7 @@ public class OpacityPreference extends DialogPreference {
     public void setValue(float value) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putFloat(getContext().getString(R.string.preference_overlay_opacity), value);
+        editor.putFloat(getKey(), value);
         editor.apply();
         notifyChanged();
     }

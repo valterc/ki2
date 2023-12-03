@@ -1,13 +1,10 @@
 package com.valterc.ki2.karoo.overlay.position;
 
-import android.content.Context;
 import android.content.res.Resources;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
-
-import com.valterc.ki2.data.preferences.PreferencesView;
 
 public class PositionManager {
 
@@ -22,16 +19,17 @@ public class PositionManager {
     private int lastX;
     private int lastY;
 
-    private int lastWidth;
-    private int lastHeight;
+    private int lastWidth = -1;
+    private int lastHeight = -1;
 
-    public PositionManager(Context context, PreferencesView preferencesView, View overlayView) {
+    public PositionManager(int positionX, int positionY, View overlayView) {
         DisplayMetrics displayMetrics = Resources.getSystem().getDisplayMetrics();
         parentWidth = displayMetrics.widthPixels;
         parentHeight = displayMetrics.heightPixels;
 
-        x = preferencesView.getOverlayPositionX(context);
-        y = preferencesView.getOverlayPositionY(context);
+        this.x = positionX;
+        this.y = positionY;
+
         this.overlayView = overlayView;
     }
 
@@ -45,7 +43,12 @@ public class PositionManager {
         int viewWidth = overlayView.getMeasuredWidth() + overlayView.getPaddingStart() + overlayView.getPaddingEnd();
         int viewHeight = overlayView.getMeasuredHeight() + overlayView.getPaddingTop() + overlayView.getPaddingBottom();
 
-        if ((lastWidth == viewWidth && lastHeight == viewHeight) || overlayView.getMeasuredWidth() == 0 || overlayView.getMeasuredHeight() == 0) {
+        if (overlayView.getMeasuredWidth() == 0 || overlayView.getMeasuredHeight() == 0) {
+            viewWidth = overlayView.getWidth() + overlayView.getPaddingStart() + overlayView.getPaddingEnd();
+            viewHeight = overlayView.getHeight() + overlayView.getPaddingTop() + overlayView.getPaddingBottom();
+        }
+
+        if (lastWidth == viewWidth && lastHeight == viewHeight) {
             return;
         }
 
@@ -84,7 +87,6 @@ public class PositionManager {
 
         lastX = xValue;
         lastY = yValue;
-
         overlayView.setLayoutParams(layoutParamsRelativeLayout);
     }
 }

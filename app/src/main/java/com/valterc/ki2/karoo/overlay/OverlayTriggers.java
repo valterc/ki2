@@ -9,6 +9,7 @@ import java.util.Set;
 
 public class OverlayTriggers {
 
+    private static final String TRIGGER_PRIMARY_HIDDEN = "primary-hidden";
     private static final String TRIGGER_CONNECTION = "connection";
     private static final String TRIGGER_BATTERY = "battery";
     private static final String TRIGGER_SHIFTING = "shifting";
@@ -19,6 +20,14 @@ public class OverlayTriggers {
 
     public OverlayTriggers(Set<String> triggers) {
         this.triggers = triggers;
+    }
+
+    public boolean isTriggeredByPrimaryHidden(){
+        return triggers.contains(TRIGGER_PRIMARY_HIDDEN);
+    }
+
+    public void onPrimaryHidden() {
+        shouldShowOverlay |= triggers.contains(TRIGGER_PRIMARY_HIDDEN);
     }
 
     public void onConnectionInfo(ConnectionInfo connectionInfo) {

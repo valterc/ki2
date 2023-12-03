@@ -1,14 +1,11 @@
 package com.valterc.ki2.fragments.settings.overlay.position;
 
-import android.content.Context;
 import android.content.res.Resources;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.RelativeLayout;
-
-import com.valterc.ki2.data.preferences.PreferencesView;
 
 public class ScaledPositionManager {
 
@@ -48,12 +45,6 @@ public class ScaledPositionManager {
 
     public float getScaleY() {
         return scaleY;
-    }
-
-    public void applyPosition(Context context, PreferencesView preferencesView, View view) {
-        final int x = preferencesView.getOverlayPositionX(context);
-        final int y = preferencesView.getOverlayPositionY(context);
-        applyPosition(x, y, view);
     }
 
     public void applyPosition(int x, int y, View view) {

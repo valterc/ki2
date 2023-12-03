@@ -4,8 +4,10 @@
     <attr name="textEnabled" format="boolean" />
 
     <attr name="drivetrainColor" format="color" />
+    <attr name="gearColor" format="color" />
     <attr name="selectedGearColor" format="color" />
     <attr name="foregroundColor" format="color" />
+    <attr name="backgroundColor" format="color" />
 
     <attr name="value" format="float" />
 
@@ -60,7 +62,7 @@
 
     <declare-styleable name="BatteryView">
         <attr name="borderColor" format="color" />
-        <attr name="backgroundColor" format="color" />
+        <attr name="backgroundColor" />
         <attr name="foregroundColor" />
         <attr name="value" />
         <attr name="orientation" format="enum">
@@ -74,6 +76,17 @@
     <declare-styleable name="FillView">
         <attr name="foregroundColor" />
         <attr name="value" />
+    </declare-styleable>
+
+    <declare-styleable name="SlimGearsView">
+        <attr name="gearColor" />
+        <attr name="selectedFrontGearColor" format="color" />
+        <attr name="selectedRearGearColor" format="color" />
+
+        <attr name="frontGearMax" />
+        <attr name="rearGearMax" />
+        <attr name="frontGear" />
+        <attr name="rearGear" />
     </declare-styleable>
 
 </resources>

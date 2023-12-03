@@ -49,11 +49,69 @@
             app:useSimpleSummaryProvider="true"
             app:dependency="@string/preference_overlay_enabled"/>
 
-        <com.valterc.ki2.fragments.settings.overlay.position.PositionPreference
+        <com.valterc.ki2.fragments.settings.overlay.position.PrimaryOverlayPositionPreference
             app:summary="@string/summary_preference_overlay_position"
             app:title="@string/title_preference_overlay_position"
             app:useSimpleSummaryProvider="true"
             app:dependency="@string/preference_overlay_enabled"/>
+
+    </com.valterc.ki2.views.preference.MultiLinePreferenceCategory>
+
+    <com.valterc.ki2.views.preference.MultiLinePreferenceCategory
+        app:title="@string/category_preference_secondary_overlay"
+        app:summary="@string/summary_preference_secondary_overlay">
+
+        <SwitchPreference
+            app:defaultValue="@bool/default_preference_secondary_overlay_enabled"
+            app:key="@string/preference_secondary_overlay_enabled"
+            app:summary="@string/summary_preference_overlay_enabled"
+            app:title="@string/title_preference_overlay_enabled"
+            app:dependency="@string/preference_overlay_enabled"/>
+
+        <MultiSelectListPreference
+            app:defaultValue="@array/default_preference_secondary_overlay_triggers"
+            app:entries="@array/preference_titles_secondary_overlay_triggers"
+            app:entryValues="@array/preference_values_secondary_overlay_triggers"
+            app:key="@string/preference_secondary_overlay_triggers"
+            app:summary="@string/summary_preference_overlay_triggers"
+            app:title="@string/title_preference_overlay_triggers"
+            app:useSimpleSummaryProvider="true"
+            app:dependency="@string/preference_secondary_overlay_enabled"/>
+
+        <ListPreference
+            app:defaultValue="@string/default_preference_secondary_overlay_duration"
+            app:entries="@array/preference_titles_overlay_duration"
+            app:entryValues="@array/preference_values_overlay_duration"
+            app:key="@string/preference_secondary_overlay_duration"
+            app:summary="@string/summary_preference_overlay_duration"
+            app:title="@string/title_preference_overlay_duration"
+            app:useSimpleSummaryProvider="true"
+            app:dependency="@string/preference_secondary_overlay_enabled"/>
+
+        <ListPreference
+            app:defaultValue="@string/default_preference_secondary_overlay_theme"
+            app:entries="@array/preference_titles_overlay_theme"
+            app:entryValues="@array/preference_values_overlay_theme"
+            app:key="@string/preference_secondary_overlay_theme"
+            app:summary="@string/summary_preference_overlay_theme"
+            app:title="@string/title_preference_overlay_theme"
+            app:useSimpleSummaryProvider="true"
+            app:dependency="@string/preference_secondary_overlay_enabled"/>
+
+        <com.valterc.ki2.fragments.settings.overlay.opacity.OpacityPreference
+            app:defaultValue="@integer/default_preference_secondary_overlay_opacity"
+            app:key="@string/preference_secondary_overlay_opacity"
+            app:summary="@string/summary_preference_overlay_opacity"
+            app:title="@string/title_preference_overlay_opacity"
+            app:useSimpleSummaryProvider="true"
+            app:dependency="@string/preference_secondary_overlay_enabled"/>
+
+        <com.valterc.ki2.fragments.settings.overlay.position.SecondaryOverlayPositionPreference
+            app:summary="@string/summary_preference_overlay_position"
+            app:title="@string/title_preference_overlay_position"
+            app:useSimpleSummaryProvider="true"
+            app:dependency="@string/preference_secondary_overlay_enabled"
+            app:key="secondary"/>
 
     </com.valterc.ki2.views.preference.MultiLinePreferenceCategory>
 

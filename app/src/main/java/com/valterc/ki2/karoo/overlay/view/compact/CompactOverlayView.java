@@ -41,13 +41,6 @@ public abstract class CompactOverlayView extends BaseOverlayView<CompactOverlayV
 
     @Override
     public void setupInRide() {
-        ViewGroup.LayoutParams layoutParams = getViewHolder().getOverlayView().getLayoutParams();
-        if (layoutParams instanceof ViewGroup.MarginLayoutParams) {
-            ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) layoutParams;
-            marginLayoutParams.topMargin = 60;
-            getViewHolder().getOverlayView().setLayoutParams(marginLayoutParams);
-        }
-
         getViewHolder().getOverlayView().setClickable(true);
         getViewHolder().getOverlayView().setOnClickListener(v -> hide());
     }

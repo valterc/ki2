@@ -389,4 +389,91 @@ public class PreferencesView implements Parcelable {
         });
     }
 
+    /**
+     * Indicates if the secondary overlay is enabled.
+     *
+     * @param context Ki2 application context. Cannot be a context generated from another package.
+     * @return True if the secondary overlay is enabled, False otherwise.
+     */
+    public boolean isSecondaryOverlayEnabled(Context context) {
+        return getBoolean(context.getString(R.string.preference_secondary_overlay_enabled), () -> context.getResources().getBoolean(R.bool.default_preference_secondary_overlay_enabled));
+    }
+
+    /**
+     * Get secondary overlay triggers.
+     *
+     * @param context Ki2 application context. Cannot be a context generated from another package.
+     * @return Set with secondary overlay triggers, can be empty.
+     */
+    public Set<String> getSecondaryOverlayTriggers(Context context) {
+        return getStringSet(context.getString(R.string.preference_secondary_overlay_triggers), () -> new HashSet<>(Arrays.asList(context.getResources().getStringArray(R.array.default_preference_secondary_overlay_triggers))));
+    }
+
+    /**
+     * Get the display duration of the secondary overlay.
+     *
+     * @param context Ki2 application context. Cannot be a context generated from another package.
+     * @return Secondary overlay display duration in milliseconds.
+     */
+    public int getSecondaryOverlayDuration(Context context) {
+        return Integer.parseInt(getString(context.getString(R.string.preference_secondary_overlay_duration), () -> context.getString(R.string.default_preference_secondary_overlay_duration)));
+    }
+
+    /**
+     * Get the secondary overlay theme.
+     *
+     * @param context Ki2 application context. Cannot be a context generated from another package.
+     * @return Secondary overlay theme.
+     */
+    public String getSecondaryOverlayTheme(Context context) {
+        return getString(context.getString(R.string.preference_secondary_overlay_theme), () -> context.getString(R.string.default_preference_secondary_overlay_theme));
+    }
+
+    /**
+     * Get the secondary overlay opacity.
+     *
+     * @param context Ki2 application context. Cannot be a context generated from another package.
+     * @return Secondary overlay opacity.
+     */
+    public float getSecondaryOverlayOpacity(Context context) {
+        float opacity = getFloat(context.getString(R.string.preference_secondary_overlay_opacity), () -> (float) context.getResources().getInteger(R.integer.default_preference_secondary_overlay_opacity));
+        return Math.min(1, Math.max(opacity, 0));
+    }
+
+    /**
+     * Get the secondary overlay X position.
+     *
+     * @param context Ki2 application context. Cannot be a context generated from another package.
+     * @return Secondary overlay X position.
+     */
+    public int getSecondaryOverlayPositionX(Context context) {
+        return getInt(context.getString(R.string.preference_secondary_overlay_position_x), () -> {
+            OverlayViewBuilderEntry overlayBuilder = OverlayViewBuilderRegistry.getBuilder(getSecondaryOverlayTheme(context));
+
+            if (overlayBuilder != null) {
+                return overlayBuilder.getDefaultPositionX();
+            }
+
+            return context.getResources().getInteger(R.integer.default_preference_secondary_overlay_position);
+        });
+    }
+
+    /**
+     * Get the secondary overlay Y position.
+     *
+     * @param context Ki2 application context. Cannot be a context generated from another package.
+     * @return Secondary overlay Y position.
+     */
+    public int getSecondaryOverlayPositionY(Context context) {
+        return getInt(context.getString(R.string.preference_secondary_overlay_position_y), () -> {
+            OverlayViewBuilderEntry overlayBuilder = OverlayViewBuilderRegistry.getBuilder(getSecondaryOverlayTheme(context));
+
+            if (overlayBuilder != null) {
+                return overlayBuilder.getDefaultPositionY();
+            }
+
+            return context.getResources().getInteger(R.integer.default_preference_secondary_overlay_position);
+        });
+    }
+
 }
