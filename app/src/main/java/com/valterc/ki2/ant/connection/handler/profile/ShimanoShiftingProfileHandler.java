@@ -126,7 +126,7 @@ public class ShimanoShiftingProfileHandler implements IDeviceProfileHandler {
                 break;
 
             default:
-                Timber.d("[%s] Unhandled page %s", deviceId, pageType);
+                Timber.d("[%s] Unhandled page %s: %s", deviceId, pageType, Arrays.toString(payload));
                 break;
         }
     }

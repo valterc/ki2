@@ -35,9 +35,9 @@ import timber.log.Timber;
 @SuppressLint("SimpleDateFormat")
 public class AntDebugRecorder extends Timber.DebugTree implements Closeable {
 
-
-    private final static DateFormat DATE_FORMAT_FILE_NAME = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss.SSS");
-    private final static DateFormat DATE_FORMAT_LOG_TIME = new SimpleDateFormat("HH:mm:ss.SSS");
+    private static final DateFormat DATE_FORMAT_FILE_NAME = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss.SSS");
+    private static final DateFormat DATE_FORMAT_LOG_TIME = new SimpleDateFormat("HH:mm:ss.SSS");
+    private static final int TIME_S_QUEUE_DELAY = 3;
 
     private final static Set<String> TAGS = new HashSet<>(Arrays.asList(
             ShimanoShiftingProfileHandler.class.getSimpleName(),
@@ -55,7 +55,7 @@ public class AntDebugRecorder extends Timber.DebugTree implements Closeable {
     public AntDebugRecorder(File directory) throws Exception {
         queueLogs = new ConcurrentLinkedQueue<>();
         executorService = Executors.newSingleThreadScheduledExecutor();
-        executorService.scheduleWithFixedDelay(this::persistLogs, 5, 5, TimeUnit.SECONDS);
+        executorService.scheduleWithFixedDelay(this::persistLogs, TIME_S_QUEUE_DELAY, TIME_S_QUEUE_DELAY, TimeUnit.SECONDS);
 
         File fileRecording = new File(directory, "ki2-ant_recording-" + DATE_FORMAT_FILE_NAME.format(Date.from(Instant.now())) + ".txt");
         boolean fileReady = fileRecording.createNewFile();
