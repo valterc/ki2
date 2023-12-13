@@ -154,7 +154,7 @@ public class ShimanoShiftingProfileHandler implements IDeviceProfileHandler {
 
         Timber.d("[%s] Received manufacturer info: {software=%s, serial=%s}", deviceId, softwareVersionFromRevisions, serialNumber);
 
-        if (serialNumber != 0xFFFFFFFF) {
+        if (serialNumber != 0xFFFFFFFFL) {
             manufacturerInfoBuilder.setSerialNumber(Long.toString(serialNumber));
         } else {
             manufacturerInfoBuilder.setSerialNumber(null);
@@ -196,6 +196,7 @@ public class ShimanoShiftingProfileHandler implements IDeviceProfileHandler {
         BuzzerType buzzerType = BuzzerType.fromCommandNumber((int) MessageUtils.numberFromBytes(payload, 1, 1));
 
         if (sequenceNumber != buzzerData.getSequenceNumber()) {
+            Timber.d("[%s] Received buzzer data: {type=%s, sequence=%s}", deviceId, buzzerType, sequenceNumber);
             buzzerData.setSequenceNumber(sequenceNumber);
             shiftingInfoBuilder.setBuzzerType(buzzerType);
         }
@@ -290,6 +291,7 @@ public class ShimanoShiftingProfileHandler implements IDeviceProfileHandler {
             }
 
             if (buzzerData.isExpired()) {
+                Timber.d("[%s] Buzzer Data expired", deviceId);
                 buzzerData.resetTime();
                 shiftingInfoBuilder.setBuzzerType(BuzzerType.DEFAULT);
             }
@@ -310,7 +312,7 @@ public class ShimanoShiftingProfileHandler implements IDeviceProfileHandler {
     }
 
     private byte[] encodeSlaveStatus(Collection<SlaveStatusIndicator> slaveStatusIndicatorCollection) {
-        long bitSet = 0xFFFFFFFF;
+        long bitSet = 0xFFFFFFFFL;
 
         for (SlaveStatusIndicator slaveStatusIndicator : slaveStatusIndicatorCollection) {
             bitSet &= ~slaveStatusIndicator.getFlag();

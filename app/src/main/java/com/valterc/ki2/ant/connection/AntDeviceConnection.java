@@ -176,6 +176,7 @@ public class AntDeviceConnection implements IAntDeviceConnection, IDeviceConnect
     private void postConnectionStatus(DeviceId deviceId, ConnectionStatus connectionStatus) {
         this.connectionStatus = connectionStatus;
         if (deviceConnectionListener != null) {
+            Timber.d("[%s] Connection status: %s", deviceId, connectionStatus);
             deviceConnectionListener.onConnectionStatus(deviceId, connectionStatus);
         }
     }

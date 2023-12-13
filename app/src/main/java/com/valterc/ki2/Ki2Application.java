@@ -13,6 +13,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.valterc.ki2.ant.recorder.AntRecorderManager;
 import com.valterc.ki2.data.connection.ConnectionInfo;
 import com.valterc.ki2.data.device.DeviceId;
 import com.valterc.ki2.services.IKi2Service;
@@ -100,6 +101,9 @@ public class Ki2Application extends Application {
     private int activityCount;
     private boolean registeredWithService;
 
+    @SuppressWarnings({"FieldCanBeLocal", "unused"})
+    private AntRecorderManager antRecorderManager;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -127,6 +131,7 @@ public class Ki2Application extends Application {
 
         Timber.d("Ki2Application started");
 
+        antRecorderManager = new AntRecorderManager(this);
         registerActivityLifecycleCallbacks(activityLifecycleCallbacks);
         serviceBound = bindService(Ki2Service.getIntent(), serviceConnection, BIND_AUTO_CREATE);
     }

@@ -192,6 +192,17 @@ public class PreferencesView implements Parcelable {
     }
 
     /**
+     * Indicates if ANT Recording setting is enabled.
+     *
+     * @param context Ki2 application context. Cannot be a context generated from another package.
+     * @return True if ANT Recording setting is enabled, false otherwise.
+     */
+    public boolean isANTRecordingEnabled(Context context) {
+        return getBoolean(context.getString(R.string.preference_ant_recording),
+                () -> context.getResources().getBoolean(R.bool.default_preference_ant_recording));
+    }
+
+    /**
      * Indicates if a switch press should turn screen on.
      *
      * @param context Ki2 application context. Cannot be a context generated from another package.
