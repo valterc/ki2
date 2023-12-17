@@ -37,8 +37,8 @@ public class AntRecorderManager {
 
     private void cleanExistingFiles() {
         File directory = getDirectory();
+        
         File[] filesToDelete = directory.listFiles(file -> System.currentTimeMillis() - file.lastModified() > TimeUnit.DAYS.toMillis(30));
-
         if (filesToDelete != null) {
             Timber.i("Cleaning up %s old ANT recording files", filesToDelete.length);
             for (File fileToDelete : filesToDelete) {
