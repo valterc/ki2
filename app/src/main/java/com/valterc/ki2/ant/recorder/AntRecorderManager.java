@@ -9,6 +9,7 @@ import com.valterc.ki2.R;
 import com.valterc.ki2.data.preferences.PreferencesView;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 import timber.log.Timber;
@@ -20,7 +21,7 @@ public class AntRecorderManager {
 
     public AntRecorderManager(Context context) {
         this.context = context;
-        cleanOldFiles();
+        cleanExistingFiles();
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         setupRecording(preferences);
@@ -34,13 +35,27 @@ public class AntRecorderManager {
         }
     }
 
-    private void cleanOldFiles() {
+    private void cleanExistingFiles() {
         File directory = getDirectory();
         File[] filesToDelete = directory.listFiles(file -> System.currentTimeMillis() - file.lastModified() > TimeUnit.DAYS.toMillis(30));
 
         if (filesToDelete != null) {
             Timber.i("Cleaning up %s old ANT recording files", filesToDelete.length);
             for (File fileToDelete : filesToDelete) {
+                Timber.i("Deleting file: %s", fileToDelete);
+                boolean deleted = fileToDelete.delete();
+                if (!deleted) {
+                    Timber.i("Unable to delete file: %s", fileToDelete);
+                }
+            }
+        }
+
+        filesToDelete = directory.listFiles();
+        if (filesToDelete != null) {
+            filesToDelete = Arrays.stream(filesToDelete).sorted((a, b) -> Long.compare(b.lastModified(), a.lastModified())).skip(5).toArray(File[]::new);
+            Timber.i("Cleaning up %s ANT recording files", filesToDelete.length);
+            for (File fileToDelete : filesToDelete) {
+                Timber.i("Deleting file: %s", fileToDelete);
                 boolean deleted = fileToDelete.delete();
                 if (!deleted) {
                     Timber.i("Unable to delete file: %s", fileToDelete);

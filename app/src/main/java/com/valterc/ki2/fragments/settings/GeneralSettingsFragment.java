@@ -20,8 +20,8 @@ public class GeneralSettingsFragment extends PreferenceFragmentCompat {
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.preferences_general, rootKey);
-        Preference preferenceFITRecording = findPreference(getString(R.string.preference_ant_recording));
-        Objects.requireNonNull(preferenceFITRecording).setOnPreferenceChangeListener((preference, newValue) -> {
+        Preference preferenceANTRecording = findPreference(getString(R.string.preference_ant_recording));
+        Objects.requireNonNull(preferenceANTRecording).setOnPreferenceChangeListener((preference, newValue) -> {
             if (Objects.equals(newValue, Boolean.TRUE)) {
                 new AlertDialog.Builder(requireContext(), R.style.AlertDialogStyle)
                         .setTitle(R.string.text_ant_recording)
