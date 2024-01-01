@@ -789,6 +789,9 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
         messageManager.messageReceived(message);
         serviceHandler.postRetriableAction(() -> broadcastData(callbackListMessage, () -> message, IMessageCallback::onMessage));
 
+        SharedPreferences preferences;
+        SharedPreferences.Editor editor;
+
         switch (message.getMessageType()){
             case RIDE_STATUS:
                 RideStatusMessage rideStatusMessage = RideStatusMessage.parse(message);
@@ -806,9 +809,9 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
                 break;
 
             case AUDIO_ALERT_TOGGLE:
-                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+                preferences = PreferenceManager.getDefaultSharedPreferences(this);
                 boolean audioAlertsEnabled = preferences.getBoolean(getString(R.string.preference_audio_alerts_enabled), getResources().getBoolean(R.bool.default_preference_audio_alerts_enabled));
-                SharedPreferences.Editor editor = preferences.edit();
+                editor = preferences.edit();
                 editor.putBoolean(getString(R.string.preference_audio_alerts_enabled), !audioAlertsEnabled);
                 editor.apply();
                 break;
