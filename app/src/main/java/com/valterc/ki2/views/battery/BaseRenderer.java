@@ -20,7 +20,7 @@ public abstract class BaseRenderer implements IBatteryViewRenderer {
     public BaseRenderer() {
         paintBorder = new Paint(Paint.ANTI_ALIAS_FLAG);
         paintBorder.setStyle(Paint.Style.STROKE);
-        paintBorder.setStrokeWidth(1);
+        paintBorder.setStrokeWidth(4);
 
         paintBackground = new Paint(Paint.FILTER_BITMAP_FLAG);
         paintBackground.setStyle(Paint.Style.FILL);

@@ -225,7 +225,7 @@ public class DrivetrainView extends View {
         float horizontalCenter = (float) drivetrainBoxWidth * 0.5f;
         float verticalCenter = (float) drivetrainBoxHeight * 0.5f;
 
-        rearGearPositionX = horizontalCenter * 0.3f;
+        rearGearPositionX = horizontalCenter * 0.25f;
         frontGearPositionX = horizontalCenter + horizontalCenter * 0.6f;
 
         rearGearRadius = Math.min(horizontalCenter * 0.5f, drivetrainBoxHeight * 0.4f) * 0.5f;
@@ -492,19 +492,19 @@ public class DrivetrainView extends View {
 
     public void setGears(int frontGearMax, int frontGear, int rearGearMax, int rearGear) {
         if (frontGearMax <= 0) {
-            throw new IllegalArgumentException("Invalid front gear max value:" + frontGearMax);
+            throw new IllegalArgumentException("Invalid front gear max value: " + frontGearMax);
         }
 
         if (frontGear <= 0 || frontGear > frontGearMax) {
-            throw new IllegalArgumentException("Invalid front gear value:" + frontGear);
+            throw new IllegalArgumentException("Invalid front gear value: " + frontGear);
         }
 
         if (rearGearMax <= 0) {
-            throw new IllegalArgumentException("Invalid rear gear max value:" + rearGearMax);
+            throw new IllegalArgumentException("Invalid rear gear max value: " + rearGearMax);
         }
 
         if (rearGear <= 0 || rearGear > rearGearMax) {
-            throw new IllegalArgumentException("Invalid rear gear value:" + rearGear);
+            throw new IllegalArgumentException("Invalid rear gear value: " + rearGear);
         }
 
         if (this.frontGearMax != frontGearMax ||
@@ -525,19 +525,19 @@ public class DrivetrainView extends View {
 
     public void setGears(int frontGearMax, int frontGear, String frontGearLabel, int rearGearMax, int rearGear, String rearGearLabel) {
         if (frontGearMax <= 0) {
-            throw new IllegalArgumentException("Invalid front gear max value:" + frontGearMax);
+            throw new IllegalArgumentException("Invalid front gear max value: " + frontGearMax);
         }
 
         if (frontGear <= 0 || frontGear > frontGearMax) {
-            throw new IllegalArgumentException("Invalid front gear value:" + frontGear);
+            throw new IllegalArgumentException("Invalid front gear value: " + frontGear);
         }
 
         if (rearGearMax <= 0) {
-            throw new IllegalArgumentException("Invalid rear gear max value:" + rearGearMax);
+            throw new IllegalArgumentException("Invalid rear gear max value: " + rearGearMax);
         }
 
         if (rearGear <= 0 || rearGear > rearGearMax) {
-            throw new IllegalArgumentException("Invalid rear gear value:" + rearGear);
+            throw new IllegalArgumentException("Invalid rear gear value: " + rearGear);
         }
 
         if (this.frontGearMax != frontGearMax ||
@@ -566,7 +566,7 @@ public class DrivetrainView extends View {
 
     public void setFrontGearMax(int frontGearMax) {
         if (frontGearMax <= 0) {
-            throw new IllegalArgumentException("Invalid front gear max value:" + frontGearMax);
+            throw new IllegalArgumentException("Invalid front gear max value: " + frontGearMax);
         }
 
         if (this.frontGearMax !=  frontGearMax) {
@@ -585,7 +585,7 @@ public class DrivetrainView extends View {
 
     public void setFrontGear(int frontGear) {
         if (frontGear <= 0 || frontGear > frontGearMax) {
-            throw new IllegalArgumentException("Invalid front gear value:" + frontGear);
+            throw new IllegalArgumentException("Invalid front gear value: " + frontGear);
         }
 
         if (this.frontGear != frontGear) {
@@ -604,7 +604,7 @@ public class DrivetrainView extends View {
 
     public void setRearGearMax(int rearGearMax) {
         if (rearGearMax <= 0) {
-            throw new IllegalArgumentException("Invalid rear gear max value:" + rearGearMax);
+            throw new IllegalArgumentException("Invalid rear gear max value: " + rearGearMax);
         }
 
         if (this.rearGearMax != rearGearMax) {
@@ -623,7 +623,7 @@ public class DrivetrainView extends View {
 
     public void setRearGear(int rearGear) {
         if (rearGear <= 0 || rearGear > rearGearMax) {
-            throw new IllegalArgumentException("Invalid rear gear value:" + rearGear);
+            throw new IllegalArgumentException("Invalid rear gear value: " + rearGear);
         }
 
         if (this.rearGear != rearGear) {
@@ -672,7 +672,7 @@ public class DrivetrainView extends View {
 
     public void setTextSize(float textSize) {
         if (textSize < 0) {
-            throw new IllegalArgumentException("Invalid text size:" + textSize);
+            throw new IllegalArgumentException("Invalid text size: " + textSize);
         }
 
         final Resources resources = getResources();
@@ -720,7 +720,7 @@ public class DrivetrainView extends View {
 
     public void setDrivetrainStrokeWidth(float width) {
         if (width < 0) {
-            throw new IllegalArgumentException("Invalid width:" + width);
+            throw new IllegalArgumentException("Invalid width: " + width);
         }
 
         final Resources resources = getResources();
@@ -738,7 +738,7 @@ public class DrivetrainView extends View {
 
     public void setSelectedGearStrokeWidth(float width) {
         if (width < 0) {
-            throw new IllegalArgumentException("Invalid width:" + width);
+            throw new IllegalArgumentException("Invalid width: " + width);
         }
 
         final Resources resources = getResources();
@@ -756,7 +756,7 @@ public class DrivetrainView extends View {
 
     public void setChainStrokeWidth(float width) {
         if (width < 0) {
-            throw new IllegalArgumentException("Invalid width:" + width);
+            throw new IllegalArgumentException("Invalid width: " + width);
         }
 
         final Resources resources = getResources();

@@ -11,9 +11,8 @@
     <color name="hh_climb_blue_600">#005297</color>
     <color name="hh_climb_blue_700">#00294b</color>
 
-    <color name="hh_gears_active_blue">#617f8f</color>
-    <color name="hh_gears_active_red_bottom">#9f041b</color>
-    <color name="hh_gears_active_red_top">#f5515f</color>
+    <color name="hh_gears_active_dark">#a0b4be</color>
+    <color name="hh_gears_active_light">#617f8f</color>
     <color name="hh_gears_border_dark">#F0F0F0</color>
     <color name="hh_gears_border_light">#707070</color>
 
@@ -48,7 +47,7 @@
     <color name="grey">#777777</color>
     <color name="grey_100">#F0F0F0</color>
 
-    <color name="battery_border_light">#A0606060</color>
+    <color name="battery_border_light">#FF606060</color>
     <color name="battery_background_light">#40606060</color>
 
     <color name="battery_border_dark">#FFD0D0D0</color>

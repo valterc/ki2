@@ -47,8 +47,6 @@
         <attr name="textEnabled" />
 
         <attr name="selectedGearColor" />
-        <attr name="selectedGearColorTop" format="color" />
-        <attr name="selectedGearColorBottom" format="color" />
         <attr name="unselectedGearBorderColor" format="color" />
 
         <attr name="frontGearMax" />

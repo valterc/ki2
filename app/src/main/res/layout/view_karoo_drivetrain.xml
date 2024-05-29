@@ -1,39 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_marginVertical="12dp"
+    android:layout_marginVertical="10dp"
     tools:background="@color/black">
 
-    <com.valterc.ki2.views.DrivetrainView
-        android:id="@+id/drivetrainview_karoo_drivetrain"
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:textSize="25sp"
-        android:textColor="@color/white_100"
-        app:drivetrainColor="@color/hh_light_blue_dark"
-        app:drivetrainStrokeWidth="4dp"
-        app:selectedGearStrokeWidth="4dp"
-        app:chainStrokeWidth="4dp"
-        android:visibility="invisible"
-        tools:visibility="visible"
-        tools:layout_height="160dp" />
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:paddingHorizontal="5dp">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical|end"
+            android:orientation="horizontal"
+            android:paddingTop="2dp">
+
+            <com.valterc.ki2.views.battery.BatteryView
+                android:id="@+id/batteryview_karoo_drivetrain"
+                android:layout_width="12dp"
+                android:layout_height="22dp"
+                android:layout_gravity="center_vertical"
+                android:visibility="gone"
+                app:borderColor="@color/hh_green"
+                app:foregroundColor="@color/hh_green"
+                app:orientation="vertical_top"
+                tools:value=".5"
+                tools:visibility="visible" />
+
+            <TextView
+                android:id="@+id/textview_karoo_drivetrain"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:fontFamily="monospace"
+                android:paddingTop="3dp"
+                android:textAlignment="center"
+                android:textColor="@color/white_100"
+                android:textSize="20sp"
+                tools:text="F11 - R11" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <com.valterc.ki2.views.DrivetrainView
+            android:id="@+id/drivetrainview_karoo_drivetrain"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textColor="@color/white_100"
+            android:textSize="25sp"
+            android:visibility="invisible"
+            app:chainStrokeWidth="4dp"
+            app:drivetrainColor="@color/hh_gears_active_dark"
+            app:drivetrainStrokeWidth="4dp"
+            app:selectedGearStrokeWidth="4dp"
+            app:textEnabled="false"
+            tools:layout_height="160dp"
+            tools:visibility="visible" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
     <TextView
         android:id="@+id/textview_karoo_drivetrain_waiting_for_data"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:text="@string/text_waiting_for_data"
         android:textAlignment="center"
         android:textColor="@color/white_100"
         android:textSize="24sp"
-        android:text="@string/text_waiting_for_data"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:visibility="gone"
-        tools:visibility="visible"/>
+        tools:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
