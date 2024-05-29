@@ -26,6 +26,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import kotlin.Lazy;
 import kotlin.LazyKt;
+import kotlin.jvm.internal.DefaultConstructorMarker;
 
 @SuppressWarnings({"UnusedReturnValue", "unchecked", "rawtypes"})
 @SuppressLint("LogNotTimber")
@@ -158,7 +159,7 @@ public class DataSyncServiceHook {
 
     private static final Lazy<Constructor<?>> CONSTRUCTOR_FIELD = LazyKt.lazy(() -> {
         try {
-            return TYPE_FIELD.getValue().getConstructor(String.class, Integer.TYPE, Integer.TYPE, Boolean.TYPE);
+            return TYPE_FIELD.getValue().getConstructor(String.class, Integer.TYPE, Boolean.TYPE, Integer.TYPE);
         } catch (Exception e) {
             Log.w("KI2", "Unable to get field constructor", e);
         }
@@ -168,7 +169,7 @@ public class DataSyncServiceHook {
 
     private static final Lazy<Object> FIELD_SHIFTING_FRONT_GEAR = LazyKt.lazy(() -> {
         try {
-            return CONSTRUCTOR_FIELD.getValue().newInstance("FIELD_SHIFTING_FRONT_GEAR_ID", 0, VALIDATOR_ORDINAL.getValue(), false);
+            return CONSTRUCTOR_FIELD.getValue().newInstance("FIELD_SHIFTING_FRONT_GEAR_ID", 0, false, VALIDATOR_ORDINAL.getValue());
         } catch (Exception e) {
             Log.w("KI2", "Unable to get field shifting front gear", e);
         }
@@ -178,7 +179,7 @@ public class DataSyncServiceHook {
 
     private static final Lazy<Object> FIELD_SHIFTING_FRONT_GEAR_TEETH = LazyKt.lazy(() -> {
         try {
-            return CONSTRUCTOR_FIELD.getValue().newInstance("FIELD_SHIFTING_FRONT_GEAR_TEETH_ID", 0, VALIDATOR_ORDINAL.getValue(), true);
+            return CONSTRUCTOR_FIELD.getValue().newInstance("FIELD_SHIFTING_FRONT_GEAR_TEETH_ID", 0, true, VALIDATOR_ORDINAL.getValue());
         } catch (Exception e) {
             Log.w("KI2", "Unable to get field shifting front gear teeth", e);
         }
@@ -188,7 +189,7 @@ public class DataSyncServiceHook {
 
     private static final Lazy<Object> FIELD_SHIFTING_REAR_GEAR = LazyKt.lazy(() -> {
         try {
-            return CONSTRUCTOR_FIELD.getValue().newInstance("FIELD_SHIFTING_REAR_GEAR_ID", 0, VALIDATOR_ORDINAL.getValue(), false);
+            return CONSTRUCTOR_FIELD.getValue().newInstance("FIELD_SHIFTING_REAR_GEAR_ID", 0, false, VALIDATOR_ORDINAL.getValue());
         } catch (Exception e) {
             Log.w("KI2", "Unable to get field shifting rear gear", e);
         }
@@ -198,7 +199,7 @@ public class DataSyncServiceHook {
 
     private static final Lazy<Object> FIELD_SHIFTING_REAR_GEAR_TEETH = LazyKt.lazy(() -> {
         try {
-            return CONSTRUCTOR_FIELD.getValue().newInstance("FIELD_SHIFTING_REAR_GEAR_TEETH_ID", 0, VALIDATOR_ORDINAL.getValue(), true);
+            return CONSTRUCTOR_FIELD.getValue().newInstance("FIELD_SHIFTING_REAR_GEAR_TEETH_ID", 0, true, VALIDATOR_ORDINAL.getValue());
         } catch (Exception e) {
             Log.w("KI2", "Unable to get field shifting rear gear teeth", e);
         }
@@ -218,7 +219,7 @@ public class DataSyncServiceHook {
 
     private static final Lazy<Constructor<?>> CONSTRUCTOR_VALUE = LazyKt.lazy(() -> {
         try {
-            return TYPE_VALUE.getValue().getConstructor(Object.class, Integer.TYPE);
+            return TYPE_VALUE.getValue().getConstructor(Object.class, Integer.TYPE, DefaultConstructorMarker.class);
         } catch (Exception e) {
             Log.w("KI2", "Unable to get value constructor", e);
         }
@@ -228,7 +229,15 @@ public class DataSyncServiceHook {
 
     private static final Lazy<Constructor<?>> CONSTRUCTOR_DATA_POINT = LazyKt.lazy(() -> {
         try {
-            return TYPE_DATA_POINT.getValue().getConstructor(Long.TYPE, Long.TYPE, TYPE_DATA_TYPE.getValue(), List.class, Map.class, Map.class, Map.class);
+            return TYPE_DATA_POINT.getValue().getConstructor(
+                    Map.class,
+                    Long.TYPE,
+                    Long.TYPE,
+                    TYPE_DATA_TYPE.getValue(),
+                    List.class,
+                    Map.class,
+                    Map.class,
+                    DefaultConstructorMarker.class);
         } catch (Exception e) {
             Log.w("KI2", "Unable to get data point constructor", e);
         }
@@ -342,7 +351,7 @@ public class DataSyncServiceHook {
     }
 
     private static Object getIntValue(int value) throws Exception {
-        return CONSTRUCTOR_VALUE.getValue().newInstance(value, 0);
+        return CONSTRUCTOR_VALUE.getValue().newInstance(value, 0, null);
     }
 
     private static Object getDataPoint(DeviceId deviceId, int gearFrontIndex, int gearFrontTeeth, int gearRearIndex, int gearRearTeeth) throws Exception {
@@ -352,13 +361,15 @@ public class DataSyncServiceHook {
         map.put(FIELD_SHIFTING_REAR_GEAR.getValue(), getIntValue(gearRearIndex));
         map.put(FIELD_SHIFTING_REAR_GEAR_TEETH.getValue(), getIntValue(gearRearTeeth));
 
-        return CONSTRUCTOR_DATA_POINT.getValue().newInstance(3000,
+        return CONSTRUCTOR_DATA_POINT.getValue().newInstance(
+                map,
+                3000,
                 System.currentTimeMillis(),
                 DATA_TYPE_SHIFTING_GEARS.getValue(),
                 Collections.singletonList("SOURCE_DI2_" + deviceId.getDeviceNumber()),
-                map,
                 Collections.emptyMap(),
-                Collections.emptyMap());
+                Collections.emptyMap(),
+                null);
     }
 
     /**
