@@ -59,6 +59,7 @@
     </declare-styleable>
 
     <declare-styleable name="BatteryView">
+        <attr name="borderStrokeWidth" format="float" />
         <attr name="borderColor" format="color" />
         <attr name="backgroundColor" />
         <attr name="foregroundColor" />

@@ -20,7 +20,7 @@ public abstract class BaseRenderer implements IBatteryViewRenderer {
     public BaseRenderer() {
         paintBorder = new Paint(Paint.ANTI_ALIAS_FLAG);
         paintBorder.setStyle(Paint.Style.STROKE);
-        paintBorder.setStrokeWidth(4);
+        paintBorder.setStrokeWidth(1);
 
         paintBackground = new Paint(Paint.FILTER_BITMAP_FLAG);
         paintBackground.setStyle(Paint.Style.FILL);
@@ -34,6 +34,11 @@ public abstract class BaseRenderer implements IBatteryViewRenderer {
     }
 
     protected abstract void generatePaths(BatteryView batteryView, int internalWidth, int internalHeight);
+
+    @Override
+    public void updateSettings(BatteryView batteryView) {
+        paintBorder.setStrokeWidth(batteryView.getBorderStrokeWidth());
+    }
 
     @Override
     public void render(BatteryView batteryView, Canvas canvas, int internalWidth, int internalHeight) {

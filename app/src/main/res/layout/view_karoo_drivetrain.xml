@@ -11,10 +11,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:paddingHorizontal="5dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:paddingHorizontal="5dp">
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
@@ -26,10 +26,11 @@
             <com.valterc.ki2.views.battery.BatteryView
                 android:id="@+id/batteryview_karoo_drivetrain"
                 android:layout_width="12dp"
-                android:layout_height="22dp"
+                android:layout_height="20dp"
                 android:layout_gravity="center_vertical"
                 android:visibility="gone"
                 app:borderColor="@color/hh_green"
+                app:borderStrokeWidth="4"
                 app:foregroundColor="@color/hh_green"
                 app:orientation="vertical_top"
                 tools:value=".5"

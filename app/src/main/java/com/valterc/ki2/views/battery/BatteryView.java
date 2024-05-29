@@ -33,6 +33,7 @@ public class BatteryView extends View {
     private int colorBorder;
     private int colorBackground;
     private int colorForeground;
+    private float borderStrokeWidth;
     private float value;
 
 
@@ -51,6 +52,7 @@ public class BatteryView extends View {
             setBorderColor(array.getColor(R.styleable.BatteryView_borderColor, defaultColor));
             setBackgroundColor(array.getColor(R.styleable.BatteryView_backgroundColor, Color.TRANSPARENT));
             setForegroundColor(array.getColor(R.styleable.BatteryView_foregroundColor, defaultColor));
+            setBorderStrokeWidth(array.getFloat(R.styleable.BatteryView_borderStrokeWidth, 1));
         } finally {
             array.recycle();
         }
@@ -192,6 +194,8 @@ public class BatteryView extends View {
                 throw new IllegalArgumentException("Invalid orientation value: " + orientation);
         }
 
+        renderer.updateSettings(this);
+
         if (initialized) {
             invalidate();
             requestLayout();
@@ -211,5 +215,30 @@ public class BatteryView extends View {
 
     public Orientation getOrientation() {
         return orientation;
+    }
+
+    public void setBorderStrokeWidth(float borderStrokeWidth) {
+        if (borderStrokeWidth < 0){
+            throw new IllegalArgumentException("Invalid border stroke width value: " + borderStrokeWidth);
+        }
+
+        if (this.borderStrokeWidth == borderStrokeWidth) {
+            return;
+        }
+
+        this.borderStrokeWidth = borderStrokeWidth;
+
+        if (renderer != null) {
+            renderer.updateSettings(this);
+        }
+
+        if (initialized) {
+            invalidate();
+            requestLayout();
+        }
+    }
+
+    public float getBorderStrokeWidth() {
+        return borderStrokeWidth;
     }
 }
