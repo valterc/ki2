@@ -16,14 +16,14 @@ public class HorizontalLeftRenderer extends BaseRenderer {
         pathBorder.reset();
 
         rect.left = batteryView.getPaddingStart() + Math.max(internalWidth * .1f, 2);
-        rect.top = batteryView.getPaddingTop() + paintBorder.getStrokeWidth();
-        rect.right = batteryView.getPaddingStart() + internalWidth - paintBorder.getStrokeWidth();
-        rect.bottom = batteryView.getPaddingTop() + internalHeight - paintBorder.getStrokeWidth();
+        rect.top = batteryView.getPaddingTop() + paintBorder.getStrokeWidth() / 2;
+        rect.right = batteryView.getPaddingStart() + internalWidth - paintBorder.getStrokeWidth() / 2;
+        rect.bottom = batteryView.getPaddingTop() + internalHeight - paintBorder.getStrokeWidth() / 2;
 
         pathBackground.addRoundRect(rect, 2, 2, Path.Direction.CW);
 
         rect.left = batteryView.getPaddingStart() + Math.max(internalWidth * .1f, 2);
-        rect.right = batteryView.getPaddingStart() + internalWidth - paintBorder.getStrokeWidth();
+        rect.right = batteryView.getPaddingStart() + internalWidth - paintBorder.getStrokeWidth() / 2;
         rect.left = batteryView.getPaddingStart() + Math.max(internalWidth * .1f, 2) + (rect.right - rect.left) * (1 - batteryView.getValue());
 
         if (batteryView.getValue() > 0.99) {
@@ -32,7 +32,7 @@ public class HorizontalLeftRenderer extends BaseRenderer {
             pathValue.addRoundRect(rect, NON_FULL_CORNER_RADIUS, Path.Direction.CW);
         }
 
-        rect.left = batteryView.getPaddingStart() + paintBorder.getStrokeWidth();
+        rect.left = batteryView.getPaddingStart();
         rect.top = batteryView.getPaddingTop() + internalHeight * .3f;
         rect.right = batteryView.getPaddingStart() + Math.max(internalWidth * .1f, 2);
         rect.bottom = batteryView.getPaddingTop() + internalHeight - internalHeight * .3f;

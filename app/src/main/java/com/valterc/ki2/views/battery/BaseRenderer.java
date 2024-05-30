@@ -36,6 +36,11 @@ public abstract class BaseRenderer implements IBatteryViewRenderer {
     protected abstract void generatePaths(BatteryView batteryView, int internalWidth, int internalHeight);
 
     @Override
+    public void updateSettings(BatteryView batteryView) {
+        paintBorder.setStrokeWidth(batteryView.getBorderStrokeWidth());
+    }
+
+    @Override
     public void render(BatteryView batteryView, Canvas canvas, int internalWidth, int internalHeight) {
         generatePaths(batteryView, internalWidth, internalHeight);
 

@@ -11,20 +11,26 @@ import androidx.annotation.Nullable;
 import com.valterc.ki2.R;
 import com.valterc.ki2.data.connection.ConnectionInfo;
 import com.valterc.ki2.data.connection.ConnectionStatus;
+import com.valterc.ki2.data.device.BatteryInfo;
 import com.valterc.ki2.data.device.DeviceId;
+import com.valterc.ki2.data.preferences.PreferencesView;
 import com.valterc.ki2.data.preferences.device.DevicePreferencesView;
 import com.valterc.ki2.data.shifting.ShiftingInfo;
 import com.valterc.ki2.karoo.Ki2Context;
 import com.valterc.ki2.karoo.formatters.NumericTextFormatterConstants;
 import com.valterc.ki2.karoo.shifting.ShiftingGearingHelper;
 import com.valterc.ki2.views.DrivetrainView;
+import com.valterc.ki2.views.battery.BatteryView;
 
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 public class DrivetrainSizeSdkView extends Ki2SdkView {
 
     private ConnectionStatus connectionStatus;
     private ShiftingGearingHelper shiftingGearingHelper;
+    private BatteryInfo batteryInfo;
+    private PreferencesView preferencesView;
 
     @SuppressWarnings("FieldCanBeLocal")
     private final BiConsumer<DeviceId, ConnectionInfo> connectionInfoConsumer = (deviceId, connectionInfo) ->
@@ -42,8 +48,22 @@ public class DrivetrainSizeSdkView extends Ki2SdkView {
         updateDrivetrainView();
     };
 
-    private TextView textView;
+    @SuppressWarnings("FieldCanBeLocal")
+    private final BiConsumer<DeviceId, BatteryInfo> batteryInfoConsumer = (deviceId, batteryInfo) -> {
+        this.batteryInfo = batteryInfo;
+        updateDrivetrainView();
+    };
+
+    @SuppressWarnings("FieldCanBeLocal")
+    private final Consumer<PreferencesView> preferencesConsumer = (preferencesView) -> {
+        this.preferencesView = preferencesView;
+        updateDrivetrainView();
+    };
+
+    private TextView textViewWaitingForData;
     private DrivetrainView drivetrainView;
+    private BatteryView batteryView;
+    private TextView textViewGears;
 
     public DrivetrainSizeSdkView(@NonNull Ki2Context context) {
         super(context);
@@ -51,21 +71,31 @@ public class DrivetrainSizeSdkView extends Ki2SdkView {
         context.getServiceClient().registerConnectionInfoWeakListener(connectionInfoConsumer);
         context.getServiceClient().registerShiftingInfoWeakListener(shiftingInfoConsumer);
         context.getServiceClient().registerDevicePreferencesWeakListener(devicePreferencesConsumer);
+        context.getServiceClient().registerBatteryInfoWeakListener(batteryInfoConsumer);
+        context.getServiceClient().registerPreferencesWeakListener(preferencesConsumer);
     }
 
     @NonNull
     @Override
     protected View createView(@NonNull LayoutInflater layoutInflater, @NonNull ViewGroup parent) {
         View inflatedView = layoutInflater.inflate(R.layout.view_karoo_drivetrain, parent, false);
-        textView = inflatedView.findViewById(R.id.textview_karoo_drivetrain_waiting_for_data);
+        textViewWaitingForData = inflatedView.findViewById(R.id.textview_karoo_drivetrain_waiting_for_data);
         drivetrainView = inflatedView.findViewById(R.id.drivetrainview_karoo_drivetrain);
+        batteryView = inflatedView.findViewById(R.id.batteryview_karoo_drivetrain);
+        textViewGears = inflatedView.findViewById(R.id.textview_karoo_drivetrain);
 
         KarooTheme karooTheme = getKarooTheme(parent);
 
         if (karooTheme == KarooTheme.WHITE) {
-            textView.setTextColor(getContext().getColor(R.color.hh_black));
+            textViewWaitingForData.setTextColor(getContext().getColor(R.color.hh_black));
+            textViewGears.setTextColor(getContext().getColor(R.color.hh_black));
             drivetrainView.setTextColor(getContext().getColor(R.color.hh_black));
             drivetrainView.setChainColor(getContext().getColor(R.color.hh_black));
+        } else {
+            textViewWaitingForData.setTextColor(getContext().getColor(R.color.white));
+            textViewGears.setTextColor(getContext().getColor(R.color.white));
+            drivetrainView.setTextColor(getContext().getColor(R.color.white));
+            drivetrainView.setChainColor(getContext().getColor(R.color.hh_divider_color));
         }
 
         return inflatedView;
@@ -79,9 +109,13 @@ public class DrivetrainSizeSdkView extends Ki2SdkView {
     public void onUpdate(@NonNull View view, double value, @Nullable String formattedValue) {
         if (connectionStatus != ConnectionStatus.ESTABLISHED || shiftingGearingHelper.hasInvalidGearingInfo()) {
             drivetrainView.setVisibility(View.INVISIBLE);
-            textView.setVisibility(View.VISIBLE);
+            batteryView.setVisibility(View.INVISIBLE);
+            textViewGears.setVisibility(View.INVISIBLE);
+            textViewWaitingForData.setVisibility(View.VISIBLE);
         } else {
-            textView.setVisibility(View.INVISIBLE);
+            textViewWaitingForData.setVisibility(View.INVISIBLE);
+            batteryView.setVisibility(View.VISIBLE);
+            textViewGears.setVisibility(View.VISIBLE);
             drivetrainView.setVisibility(View.VISIBLE);
             updateDrivetrainView();
         }
@@ -92,15 +126,36 @@ public class DrivetrainSizeSdkView extends Ki2SdkView {
             return;
         }
 
-        int frontTeethCount = shiftingGearingHelper.getFrontGearTeethCount();
-        int rearTeethCount = shiftingGearingHelper.getRearGearTeethCount();
-
         drivetrainView.setGears(
                 shiftingGearingHelper.getFrontGearMax(),
                 shiftingGearingHelper.getFrontGear(),
-                frontTeethCount == 0 ? NumericTextFormatterConstants.NOT_AVAILABLE : String.valueOf(frontTeethCount),
                 shiftingGearingHelper.getRearGearMax(),
-                shiftingGearingHelper.getRearGear(),
-                rearTeethCount == 0 ? NumericTextFormatterConstants.NOT_AVAILABLE : String.valueOf(rearTeethCount));
+                shiftingGearingHelper.getRearGear());
+
+        textViewGears.setText(getContext().getString(R.string.text_param_gearing,
+                shiftingGearingHelper.getFrontGearTeethCount(),
+                shiftingGearingHelper.getRearGearTeethCount()));
+
+        if (batteryInfo == null) {
+            batteryView.setForegroundColor(getContext().getColor(R.color.battery_background_dark));
+            batteryView.setBorderColor(getContext().getColor(R.color.battery_border_dark));
+        } else {
+            batteryView.setValue((float) batteryInfo.getValue() / 100);
+
+            if (preferencesView != null &&
+                    preferencesView.getBatteryLevelCritical(getContext()) != null &&
+                    batteryInfo.getValue() <= preferencesView.getBatteryLevelCritical(getContext())) {
+                batteryView.setForegroundColor(getContext().getColor(R.color.hh_red));
+                batteryView.setBorderColor(getContext().getColor(R.color.hh_red));
+            } else if (preferencesView != null &&
+                    preferencesView.getBatteryLevelLow(getContext()) != null &&
+                    batteryInfo.getValue() <= preferencesView.getBatteryLevelLow(getContext())) {
+                batteryView.setForegroundColor(getContext().getColor(R.color.hh_yellow_darker));
+                batteryView.setBorderColor(getContext().getColor(R.color.hh_yellow_darker));
+            } else {
+                batteryView.setForegroundColor(getContext().getColor(R.color.hh_green));
+                batteryView.setBorderColor(getContext().getColor(R.color.hh_green));
+            }
+        }
     }
 }

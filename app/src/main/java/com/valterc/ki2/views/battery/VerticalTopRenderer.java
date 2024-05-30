@@ -12,6 +12,12 @@ public class VerticalTopRenderer extends BaseRenderer {
         matrixMirror = new Matrix();
     }
 
+    @Override
+    public void updateSettings(BatteryView batteryView) {
+        super.updateSettings(batteryView);
+        leftRenderer.updateSettings(batteryView);
+    }
+
     protected void generatePaths(BatteryView batteryView, int internalWidth, int internalHeight) {
         leftRenderer.generatePaths(batteryView, internalWidth, internalHeight);
 

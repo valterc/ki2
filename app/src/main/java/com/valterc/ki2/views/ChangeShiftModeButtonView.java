@@ -4,11 +4,9 @@ import android.animation.TimeAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Picture;
 import android.graphics.Rect;
-import android.graphics.Shader;
 import android.graphics.Typeface;
 import android.text.TextPaint;
 import android.util.AttributeSet;
@@ -66,24 +64,15 @@ public class ChangeShiftModeButtonView extends View {
 
         paintStateNormal = new Paint(Paint.ANTI_ALIAS_FLAG);
         paintStateNormal.setStyle(Paint.Style.FILL);
-        paintStateNormal.setShader(new LinearGradient(0, getPaddingTop(), 0, getHeight() - getPaddingBottom(),
-                getContext().getColor(R.color.hh_gears_active_red_top),
-                getContext().getColor(R.color.hh_gears_active_red_bottom),
-                Shader.TileMode.CLAMP));
+        paintStateNormal.setColor(getContext().getColor(R.color.hh_gears_active_dark));
 
         paintStateConfirming = new Paint(Paint.ANTI_ALIAS_FLAG);
         paintStateConfirming.setStyle(Paint.Style.FILL);
-        paintStateConfirming.setShader(new LinearGradient(0, getPaddingTop(), 0, getHeight() - getPaddingBottom(),
-                getContext().getColor(R.color.hh_light_blue),
-                getContext().getColor(R.color.hh_dark_blue),
-                Shader.TileMode.CLAMP));
+        paintStateConfirming.setColor(getContext().getColor(R.color.hh_gears_active_light));
 
         paintStateDone = new Paint(Paint.ANTI_ALIAS_FLAG);
         paintStateDone.setStyle(Paint.Style.FILL);
-        paintStateDone.setShader(new LinearGradient(0, getPaddingTop(), 0, getHeight() - getPaddingBottom(),
-                getContext().getColor(R.color.hh_dark_blue),
-                getContext().getColor(R.color.hh_gears_active_red_bottom),
-                Shader.TileMode.CLAMP));
+        paintStateDone.setColor(getContext().getColor(R.color.hh_dark_blue));
     }
 
     private void onClickListener(View view) {
