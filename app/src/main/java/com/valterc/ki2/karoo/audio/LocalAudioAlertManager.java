@@ -90,16 +90,24 @@ public class LocalAudioAlertManager implements IAudioAlertManager {
                 return () -> true;
 
             case "karoo_workout_interval":
-                return () -> ActivityServiceAudioAlertManagerHook.beepKarooWorkoutInterval(context.getSdkContext());
+                return () -> ActivityServiceAudioAlertManagerHook.beepKarooWorkoutInterval(context.getSdkContext())
+                        || AudioAlertHook.triggerWorkoutNewInterval(context.getSdkContext());
 
             case "karoo_auto_lap":
-                return () -> ActivityServiceAudioAlertManagerHook.beepKarooAutoLap(context.getSdkContext());
+                return () -> ActivityServiceAudioAlertManagerHook.beepKarooAutoLap(context.getSdkContext())
+                        || AudioAlertHook.triggerAutoLap(context.getSdkContext());
+
+            case "karoo_bell":
+                return () -> ActivityServiceAudioAlertManagerHook.beepKarooBell(context.getSdkContext())
+                        || AudioAlertHook.triggerBell(context.getSdkContext());
 
             case "custom_single_beep":
-                return () -> ActivityServiceAudioAlertManagerHook.beepSingle(context.getSdkContext());
+                return () -> ActivityServiceAudioAlertManagerHook.beepSingle(context.getSdkContext())
+                        || AudioAlertHook.triggerAutoLap(context.getSdkContext());
 
             case "custom_double_beep":
-                return () -> ActivityServiceAudioAlertManagerHook.beepDouble(context.getSdkContext());
+                return () -> ActivityServiceAudioAlertManagerHook.beepDouble(context.getSdkContext())
+                        || AudioAlertHook.triggerAutoLap(context.getSdkContext());
         }
 
         return null;
@@ -119,10 +127,8 @@ public class LocalAudioAlertManager implements IAudioAlertManager {
     public void triggerShiftingLowestGearAudioAlert() {
         tryTriggerAudioAlert(() -> {
             Supplier<Boolean> audioAlertCaller = getAudioAlertCaller(audioAlertLowestGear);
-            boolean attempt = audioAlertCaller != null && audioAlertCaller.get();
-            if (!attempt) {
-                Log.w("KI2", "Unable to use audio alert manager hook, using fallback");
-                AudioAlertHook.triggerAutoLap(context.getSdkContext());
+            if (audioAlertCaller != null) {
+                audioAlertCaller.get();
             }
         });
     }
@@ -130,10 +136,8 @@ public class LocalAudioAlertManager implements IAudioAlertManager {
     public void triggerShiftingHighestGearAudioAlert() {
         tryTriggerAudioAlert(() -> {
             Supplier<Boolean> audioAlertCaller = getAudioAlertCaller(audioAlertHighestGear);
-            boolean attempt = audioAlertCaller != null && audioAlertCaller.get();
-            if (!attempt) {
-                Log.w("KI2", "Unable to use audio alert manager hook, using fallback");
-                AudioAlertHook.triggerAutoLap(context.getSdkContext());
+            if (audioAlertCaller != null) {
+                audioAlertCaller.get();
             }
         });
     }
@@ -141,10 +145,8 @@ public class LocalAudioAlertManager implements IAudioAlertManager {
     public void triggerShiftingLimitAudioAlert() {
         tryTriggerAudioAlert(() -> {
             Supplier<Boolean> audioAlertCaller = getAudioAlertCaller(audioAlertShiftingLimit);
-            boolean attempt = audioAlertCaller != null && audioAlertCaller.get();
-            if (!attempt) {
-                Log.w("KI2", "Unable to use audio alert manager hook, using fallback");
-                AudioAlertHook.triggerAutoLap(context.getSdkContext());
+            if (audioAlertCaller != null) {
+                audioAlertCaller.get();
             }
         });
     }
@@ -152,10 +154,8 @@ public class LocalAudioAlertManager implements IAudioAlertManager {
     public void triggerSynchroShiftAudioAlert() {
         tryTriggerAudioAlert(() -> {
             Supplier<Boolean> audioAlertCaller = getAudioAlertCaller(audioAlertUpcomingSynchroShift);
-            boolean attempt = audioAlertCaller != null && audioAlertCaller.get();
-            if (!attempt) {
-                Log.w("KI2", "Unable to use audio alert manager hook, using fallback");
-                AudioAlertHook.triggerWorkoutNewInterval(context.getSdkContext());
+            if (audioAlertCaller != null) {
+                audioAlertCaller.get();
             }
         });
     }

@@ -135,4 +135,16 @@ public class AudioAlertHook {
                 triggerAudioAlert_3(context, 12);
     }
 
+    /**
+     * Trigger a Bell audio alert.
+     *
+     * @param context Sdk context.
+     * @return True if the alert was triggered, False otherwise.
+     */
+    public static boolean triggerBell(SdkContext context) {
+        return triggerAudioAlert_1(context, "BELL") ||
+                triggerAudioAlert_2(context, "BELL") ||
+                triggerAudioAlert_3(context, 20);
+    }
+
 }

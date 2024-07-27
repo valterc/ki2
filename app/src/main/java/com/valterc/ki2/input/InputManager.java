@@ -56,6 +56,7 @@ public class InputManager {
         preferenceToSwitchKeyMap.put("press_enable_audio_alerts", (switchEvent, converter) -> new KarooKeyEvent(KarooKey.VIRTUAL_ENABLE_AUDIO_ALERTS, KeyAction.SINGLE_PRESS, switchEvent.getRepeat()));
         preferenceToSwitchKeyMap.put("press_single_beep", (switchEvent, converter) -> new KarooKeyEvent(KarooKey.VIRTUAL_SINGLE_BEEP, KeyAction.SINGLE_PRESS, switchEvent.getRepeat()));
         preferenceToSwitchKeyMap.put("press_double_beep", (switchEvent, converter) -> new KarooKeyEvent(KarooKey.VIRTUAL_DOUBLE_BEEP, KeyAction.SINGLE_PRESS, switchEvent.getRepeat()));
+        preferenceToSwitchKeyMap.put("press_bell", (switchEvent, converter) -> new KarooKeyEvent(KarooKey.VIRTUAL_BELL, KeyAction.SINGLE_PRESS, switchEvent.getRepeat()));
 
         /*
          * Double press events
@@ -139,6 +140,18 @@ public class InputManager {
                 return null;
             }
             return new KarooKeyEvent(KarooKey.VIRTUAL_SINGLE_BEEP, KeyAction.SINGLE_PRESS, switchEvent.getRepeat());
+        });
+        preferenceToSwitchKeyMap.put("hold_short_single_bell", (switchEvent, converter) -> {
+            if (switchEvent.getCommand() != SwitchCommand.LONG_PRESS_DOWN) {
+                return null;
+            }
+            return new KarooKeyEvent(KarooKey.VIRTUAL_BELL, KeyAction.SINGLE_PRESS, switchEvent.getRepeat());
+        });
+        preferenceToSwitchKeyMap.put("hold_continuous_bell", (switchEvent, converter) -> {
+            if (switchEvent.getCommand() == SwitchCommand.LONG_PRESS_UP) {
+                return null;
+            }
+            return new KarooKeyEvent(KarooKey.VIRTUAL_BELL, KeyAction.SINGLE_PRESS, switchEvent.getRepeat());
         });
     }
 

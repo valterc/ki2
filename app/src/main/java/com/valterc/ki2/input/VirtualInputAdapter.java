@@ -42,6 +42,7 @@ public class VirtualInputAdapter {
         this.keyMapping.put(KarooKey.VIRTUAL_ENABLE_AUDIO_ALERTS, karooKeyEvent -> enableAudioAlerts(ki2Context));
         this.keyMapping.put(KarooKey.VIRTUAL_SINGLE_BEEP, karooKeyEvent -> ki2Context.getServiceClient().sendMessage(new AudioAlertMessage(ki2Context.getSdkContext().getString(R.string.value_preference_audio_alert_single_beep))));
         this.keyMapping.put(KarooKey.VIRTUAL_DOUBLE_BEEP, karooKeyEvent -> ki2Context.getServiceClient().sendMessage(new AudioAlertMessage(ki2Context.getSdkContext().getString(R.string.value_preference_audio_alert_double_beep))));
+        this.keyMapping.put(KarooKey.VIRTUAL_BELL, karooKeyEvent -> ki2Context.getServiceClient().sendMessage(new AudioAlertMessage(ki2Context.getSdkContext().getString(R.string.value_preference_audio_alert_bell))));
     }
 
     private void showToast(Ki2Context ki2Context, int textResId) {
