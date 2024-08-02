@@ -80,7 +80,12 @@ public enum KarooKey {
     /**
      * Virtual key to do double beep.
      */
-    VIRTUAL_DOUBLE_BEEP(VIRTUAL_NONE.keyCode + 9);
+    VIRTUAL_DOUBLE_BEEP(VIRTUAL_NONE.keyCode + 9),
+
+    /**
+     * Virtual key to do a bell beep.
+     */
+    VIRTUAL_BELL(VIRTUAL_NONE.keyCode + 10);
 
     public static KarooKey fromKeyCode(int keyCode) {
         for (KarooKey karooKey : values()) {

@@ -1,6 +1,9 @@
 package com.valterc.ki2.karoo.hooks;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.os.Parcelable;
+import android.speech.tts.TextToSpeech;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
@@ -55,7 +58,17 @@ public class ActivityServiceAudioAlertManagerHook {
         return null;
     });
 
-    private static final Lazy<Class<?>> TYPE_BEEP_PATTERN_STEP_ONE_SHOT = LazyKt.lazy(() -> {
+    private static final Lazy<Class<?>> TYPE_AUDIO_ALERT_TONE_1 = LazyKt.lazy(() -> {
+        try {
+            return Class.forName("io.hammerhead.datamodels.profiles.AudioAlertTone");
+        } catch (Exception e) {
+            Log.w("KI2", "Unable to get AudioAlertTone via method 1", e);
+        }
+
+        return null;
+    });
+
+    private static final Lazy<Class<?>> TYPE_AUDIO_ALERT_TONE_2 = LazyKt.lazy(() -> {
         try {
             Class<? extends Enum> type = TYPE_BEEP_PATTERN.getValue();
             Enum[] enumConstants = type.getEnumConstants();
@@ -64,60 +77,47 @@ public class ActivityServiceAudioAlertManagerHook {
                 for (Object step : Objects.requireNonNull(listStep)) {
                     for (Constructor c : step.getClass().getDeclaredConstructors()) {
                         Class[] parameterTypes = c.getParameterTypes();
-                        if (parameterTypes.length == 2 && parameterTypes[0] == Integer.TYPE && parameterTypes[1] == Long.TYPE) {
+                        if (parameterTypes.length == 2 && parameterTypes[0] == Integer.TYPE && parameterTypes[1] == Integer.class) {
                             return step.getClass();
                         }
                     }
                 }
             }
 
-            throw new Exception("Unable to find OneShot type");
+            throw new Exception("Unable to find AudioAlertTone type via Beep Pattern");
         } catch (Exception e) {
-            Log.w("KI2", "Unable to get OneShot type", e);
+            Log.w("KI2", "Unable to get AudioAlertTone via method 2", e);
         }
 
         return null;
     });
 
-    private static final Lazy<Class<?>> TYPE_BEEP_PATTERN_STEP_REST = LazyKt.lazy(() -> {
+    private static final Lazy<Class<?>> TYPE_AUDIO_ALERT_TONE = LazyKt.lazy(() -> {
         try {
-            Class<? extends Enum> type = TYPE_BEEP_PATTERN.getValue();
-            Enum[] enumConstants = type.getEnumConstants();
-            for (Enum enumValue : Objects.requireNonNull(enumConstants)) {
-                List<?> listStep = (List<?>) METHOD_BEEP_PATTERN_GET_STEPS.getValue().invoke(enumValue);
-                for (Object step : Objects.requireNonNull(listStep)) {
-                    for (Constructor c : step.getClass().getDeclaredConstructors()) {
-                        Class[] parameterTypes = c.getParameterTypes();
-                        if (parameterTypes.length == 1 && parameterTypes[0] == Long.TYPE) {
-                            return step.getClass();
-                        }
-                    }
-                }
+            Class<?> audioAlertToneType = TYPE_AUDIO_ALERT_TONE_1.getValue();
+
+            if (audioAlertToneType != null) {
+                return audioAlertToneType;
             }
 
-            throw new Exception("Unable to find OneShot type");
+            audioAlertToneType = TYPE_AUDIO_ALERT_TONE_2.getValue();
+            if (audioAlertToneType != null) {
+                return audioAlertToneType;
+            }
+
+            throw new Exception("Unable to get AudioAlertTone type");
         } catch (Exception e) {
-            Log.w("KI2", "Unable to get OneShot type", e);
+            Log.w("KI2", "Unable to get AudioAlertTone", e);
         }
 
         return null;
     });
 
-    private static final Lazy<Constructor<?>> CONSTRUCTOR_BEEP_PATTERN_STEP_ONE_SHOT = LazyKt.lazy(() -> {
+    private static final Lazy<Constructor<?>> CONSTRUCTOR_AUDIO_ALERT_TONE = LazyKt.lazy(() -> {
         try {
-            return TYPE_BEEP_PATTERN_STEP_ONE_SHOT.getValue().getDeclaredConstructor(Integer.TYPE, Long.TYPE);
+            return TYPE_AUDIO_ALERT_TONE.getValue().getDeclaredConstructor(Integer.TYPE, Integer.class);
         } catch (Exception e) {
-            Log.w("KI2", "Unable to get OneShot type", e);
-        }
-
-        return null;
-    });
-
-    private static final Lazy<Constructor<?>> CONSTRUCTOR_BEEP_PATTERN_STEP_REST = LazyKt.lazy(() -> {
-        try {
-            return TYPE_BEEP_PATTERN_STEP_REST.getValue().getDeclaredConstructor(Long.TYPE);
-        } catch (Exception e) {
-            Log.w("KI2", "Unable to get OneShot type", e);
+            Log.w("KI2", "Unable to get AudioAlertTone constructor", e);
         }
 
         return null;
@@ -138,7 +138,7 @@ public class ActivityServiceAudioAlertManagerHook {
             Class<? extends Enum> enumType = TYPE_BEEP_PATTERN.getValue();
             return Enum.valueOf(enumType, "WORKOUT_INTERVAL");
         } catch (Exception e) {
-            Log.w("KI2", "Unable to create single beep pattern", e);
+            Log.w("KI2", "Unable to get bet pattern WORKOUT_INTERVAL", e);
         }
 
         return null;
@@ -149,7 +149,18 @@ public class ActivityServiceAudioAlertManagerHook {
             Class<? extends Enum> enumType = TYPE_BEEP_PATTERN.getValue();
             return Enum.valueOf(enumType, "AUTO_LAP");
         } catch (Exception e) {
-            Log.w("KI2", "Unable to create single beep pattern", e);
+            Log.w("KI2", "Unable to get bet pattern AUTO_LAP", e);
+        }
+
+        return null;
+    });
+
+    private static final Lazy<Object> BEEP_PATTERN_BELL = LazyKt.lazy(() -> {
+        try {
+            Class<? extends Enum> enumType = TYPE_BEEP_PATTERN.getValue();
+            return Enum.valueOf(enumType, "BELL");
+        } catch (Exception e) {
+            Log.w("KI2", "Unable to get bet pattern BELL", e);
         }
 
         return null;
@@ -159,7 +170,7 @@ public class ActivityServiceAudioAlertManagerHook {
         try {
             Constructor<?> constructor = TYPE_BEEP_PATTERN.getValue().getDeclaredConstructors()[0];
             constructor.setAccessible(true);
-            return constructor.newInstance("SINGLE_BEEP", 0x100, Collections.singletonList(createStepOneShot(5000, 350)));
+            return constructor.newInstance("SINGLE_BEEP", 0x100, Collections.singletonList(createTone(350, 5000)));
         } catch (Exception e) {
             Log.w("KI2", "Unable to create single beep pattern", e);
         }
@@ -172,9 +183,9 @@ public class ActivityServiceAudioAlertManagerHook {
             Constructor<?> constructor = TYPE_BEEP_PATTERN.getValue().getDeclaredConstructors()[0];
             constructor.setAccessible(true);
             return constructor.newInstance("DOUBLE_BEEP", 0x100, Arrays.asList(
-                    createStepOneShot(5000, 350),
-                    createStepRest(100),
-                    createStepOneShot(5000, 350)));
+                    createTone(350, 5000),
+                    createRest(100),
+                    createTone(350, 5000)));
         } catch (Exception e) {
             Log.w("KI2", "Unable to create double beep pattern", e);
         }
@@ -186,7 +197,7 @@ public class ActivityServiceAudioAlertManagerHook {
         try {
             return AudioAlertHook.getAudioAlert("AUTO_LAP");
         } catch (Exception e) {
-            Log.w("KI2", "Unable to create audio alert", e);
+            Log.w("KI2", "Unable to get AUTO_LAP audio alert", e);
         }
 
         return null;
@@ -196,7 +207,17 @@ public class ActivityServiceAudioAlertManagerHook {
         try {
             return AudioAlertHook.getAudioAlert("WORKOUT_NEW_INTERVAL");
         } catch (Exception e) {
-            Log.w("KI2", "Unable create double beep pattern", e);
+            Log.w("KI2", "Unable to get WORKOUT_NEW_INTERVAL audio alert", e);
+        }
+
+        return null;
+    });
+
+    private static final Lazy<Object> AUDIO_ALERT_BELL = LazyKt.lazy(() -> {
+        try {
+            return AudioAlertHook.getAudioAlert("BELL");
+        } catch (Exception e) {
+            Log.w("KI2", "Unable to get BELL audio alert", e);
         }
 
         return null;
@@ -234,10 +255,6 @@ public class ActivityServiceAudioAlertManagerHook {
 
                     Field[] fieldsInActivityController = activityController.getClass().getDeclaredFields();
 
-                    if (fieldsInActivityController.length == 0) {
-                        continue;
-                    }
-
                     for (Field fieldListActivityLifecycleListener : fieldsInActivityController) {
                         if (!List.class.isAssignableFrom(fieldListActivityLifecycleListener.getType())) {
                             continue;
@@ -253,10 +270,6 @@ public class ActivityServiceAudioAlertManagerHook {
                         for (Object activityLifecycleListener : listActivityLifecycleListener) {
                             Field[] fieldsInAudioAlertReceiver = activityLifecycleListener.getClass().getDeclaredFields();
 
-                            if (fieldsInAudioAlertReceiver.length == 0) {
-                                continue;
-                            }
-
                             for (Field fieldListAudioAlertManager : fieldsInAudioAlertReceiver) {
                                 if (!List.class.isAssignableFrom(fieldListAudioAlertManager.getType())) {
                                     continue;
@@ -271,12 +284,14 @@ public class ActivityServiceAudioAlertManagerHook {
 
                                 for (Object audioAlertManager : listAudioAlertManager) {
                                     Method[] methodsAudioAlertManager = audioAlertManager.getClass().getDeclaredMethods();
+                                    boolean isAudioAlertManager = Arrays.stream(audioAlertManager.getClass().getFields()).anyMatch(f -> f.getType() == TextToSpeech.class);
 
                                     Method methodBeep = null;
                                     Method methodAudioAlert = null;
                                     for (Method m : methodsAudioAlertManager) {
                                         Class<?>[] types = m.getParameterTypes();
-                                        if (types.length == 1 && types[0] == TYPE_BEEP_PATTERN.getValue()) {
+
+                                        if (types.length == 1 && types[0] == METHOD_BEEP_PATTERN_GET_STEPS.getValue().getReturnType()) {
                                             m.setAccessible(true);
                                             methodBeep = m;
                                         }
@@ -292,7 +307,7 @@ public class ActivityServiceAudioAlertManagerHook {
                                         METHOD_BEEP = o -> m.invoke(audioAlertManager, o);
                                     }
 
-                                    if (methodBeep == null && methodAudioAlert != null) {
+                                    if (isAudioAlertManager && methodAudioAlert != null) {
                                         Method m = methodAudioAlert;
 
                                         if (METHOD_AUDIO_ALERT == null) {
@@ -323,22 +338,22 @@ public class ActivityServiceAudioAlertManagerHook {
     }
 
     @Nullable
-    private static Object createStepOneShot(int frequency, long duration) {
+    private static Object createTone(int duration, int frequency) {
         try {
-            return CONSTRUCTOR_BEEP_PATTERN_STEP_ONE_SHOT.getValue().newInstance(frequency, duration);
+            return CONSTRUCTOR_AUDIO_ALERT_TONE.getValue().newInstance(duration, frequency);
         } catch (Exception e) {
-            Log.e("KI2", "Unable to create BeepPattern Step OneShot instance", e);
+            Log.e("KI2", "Unable to create tone AudioAlertTone", e);
         }
 
         return null;
     }
 
     @Nullable
-    private static Object createStepRest(long duration) {
+    private static Object createRest(int duration) {
         try {
-            return CONSTRUCTOR_BEEP_PATTERN_STEP_REST.getValue().newInstance(duration);
+            return CONSTRUCTOR_AUDIO_ALERT_TONE.getValue().newInstance(duration, null);
         } catch (Exception e) {
-            Log.e("KI2", "Unable to create BeepPattern Step Rest instance", e);
+            Log.e("KI2", "Unable to create rest AudioAlertTone", e);
         }
 
         return null;
@@ -347,8 +362,12 @@ public class ActivityServiceAudioAlertManagerHook {
     private static boolean beep(SdkContext sdkContext, Object beepPattern, Object audioAlert) {
         init(sdkContext);
 
+        if (METHOD_BEEP == null || METHOD_AUDIO_ALERT == null) {
+            return false;
+        }
+
         try {
-            METHOD_BEEP.accept(beepPattern);
+            METHOD_BEEP.accept(METHOD_BEEP_PATTERN_GET_STEPS.getValue().invoke(beepPattern));
             METHOD_AUDIO_ALERT.accept(audioAlert, null);
             return true;
         } catch (Exception e) {
@@ -356,6 +375,41 @@ public class ActivityServiceAudioAlertManagerHook {
         }
 
         return false;
+    }
+
+    private static final Lazy<Class<?>> TYPE_PARCELABLE_LIST = LazyKt.lazy(() -> {
+        try {
+            return Class.forName("io.hammerhead.aidlrx.ParcelableList");
+        } catch (Exception e) {
+            Log.w("KI2", "Unable to get ParcelableList type", e);
+        }
+
+        return null;
+    });
+
+    private static final Lazy<Constructor<?>> CONSTRUCTOR_PARCELABLE_LIST = LazyKt.lazy(() -> {
+        try {
+            return TYPE_PARCELABLE_LIST.getValue().getDeclaredConstructor(List.class);
+        } catch (Exception e) {
+            Log.w("KI2", "Unable to get ParcelableList constructor", e);
+        }
+
+        return null;
+    });
+
+    private static boolean beepCustom(SdkContext context, Object beepPattern) {
+        try {
+            Intent intent = new Intent("io.hammerhead.action.AUDIO_ALERT");
+            intent.setAction("io.hammerhead.action.CUSTOM_AUDIO_ALERT");
+            intent.putExtra("tones", (Parcelable) CONSTRUCTOR_PARCELABLE_LIST.getValue().newInstance(METHOD_BEEP_PATTERN_GET_STEPS.getValue().invoke(beepPattern)));
+
+            context.sendBroadcast(intent);
+        } catch (Exception e) {
+            Log.w("KI2", "Unable to send custom audio alert intent", e);
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -379,13 +433,24 @@ public class ActivityServiceAudioAlertManagerHook {
     }
 
     /**
+     * Beep Karoo 'Bell'.
+     *
+     * @param context Sdk context.
+     * @return True if the alert was triggered, False otherwise.
+     */
+    public static boolean beepKarooBell(SdkContext context) {
+        return beep(context, BEEP_PATTERN_BELL.getValue(), AUDIO_ALERT_BELL.getValue());
+    }
+
+    /**
      * Single Beep.
      *
      * @param context Sdk context.
      * @return True if the alert was triggered, False otherwise.
      */
     public static boolean beepSingle(SdkContext context) {
-        return beep(context, BEEP_PATTERN_SINGLE.getValue(), AUDIO_ALERT_AUTO_LAP.getValue());
+        return beep(context, BEEP_PATTERN_SINGLE.getValue(), AUDIO_ALERT_AUTO_LAP.getValue())
+                || beepCustom(context, BEEP_PATTERN_SINGLE.getValue());
     }
 
     /**
@@ -395,7 +460,8 @@ public class ActivityServiceAudioAlertManagerHook {
      * @return True if the alert was triggered, False otherwise.
      */
     public static boolean beepDouble(SdkContext context) {
-        return beep(context, BEEP_PATTERN_DOUBLE.getValue(), AUDIO_ALERT_WORKOUT_NEW_INTERVAL.getValue());
+        return beep(context, BEEP_PATTERN_DOUBLE.getValue(), AUDIO_ALERT_WORKOUT_NEW_INTERVAL.getValue())
+                || beepCustom(context, BEEP_PATTERN_DOUBLE.getValue());
     }
 
 }
