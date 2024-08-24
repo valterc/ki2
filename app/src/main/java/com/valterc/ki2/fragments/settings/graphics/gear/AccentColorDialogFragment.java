@@ -32,9 +32,9 @@ public class AccentColorDialogFragment extends DialogFragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.dialog_gear_color, container, false);
+        View view = inflater.inflate(R.layout.dialog_accent_color, container, false);
 
-        RecyclerView recyclerViewOptions = view.findViewById(R.id.recyclerview_gear_color_options);
+        RecyclerView recyclerViewOptions = view.findViewById(R.id.recyclerview_accent_color_options);
         AccentColorAdapter adapter = new AccentColorAdapter(requireContext(), value -> {
             Bundle bundle = new Bundle(1);
             bundle.putString(RESULT_VALUE, value);
@@ -47,7 +47,7 @@ public class AccentColorDialogFragment extends DialogFragment {
         String currentValue = PreferenceManager.getDefaultSharedPreferences(requireContext()).getString(requireArguments().getString(PREFERENCE_KEY), null);
         recyclerViewOptions.smoothScrollToPosition(adapter.getItemIndex(currentValue));
 
-        Button buttonCancel = view.findViewById(R.id.button_gear_color_cancel);
+        Button buttonCancel = view.findViewById(R.id.button_accent_color_cancel);
         buttonCancel.setOnClickListener(v -> dismiss());
 
         return view;
