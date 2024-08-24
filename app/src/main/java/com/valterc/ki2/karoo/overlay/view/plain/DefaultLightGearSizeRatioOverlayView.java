@@ -12,11 +12,14 @@ import com.valterc.ki2.data.preferences.PreferencesView;
 import com.valterc.ki2.data.preferences.device.DevicePreferencesView;
 import com.valterc.ki2.data.shifting.ShiftingInfo;
 import com.valterc.ki2.karoo.Ki2Context;
+import com.valterc.ki2.karoo.views.KarooTheme;
 
 public class DefaultLightGearSizeRatioOverlayView extends DefaultLightOverlayView {
 
     public DefaultLightGearSizeRatioOverlayView(Ki2Context context, View view) {
         super(context, view);
+
+        getViewHolder().getGearsView().setSelectedGearColor(new PreferencesView(context.getSdkContext()).getGearsColor(context.getSdkContext(), KarooTheme.WHITE));
     }
 
     @Override

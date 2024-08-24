@@ -299,4 +299,20 @@
         <item>slim_light</item>
     </string-array>
 
+    <string-array name="preference_titles_gear_color">
+        <item>Default</item>
+        <item>Red</item>
+        <item>Green</item>
+        <item>Blue</item>
+        <item>Yellow</item>
+    </string-array>
+
+    <string-array name="preference_values_gear_color">
+        <item>default</item>
+        <item>red</item>
+        <item>green</item>
+        <item>blue</item>
+        <item>yellow</item>
+    </string-array>
+
 </resources>

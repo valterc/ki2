@@ -3,7 +3,9 @@ package com.valterc.ki2.karoo.overlay.view.plain;
 import android.view.View;
 
 import com.valterc.ki2.R;
+import com.valterc.ki2.data.preferences.PreferencesView;
 import com.valterc.ki2.karoo.Ki2Context;
+import com.valterc.ki2.karoo.views.KarooTheme;
 
 public class DefaultDarkOverlayView extends DefaultOverlayView {
 
@@ -20,6 +22,7 @@ public class DefaultDarkOverlayView extends DefaultOverlayView {
         getViewHolder().getBatteryView().setBackgroundColor(getContext().getColor(R.color.battery_background_dark));
 
         getViewHolder().getGearsView().setUnselectedGearBorderColor(getContext().getColor(R.color.hh_gears_border_dark));
+        getViewHolder().getGearsView().setSelectedGearColor(new PreferencesView(context.getSdkContext()).getGearsColor(context.getSdkContext(), KarooTheme.DARK));
 
         getViewHolder().getTextViewGearing().setTextColor(getContext().getColor(android.R.color.primary_text_dark));
         getViewHolder().getTextViewGearingExtra().setTextColor(getContext().getColor(android.R.color.primary_text_dark));

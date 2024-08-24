@@ -17,6 +17,7 @@
     <string name="category_preference_overlay">Overlay</string>
     <string name="category_preference_secondary_overlay">Secondary overlay</string>
     <string name="category_preference_fit_recording">FIT Recording</string>
+    <string name="category_preference_graphics">Graphics</string>
 
     <string name="title_preference_switch_single_press">Single Press</string>
     <string name="title_preference_switch_double_press">Double Press</string>
@@ -40,6 +41,7 @@
     <string name="title_preference_overlay_position">Position</string>
     <string name="title_preference_fit_recording">FIT Recording</string>
     <string name="title_preference_switch_turn_screen_on">Turn screen on</string>
+    <string name="title_preference_gear_color">Gear Color</string>
 
     <string name="summary_preference_pre_load">Pre load the ride application to avoid data elements not showing after startup</string>
     <string name="summary_preference_ant_recording">Record all ANT events and data into a file for debugging</string>
@@ -52,6 +54,7 @@
     <string name="summary_preference_audio_alert_upcoming_synchro_shift">Audio alert when the next shift can trigger a synchronized shift (on S2 mode)</string>
     <string name="summary_preference_audio_alert_delay">Minimum delay between audio alerts</string>
     <string name="summary_preference_overlay">Show an Overlay with shifting information in Ride</string>
+    <string name="summary_preference_graphics">Customize graphical setting of Ki2 elements</string>
     <string name="summary_preference_overlay_enabled">Enable Overlay in Ride</string>
     <string name="summary_preference_overlay_triggers">Which events cause the overlay to appear</string>
     <string name="summary_preference_overlay_duration">Duration that the overlay is visible</string>
@@ -61,6 +64,7 @@
     <string name="summary_preference_secondary_overlay">Show a secondary Overlay with shifting information in Ride</string>
     <string name="summary_preference_fit_recording">Record gear shift events in the Ride FIT file</string>
     <string name="summary_preference_switch_turn_screen_on">Turn screen on when a switch is pressed</string>
+    <string name="summary_preference_gear_color">Selected gear color</string>
 
     <string name="default_preference_switch_ch1_single_press">navigate_left</string>
     <string name="default_preference_switch_ch1_double_press">lap_map_back</string>
@@ -90,6 +94,7 @@
     <integer name="default_preference_secondary_overlay_opacity">1</integer>
     <integer name="default_preference_secondary_overlay_position">0</integer>
     <bool name="default_preference_fit_recording">false</bool>
+    <string name="default_preference_gear_color">default</string>
 
     <string name="value_preference_battery_level_off">off</string>
     <string name="value_preference_audio_alert_disabled">disabled</string>
@@ -136,5 +141,6 @@
     <string name="preference_secondary_overlay_position_x">SECONDARY_OVERLAY_POSITION_X</string>
     <string name="preference_secondary_overlay_position_y">SECONDARY_OVERLAY_POSITION_Y</string>
     <string name="preference_fit_recording">FIT_RECORDING</string>
+    <string name="preference_gear_color">GEAR_COLOR</string>
 
 </resources>

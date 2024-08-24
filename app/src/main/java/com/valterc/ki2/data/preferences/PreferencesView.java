@@ -5,23 +5,28 @@ import android.content.SharedPreferences;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.annotation.ColorInt;
 import androidx.preference.PreferenceManager;
 
 import com.valterc.ki2.R;
 import com.valterc.ki2.karoo.overlay.view.builder.OverlayViewBuilderEntry;
 import com.valterc.ki2.karoo.overlay.view.builder.OverlayViewBuilderRegistry;
+import com.valterc.ki2.karoo.views.KarooTheme;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 @SuppressWarnings({"unchecked", "unused"})
 public class PreferencesView implements Parcelable {
 
     private final Map<String, ?> preferenceMap;
+
+    private Integer cachedGearColor;
 
     public static final Parcelable.Creator<PreferencesView> CREATOR = new Parcelable.Creator<PreferencesView>() {
         public PreferencesView createFromParcel(Parcel in) {
@@ -58,6 +63,15 @@ public class PreferencesView implements Parcelable {
     }
 
     /**
+     * Generate a new preference from a map.
+     *
+     * @param preferences Map with preferences.
+     */
+    public PreferencesView(Map<String, ?> preferences) {
+        preferenceMap = new HashMap<>(preferences);
+    }
+
+    /**
      * Generate a new empty preference view with no preferences set.
      */
     public PreferencesView() {
@@ -74,7 +88,18 @@ public class PreferencesView implements Parcelable {
         return 0;
     }
 
-    public boolean getBoolean(String key, boolean defaultValue) {
+    private <T> T getOrCache(T value, Supplier<T> supplier, Consumer<T> consumer){
+        if (value != null){
+            return value;
+        }
+
+        value = supplier.get();
+        consumer.accept(value);
+
+        return value;
+    }
+
+    private boolean getBoolean(String key, boolean defaultValue) {
         if (preferenceMap.containsKey(key)) {
             return (boolean) preferenceMap.get(key);
         }
@@ -82,7 +107,7 @@ public class PreferencesView implements Parcelable {
         return defaultValue;
     }
 
-    public boolean getBoolean(String key, Supplier<Boolean> defaultValueSupplier) {
+    private boolean getBoolean(String key, Supplier<Boolean> defaultValueSupplier) {
         if (preferenceMap.containsKey(key)) {
             return (boolean) preferenceMap.get(key);
         }
@@ -90,7 +115,7 @@ public class PreferencesView implements Parcelable {
         return defaultValueSupplier.get();
     }
 
-    public int getInt(String key, int defaultValue) {
+    private int getInt(String key, int defaultValue) {
         if (preferenceMap.containsKey(key)) {
             return (int) preferenceMap.get(key);
         }
@@ -98,7 +123,7 @@ public class PreferencesView implements Parcelable {
         return defaultValue;
     }
 
-    public int getInt(String key, Supplier<Integer> defaultValueSupplier) {
+    private int getInt(String key, Supplier<Integer> defaultValueSupplier) {
         if (preferenceMap.containsKey(key)) {
             return (int) preferenceMap.get(key);
         }
@@ -106,7 +131,7 @@ public class PreferencesView implements Parcelable {
         return defaultValueSupplier.get();
     }
 
-    public String getString(String key, String defaultValue) {
+    private String getString(String key, String defaultValue) {
         if (preferenceMap.containsKey(key)) {
             return (String) preferenceMap.get(key);
         }
@@ -114,7 +139,7 @@ public class PreferencesView implements Parcelable {
         return defaultValue;
     }
 
-    public String getString(String key, Supplier<String> defaultValueSupplier) {
+    private String getString(String key, Supplier<String> defaultValueSupplier) {
         if (preferenceMap.containsKey(key)) {
             return (String) preferenceMap.get(key);
         }
@@ -122,7 +147,7 @@ public class PreferencesView implements Parcelable {
         return defaultValueSupplier.get();
     }
 
-    public float getFloat(String key, float defaultValue) {
+    private float getFloat(String key, float defaultValue) {
         if (preferenceMap.containsKey(key)) {
             return (float) preferenceMap.get(key);
         }
@@ -130,7 +155,7 @@ public class PreferencesView implements Parcelable {
         return defaultValue;
     }
 
-    public float getFloat(String key, Supplier<Float> defaultValueSupplier) {
+    private float getFloat(String key, Supplier<Float> defaultValueSupplier) {
         if (preferenceMap.containsKey(key)) {
             return (float) preferenceMap.get(key);
         }
@@ -138,7 +163,7 @@ public class PreferencesView implements Parcelable {
         return defaultValueSupplier.get();
     }
 
-    public long getLong(String key, long defaultValue) {
+    private long getLong(String key, long defaultValue) {
         if (preferenceMap.containsKey(key)) {
             return (long) preferenceMap.get(key);
         }
@@ -146,7 +171,7 @@ public class PreferencesView implements Parcelable {
         return defaultValue;
     }
 
-    public long getLong(String key, Supplier<Long> defaultValueSupplier) {
+    private long getLong(String key, Supplier<Long> defaultValueSupplier) {
         if (preferenceMap.containsKey(key)) {
             return (long) preferenceMap.get(key);
         }
@@ -154,7 +179,7 @@ public class PreferencesView implements Parcelable {
         return defaultValueSupplier.get();
     }
 
-    public Set<String> getStringSet(String key, Set<String> defaultValue) {
+    private Set<String> getStringSet(String key, Set<String> defaultValue) {
         if (preferenceMap.containsKey(key)) {
             return (Set<String>) preferenceMap.get(key);
         }
@@ -162,7 +187,7 @@ public class PreferencesView implements Parcelable {
         return defaultValue;
     }
 
-    public Set<String> getStringSet(String key, Supplier<Set<String>> defaultValueSupplier) {
+    private Set<String> getStringSet(String key, Supplier<Set<String>> defaultValueSupplier) {
         if (preferenceMap.containsKey(key)) {
             return (Set<String>) preferenceMap.get(key);
         }
@@ -485,6 +510,42 @@ public class PreferencesView implements Parcelable {
 
             return context.getResources().getInteger(R.integer.default_preference_secondary_overlay_position);
         });
+    }
+
+    /**
+     * Get the gears color in raw string format.
+     *
+     * @param context Ki2 application context. Cannot be a context generated from another package.
+     * @return Gears color in raw string format.
+     */
+    public String getGearsColorRaw(Context context) {
+        return getString(context.getString(R.string.preference_gear_color), () ->
+                context.getResources().getString(R.string.default_preference_gear_color));
+    }
+
+    /**
+     * Get the gears color.
+     *
+     * @param context Ki2 application context. Cannot be a context generated from another package.
+     * @param karooTheme Karoo theme.
+     * @return Gears color.
+     */
+    @ColorInt
+    public int getGearsColor(Context context, KarooTheme karooTheme) {
+        return getOrCache(cachedGearColor, () -> {
+            String colorString = getString(context.getString(R.string.preference_gear_color), () ->
+                    context.getResources().getString(R.string.default_preference_gear_color));
+
+            switch (colorString) {
+                case "default": return karooTheme == KarooTheme.WHITE ? context.getColor(R.color.hh_gears_active_light) : context.getColor(R.color.hh_gears_active_dark);
+                case "blue": return context.getColor(R.color.hh_gears_blue);
+                case "red": return context.getColor(R.color.hh_gears_red);
+                case "green": return context.getColor(R.color.hh_gears_green);
+                case "yellow": return context.getColor(R.color.hh_gears_yellow);
+            }
+
+            return karooTheme == KarooTheme.WHITE ? context.getColor(R.color.hh_gears_active_light) : context.getColor(R.color.hh_gears_active_dark);
+        }, value -> cachedGearColor = value);
     }
 
 }
