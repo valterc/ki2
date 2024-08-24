@@ -126,7 +126,7 @@ public class GearsSdkView extends Ki2SdkView {
         textViewGears.setText(getContext().getString(R.string.text_param_gearing,
                 shiftingInfo.getFrontGear(),
                 shiftingInfo.getRearGear()));
-        gearsView.setSelectedGearColor(preferencesView.getGearsColor(getContext(), karooTheme));
+        gearsView.setSelectedGearColor(preferencesView.getAccentColor(getContext(), karooTheme));
 
         if (batteryInfo == null) {
             batteryView.setForegroundColor(getContext().getColor(R.color.battery_background_dark));

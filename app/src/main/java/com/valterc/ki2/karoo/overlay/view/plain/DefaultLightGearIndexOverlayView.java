@@ -16,20 +16,18 @@ import com.valterc.ki2.karoo.views.KarooTheme;
 
 public class DefaultLightGearIndexOverlayView extends DefaultLightOverlayView {
 
-    public DefaultLightGearIndexOverlayView(Ki2Context context, View view) {
-        super(context, view);
+    public DefaultLightGearIndexOverlayView(Ki2Context context, PreferencesView preferences, View view) {
+        super(context, preferences, view);
 
         getViewHolder().getLinearLayoutGearingRatio().setVisibility(View.GONE);
-        getViewHolder().getGearsView().setSelectedGearColor(new PreferencesView(context.getSdkContext()).getGearsColor(context.getSdkContext(), KarooTheme.WHITE));
     }
 
     @Override
-    public void updateView(@NonNull PreferencesView preferences,
-                           @NonNull ConnectionInfo connectionInfo,
+    public void updateView(@NonNull ConnectionInfo connectionInfo,
                            @NonNull DevicePreferencesView devicePreferences,
                            @Nullable BatteryInfo batteryInfo,
                            @Nullable ShiftingInfo shiftingInfo) {
-        super.updateView(preferences, connectionInfo, devicePreferences, batteryInfo, shiftingInfo);
+        super.updateView(connectionInfo, devicePreferences, batteryInfo, shiftingInfo);
 
         if (!shiftingGearingHelper.hasInvalidGearingInfo() && connectionInfo.isConnected()) {
             getViewHolder().getTextViewGearing().setText(

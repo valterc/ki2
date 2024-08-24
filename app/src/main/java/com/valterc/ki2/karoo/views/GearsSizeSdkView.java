@@ -136,7 +136,7 @@ public class GearsSizeSdkView extends Ki2SdkView {
         textViewGears.setText(getContext().getString(R.string.text_param_gearing,
                 shiftingGearingHelper.getFrontGearTeethCount(),
                 shiftingGearingHelper.getRearGearTeethCount()));
-        gearsView.setSelectedGearColor(preferencesView.getGearsColor(getContext(), karooTheme));
+        gearsView.setSelectedGearColor(preferencesView.getAccentColor(getContext(), karooTheme));
 
         if (batteryInfo == null) {
             batteryView.setForegroundColor(getContext().getColor(R.color.battery_background_dark));

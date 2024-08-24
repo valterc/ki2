@@ -126,7 +126,7 @@ public class DrivetrainSdkView extends Ki2SdkView {
         textViewGears.setText(getContext().getString(R.string.text_param_gearing,
                 shiftingInfo.getFrontGear(),
                 shiftingInfo.getRearGear()));
-        drivetrainView.setSelectedGearColor(preferencesView.getGearsColor(getContext(), karooTheme));
+        drivetrainView.setSelectedGearColor(preferencesView.getAccentColor(getContext(), karooTheme));
 
         if (batteryInfo == null) {
             batteryView.setForegroundColor(getContext().getColor(R.color.battery_background_dark));

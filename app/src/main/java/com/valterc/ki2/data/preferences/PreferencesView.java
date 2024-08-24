@@ -26,7 +26,7 @@ public class PreferencesView implements Parcelable {
 
     private final Map<String, ?> preferenceMap;
 
-    private Integer cachedGearColor;
+    private Integer cachedAccentColor;
 
     public static final Parcelable.Creator<PreferencesView> CREATOR = new Parcelable.Creator<PreferencesView>() {
         public PreferencesView createFromParcel(Parcel in) {
@@ -513,28 +513,28 @@ public class PreferencesView implements Parcelable {
     }
 
     /**
-     * Get the gears color in raw string format.
+     * Get the accent color in raw string format.
      *
      * @param context Ki2 application context. Cannot be a context generated from another package.
-     * @return Gears color in raw string format.
+     * @return Accent color in raw string format.
      */
-    public String getGearsColorRaw(Context context) {
-        return getString(context.getString(R.string.preference_gear_color), () ->
-                context.getResources().getString(R.string.default_preference_gear_color));
+    public String getAccentColorRaw(Context context) {
+        return getString(context.getString(R.string.preference_accent_color), () ->
+                context.getResources().getString(R.string.default_preference_accent_color));
     }
 
     /**
-     * Get the gears color.
+     * Get the accent color value.
      *
      * @param context Ki2 application context. Cannot be a context generated from another package.
      * @param karooTheme Karoo theme.
-     * @return Gears color.
+     * @return Accent color.
      */
     @ColorInt
-    public int getGearsColor(Context context, KarooTheme karooTheme) {
-        return getOrCache(cachedGearColor, () -> {
-            String colorString = getString(context.getString(R.string.preference_gear_color), () ->
-                    context.getResources().getString(R.string.default_preference_gear_color));
+    public int getAccentColor(Context context, KarooTheme karooTheme) {
+        return getOrCache(cachedAccentColor, () -> {
+            String colorString = getString(context.getString(R.string.preference_accent_color), () ->
+                    context.getResources().getString(R.string.default_preference_accent_color));
 
             switch (colorString) {
                 case "default": return karooTheme == KarooTheme.WHITE ? context.getColor(R.color.hh_gears_active_light) : context.getColor(R.color.hh_gears_active_dark);
@@ -542,10 +542,12 @@ public class PreferencesView implements Parcelable {
                 case "red": return context.getColor(R.color.hh_gears_red);
                 case "green": return context.getColor(R.color.hh_gears_green);
                 case "yellow": return context.getColor(R.color.hh_gears_yellow);
+                case "orange": return context.getColor(R.color.hh_orange);
+                case "pink": return context.getColor(R.color.pink);
             }
 
             return karooTheme == KarooTheme.WHITE ? context.getColor(R.color.hh_gears_active_light) : context.getColor(R.color.hh_gears_active_dark);
-        }, value -> cachedGearColor = value);
+        }, value -> cachedAccentColor = value);
     }
 
 }

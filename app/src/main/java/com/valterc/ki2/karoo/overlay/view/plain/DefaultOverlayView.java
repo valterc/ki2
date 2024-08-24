@@ -27,8 +27,8 @@ public abstract class DefaultOverlayView extends BaseOverlayView<DefaultOverlayV
     private final Handler handler;
     private Runnable blinkMethod;
 
-    public DefaultOverlayView(Ki2Context ki2Context, View view) {
-        super(ki2Context.getSdkContext(), new DefaultOverlayViewHolder(view));
+    public DefaultOverlayView(Ki2Context ki2Context, PreferencesView preferences, View view) {
+        super(ki2Context.getSdkContext(), preferences, new DefaultOverlayViewHolder(view));
         shiftingGearingHelper = new ShiftingGearingHelper(ki2Context.getSdkContext());
         buzzerTracking = new BuzzerTracking();
         handler = ki2Context.getHandler();
@@ -47,8 +47,7 @@ public abstract class DefaultOverlayView extends BaseOverlayView<DefaultOverlayV
     }
 
     @Override
-    public void updateView(@NonNull PreferencesView preferences,
-                           @NonNull ConnectionInfo connectionInfo,
+    public void updateView(@NonNull ConnectionInfo connectionInfo,
                            @NonNull DevicePreferencesView devicePreferences,
                            @Nullable BatteryInfo batteryInfo,
                            @Nullable ShiftingInfo shiftingInfo) {
@@ -65,12 +64,12 @@ public abstract class DefaultOverlayView extends BaseOverlayView<DefaultOverlayV
             getViewHolder().getBatteryView().setValue((float) batteryInfo.getValue() / 100);
             getViewHolder().getTextViewBattery().setText(getContext().getString(R.string.text_param_percentage, batteryInfo.getValue()));
 
-            if (preferences.getBatteryLevelCritical(getContext()) != null &&
-                    batteryInfo.getValue() <= preferences.getBatteryLevelCritical(getContext())) {
+            if (getPreferences().getBatteryLevelCritical(getContext()) != null &&
+                    batteryInfo.getValue() <= getPreferences().getBatteryLevelCritical(getContext())) {
                 getViewHolder().getBatteryView().setForegroundColor(getContext().getColor(R.color.hh_red));
                 getViewHolder().getBatteryView().setBorderColor(getContext().getColor(R.color.hh_red));
-            } else if (preferences.getBatteryLevelLow(getContext()) != null &&
-                    batteryInfo.getValue() <= preferences.getBatteryLevelLow(getContext())) {
+            } else if (getPreferences().getBatteryLevelLow(getContext()) != null &&
+                    batteryInfo.getValue() <= getPreferences().getBatteryLevelLow(getContext())) {
                 getViewHolder().getBatteryView().setForegroundColor(getContext().getColor(R.color.hh_red));
                 getViewHolder().getBatteryView().setBorderColor(getBatteryBorderColor());
             } else {

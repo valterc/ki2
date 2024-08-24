@@ -17,7 +17,6 @@ import com.valterc.ki2.data.preferences.PreferencesView;
 import com.valterc.ki2.data.preferences.device.DevicePreferencesView;
 import com.valterc.ki2.data.shifting.ShiftingInfo;
 import com.valterc.ki2.karoo.Ki2Context;
-import com.valterc.ki2.karoo.formatters.NumericTextFormatterConstants;
 import com.valterc.ki2.karoo.shifting.ShiftingGearingHelper;
 import com.valterc.ki2.views.DrivetrainView;
 import com.valterc.ki2.views.battery.BatteryView;
@@ -136,7 +135,7 @@ public class DrivetrainSizeSdkView extends Ki2SdkView {
         textViewGears.setText(getContext().getString(R.string.text_param_gearing,
                 shiftingGearingHelper.getFrontGearTeethCount(),
                 shiftingGearingHelper.getRearGearTeethCount()));
-        drivetrainView.setSelectedGearColor(preferencesView.getGearsColor(getContext(), karooTheme));
+        drivetrainView.setSelectedGearColor(preferencesView.getAccentColor(getContext(), karooTheme));
 
         if (batteryInfo == null) {
             batteryView.setForegroundColor(getContext().getColor(R.color.battery_background_dark));

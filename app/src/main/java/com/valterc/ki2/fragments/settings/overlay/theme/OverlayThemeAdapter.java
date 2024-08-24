@@ -77,8 +77,8 @@ public class OverlayThemeAdapter extends RecyclerView.Adapter<OverlayThemeViewHo
         holder.getLinearLayoutViewContainer().removeAllViews();
         holder.getLinearLayoutViewContainer().addView(viewOverlay);
 
-        IOverlayView overlayView = entry.createOverlayView(ki2Context, viewOverlay);
-        overlayView.updateView(preferencesView, connectionInfo, devicePreferencesView, batteryInfo, shiftingInfo);
+        IOverlayView overlayView = entry.createOverlayView(ki2Context, preferencesView, viewOverlay);
+        overlayView.updateView(connectionInfo, devicePreferencesView, batteryInfo, shiftingInfo);
         viewOverlay.setElevation(0);
     }
 

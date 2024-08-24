@@ -17,18 +17,24 @@ import java.util.function.Consumer;
 public abstract class BaseOverlayView<TViewHolder extends BaseOverlayViewHolder> implements IOverlayView {
 
     private final Context context;
+    private final PreferencesView preferences;
 
     private final TViewHolder viewHolder;
 
     private Consumer<Boolean> visibilityListener;
 
-    public BaseOverlayView(Context context, TViewHolder viewHolder) {
+    public BaseOverlayView(Context context, PreferencesView preferences, TViewHolder viewHolder) {
         this.context = context;
+        this.preferences = preferences;
         this.viewHolder = viewHolder;
     }
 
     public Context getContext() {
         return context;
+    }
+
+    public PreferencesView getPreferences() {
+        return preferences;
     }
 
     protected TViewHolder getViewHolder() {
@@ -66,8 +72,7 @@ public abstract class BaseOverlayView<TViewHolder extends BaseOverlayViewHolder>
         viewHolder.getOverlayView().setAlpha(value);
     }
 
-    public abstract void updateView(@NonNull PreferencesView preferences,
-                                    @NonNull ConnectionInfo connectionInfo,
+    public abstract void updateView(@NonNull ConnectionInfo connectionInfo,
                                     @NonNull DevicePreferencesView devicePreferences,
                                     @Nullable BatteryInfo batteryInfo,
                                     @Nullable ShiftingInfo shiftingInfo);

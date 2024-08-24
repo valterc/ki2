@@ -16,14 +16,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.valterc.ki2.R;
 
-public class GearColorDialogFragment extends DialogFragment {
+public class AccentColorDialogFragment extends DialogFragment {
 
     private static final String PREFERENCE_KEY = "PreferenceKey";
 
     public static final String RESULT_VALUE = "ResultValue";
 
-    public static GearColorDialogFragment newInstance(String preferenceKey) {
-        GearColorDialogFragment fragment = new GearColorDialogFragment();
+    public static AccentColorDialogFragment newInstance(String preferenceKey) {
+        AccentColorDialogFragment fragment = new AccentColorDialogFragment();
         final Bundle b = new Bundle(1);
         b.putString(PREFERENCE_KEY, preferenceKey);
         fragment.setArguments(b);
@@ -35,7 +35,7 @@ public class GearColorDialogFragment extends DialogFragment {
         View view = inflater.inflate(R.layout.dialog_gear_color, container, false);
 
         RecyclerView recyclerViewOptions = view.findViewById(R.id.recyclerview_gear_color_options);
-        GearColorAdapter adapter = new GearColorAdapter(requireContext(), value -> {
+        AccentColorAdapter adapter = new AccentColorAdapter(requireContext(), value -> {
             Bundle bundle = new Bundle(1);
             bundle.putString(RESULT_VALUE, value);
             getParentFragmentManager().setFragmentResult(requireArguments().getString(PREFERENCE_KEY), bundle);

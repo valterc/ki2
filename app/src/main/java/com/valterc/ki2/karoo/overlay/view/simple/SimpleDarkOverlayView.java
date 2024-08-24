@@ -16,20 +16,18 @@ import com.valterc.ki2.karoo.views.KarooTheme;
 
 public class SimpleDarkOverlayView extends DefaultDarkOverlayView {
 
-    public SimpleDarkOverlayView(Ki2Context context, View view) {
-        super(context, view);
+    public SimpleDarkOverlayView(Ki2Context context, PreferencesView preferences, View view) {
+        super(context, preferences, view);
 
         getViewHolder().getLinearLayoutDetails().setVisibility(View.GONE);
-        getViewHolder().getGearsView().setSelectedGearColor(new PreferencesView(context.getSdkContext()).getGearsColor(context.getSdkContext(), KarooTheme.DARK));
     }
 
     @Override
-    public void updateView(@NonNull PreferencesView preferences,
-                           @NonNull ConnectionInfo connectionInfo,
+    public void updateView(@NonNull ConnectionInfo connectionInfo,
                            @NonNull DevicePreferencesView devicePreferences,
                            @Nullable BatteryInfo batteryInfo,
                            @Nullable ShiftingInfo shiftingInfo) {
-        super.updateView(preferences, connectionInfo, devicePreferences, batteryInfo, shiftingInfo);
+        super.updateView(connectionInfo, devicePreferences, batteryInfo, shiftingInfo);
 
         if (connectionInfo.isConnected()) {
             getViewHolder().getLinearLayoutDetails().setVisibility(View.GONE);

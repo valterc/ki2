@@ -51,6 +51,7 @@
     <color name="white_100">#FFFAFAFA</color>
     <color name="grey">#777777</color>
     <color name="grey_100">#F0F0F0</color>
+    <color name="pink">#EF4fA6</color>
 
     <color name="battery_border_light">#FF606060</color>
     <color name="battery_background_light">#40606060</color>

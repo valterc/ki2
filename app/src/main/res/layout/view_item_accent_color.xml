@@ -10,18 +10,18 @@
     android:padding="5dp">
 
     <com.valterc.ki2.views.GearsView
-        android:id="@+id/gearsview_gear_color"
+        android:id="@+id/gearsview_accent_color"
         android:layout_width="match_parent"
         app:unselectedGearBorderColor="@color/black"
         app:frontGear="2"
         app:rearGear="5"
-        android:layout_height="80dp"
+        android:layout_height="50dp"
         android:gravity="center"
         android:orientation="horizontal"
         android:paddingVertical="5dp" />
 
     <TextView
-        android:id="@+id/textview_gear_color_name"
+        android:id="@+id/textview_accent_color_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="5dp"

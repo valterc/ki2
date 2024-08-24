@@ -17,24 +17,22 @@ import com.valterc.ki2.R;
 import com.valterc.ki2.data.preferences.PreferencesView;
 import com.valterc.ki2.karoo.views.KarooTheme;
 
-import java.util.Arrays;
-
 @SuppressWarnings("unused")
-public class GearColorPreference extends DialogPreference {
+public class AccentColorPreference extends DialogPreference {
 
-    public GearColorPreference(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public AccentColorPreference(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
-    public GearColorPreference(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public AccentColorPreference(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
-    public GearColorPreference(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public AccentColorPreference(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public GearColorPreference(@NonNull Context context) {
+    public AccentColorPreference(@NonNull Context context) {
         super(context);
     }
 
@@ -59,23 +57,23 @@ public class GearColorPreference extends DialogPreference {
     public void setValue(String color) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(getContext().getString(R.string.preference_gear_color), color);
+        editor.putString(getContext().getString(R.string.preference_accent_color), color);
         editor.apply();
         notifyChanged();
     }
 
     private int getColor() {
         PreferencesView preferencesView = new PreferencesView(getContext());
-        return preferencesView.getGearsColor(getContext(), KarooTheme.UNKNOWN);
+        return preferencesView.getAccentColor(getContext(), KarooTheme.UNKNOWN);
     }
 
     @Nullable
     private String getColorTitle(){
-        String[] colorValues = getContext().getResources().getStringArray(R.array.preference_values_gear_color);
-        String[] colorTitles = getContext().getResources().getStringArray(R.array.preference_titles_gear_color);
+        String[] colorValues = getContext().getResources().getStringArray(R.array.preference_values_accent_color);
+        String[] colorTitles = getContext().getResources().getStringArray(R.array.preference_titles_accent_color);
 
         PreferencesView preferencesView = new PreferencesView(getContext());
-        String colorValue = preferencesView.getGearsColorRaw(getContext());
+        String colorValue = preferencesView.getAccentColorRaw(getContext());
 
         for (int i = 0; i < colorValues.length; i++) {
             if (colorValue.equals(colorValues[i])){
