@@ -72,8 +72,8 @@ public class OverlayOpacityDialogFragment extends DialogFragment {
         BatteryInfo batteryInfo = new BatteryInfo(80);
         ShiftingInfo shiftingInfo = new ShiftingInfo(BuzzerType.DEFAULT, 2, 2, 5, 11, FrontTeethPattern.P50_34, RearTeethPattern.S11_P11_30, ShiftingMode.SYNCHRONIZED_SHIFT_MODE_2);
 
-        IOverlayView overlayView = entry.createOverlayView(ki2Context, viewOverlay);
-        overlayView.updateView(preferencesView, connectionInfo, devicePreferencesView, batteryInfo, shiftingInfo);
+        IOverlayView overlayView = entry.createOverlayView(ki2Context, preferencesView, viewOverlay);
+        overlayView.updateView(connectionInfo, devicePreferencesView, batteryInfo, shiftingInfo);
         overlayView.setAlpha(requireArguments().getFloat(PARAMETER_OPACITY));
         viewOverlay.setElevation(0);
         linearLayoutContainer.addView(viewOverlay);

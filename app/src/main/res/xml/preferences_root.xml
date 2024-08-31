@@ -22,6 +22,11 @@
         app:title="@string/category_preference_overlay" />
 
     <Preference
+        app:fragment="com.valterc.ki2.fragments.settings.graphics.GraphicsSettingsFragment"
+        app:icon="@drawable/ic_palette"
+        app:title="@string/category_preference_graphics" />
+
+    <Preference
         app:fragment="com.valterc.ki2.fragments.settings.FITRecordingSettingsFragment"
         app:icon="@drawable/ic_fit_file"
         app:title="@string/category_preference_fit_recording" />

@@ -1,0 +1,17 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:title="@string/category_preference_overlay">
+
+    <com.valterc.ki2.views.preference.MultiLinePreferenceCategory
+        app:title="@string/category_preference_graphics"
+        app:summary="@string/summary_preference_graphics">
+
+        <com.valterc.ki2.fragments.settings.graphics.gear.AccentColorPreference
+            app:defaultValue="@string/default_preference_accent_color"
+            app:key="@string/preference_accent_color"
+            app:summary="@string/summary_preference_accent_color"
+            app:title="@string/title_preference_accent_color"
+            app:useSimpleSummaryProvider="true" />
+
+    </com.valterc.ki2.views.preference.MultiLinePreferenceCategory>
+
+</PreferenceScreen>

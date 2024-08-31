@@ -81,8 +81,8 @@ public class OverlayPositionDialogFragment extends DialogFragment {
         BatteryInfo batteryInfo = new BatteryInfo(80);
         ShiftingInfo shiftingInfo = new ShiftingInfo(BuzzerType.DEFAULT, 2, 2, 5, 11, FrontTeethPattern.P50_34, RearTeethPattern.S11_P11_30, ShiftingMode.SYNCHRONIZED_SHIFT_MODE_2);
 
-        IOverlayView overlayView = entry.createOverlayView(ki2Context, viewOverlay);
-        overlayView.updateView(preferencesView, connectionInfo, devicePreferencesView, batteryInfo, shiftingInfo);
+        IOverlayView overlayView = entry.createOverlayView(ki2Context, preferencesView, viewOverlay);
+        overlayView.updateView(connectionInfo, devicePreferencesView, batteryInfo, shiftingInfo);
         relativeLayout.addView(viewOverlay);
 
         ScaledPositionManager positionManager = new ScaledPositionManager(relativeLayout);

@@ -16,6 +16,11 @@
     <color name="hh_gears_border_dark">#F0F0F0</color>
     <color name="hh_gears_border_light">#707070</color>
 
+    <color name="hh_gears_blue">#2386d9</color>
+    <color name="hh_gears_red">#D32F2F</color>
+    <color name="hh_gears_green">@color/hh_green</color>
+    <color name="hh_gears_yellow">#FFC107</color>
+
     <color name="hh_green">#209f13</color>
     <color name="hh_orange">#fd7919</color>
     <color name="hh_orange_dark">#db6216</color>
@@ -46,6 +51,7 @@
     <color name="white_100">#FFFAFAFA</color>
     <color name="grey">#777777</color>
     <color name="grey_100">#F0F0F0</color>
+    <color name="pink">#EF4fA6</color>
 
     <color name="battery_border_light">#FF606060</color>
     <color name="battery_background_light">#40606060</color>

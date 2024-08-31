@@ -174,7 +174,7 @@ public abstract class BaseOverlayManager {
             View viewOverlay = layoutInflater.inflate(viewBuilder.getLayoutId(), parentLayout, false);
             parentLayout.addView(viewOverlay);
 
-            view = viewBuilder.createOverlayView(ki2Context, viewOverlay);
+            view = viewBuilder.createOverlayView(ki2Context, preferences, viewOverlay);
             view.applyPreferences(ki2Context, getOverlayPreferences());
             view.setupInRide();
             positionManager = new PositionManager(getOverlayPositionX(), getOverlayPositionY(), viewOverlay);
@@ -222,7 +222,7 @@ public abstract class BaseOverlayManager {
         }
 
         timestampLastTrigger = System.currentTimeMillis();
-        view.updateView(preferences, connectionInfo, devicePreferences, batteryInfo, shiftingInfo);
+        view.updateView(connectionInfo, devicePreferences, batteryInfo, shiftingInfo);
         positionManager.updatePosition();
         view.show();
 

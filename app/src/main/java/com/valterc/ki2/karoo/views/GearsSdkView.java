@@ -51,10 +51,12 @@ public class GearsSdkView extends Ki2SdkView {
     private BatteryInfo batteryInfo;
     private PreferencesView preferencesView;
 
+    private KarooTheme karooTheme;
     private TextView textViewWaitingForData;
     private GearsView gearsView;
     private BatteryView batteryView;
     private TextView textViewGears;
+
 
     public GearsSdkView(@NonNull Ki2Context context) {
         super(context);
@@ -73,7 +75,7 @@ public class GearsSdkView extends Ki2SdkView {
         batteryView = inflatedView.findViewById(R.id.batteryview_karoo_gears);
         textViewGears = inflatedView.findViewById(R.id.textview_karoo_gears);
 
-        KarooTheme karooTheme = getKarooTheme(parent);
+        karooTheme = getKarooTheme(parent);
 
         if (karooTheme == KarooTheme.WHITE) {
             textViewWaitingForData.setTextColor(getContext().getColor(R.color.hh_black));
@@ -111,7 +113,7 @@ public class GearsSdkView extends Ki2SdkView {
     }
 
     private void updateGearsView() {
-        if (gearsView == null || shiftingInfo == null) {
+        if (gearsView == null || shiftingInfo == null || preferencesView == null) {
             return;
         }
 
@@ -124,6 +126,7 @@ public class GearsSdkView extends Ki2SdkView {
         textViewGears.setText(getContext().getString(R.string.text_param_gearing,
                 shiftingInfo.getFrontGear(),
                 shiftingInfo.getRearGear()));
+        gearsView.setSelectedGearColor(preferencesView.getAccentColor(getContext(), karooTheme));
 
         if (batteryInfo == null) {
             batteryView.setForegroundColor(getContext().getColor(R.color.battery_background_dark));

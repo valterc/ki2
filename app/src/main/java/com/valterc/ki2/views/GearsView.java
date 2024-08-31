@@ -37,22 +37,19 @@ public class GearsView extends View {
     private static final String STRING_GEAR_SEPARATOR = "/";
 
     private final boolean initialized;
+    private final Path textPath;
+    private final Path tempPath1;
+    private final Path tempPath2;
+    private final Rect tempRect;
     private Paint unselectedGearPaint;
     private Paint selectedGearPaint;
     private Picture picture;
     private boolean textEnabled;
     private Paint textPaint;
-
     private int frontGearMax;
     private int frontGear;
     private int rearGearMax;
     private int rearGear;
-
-    private final Path textPath;
-    private final Path tempPath1;
-    private final Path tempPath2;
-    private final Rect tempRect;
-
     private String frontGearLabel;
     private String rearGearLabel;
 
@@ -481,6 +478,10 @@ public class GearsView extends View {
     }
 
     public void setTextColor(int textColor) {
+        if (textPaint.getColor() == textColor){
+            return;
+        }
+
         textPaint.setColor(textColor);
 
         if (initialized) {
@@ -494,6 +495,10 @@ public class GearsView extends View {
     }
 
     public void setTextEnabled(boolean textEnabled) {
+        if (this.textEnabled == textEnabled){
+            return;
+        }
+
         this.textEnabled = textEnabled;
 
         if (initialized) {
@@ -507,7 +512,11 @@ public class GearsView extends View {
     }
 
     public void setSelectedGearColor(int selectedGearColor) {
-        this.selectedGearPaint.setColor(selectedGearColor);
+        if (selectedGearPaint.getColor() == selectedGearColor) {
+            return;
+        }
+
+        selectedGearPaint.setColor(selectedGearColor);
 
         if (initialized) {
             invalidate();
@@ -520,7 +529,10 @@ public class GearsView extends View {
     }
 
     public void setUnselectedGearBorderColor(int unselectedGearBorderColor) {
-        this.unselectedGearPaint.setColor(unselectedGearBorderColor);
+        if (unselectedGearPaint.getColor() == unselectedGearBorderColor) {
+            return;
+        }
+        unselectedGearPaint.setColor(unselectedGearBorderColor);
 
         if (initialized) {
             invalidate();

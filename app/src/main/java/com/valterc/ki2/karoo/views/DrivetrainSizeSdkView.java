@@ -17,7 +17,6 @@ import com.valterc.ki2.data.preferences.PreferencesView;
 import com.valterc.ki2.data.preferences.device.DevicePreferencesView;
 import com.valterc.ki2.data.shifting.ShiftingInfo;
 import com.valterc.ki2.karoo.Ki2Context;
-import com.valterc.ki2.karoo.formatters.NumericTextFormatterConstants;
 import com.valterc.ki2.karoo.shifting.ShiftingGearingHelper;
 import com.valterc.ki2.views.DrivetrainView;
 import com.valterc.ki2.views.battery.BatteryView;
@@ -60,6 +59,7 @@ public class DrivetrainSizeSdkView extends Ki2SdkView {
         updateDrivetrainView();
     };
 
+    private KarooTheme karooTheme;
     private TextView textViewWaitingForData;
     private DrivetrainView drivetrainView;
     private BatteryView batteryView;
@@ -84,7 +84,7 @@ public class DrivetrainSizeSdkView extends Ki2SdkView {
         batteryView = inflatedView.findViewById(R.id.batteryview_karoo_drivetrain);
         textViewGears = inflatedView.findViewById(R.id.textview_karoo_drivetrain);
 
-        KarooTheme karooTheme = getKarooTheme(parent);
+        karooTheme = getKarooTheme(parent);
 
         if (karooTheme == KarooTheme.WHITE) {
             textViewWaitingForData.setTextColor(getContext().getColor(R.color.hh_black));
@@ -122,7 +122,7 @@ public class DrivetrainSizeSdkView extends Ki2SdkView {
     }
 
     private void updateDrivetrainView(){
-        if (drivetrainView == null || shiftingGearingHelper.hasInvalidGearingInfo()) {
+        if (drivetrainView == null || shiftingGearingHelper.hasInvalidGearingInfo() || preferencesView == null) {
             return;
         }
 
@@ -135,6 +135,7 @@ public class DrivetrainSizeSdkView extends Ki2SdkView {
         textViewGears.setText(getContext().getString(R.string.text_param_gearing,
                 shiftingGearingHelper.getFrontGearTeethCount(),
                 shiftingGearingHelper.getRearGearTeethCount()));
+        drivetrainView.setSelectedGearColor(preferencesView.getAccentColor(getContext(), karooTheme));
 
         if (batteryInfo == null) {
             batteryView.setForegroundColor(getContext().getColor(R.color.battery_background_dark));

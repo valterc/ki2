@@ -31,8 +31,8 @@ public abstract class SlimOverlayView extends BaseOverlayView<SlimOverlayViewHol
     private long timestampBlinkStart;
     private boolean canBeShown;
 
-    public SlimOverlayView(Ki2Context ki2Context, View view) {
-        super(ki2Context.getSdkContext(), new SlimOverlayViewHolder(view));
+    public SlimOverlayView(Ki2Context ki2Context, PreferencesView preferences, View view) {
+        super(ki2Context.getSdkContext(), preferences, new SlimOverlayViewHolder(view));
         shiftingGearingHelper = new ShiftingGearingHelper(ki2Context.getSdkContext());
         buzzerTracking = new BuzzerTracking();
         handler = ki2Context.getHandler();
@@ -58,8 +58,7 @@ public abstract class SlimOverlayView extends BaseOverlayView<SlimOverlayViewHol
     }
 
     @Override
-    public void updateView(@NonNull PreferencesView preferences,
-                           @NonNull ConnectionInfo connectionInfo,
+    public void updateView(@NonNull ConnectionInfo connectionInfo,
                            @NonNull DevicePreferencesView devicePreferences,
                            @Nullable BatteryInfo batteryInfo,
                            @Nullable ShiftingInfo shiftingInfo) {

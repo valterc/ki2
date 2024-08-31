@@ -299,4 +299,24 @@
         <item>slim_light</item>
     </string-array>
 
+    <string-array name="preference_titles_accent_color">
+        <item>Default</item>
+        <item>Blue</item>
+        <item>Green</item>
+        <item>Orange</item>
+        <item>Pink</item>
+        <item>Red</item>
+        <item>Yellow</item>
+    </string-array>
+
+    <string-array name="preference_values_accent_color">
+        <item>default</item>
+        <item>blue</item>
+        <item>green</item>
+        <item>orange</item>
+        <item>pink</item>
+        <item>red</item>
+        <item>yellow</item>
+    </string-array>
+
 </resources>

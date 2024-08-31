@@ -3,12 +3,13 @@ package com.valterc.ki2.karoo.overlay.view.compact;
 import android.view.View;
 
 import com.valterc.ki2.R;
+import com.valterc.ki2.data.preferences.PreferencesView;
 import com.valterc.ki2.karoo.Ki2Context;
 
 public class CompactLightOverlayView extends CompactOverlayView {
 
-    public CompactLightOverlayView(Ki2Context context, View view) {
-        super(context, view);
+    public CompactLightOverlayView(Ki2Context context, PreferencesView preferences, View view) {
+        super(context, preferences, view);
 
         getViewHolder().getOverlayView().setBackgroundResource(R.drawable.background_overlay_light);
         getViewHolder().getTextViewGearing().setTextColor(getContext().getColor(android.R.color.primary_text_light));

@@ -15,19 +15,18 @@ import com.valterc.ki2.karoo.Ki2Context;
 
 public class CompactLightGearSizeOverlayView extends CompactLightOverlayView {
 
-    public CompactLightGearSizeOverlayView(Ki2Context context, View view) {
-        super(context, view);
+    public CompactLightGearSizeOverlayView(Ki2Context context, PreferencesView preferences, View view) {
+        super(context, preferences, view);
 
         getViewHolder().getLinearLayoutGearingRatio().setVisibility(View.GONE);
     }
 
     @Override
-    public void updateView(@NonNull PreferencesView preferences,
-                           @NonNull ConnectionInfo connectionInfo,
+    public void updateView(@NonNull ConnectionInfo connectionInfo,
                            @NonNull DevicePreferencesView devicePreferences,
                            @Nullable BatteryInfo batteryInfo,
                            @Nullable ShiftingInfo shiftingInfo) {
-        super.updateView(preferences, connectionInfo, devicePreferences, batteryInfo, shiftingInfo);
+        super.updateView(connectionInfo, devicePreferences, batteryInfo, shiftingInfo);
 
         if (!shiftingGearingHelper.hasInvalidGearingInfo() && connectionInfo.isConnected()) {
             getViewHolder().getTextViewGearing().setText(

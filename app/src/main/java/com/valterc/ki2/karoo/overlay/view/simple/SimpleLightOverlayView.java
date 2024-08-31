@@ -12,22 +12,22 @@ import com.valterc.ki2.data.preferences.device.DevicePreferencesView;
 import com.valterc.ki2.data.shifting.ShiftingInfo;
 import com.valterc.ki2.karoo.Ki2Context;
 import com.valterc.ki2.karoo.overlay.view.plain.DefaultLightOverlayView;
+import com.valterc.ki2.karoo.views.KarooTheme;
 
 public class SimpleLightOverlayView extends DefaultLightOverlayView {
 
-    public SimpleLightOverlayView(Ki2Context context, View view) {
-        super(context, view);
+    public SimpleLightOverlayView(Ki2Context context, PreferencesView preferences, View view) {
+        super(context, preferences, view);
 
         getViewHolder().getLinearLayoutDetails().setVisibility(View.GONE);
     }
 
     @Override
-    public void updateView(@NonNull PreferencesView preferences,
-                           @NonNull ConnectionInfo connectionInfo,
+    public void updateView(@NonNull ConnectionInfo connectionInfo,
                            @NonNull DevicePreferencesView devicePreferences,
                            @Nullable BatteryInfo batteryInfo,
                            @Nullable ShiftingInfo shiftingInfo) {
-        super.updateView(preferences, connectionInfo, devicePreferences, batteryInfo, shiftingInfo);
+        super.updateView(connectionInfo, devicePreferences, batteryInfo, shiftingInfo);
 
         if (connectionInfo.isConnected()) {
             getViewHolder().getLinearLayoutDetails().setVisibility(View.GONE);
