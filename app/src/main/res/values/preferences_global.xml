@@ -68,10 +68,10 @@
 
     <string name="default_preference_switch_ch1_single_press">navigate_left</string>
     <string name="default_preference_switch_ch1_double_press">lap_map_back</string>
-    <string name="default_preference_switch_ch1_hold">map_graph_zoom_out</string>
+    <string name="default_preference_switch_ch1_hold">map_graph_slow_zoom_out</string>
     <string name="default_preference_switch_ch2_single_press">navigate_right</string>
     <string name="default_preference_switch_ch2_double_press">pause_resume_confirm</string>
-    <string name="default_preference_switch_ch2_hold">map_graph_zoom_in</string>
+    <string name="default_preference_switch_ch2_hold">map_graph_slow_zoom_in</string>
     <string name="default_preference_switch">none</string>
     <bool name="default_preference_switch_turn_screen_on">true</bool>
     <string name="default_preference_battery_level_low">20</string>

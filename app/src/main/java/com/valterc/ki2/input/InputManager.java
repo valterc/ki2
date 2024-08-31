@@ -69,6 +69,36 @@ public class InputManager {
          */
         preferenceToSwitchKeyMap.put("map_graph_zoom_out", (switchEvent, converter) -> new KarooKeyEvent(KarooKey.LEFT, switchEvent.getCommand().getKeyAction(), switchEvent.getRepeat()));
         preferenceToSwitchKeyMap.put("map_graph_zoom_in", (switchEvent, converter) -> new KarooKeyEvent(KarooKey.RIGHT, switchEvent.getCommand().getKeyAction(), switchEvent.getRepeat()));
+        preferenceToSwitchKeyMap.put("hold_short_single_map_graph_zoom_out", (switchEvent, converter) -> {
+            if (switchEvent.getCommand() != SwitchCommand.LONG_PRESS_DOWN) {
+                return null;
+            }
+
+            return new KarooKeyEvent(KarooKey.LEFT, KeyAction.SIMULATE_LONG_PRESS, 0);
+        });
+        preferenceToSwitchKeyMap.put("hold_short_single_map_graph_zoom_in", (switchEvent, converter) -> {
+            if (switchEvent.getCommand() != SwitchCommand.LONG_PRESS_DOWN) {
+                return null;
+            }
+
+            return new KarooKeyEvent(KarooKey.RIGHT, KeyAction.SIMULATE_LONG_PRESS, 0);
+        });
+        preferenceToSwitchKeyMap.put("map_graph_slow_zoom_out", (switchEvent, converter) -> {
+            if (switchEvent.getCommand() == SwitchCommand.LONG_PRESS_UP ||
+                    (switchEvent.getCommand() == SwitchCommand.LONG_PRESS_CONTINUE && switchEvent.getRepeat() % 2 != 0)) {
+                return null;
+            }
+
+            return new KarooKeyEvent(KarooKey.LEFT, KeyAction.SIMULATE_LONG_PRESS, 0);
+        });
+        preferenceToSwitchKeyMap.put("map_graph_slow_zoom_in", (switchEvent, converter) -> {
+            if (switchEvent.getCommand() == SwitchCommand.LONG_PRESS_UP ||
+                    (switchEvent.getCommand() == SwitchCommand.LONG_PRESS_CONTINUE && switchEvent.getRepeat() % 2 != 0)) {
+                return null;
+            }
+
+            return new KarooKeyEvent(KarooKey.RIGHT, KeyAction.SIMULATE_LONG_PRESS, 0);
+        });
         preferenceToSwitchKeyMap.put("repeat_single_press", (switchEvent, converter) -> {
             if (switchEvent.getCommand() == SwitchCommand.LONG_PRESS_UP) {
                 return null;
