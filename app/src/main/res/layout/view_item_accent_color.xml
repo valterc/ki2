@@ -18,13 +18,13 @@
         android:layout_height="50dp"
         android:gravity="center"
         android:orientation="horizontal"
-        android:paddingVertical="5dp" />
+        android:paddingTop="5dp" />
 
     <TextView
         android:id="@+id/textview_accent_color_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="5dp"
+        android:paddingHorizontal="5dp"
         tools:text="Dark overlay" />
 
 </LinearLayout>
