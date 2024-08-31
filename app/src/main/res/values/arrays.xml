@@ -89,6 +89,10 @@
         <item>None</item>
         <item>Map/Graph Zoom Out</item>
         <item>Map/Graph Zoom In</item>
+        <item>Map/Graph Single Zoom Out</item>
+        <item>Map/Graph Single Zoom In</item>
+        <item>Map/Graph Slow Zoom Out</item>
+        <item>Map/Graph Slow Zoom In</item>
         <item>Repeat Single Press</item>
         <item>Pause/Resume Ride/Confirm</item>
         <item>Mark Lap</item>
@@ -110,6 +114,10 @@
         <item>none</item>
         <item>map_graph_zoom_out</item>
         <item>map_graph_zoom_in</item>
+        <item>hold_short_single_map_graph_zoom_out</item>
+        <item>hold_short_single_map_graph_zoom_in</item>
+        <item>map_graph_slow_zoom_out</item>
+        <item>map_graph_slow_zoom_in</item>
         <item>repeat_single_press</item>
         <item>hold_short_single_pause_resume_confirm</item>
         <item>hold_short_single_lap</item>
