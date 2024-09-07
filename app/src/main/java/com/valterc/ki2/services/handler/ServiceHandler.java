@@ -1,17 +1,19 @@
 package com.valterc.ki2.services.handler;
 
+import android.annotation.SuppressLint;
 import android.os.Handler;
 import android.os.Looper;
-import android.os.Message;
+import android.util.Log;
 
-import androidx.annotation.NonNull;
-
+import com.valterc.ki2.utils.SafeHandler;
 import com.valterc.ki2.utils.function.ThrowingRunnable;
 
+import java.util.Objects;
 import java.util.function.Consumer;
 
 import timber.log.Timber;
 
+@SuppressLint("LogNotTimber")
 public class ServiceHandler {
 
     private static final long RETRY_DELAY_MS = 100;
@@ -24,8 +26,8 @@ public class ServiceHandler {
     public ServiceHandler() {
         thread = new Thread(() -> {
             Looper.prepare();
-            this.looper = Looper.myLooper();
-            this.handler = new RunnableHandler(this.looper);
+            this.looper = Objects.requireNonNull(Looper.myLooper());
+            this.handler = new SafeHandler(this.looper);
             Looper.loop();
         }, "ServiceHandler");
         thread.start();
@@ -57,7 +59,7 @@ public class ServiceHandler {
                     if (retry < RETRY_MAX_ATTEMPTS) {
                         postDelayedAction(() -> this.accept(retry + 1), RETRY_DELAY_MS);
                     } else {
-                        throw new RuntimeException(e);
+                        Timber.e(e, "Error in service handler retriable invocation");
                     }
                 }
             }
@@ -68,23 +70,6 @@ public class ServiceHandler {
 
     public boolean isOnServiceHandlerThread() {
         return Thread.currentThread() == thread;
-    }
-
-    private static class RunnableHandler extends Handler {
-
-        public RunnableHandler(@NonNull Looper looper) {
-            super(looper);
-        }
-
-        @Override
-        public void handleMessage(@NonNull Message message) {
-            try {
-                super.handleMessage(message);
-            } catch (Exception e) {
-                Timber.e(e, "Error handling message");
-            }
-        }
-
     }
 
 }

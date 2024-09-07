@@ -34,7 +34,7 @@ public class UpdateOverlayFragment extends Fragment {
         return new UpdateOverlayFragment();
     }
 
-    Handler handler = new Handler(Looper.getMainLooper());
+    private final Handler handler = new Handler(Looper.getMainLooper());
     private UpdateOverlayViewModel viewModel;
 
     @Override

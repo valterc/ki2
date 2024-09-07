@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Handler;
 import android.os.IBinder;
@@ -89,7 +90,7 @@ public class AntManager {
             if (AntChannelProvider.ACTION_CHANNEL_PROVIDER_STATE_CHANGED.equals(intent.getAction())) {
                 int numChannelsAvailable = intent.getIntExtra(AntChannelProvider.NUM_CHANNELS_AVAILABLE, 0);
                 boolean legacyInterfaceInUse = intent.getBooleanExtra(AntChannelProvider.LEGACY_INTERFACE_IN_USE, false);
-                Timber.d("Received ANT channel provider broadcast: Number of channels available: %s, Legacy interface: %s", numChannelsAvailable, legacyInterfaceInUse);
+                Timber.i("Received ANT channel provider broadcast: Number of channels available: %s, Legacy interface: %s", numChannelsAvailable, legacyInterfaceInUse);
             }
         }
     };
@@ -99,6 +100,7 @@ public class AntManager {
         this.stateListener = stateListener;
         this.handler = new Handler(Looper.getMainLooper());
 
+        context.registerReceiver(channelProviderStateChangedReceiver, new IntentFilter(AntChannelProvider.ACTION_CHANNEL_PROVIDER_STATE_CHANGED), Context.RECEIVER_EXPORTED);
         attemptBindToAntService();
     }
 
@@ -177,7 +179,7 @@ public class AntManager {
                 antChannel = antChannelProvider.acquireChannel(this.context, PredefinedNetwork.ANT_PLUS);
             }
         } catch (Exception e) {
-            Timber.e(e, "Unable to create ANT channel");
+            Timber.w(e, "Unable to create ANT channel");
             throw e;
         }
 
@@ -204,7 +206,7 @@ public class AntManager {
 
             return new AntChannelWrapper(antChannel);
         } catch (Exception e) {
-            Timber.e(e, "Unable to create ANT channel");
+            Timber.w(e, "Unable to create ANT channel");
 
             antChannel.clearChannelEventHandler();
             antChannel.clearAdapterEventHandler();
@@ -246,7 +248,7 @@ public class AntManager {
                 antChannel = antChannelProvider.acquireChannel(this.context, PredefinedNetwork.ANT_PLUS, capabilities);
             }
         } catch (Exception e) {
-            Timber.e(e, "Unable to create ANT channel");
+            Timber.w(e, "Unable to create ANT channel");
             throw e;
         }
 
@@ -268,7 +270,7 @@ public class AntManager {
 
             return new AntChannelWrapper(antChannel);
         } catch (Exception e) {
-            Timber.e(e, "Unable to create ANT channel");
+            Timber.w(e, "Unable to create ANT channel");
 
             antChannel.clearChannelEventHandler();
             antChannel.clearAdapterEventHandler();

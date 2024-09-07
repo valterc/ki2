@@ -29,7 +29,7 @@ import timber.log.Timber;
 
 public class AddDeviceFragment extends Fragment implements IKarooKeyListener {
 
-    private static final long DURATION_SCAN_MS = 20_000;
+    private static final long DURATION_SCAN_MS = 25_000;
 
     private final Handler handlerStopScan = new Handler();
     private boolean serviceBound;

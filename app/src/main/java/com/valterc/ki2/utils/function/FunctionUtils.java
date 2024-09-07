@@ -23,7 +23,7 @@ public final class FunctionUtils {
         try {
             return supplier.get();
         } catch (Exception e) {
-            Log.w("KI2", "Exception from supplier: " + e);
+            Log.w("KI2", "Exception from supplier: " + e, e);
             return null;
         }
     }

@@ -13,6 +13,7 @@ import com.valterc.ki2.karoo.hooks.ActivityServiceHook;
 import com.valterc.ki2.karoo.instance.InstanceManager;
 import com.valterc.ki2.karoo.screen.ScreenHelper;
 import com.valterc.ki2.karoo.service.ServiceClient;
+import com.valterc.ki2.utils.SafeHandler;
 
 import java.util.function.Consumer;
 
@@ -37,7 +38,7 @@ public class Ki2Context {
     public Ki2Context(SdkContext sdkContext) {
         this.sdkContext = sdkContext;
         this.rideStatus = RideStatus.NEW;
-        this.handler = new Handler(Looper.getMainLooper());
+        this.handler = new SafeHandler(Looper.getMainLooper());
         this.instanceManager = new InstanceManager();
         this.serviceClient = new ServiceClient(this);
         this.audioAlertManager = ActivityServiceHook.isInActivityService() ? new LocalAudioAlertManager(this) : new RemoteAudioAlertManager(this);

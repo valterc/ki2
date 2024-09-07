@@ -7,6 +7,7 @@ import android.content.Context;
 import android.graphics.drawable.Icon;
 
 import androidx.appcompat.content.res.AppCompatResources;
+import androidx.core.content.ContextCompat;
 
 import com.valterc.ki2.R;
 import com.valterc.ki2.utils.DrawableUtils;
@@ -28,7 +29,7 @@ public class LowBatteryNotification {
         notificationManager.createNotificationChannel(notificationChannel);
 
         Notification.Builder notification = new Notification.Builder(context, notificationChannel.getId())
-                .setSmallIcon(Icon.createWithBitmap(DrawableUtils.drawableToBitmap(AppCompatResources.getDrawable(context, R.drawable.ic_battery_0))))
+                .setSmallIcon(Icon.createWithBitmap(DrawableUtils.drawableToBitmap(ContextCompat.getDrawable(context, R.drawable.ic_battery_0))))
                 .setOngoing(false)
                 .setAutoCancel(true)
                 .setWhen(System.currentTimeMillis())

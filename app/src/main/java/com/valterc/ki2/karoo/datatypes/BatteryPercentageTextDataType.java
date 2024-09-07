@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.content.res.AppCompatResources;
+import androidx.core.content.ContextCompat;
 
 import com.valterc.ki2.R;
 import com.valterc.ki2.karoo.Ki2Context;
@@ -30,7 +31,7 @@ public class BatteryPercentageTextDataType extends Ki2DataType {
         super(context);
 
         this.drawables = FunctionUtils.safeInvoke(() -> Arrays.asList(
-                AppCompatResources.getDrawable(getContext(), R.drawable.ic_hh_battery), AppCompatResources.getDrawable(getContext(), R.drawable.ic_hh_gear)));
+                ContextCompat.getDrawable(getContext(), R.drawable.ic_hh_battery), ContextCompat.getDrawable(getContext(), R.drawable.ic_hh_gear)));
     }
 
     @NonNull
