@@ -24,9 +24,9 @@ public class AntScanner {
 
     private final AntManager antManager;
     private final IAntScanListener scanListener;
+    private final Handler handler;
     private AntChannelWrapper antChannelWrapper;
     private Boolean scanEnabled;
-    private final Handler handler;
 
     public AntScanner(AntManager antManager, IAntScanListener scanListener) {
         this.antManager = antManager;

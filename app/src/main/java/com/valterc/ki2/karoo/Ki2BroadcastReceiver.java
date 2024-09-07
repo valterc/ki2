@@ -22,7 +22,7 @@ public class Ki2BroadcastReceiver extends BroadcastReceiver {
     @SuppressLint("LogNotTimber")
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (intent.getAction() == null){
+        if (intent.getAction() == null) {
             return;
         }
 

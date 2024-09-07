@@ -1,8 +1,6 @@
 package com.valterc.ki2.karoo;
 
 import android.annotation.SuppressLint;
-import android.provider.Settings;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
