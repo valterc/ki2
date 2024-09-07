@@ -24,7 +24,7 @@ public class SafeHandler extends Handler {
         } catch (Exception e) {
             String processName = ProcessUtils.getProcessName();
 
-            if (processName != null && processName.contains("com.valter.ki2")) {
+            if (processName != null && processName.contains("com.valterc.ki2")) {
                 Timber.e(e, "Error in handler invocation");
             } else {
                 Log.w("KI2", "Error in handler invocation", e);
