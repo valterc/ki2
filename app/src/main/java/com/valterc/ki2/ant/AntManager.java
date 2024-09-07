@@ -48,7 +48,6 @@ public class AntManager {
 
     private boolean disposed;
     private boolean antServiceBound;
-    private boolean antEnabled;
     private AntService antService;
     private AntChannelProvider antChannelProvider;
 
@@ -108,8 +107,7 @@ public class AntManager {
     }
 
     private void ensureAntEnabled() {
-        antEnabled = AntSettings.isAntEnabled(context);
-        if (!antEnabled) {
+        if (!AntSettings.isAntEnabled(context)) {
             if (stateListener != null) {
                 stateListener.onAntDisabled();
             }
@@ -123,9 +121,7 @@ public class AntManager {
 
             @Override
             public void onChange(boolean selfChange) {
-                antEnabled = AntSettings.isAntEnabled(context);
-
-                if (antEnabled) {
+                if (AntSettings.isAntEnabled(context)) {
                     return;
                 }
 
