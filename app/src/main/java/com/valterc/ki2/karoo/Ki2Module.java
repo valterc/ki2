@@ -8,6 +8,7 @@ import androidx.annotation.Nullable;
 import com.valterc.ki2.BuildConfig;
 import com.valterc.ki2.data.message.RideStatusMessage;
 import com.valterc.ki2.data.ride.RideStatus;
+import com.valterc.ki2.karoo.ant.AntEnablerHandler;
 import com.valterc.ki2.karoo.battery.LowBatteryHandler;
 import com.valterc.ki2.karoo.datatypes.BatteryGraphicalDataType;
 import com.valterc.ki2.karoo.datatypes.BatteryPercentageTextDataType;
@@ -73,7 +74,8 @@ public class Ki2Module extends Module {
                     new UpdateAvailableHandler(ki2Context),
                     new LowBatteryHandler(ki2Context),
                     new ShiftingAudioAlertHandler(ki2Context),
-                    new ShiftingReportingManager(ki2Context)));
+                    new ShiftingReportingManager(ki2Context),
+                    new AntEnablerHandler(ki2Context)));
         } else if (RideActivityHook.isRideActivityProcess()) {
             handlerManager = new HandlerManager(ki2Context, Collections.singletonList(new OverlayManager(ki2Context)));
         } else {

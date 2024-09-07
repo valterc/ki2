@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.database.ContentObserver;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
@@ -47,6 +48,7 @@ public class AntManager {
 
     private boolean disposed;
     private boolean antServiceBound;
+    private boolean antEnabled;
     private AntService antService;
     private AntChannelProvider antChannelProvider;
 
@@ -101,7 +103,37 @@ public class AntManager {
         this.handler = new Handler(Looper.getMainLooper());
 
         context.registerReceiver(channelProviderStateChangedReceiver, new IntentFilter(AntChannelProvider.ACTION_CHANNEL_PROVIDER_STATE_CHANGED), Context.RECEIVER_EXPORTED);
+        handler.post(this::ensureAntEnabled);
         attemptBindToAntService();
+    }
+
+    private void ensureAntEnabled() {
+        antEnabled = AntSettings.isAntEnabled(context);
+        if (!antEnabled) {
+            if (stateListener != null) {
+                stateListener.onAntDisabled();
+            }
+        }
+
+        context.getContentResolver().registerContentObserver(AntSettings.getEnabledUri(), false, new ContentObserver(handler) {
+            @Override
+            public boolean deliverSelfNotifications() {
+                return true;
+            }
+
+            @Override
+            public void onChange(boolean selfChange) {
+                antEnabled = AntSettings.isAntEnabled(context);
+
+                if (antEnabled) {
+                    return;
+                }
+
+                if (stateListener != null) {
+                    stateListener.onAntDisabled();
+                }
+            }
+        });
     }
 
     private void attemptBindToAntService() {
@@ -136,20 +168,6 @@ public class AntManager {
             }
             antServiceBound = false;
         }
-    }
-
-    /**
-     * Get the number of available channels from this provider.
-     *
-     * @return Number of available channels from this provider.
-     * @throws Exception If the ANT service becomes unavailable.
-     */
-    public int getAvailableChannelCount() throws Exception {
-        if (!isReady()) {
-            throw new RuntimeException("ANT channel provider is not available");
-        }
-
-        return antChannelProvider.getNumChannelsAvailable();
     }
 
     /**

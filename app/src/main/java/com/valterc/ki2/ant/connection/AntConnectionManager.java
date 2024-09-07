@@ -49,13 +49,6 @@ public class AntConnectionManager {
     }
 
     public void connect(Collection<DeviceId> devices, IDeviceConnectionListener deviceConnectionListener) throws Exception {
-        int newDeviceCount = (int) devices.stream().filter(d -> !connectionMap.containsKey(d)).count();
-        int availableAntChannels = antManager.getAvailableChannelCount();
-
-        if (newDeviceCount > availableAntChannels) {
-            throw new Exception("Not enough ANT channels available. Requested: " + newDeviceCount + ", available: " + availableAntChannels);
-        }
-
         for (DeviceId deviceId : devices) {
             connect(deviceId, deviceConnectionListener, false);
         }

@@ -17,6 +17,7 @@ import androidx.preference.PreferenceManager;
 
 import com.valterc.ki2.R;
 import com.valterc.ki2.ant.AntManager;
+import com.valterc.ki2.ant.AntSettings;
 import com.valterc.ki2.ant.IAntStateListener;
 import com.valterc.ki2.ant.connection.AntConnectionManager;
 import com.valterc.ki2.ant.connection.IAntDeviceConnection;
@@ -34,6 +35,7 @@ import com.valterc.ki2.data.device.DeviceStore;
 import com.valterc.ki2.data.info.DataType;
 import com.valterc.ki2.data.info.ManufacturerInfo;
 import com.valterc.ki2.data.input.KarooKeyEvent;
+import com.valterc.ki2.data.message.EnableAntMessage;
 import com.valterc.ki2.data.message.Message;
 import com.valterc.ki2.data.message.MessageManager;
 import com.valterc.ki2.data.message.RideStatusMessage;
@@ -496,7 +498,10 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
         @Override
         public void onReceive(final Context context, final Intent intent) {
             Timber.d("Received reconnect devices broadcast");
-            serviceHandler.postRetriableAction(() -> antConnectionManager.restartClosedConnections(Ki2Service.this));
+            serviceHandler.postRetriableAction(() -> {
+                ensureAntEnabled();
+                antConnectionManager.restartClosedConnections(Ki2Service.this);
+            });
         }
     };
 
@@ -545,8 +550,8 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
         PostUpdateActions.executePostInit(new PostUpdateContext(this, deviceStore));
         devicePreferencesStore.setDevices(deviceStore.getDevices());
 
-        registerReceiver(receiverReconnectDevices, new IntentFilter("io.hammerhead.action.RECONNECT_DEVICES"));
-        registerReceiver(receiverInRide, new IntentFilter("io.hammerhead.action.IN_RIDE"));
+        registerReceiver(receiverReconnectDevices, new IntentFilter("io.hammerhead.action.RECONNECT_DEVICES"), Context.RECEIVER_EXPORTED);
+        registerReceiver(receiverInRide, new IntentFilter("io.hammerhead.action.IN_RIDE"), Context.RECEIVER_EXPORTED);
         Timber.i("Service created");
     }
 
@@ -576,6 +581,8 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
 
     private void processScan() throws Exception {
         if (callbackListScan.getRegisteredCallbackCount() != 0) {
+            ensureAntEnabled();
+
             if (antManager.isReady()) {
                 antScanner.startScan(ConfigurationStore.getScanChannelConfiguration(Ki2Service.this));
             }
@@ -595,6 +602,8 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
                 || callbackListManufacturerInfo.getRegisteredCallbackCount() != 0
                 || callbackListShifting.getRegisteredCallbackCount() != 0
                 || callbackListKey.getRegisteredCallbackCount() != 0) {
+            ensureAntEnabled();
+
             if (antManager.isReady()) {
                 Collection<DeviceId> enabledDevices = devices.stream()
                         .filter(deviceId -> new DevicePreferences(this, deviceId).isEnabled())
@@ -646,6 +655,11 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
                 serviceHandler.postRetriableAction(Ki2Service.this::processConnections);
             }
         });
+    }
+
+    @Override
+    public void onAntDisabled() {
+        ensureAntEnabled();
     }
 
     @Override
@@ -792,7 +806,7 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
         SharedPreferences preferences;
         SharedPreferences.Editor editor;
 
-        switch (message.getMessageType()){
+        switch (message.getMessageType()) {
             case RIDE_STATUS:
                 RideStatusMessage rideStatusMessage = RideStatusMessage.parse(message);
                 if (rideStatusMessage != null) {
@@ -848,6 +862,14 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
         serviceHandler.postRetriableAction(() -> broadcastData(callbackListDevicePreferences,
                 () -> devicePreferencesView, (callback, devicePreferences) -> callback.onDevicePreferences(deviceId, devicePreferences)));
         serviceHandler.postRetriableAction(Ki2Service.this::processConnections);
+    }
+
+    private void ensureAntEnabled() {
+        if (AntSettings.isAntEnabled(this)) {
+            return;
+        }
+
+        serviceHandler.postAction(() -> onMessage(new EnableAntMessage()));
     }
 
 }
