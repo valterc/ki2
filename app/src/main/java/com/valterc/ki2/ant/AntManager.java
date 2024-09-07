@@ -46,6 +46,7 @@ public class AntManager {
     private final Handler handler;
     private final IAntStateListener stateListener;
 
+    private ContentObserver antSettingContentObserver;
     private boolean disposed;
     private boolean antServiceBound;
     private AntService antService;
@@ -113,7 +114,11 @@ public class AntManager {
             }
         }
 
-        context.getContentResolver().registerContentObserver(AntSettings.getEnabledUri(), false, new ContentObserver(handler) {
+        if (antSettingContentObserver != null) {
+            return;
+        }
+
+        antSettingContentObserver = new ContentObserver(handler) {
             @Override
             public boolean deliverSelfNotifications() {
                 return true;
@@ -125,11 +130,14 @@ public class AntManager {
                     return;
                 }
 
+                Timber.w("Ant disabled");
                 if (stateListener != null) {
                     stateListener.onAntDisabled();
                 }
             }
-        });
+        };
+
+        context.getContentResolver().registerContentObserver(AntSettings.getEnabledUri(), false, antSettingContentObserver);
     }
 
     private void attemptBindToAntService() {
@@ -152,7 +160,13 @@ public class AntManager {
 
         try {
             context.unregisterReceiver(channelProviderStateChangedReceiver);
-        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
+            // Not bound
+        }
+
+        try {
+            context.getContentResolver().unregisterContentObserver(antSettingContentObserver);
+        } catch (Exception e) {
             // Not bound
         }
 
