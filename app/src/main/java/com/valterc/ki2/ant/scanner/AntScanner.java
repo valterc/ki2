@@ -1,6 +1,5 @@
 package com.valterc.ki2.ant.scanner;
 
-import android.annotation.SuppressLint;
 import android.os.Handler;
 import android.os.Looper;
 
@@ -17,7 +16,6 @@ import com.valterc.ki2.data.device.DeviceId;
 
 import timber.log.Timber;
 
-@SuppressLint("LogNotTimber")
 public class AntScanner {
 
     private static final int TIME_MS_ATTEMPT_START_SCAN = 2000;
