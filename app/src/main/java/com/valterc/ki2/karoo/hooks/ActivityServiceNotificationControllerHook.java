@@ -3,12 +3,9 @@ package com.valterc.ki2.karoo.hooks;
 import android.annotation.SuppressLint;
 import android.util.Log;
 
-import com.valterc.ki2.R;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
-import java.util.Locale;
 
 import io.hammerhead.sdk.v0.SdkContext;
 
@@ -19,40 +16,6 @@ public class ActivityServiceNotificationControllerHook {
     }
 
     private static boolean showNotification_1(SdkContext context, Object notification) {
-        try {
-            Class<?> classActivityServiceApplication = Class.forName("io.hammerhead.activityservice.ActivityServiceApplication");
-            Method methodGetActivityComponent = classActivityServiceApplication.getMethod("getActivityComponent");
-            Object activityComponent = methodGetActivityComponent.invoke(context.getBaseContext());
-
-            assert activityComponent != null;
-            Method methodNotificationController = activityComponent.getClass().getMethod("notificationController");
-            Object notificationController = methodNotificationController.invoke(activityComponent);
-
-            assert notificationController != null;
-            Field fieldNotificationSubject = notificationController.getClass().getDeclaredField("notificationSubject");
-            fieldNotificationSubject.setAccessible(true);
-            Object notificationSubject = fieldNotificationSubject.get(notificationController);
-
-            assert notificationSubject != null;
-            Method[] allMethods = notificationSubject.getClass().getDeclaredMethods();
-
-            for (Method method : allMethods) {
-                Type[] types = method.getGenericParameterTypes();
-                if (types.length == 1 && types[0].toString().equals("T")) {
-                    method.invoke(notificationSubject, notification);
-                    return true;
-                }
-            }
-
-            throw new Exception("Unable to hook into notification publisher");
-        } catch (Exception e) {
-            Log.w("KI2", "Unable to publish notification using method 1: " + e);
-        }
-
-        return false;
-    }
-
-    private static boolean showNotification_2(SdkContext context, Object notification) {
         try {
             Class<?> classActivityServiceApplication = Class.forName("io.hammerhead.activityservice.ActivityServiceApplication");
             Field[] fieldsInActivityServiceApplication = classActivityServiceApplication.getDeclaredFields();
@@ -102,7 +65,7 @@ public class ActivityServiceNotificationControllerHook {
 
             throw new Exception("Unable to hook into notification publisher");
         } catch (Exception e) {
-            Log.w("KI2", "Unable to publish notification using method 2: " + e);
+            Log.w("KI2", "Unable to publish notification using method 1: " + e);
         }
 
         return false;
@@ -110,8 +73,7 @@ public class ActivityServiceNotificationControllerHook {
 
     public static boolean showSensorLowBatteryNotification(SdkContext context, String deviceName) {
         Object notification = NotificationHook.buildSensorLowBatteryNotification(deviceName);
-        return showNotification_1(context, notification)
-                || showNotification_2(context, notification);
+        return showNotification_1(context, notification);
     }
 
 }

@@ -1,5 +1,8 @@
 package com.valterc.ki2.ant.scanner;
 
+import android.os.Handler;
+import android.os.Looper;
+
 import com.dsi.ant.channel.IAntChannelEventHandler;
 import com.dsi.ant.message.ChannelId;
 import com.dsi.ant.message.ExtendedData;
@@ -15,20 +18,44 @@ import timber.log.Timber;
 
 public class AntScanner {
 
+    private static final int TIME_MS_ATTEMPT_START_SCAN = 2000;
+
     private final AntManager antManager;
     private final IAntScanListener scanListener;
+    private final Handler handler;
     private AntChannelWrapper antChannelWrapper;
+    private Boolean scanEnabled;
 
     public AntScanner(AntManager antManager, IAntScanListener scanListener) {
         this.antManager = antManager;
         this.scanListener = scanListener;
+        this.handler = new Handler(Looper.getMainLooper());
     }
 
-    public void startScan(ScanChannelConfiguration scanChannelConfiguration) throws Exception {
+    public void startScan(ScanChannelConfiguration scanChannelConfiguration) {
         if (antChannelWrapper != null) {
             return;
         }
 
+        scanEnabled = true;
+        handler.post(() -> starScanInternal(scanChannelConfiguration));
+    }
+
+    private void starScanInternal(ScanChannelConfiguration scanChannelConfiguration) {
+        if (!scanEnabled || antChannelWrapper != null) {
+            return;
+        }
+
+        try {
+            getScanAntChannel(scanChannelConfiguration);
+            Timber.i("Scan started");
+        } catch (Exception e) {
+            Timber.w(e, "Unable to start scan");
+            handler.postDelayed(() -> starScanInternal(scanChannelConfiguration), (int) (TIME_MS_ATTEMPT_START_SCAN * (1 + 2 * Math.random())));
+        }
+    }
+
+    private void getScanAntChannel(ScanChannelConfiguration scanChannelConfiguration) throws Exception {
         antChannelWrapper = antManager.getScanAntChannel(scanChannelConfiguration, new IAntChannelEventHandler() {
             @Override
             public void onReceiveMessage(MessageFromAntType messageFromAntType, AntMessageParcel antMessageParcel) {
@@ -54,15 +81,23 @@ public class AntScanner {
     }
 
     public void stopScan() {
+        scanEnabled = false;
+        handler.post(this::stopScanInternal);
+    }
+
+    private void stopScanInternal() {
+        scanEnabled = false;
+
         AntChannelWrapper antChannelWrapper = this.antChannelWrapper;
         this.antChannelWrapper = null;
 
         if (antChannelWrapper != null) {
             antChannelWrapper.dispose();
+            Timber.i("Scan stopped");
         }
     }
 
-    public final DeviceId processScanResult(MessageFromAntType messageFromAntType, AntMessageParcel antMessageParcel) {
+    private DeviceId processScanResult(MessageFromAntType messageFromAntType, AntMessageParcel antMessageParcel) {
         if (antMessageParcel == null || messageFromAntType != MessageFromAntType.BROADCAST_DATA) {
             return null;
         }

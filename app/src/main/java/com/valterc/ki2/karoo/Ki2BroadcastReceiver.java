@@ -22,6 +22,10 @@ public class Ki2BroadcastReceiver extends BroadcastReceiver {
     @SuppressLint("LogNotTimber")
     @Override
     public void onReceive(Context context, Intent intent) {
+        if (intent.getAction() == null) {
+            return;
+        }
+
         switch (intent.getAction()) {
 
             case "android.intent.action.BOOT_COMPLETED":
