@@ -4,6 +4,7 @@ import android.os.Handler;
 
 import com.valterc.ki2.data.message.AudioAlertEventMessage;
 import com.valterc.ki2.data.message.AudioAlertMessage;
+import com.valterc.ki2.data.message.EnableAntMessage;
 import com.valterc.ki2.data.message.Message;
 import com.valterc.ki2.data.message.MessageType;
 import com.valterc.ki2.data.message.RideStatusMessage;
@@ -32,6 +33,7 @@ public class CustomMessageClient {
         customMessageHandlers.put(MessageType.SHOW_OVERLAY, new CustomMessageHandler<>(MessageType.SHOW_OVERLAY, ShowOverlayMessage::parse));
         customMessageHandlers.put(MessageType.AUDIO_ALERT, new CustomMessageHandler<>(MessageType.AUDIO_ALERT, AudioAlertMessage::parse));
         customMessageHandlers.put(MessageType.AUDIO_ALERT_EVENT, new CustomMessageHandler<>(MessageType.AUDIO_ALERT_EVENT, AudioAlertEventMessage::parse));
+        customMessageHandlers.put(MessageType.ENABLE_ANT, new CustomMessageHandler<>(MessageType.ENABLE_ANT, EnableAntMessage::parse));
 
         serviceClient.registerMessageWeakListener(onMessage);
     }
@@ -112,6 +114,21 @@ public class CustomMessageClient {
         handler.post(() -> {
             CustomMessageHandler<AudioAlertEventMessage> customMessageHandler =
                     (CustomMessageHandler<AudioAlertEventMessage>) customMessageHandlers.get(MessageType.AUDIO_ALERT_EVENT);
+            if (customMessageHandler != null) {
+                customMessageHandler.addListener(consumer);
+            }
+        });
+    }
+
+    /**
+     * Register a weak referenced listener that will receive Enable Ant messages.
+     *
+     * @param consumer Consumer that will receive Enable Ant messages. It will be referenced using a weak reference so the owner must keep a strong reference.
+     */
+    public void registerEnableAntWeakListener(Consumer<EnableAntMessage> consumer) {
+        handler.post(() -> {
+            CustomMessageHandler<EnableAntMessage> customMessageHandler =
+                    (CustomMessageHandler<EnableAntMessage>) customMessageHandlers.get(MessageType.ENABLE_ANT);
             if (customMessageHandler != null) {
                 customMessageHandler.addListener(consumer);
             }

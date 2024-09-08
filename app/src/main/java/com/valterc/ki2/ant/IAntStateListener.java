@@ -3,9 +3,14 @@ package com.valterc.ki2.ant;
 public interface IAntStateListener {
 
     /**
-     * Invoked when the state of AntManager changes.
-     * @param ready Indicates if ANT is ready.
+     * Invoked when ANT radio is disabled system wide.
      */
-    void onAntStateChange(boolean ready);
+    void onAntDisabled();
+
+    /**
+     * Invoked when the state of ANT service changes.
+     * @param serviceReady Indicates if ANT service is ready.
+     */
+    void onAntServiceStateChange(boolean serviceReady);
 
 }

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.database.ContentObserver;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
@@ -45,6 +46,7 @@ public class AntManager {
     private final Handler handler;
     private final IAntStateListener stateListener;
 
+    private ContentObserver antSettingContentObserver;
     private boolean disposed;
     private boolean antServiceBound;
     private AntService antService;
@@ -101,7 +103,41 @@ public class AntManager {
         this.handler = new Handler(Looper.getMainLooper());
 
         context.registerReceiver(channelProviderStateChangedReceiver, new IntentFilter(AntChannelProvider.ACTION_CHANNEL_PROVIDER_STATE_CHANGED), Context.RECEIVER_EXPORTED);
+        handler.post(this::ensureAntEnabled);
         attemptBindToAntService();
+    }
+
+    private void ensureAntEnabled() {
+        if (!AntSettings.isAntEnabled(context)) {
+            if (stateListener != null) {
+                stateListener.onAntDisabled();
+            }
+        }
+
+        if (antSettingContentObserver != null) {
+            return;
+        }
+
+        antSettingContentObserver = new ContentObserver(handler) {
+            @Override
+            public boolean deliverSelfNotifications() {
+                return true;
+            }
+
+            @Override
+            public void onChange(boolean selfChange) {
+                if (AntSettings.isAntEnabled(context)) {
+                    return;
+                }
+
+                Timber.w("ANT disabled");
+                if (stateListener != null) {
+                    stateListener.onAntDisabled();
+                }
+            }
+        };
+
+        context.getContentResolver().registerContentObserver(AntSettings.getEnabledUri(), false, antSettingContentObserver);
     }
 
     private void attemptBindToAntService() {
@@ -115,7 +151,7 @@ public class AntManager {
 
     private void triggerStateChange() {
         if (stateListener != null) {
-            stateListener.onAntStateChange(isReady());
+            stateListener.onAntServiceStateChange(isAntServiceReady());
         }
     }
 
@@ -124,7 +160,13 @@ public class AntManager {
 
         try {
             context.unregisterReceiver(channelProviderStateChangedReceiver);
-        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
+            // Not bound
+        }
+
+        try {
+            context.getContentResolver().unregisterContentObserver(antSettingContentObserver);
+        } catch (Exception e) {
             // Not bound
         }
 
@@ -136,20 +178,6 @@ public class AntManager {
             }
             antServiceBound = false;
         }
-    }
-
-    /**
-     * Get the number of available channels from this provider.
-     *
-     * @return Number of available channels from this provider.
-     * @throws Exception If the ANT service becomes unavailable.
-     */
-    public int getAvailableChannelCount() throws Exception {
-        if (!isReady()) {
-            throw new RuntimeException("ANT channel provider is not available");
-        }
-
-        return antChannelProvider.getNumChannelsAvailable();
     }
 
     /**
@@ -165,7 +193,7 @@ public class AntManager {
             ChannelConfiguration channelConfiguration,
             IAntChannelEventHandler channelEventHandler,
             IAntAdapterEventHandler adapterEventHandler) throws Exception {
-        if (!isReady()) {
+        if (!isAntServiceReady()) {
             throw new RuntimeException("ANT channel provider is not available");
         }
 
@@ -229,7 +257,7 @@ public class AntManager {
             ScanChannelConfiguration scanChannelConfiguration,
             IAntChannelEventHandler channelEventHandler,
             IAntAdapterEventHandler adapterEventHandler) throws Exception {
-        if (!isReady()) {
+        if (!isAntServiceReady()) {
             throw new RuntimeException("ANT channel provider is not available");
         }
 
@@ -281,11 +309,11 @@ public class AntManager {
     }
 
     /**
-     * Indicates if the ANT manager is ready to create ANT channels.
+     * Indicates if the ANT service is ready.
      *
-     * @return True if ANT is ready, False otherwise.
+     * @return True if ANT service is ready, False otherwise.
      */
-    public boolean isReady() {
+    public boolean isAntServiceReady() {
         return antChannelProvider != null;
     }
 

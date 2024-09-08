@@ -11,7 +11,8 @@ public enum MessageType {
     AUDIO_ALERT_EVENT(6),
     AUDIO_ALERT_TOGGLE(7),
     AUDIO_ALERT_DISABLE(8),
-    AUDIO_ALERT_ENABLE(9);
+    AUDIO_ALERT_ENABLE(9),
+    ENABLE_ANT(10);
 
     public static MessageType fromValue(int value) {
         for (MessageType messageType : values()) {
