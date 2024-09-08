@@ -8,9 +8,9 @@ public interface IAntStateListener {
     void onAntDisabled();
 
     /**
-     * Invoked when the state of AntManager changes.
-     * @param ready Indicates if ANT is ready.
+     * Invoked when the state of ANT service changes.
+     * @param serviceReady Indicates if ANT service is ready.
      */
-    void onAntStateChange(boolean ready);
+    void onAntServiceStateChange(boolean serviceReady);
 
 }

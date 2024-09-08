@@ -70,7 +70,7 @@ public class AntScanner {
                 stopScan();
 
                 try {
-                    if (antManager.isReady()) {
+                    if (antManager.isAntServiceReady()) {
                         startScan(scanChannelConfiguration);
                     }
                 } catch (Exception e) {

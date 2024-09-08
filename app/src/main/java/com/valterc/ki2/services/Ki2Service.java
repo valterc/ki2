@@ -581,9 +581,7 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
 
     private void processScan() throws Exception {
         if (callbackListScan.getRegisteredCallbackCount() != 0) {
-            ensureAntEnabled();
-
-            if (antManager.isReady()) {
+            if (antManager.isAntServiceReady()) {
                 antScanner.startScan(ConfigurationStore.getScanChannelConfiguration(Ki2Service.this));
             }
         } else {
@@ -602,9 +600,7 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
                 || callbackListManufacturerInfo.getRegisteredCallbackCount() != 0
                 || callbackListShifting.getRegisteredCallbackCount() != 0
                 || callbackListKey.getRegisteredCallbackCount() != 0) {
-            ensureAntEnabled();
-
-            if (antManager.isReady()) {
+            if (antManager.isAntServiceReady()) {
                 Collection<DeviceId> enabledDevices = devices.stream()
                         .filter(deviceId -> new DevicePreferences(this, deviceId).isEnabled())
                         .collect(Collectors.toList());
@@ -645,12 +641,12 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
     }
 
     @Override
-    public void onAntStateChange(boolean ready) {
+    public void onAntServiceStateChange(boolean serviceReady) {
         serviceHandler.postAction(() -> {
             antScanner.stopScan();
             antConnectionManager.disconnectAll();
 
-            if (ready) {
+            if (serviceReady) {
                 serviceHandler.postRetriableAction(Ki2Service.this::processScan);
                 serviceHandler.postRetriableAction(Ki2Service.this::processConnections);
             }

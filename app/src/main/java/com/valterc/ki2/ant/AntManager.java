@@ -130,7 +130,7 @@ public class AntManager {
                     return;
                 }
 
-                Timber.w("Ant disabled");
+                Timber.w("ANT disabled");
                 if (stateListener != null) {
                     stateListener.onAntDisabled();
                 }
@@ -151,7 +151,7 @@ public class AntManager {
 
     private void triggerStateChange() {
         if (stateListener != null) {
-            stateListener.onAntStateChange(isReady());
+            stateListener.onAntServiceStateChange(isAntServiceReady());
         }
     }
 
@@ -193,7 +193,7 @@ public class AntManager {
             ChannelConfiguration channelConfiguration,
             IAntChannelEventHandler channelEventHandler,
             IAntAdapterEventHandler adapterEventHandler) throws Exception {
-        if (!isReady()) {
+        if (!isAntServiceReady()) {
             throw new RuntimeException("ANT channel provider is not available");
         }
 
@@ -257,7 +257,7 @@ public class AntManager {
             ScanChannelConfiguration scanChannelConfiguration,
             IAntChannelEventHandler channelEventHandler,
             IAntAdapterEventHandler adapterEventHandler) throws Exception {
-        if (!isReady()) {
+        if (!isAntServiceReady()) {
             throw new RuntimeException("ANT channel provider is not available");
         }
 
@@ -309,11 +309,11 @@ public class AntManager {
     }
 
     /**
-     * Indicates if the ANT manager is ready to create ANT channels.
+     * Indicates if the ANT service is ready.
      *
-     * @return True if ANT is ready, False otherwise.
+     * @return True if ANT service is ready, False otherwise.
      */
-    public boolean isReady() {
+    public boolean isAntServiceReady() {
         return antChannelProvider != null;
     }
 
