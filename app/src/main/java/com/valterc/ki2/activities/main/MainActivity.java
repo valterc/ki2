@@ -1,5 +1,6 @@
 package com.valterc.ki2.activities.main;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -8,6 +9,7 @@ import android.view.View;
 import android.view.inputmethod.BaseInputConnection;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -27,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int TIME_MS_CHECK_FOR_UPDATES = 3500;
     private static final int KEY_EVENT_SOURCE_OWN = 0x6667;
+    private static final String DEVICE_KAROO_K24 = "k24";
 
     private final Handler handler = new Handler(Looper.getMainLooper());
     private BaseInputConnection baseInputConnection;
@@ -36,6 +39,15 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (!BuildConfig.DEBUG && Build.DEVICE.equals(DEVICE_KAROO_K24)) {
+            new AlertDialog.Builder(this, R.style.AlertDialogStyle)
+                    .setTitle(R.string.text_not_compatible)
+                    .setMessage(getString(R.string.text_k24))
+                    .setPositiveButton(android.R.string.ok, (dialog, whichButton) -> dialog.dismiss())
+                    .show();
+        }
+
         setContentView(R.layout.activity_main);
         baseInputConnection = new BaseInputConnection(findViewById(android.R.id.content), true);
 
