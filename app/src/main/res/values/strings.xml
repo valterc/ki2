@@ -131,6 +131,7 @@
     <string name="text_enabled_audio_alerts">Enabled Shifting audio alerts</string>
     <string name="text_ant_recording">ANT Recording</string>
     <string name="text_warning_ant_recording">WARNING!\n\nANT recording will record all ANT events to a file for debugging purposes.\n\nEnable ONLY when troubleshooting ANT issues, this feature vastly increases resource usage and battery consumption.\n\nUse at your own risk.</string>
-
+    <string name="text_not_compatible">Not compatible</string>
+    <string name="text_k24">Ki2 is not compatible with the new Karoo.\n\nHammerhead decided to disable SDK support on the new Karoo.\n\nThere is nothing we can do on our end to enable Ki2, the only action is to keep asking Hammerhead.</string>
 
 </resources>
