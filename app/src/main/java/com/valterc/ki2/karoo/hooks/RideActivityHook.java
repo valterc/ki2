@@ -61,7 +61,7 @@ public final class RideActivityHook {
         return null;
     });
 
-    private static final Lazy<Field> FIELD_PAGE_PAGE_TYPE = LazyKt.lazy(() -> {
+    private static final Lazy<Field> FIELD_PAGE_TYPE = LazyKt.lazy(() -> {
         try {
             Class<?> classPager = Class.forName("io.hammerhead.datamodels.profiles.Page");
             Field[] classPagerFields = classPager.getFields();
@@ -251,7 +251,7 @@ public final class RideActivityHook {
         int index = 0;
         for (Object page : pages) {
             try {
-                Object pageType = FIELD_PAGE_PAGE_TYPE.getValue().get(page);
+                Object pageType = FIELD_PAGE_TYPE.getValue().get(page);
                 if (pageType == ENUM_PAGE_TYPE_MAP.getValue()) {
                     viewPager.setCurrentItem(index, false);
                     return true;
