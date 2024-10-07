@@ -196,16 +196,6 @@ public class PreferencesView implements Parcelable {
     }
 
     /**
-     * Indicates if the preload setting is active.
-     *
-     * @param context Ki2 application context. Cannot be a context generated from another package.
-     * @return True if the preload setting is active, false otherwise.
-     */
-    public boolean getPreLoad(Context context) {
-        return getBoolean(context.getString(R.string.preference_pre_load), context.getResources().getBoolean(R.bool.default_preference_pre_load));
-    }
-
-    /**
      * Indicates if FIT Recording setting is enabled.
      *
      * @param context Ki2 application context. Cannot be a context generated from another package.

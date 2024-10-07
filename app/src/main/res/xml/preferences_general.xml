@@ -1,16 +1,6 @@
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
     app:title="@string/category_preference_general_settings">
 
-    <PreferenceCategory app:title="@string/category_preference_pre_load">
-
-        <SwitchPreference
-            app:defaultValue="@bool/default_preference_pre_load"
-            app:key="@string/preference_pre_load"
-            app:summary="@string/summary_preference_pre_load"
-            app:title="@string/title_preference_pre_load" />
-
-    </PreferenceCategory>
-
     <PreferenceCategory app:title="@string/category_preference_ant_recording">
 
         <SwitchPreference
