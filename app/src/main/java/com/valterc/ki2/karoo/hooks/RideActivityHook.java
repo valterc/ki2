@@ -268,22 +268,26 @@ public final class RideActivityHook {
 
     private static Parcelable recreateProfileElement(Parcelable profileElement) {
         Parcel parcel = Parcel.obtain();
-        profileElement.writeToParcel(parcel, 0);
-        parcel.setDataPosition(0);
-
-        if (PROFILE_ELEMENT_CREATOR == null) {
-            try {
-                PROFILE_ELEMENT_CREATOR = (Parcelable.Creator) FIELD_CREATOR.getValue().get(profileElement);
-            } catch (Exception e) {
-                Log.w("KI2", "Unable to get ProfileElement creator instance", e);
-            }
+        try {
+            profileElement.writeToParcel(parcel, 0);
+            parcel.setDataPosition(0);
 
             if (PROFILE_ELEMENT_CREATOR == null) {
-                Log.w("KI2", "Unable to get ProfileElement creator instance");
-            }
-        }
+                try {
+                    PROFILE_ELEMENT_CREATOR = (Parcelable.Creator) FIELD_CREATOR.getValue().get(profileElement);
+                } catch (Exception e) {
+                    Log.w("KI2", "Unable to get ProfileElement creator instance", e);
+                }
 
-        return (Parcelable) PROFILE_ELEMENT_CREATOR.createFromParcel(parcel);
+                if (PROFILE_ELEMENT_CREATOR == null) {
+                    Log.w("KI2", "Unable to get ProfileElement creator instance");
+                }
+            }
+
+            return (Parcelable) PROFILE_ELEMENT_CREATOR.createFromParcel(parcel);
+        } finally {
+            parcel.recycle();
+        }
     }
 
     @SuppressLint("NotifyDataSetChanged")
