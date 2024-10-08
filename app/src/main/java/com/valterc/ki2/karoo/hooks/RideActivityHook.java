@@ -145,6 +145,56 @@ public final class RideActivityHook {
         return processName != null && processName.contains("io.hammerhead.rideapp");
     });
 
+    private static ViewPager2 tryFindViewPager(ViewGroup viewGroup) {
+        Set<ViewGroup> childViewGroups = new HashSet<>();
+        for (int i = 0; i < viewGroup.getChildCount(); i++) {
+            View childView = viewGroup.getChildAt(i);
+            if (childView instanceof ViewPager2) {
+                return (ViewPager2) childView;
+            } else if (childView instanceof ViewGroup) {
+                childViewGroups.add((ViewGroup) childView);
+            }
+        }
+
+        for (ViewGroup childView : childViewGroups) {
+            ViewPager2 viewPager = tryFindViewPager(childView);
+            if (viewPager != null) {
+                return viewPager;
+            }
+        }
+
+        return null;
+    }
+
+    @Nullable
+    private static Parcelable recreateProfileElement(Parcelable profileElement) {
+        if (PROFILE_ELEMENT_CREATOR == null) {
+            try {
+                PROFILE_ELEMENT_CREATOR = (Parcelable.Creator) FIELD_CREATOR.getValue().get(profileElement);
+            } catch (Exception e) {
+                Log.w("KI2", "Unable to get ProfileElement creator instance", e);
+                return null;
+            }
+
+            if (PROFILE_ELEMENT_CREATOR == null) {
+                Log.w("KI2", "Unable to get ProfileElement creator instance, value is null");
+                return null;
+            }
+        }
+
+        Parcel parcel = Parcel.obtain();
+        try {
+            profileElement.writeToParcel(parcel, 0);
+            parcel.setDataPosition(0);
+            return (Parcelable) PROFILE_ELEMENT_CREATOR.createFromParcel(parcel);
+        } catch (Exception e) {
+            Log.w("KI2", "Unable to recreate ProfileElement", e);
+            return null;
+        } finally {
+            parcel.recycle();
+        }
+    }
+
     /**
      * Indicates if the running code is inside the Ride activity process.
      *
@@ -185,27 +235,12 @@ public final class RideActivityHook {
         return null;
     }
 
-    private static ViewPager2 tryFindViewPager(ViewGroup viewGroup) {
-        Set<ViewGroup> childViewGroups = new HashSet<>();
-        for (int i = 0; i < viewGroup.getChildCount(); i++) {
-            View childView = viewGroup.getChildAt(i);
-            if (childView instanceof ViewPager2) {
-                return (ViewPager2) childView;
-            } else if (childView instanceof ViewGroup) {
-                childViewGroups.add((ViewGroup) childView);
-            }
-        }
-
-        for (ViewGroup childView : childViewGroups) {
-            ViewPager2 viewPager = tryFindViewPager(childView);
-            if (viewPager != null) {
-                return viewPager;
-            }
-        }
-
-        return null;
-    }
-
+    /**
+     * Switch ride screen to map page.
+     *
+     * @return True if it was possible to switch to a map page, False otherwise. If no map page
+     * exists in the ride profile, then this method will always return False.
+     */
     public static boolean switchToMapPage() {
         ViewPager2 viewPager = getActivityViewPager();
         if (viewPager == null) {
@@ -239,7 +274,7 @@ public final class RideActivityHook {
         try {
             pages = (Collection<?>) FIELD_PAGE_LIST.get(viewPagerAdapter);
         } catch (Exception e) {
-            Log.e("KI2", "Unable to get pages: " + e);
+            Log.e("KI2", "Unable to get pages", e);
             return false;
         }
 
@@ -257,7 +292,7 @@ public final class RideActivityHook {
                     return true;
                 }
             } catch (Exception e) {
-                Log.w("KI2", "Unable to check page type: " + e);
+                Log.w("KI2", "Unable to check page type", e);
             }
 
             index++;
@@ -266,30 +301,13 @@ public final class RideActivityHook {
         return false;
     }
 
-    private static Parcelable recreateProfileElement(Parcelable profileElement) {
-        Parcel parcel = Parcel.obtain();
-        try {
-            profileElement.writeToParcel(parcel, 0);
-            parcel.setDataPosition(0);
-
-            if (PROFILE_ELEMENT_CREATOR == null) {
-                try {
-                    PROFILE_ELEMENT_CREATOR = (Parcelable.Creator) FIELD_CREATOR.getValue().get(profileElement);
-                } catch (Exception e) {
-                    Log.w("KI2", "Unable to get ProfileElement creator instance", e);
-                }
-
-                if (PROFILE_ELEMENT_CREATOR == null) {
-                    Log.w("KI2", "Unable to get ProfileElement creator instance");
-                }
-            }
-
-            return (Parcelable) PROFILE_ELEMENT_CREATOR.createFromParcel(parcel);
-        } finally {
-            parcel.recycle();
-        }
-    }
-
+    /**
+     * Refresh SDK elements on the ride screen that may have not been correctly loaded during
+     * application initialization.
+     *
+     * @return True if all ride screen elements have been correctly loaded or refreshed, False
+     * otherwise.
+     */
     @SuppressLint("NotifyDataSetChanged")
     public static boolean tryRefreshSdkElements() {
         ViewPager2 viewPager = getActivityViewPager();
@@ -324,12 +342,17 @@ public final class RideActivityHook {
         try {
             pages = (Collection<Object>) FIELD_PAGE_LIST.get(viewPagerAdapter);
         } catch (Exception e) {
-            Log.e("KI2", "Unable to get pages: " + e);
+            Log.e("KI2", "Unable to get pages", e);
             return false;
         }
 
         if (pages == null) {
             Log.w("KI2", "List of pages is null");
+            return false;
+        }
+
+        if (pages.isEmpty()) {
+            Log.w("KI2", "List of pages is empty");
             return false;
         }
 
@@ -346,6 +369,9 @@ public final class RideActivityHook {
 
                 for (int i = 0; i < elements.size(); i++) {
                     Parcelable profileElement = (Parcelable) elements.get(i);
+                    if (profileElement == null) {
+                        continue;
+                    }
 
                     Object existingDataType = FIELD_DATA_TYPE.getValue().get(profileElement);
                     if (existingDataType == null) {
@@ -355,6 +381,11 @@ public final class RideActivityHook {
                     String dataTypeString = existingDataType.toString();
                     if (dataTypeString.contains("DataTypeUnknown")) {
                         profileElement = recreateProfileElement(profileElement);
+                        if (profileElement == null) {
+                            unchangedUnknownElements++;
+                            continue;
+                        }
+
                         Object newDataType = FIELD_DATA_TYPE.getValue().get(profileElement);
                         if (newDataType != null && existingDataType.getClass() != newDataType.getClass()) {
                             changedUnknownElements++;
@@ -371,12 +402,22 @@ public final class RideActivityHook {
                 viewPager.postInvalidateDelayed(100);
             }
         } catch (Exception e) {
-            Log.e("KI2", "Unable to refresh elements: " + e);
+            Log.e("KI2", "Unable to refresh elements", e);
+            return false;
         }
 
-        return !pages.isEmpty() && unchangedUnknownElements == 0;
+        if (unchangedUnknownElements > 0) {
+            Log.w("KI2", "Unable to refresh " + unchangedUnknownElements + " elements");
+        }
+
+        return unchangedUnknownElements == 0;
     }
 
+    /**
+     * Register Ride Activity monitoring to detect activity events and perform actions.
+     *
+     * @param context Ki2 context.
+     */
     public static void registerActivityMonitoring(Ki2Context context) {
         if (!(context.getSdkContext().getBaseContext() instanceof Application)) {
             Log.w("KI2", "Unable to register activity monitor, context is not from an application");
