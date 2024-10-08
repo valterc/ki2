@@ -434,6 +434,7 @@ public final class RideActivityHook {
                             context.getHandler().postDelayed(() -> {
                                 boolean resultSecondAttempt = RideActivityHook.tryRefreshSdkElements();
                                 if (!resultSecondAttempt && !ACTIVITY_RECREATED) {
+                                    Log.w("KI2", "Recreating activity");
                                     ACTIVITY_RECREATED = true;
                                     activity.recreate();
                                 }
