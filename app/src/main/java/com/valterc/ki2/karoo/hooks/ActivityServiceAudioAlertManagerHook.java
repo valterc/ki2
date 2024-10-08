@@ -170,7 +170,9 @@ public class ActivityServiceAudioAlertManagerHook {
         try {
             Constructor<?> constructor = TYPE_BEEP_PATTERN.getValue().getDeclaredConstructors()[0];
             constructor.setAccessible(true);
-            return constructor.newInstance("SINGLE_BEEP", 0x100, Collections.singletonList(createTone(350, 5000)));
+
+            Object steps = Collections.singletonList(createTone(350, 5000));
+            return constructor.newInstance("SINGLE_BEEP", 0x100, steps, steps);
         } catch (Exception e) {
             Log.w("KI2", "Unable to create single beep pattern", e);
         }
@@ -182,10 +184,12 @@ public class ActivityServiceAudioAlertManagerHook {
         try {
             Constructor<?> constructor = TYPE_BEEP_PATTERN.getValue().getDeclaredConstructors()[0];
             constructor.setAccessible(true);
-            return constructor.newInstance("DOUBLE_BEEP", 0x100, Arrays.asList(
+
+            Object steps = Arrays.asList(
                     createTone(350, 5000),
                     createRest(100),
-                    createTone(350, 5000)));
+                    createTone(350, 5000));
+            return constructor.newInstance("DOUBLE_BEEP", 0x100, steps, steps);
         } catch (Exception e) {
             Log.w("KI2", "Unable to create double beep pattern", e);
         }
