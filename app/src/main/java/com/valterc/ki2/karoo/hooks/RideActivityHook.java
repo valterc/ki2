@@ -410,6 +410,7 @@ public final class RideActivityHook {
             Log.w("KI2", "Unable to refresh " + unchangedUnknownElements + " elements");
         }
 
+        Log.i("KI2", "Refreshed " + changedUnknownElements + " elements");
         return unchangedUnknownElements == 0;
     }
 
