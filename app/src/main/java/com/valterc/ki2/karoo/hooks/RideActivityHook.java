@@ -430,7 +430,7 @@ public final class RideActivityHook {
     }
 
     /**
-     * Ensures that SDK elements on the ride activity are loaded.
+     * Attempt to ensures that SDK elements on the ride activity are loaded.
      *
      * @param context Ki2 context.
      */
