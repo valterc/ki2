@@ -28,7 +28,7 @@ import java.util.Set;
 import kotlin.Lazy;
 import kotlin.LazyKt;
 
-@SuppressWarnings({"unchecked", "rawtypes"})
+@SuppressWarnings({"unchecked", "rawtypes", "UnusedReturnValue"})
 @SuppressLint({"LogNotTimber", "NotifyDataSetChanged"})
 public final class RideActivityHook {
 
@@ -236,12 +236,11 @@ public final class RideActivityHook {
     }
 
     private static void performRefreshSdkElements(@NonNull Activity activity) {
-        if (tryRefreshSdkElements()) {
-            recreateActivity(activity);
-        }
+        tryRefreshSdkElements();
+        recreateActivity(activity);
     }
 
-    private static void recreateActivity(@NonNull Activity activity){
+    private static void recreateActivity(@NonNull Activity activity) {
         if (!ACTIVITY_RECREATED) {
             ACTIVITY_RECREATED = true;
             Log.w("KI2", "Recreating activity");
@@ -424,7 +423,6 @@ public final class RideActivityHook {
         }
 
         Log.i("KI2", "Refreshed " + changedUnknownElements + " elements");
-
         return unchangedUnknownElements == 0;
     }
 
@@ -448,7 +446,7 @@ public final class RideActivityHook {
             @Override
             public void onActivityCreated(@NonNull Activity activity, @Nullable Bundle savedInstanceState) {
                 if (activity.getLocalClassName().contains("RideActivity")) {
-                    if (ACTIVITY_RECREATED){
+                    if (ACTIVITY_RECREATED) {
                         return;
                     }
 
