@@ -29,7 +29,7 @@ import kotlin.Lazy;
 import kotlin.LazyKt;
 
 @SuppressWarnings({"unchecked", "rawtypes"})
-@SuppressLint("LogNotTimber")
+@SuppressLint({"LogNotTimber", "NotifyDataSetChanged"})
 public final class RideActivityHook {
 
     private RideActivityHook() {
@@ -235,6 +235,22 @@ public final class RideActivityHook {
         return null;
     }
 
+    private static void performRefreshSdkElements(@NonNull Activity activity, @NonNull Ki2Context context) {
+        context.getHandler().postDelayed(() -> {
+            boolean result = tryRefreshSdkElements();
+            if (!result) {
+                context.getHandler().postDelayed(() -> {
+                    boolean resultSecondAttempt = tryRefreshSdkElements();
+                    if (!resultSecondAttempt && !ACTIVITY_RECREATED) {
+                        Log.w("KI2", "Recreating activity");
+                        ACTIVITY_RECREATED = true;
+                        activity.recreate();
+                    }
+                }, 250);
+            }
+        }, 150);
+    }
+
     /**
      * Switch ride screen to map page.
      *
@@ -308,7 +324,6 @@ public final class RideActivityHook {
      * @return True if all ride screen elements have been correctly loaded or refreshed, False
      * otherwise.
      */
-    @SuppressLint("NotifyDataSetChanged")
     public static boolean tryRefreshSdkElements() {
         ViewPager2 viewPager = getActivityViewPager();
         if (viewPager == null) {
@@ -415,11 +430,26 @@ public final class RideActivityHook {
     }
 
     /**
-     * Register Ride Activity monitoring to detect activity events and perform actions.
+     * Ensures that SDK elements on the ride activity are loaded.
      *
      * @param context Ki2 context.
      */
-    public static void registerActivityMonitoring(Ki2Context context) {
+    public static void tryEnsureSdkElementsLoaded(Ki2Context context) {
+        Activity activity = ActivityUtils.getRunningActivity();
+        if (activity != null && activity.getLocalClassName().contains("RideActivity")) {
+            context.getHandler().postDelayed(() -> performRefreshSdkElements(activity, context), 1000);
+            ViewPager2 activityViewPager = getActivityViewPager();
+            if (activityViewPager != null) {
+                context.getHandler().postDelayed(() -> {
+                    RecyclerView.Adapter adapter = activityViewPager.getAdapter();
+                    if (adapter != null) {
+                        adapter.notifyDataSetChanged();
+                        activityViewPager.postInvalidateDelayed(1000);
+                    }
+                }, 1000);
+            }
+        }        
+        
         if (!(context.getSdkContext().getBaseContext() instanceof Application)) {
             Log.w("KI2", "Unable to register activity monitor, context is not from an application");
             return;
@@ -429,19 +459,7 @@ public final class RideActivityHook {
             @Override
             public void onActivityCreated(@NonNull Activity activity, @Nullable Bundle savedInstanceState) {
                 if (activity.getLocalClassName().contains("RideActivity")) {
-                    context.getHandler().postDelayed(() -> {
-                        boolean result = RideActivityHook.tryRefreshSdkElements();
-                        if (!result) {
-                            context.getHandler().postDelayed(() -> {
-                                boolean resultSecondAttempt = RideActivityHook.tryRefreshSdkElements();
-                                if (!resultSecondAttempt && !ACTIVITY_RECREATED) {
-                                    Log.w("KI2", "Recreating activity");
-                                    ACTIVITY_RECREATED = true;
-                                    activity.recreate();
-                                }
-                            }, 150);
-                        }
-                    }, 150);
+                    performRefreshSdkElements(activity, context);
                 }
             }
 

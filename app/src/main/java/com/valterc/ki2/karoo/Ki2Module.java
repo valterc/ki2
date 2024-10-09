@@ -77,7 +77,7 @@ public class Ki2Module extends Module {
                     new AntEnablerHandler(ki2Context)));
         } else if (RideActivityHook.isRideActivityProcess()) {
             handlerManager = new HandlerManager(ki2Context, Collections.singletonList(new OverlayManager(ki2Context)));
-            RideActivityHook.registerActivityMonitoring(ki2Context);
+            RideActivityHook.tryEnsureSdkElementsLoaded(ki2Context);
         } else {
             handlerManager = null;
         }
