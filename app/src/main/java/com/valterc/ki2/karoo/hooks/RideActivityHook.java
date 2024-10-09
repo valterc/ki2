@@ -437,19 +437,21 @@ public final class RideActivityHook {
     public static void tryEnsureSdkElementsLoaded(Ki2Context context) {
         Activity activity = ActivityUtils.getRunningActivity();
         if (activity != null && activity.getLocalClassName().contains("RideActivity")) {
-            context.getHandler().postDelayed(() -> performRefreshSdkElements(activity, context), 1000);
-            ViewPager2 activityViewPager = getActivityViewPager();
-            if (activityViewPager != null) {
+            context.getHandler().postDelayed(() -> {
+                performRefreshSdkElements(activity, context);
                 context.getHandler().postDelayed(() -> {
-                    RecyclerView.Adapter adapter = activityViewPager.getAdapter();
-                    if (adapter != null) {
-                        adapter.notifyDataSetChanged();
-                        activityViewPager.postInvalidateDelayed(1000);
+                    ViewPager2 activityViewPager = getActivityViewPager();
+                    if (activityViewPager != null) {
+                        RecyclerView.Adapter adapter = activityViewPager.getAdapter();
+                        if (adapter != null) {
+                            adapter.notifyDataSetChanged();
+                            activityViewPager.postInvalidateDelayed(100);
+                        }
                     }
                 }, 1000);
-            }
-        }        
-        
+            }, 1000);
+        }
+
         if (!(context.getSdkContext().getBaseContext() instanceof Application)) {
             Log.w("KI2", "Unable to register activity monitor, context is not from an application");
             return;
