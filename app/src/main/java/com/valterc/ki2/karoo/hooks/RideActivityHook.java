@@ -235,20 +235,18 @@ public final class RideActivityHook {
         return null;
     }
 
-    private static void performRefreshSdkElements(@NonNull Activity activity, @NonNull Ki2Context context) {
-        context.getHandler().postDelayed(() -> {
-            boolean result = tryRefreshSdkElements();
-            if (!result) {
-                context.getHandler().postDelayed(() -> {
-                    boolean resultSecondAttempt = tryRefreshSdkElements();
-                    if (!resultSecondAttempt && !ACTIVITY_RECREATED) {
-                        Log.w("KI2", "Recreating activity");
-                        ACTIVITY_RECREATED = true;
-                        activity.recreate();
-                    }
-                }, 250);
-            }
-        }, 150);
+    private static void performRefreshSdkElements(@NonNull Activity activity) {
+        if (tryRefreshSdkElements()) {
+            recreateActivity(activity);
+        }
+    }
+
+    private static void recreateActivity(@NonNull Activity activity){
+        if (!ACTIVITY_RECREATED) {
+            ACTIVITY_RECREATED = true;
+            Log.w("KI2", "Recreating activity");
+            activity.recreate();
+        }
     }
 
     /**
@@ -426,6 +424,7 @@ public final class RideActivityHook {
         }
 
         Log.i("KI2", "Refreshed " + changedUnknownElements + " elements");
+
         return unchangedUnknownElements == 0;
     }
 
@@ -437,19 +436,7 @@ public final class RideActivityHook {
     public static void tryEnsureSdkElementsLoaded(Ki2Context context) {
         Activity activity = ActivityUtils.getRunningActivity();
         if (activity != null && activity.getLocalClassName().contains("RideActivity")) {
-            context.getHandler().postDelayed(() -> {
-                performRefreshSdkElements(activity, context);
-                context.getHandler().postDelayed(() -> {
-                    ViewPager2 activityViewPager = getActivityViewPager();
-                    if (activityViewPager != null) {
-                        RecyclerView.Adapter adapter = activityViewPager.getAdapter();
-                        if (adapter != null) {
-                            adapter.notifyDataSetChanged();
-                            activityViewPager.postInvalidateDelayed(100);
-                        }
-                    }
-                }, 1000);
-            }, 1000);
+            context.getHandler().postDelayed(() -> performRefreshSdkElements(activity), 3000);
         }
 
         if (!(context.getSdkContext().getBaseContext() instanceof Application)) {
@@ -461,7 +448,11 @@ public final class RideActivityHook {
             @Override
             public void onActivityCreated(@NonNull Activity activity, @Nullable Bundle savedInstanceState) {
                 if (activity.getLocalClassName().contains("RideActivity")) {
-                    performRefreshSdkElements(activity, context);
+                    if (ACTIVITY_RECREATED){
+                        return;
+                    }
+
+                    context.getHandler().postDelayed(() -> performRefreshSdkElements(activity), 3000);
                 }
             }
 
