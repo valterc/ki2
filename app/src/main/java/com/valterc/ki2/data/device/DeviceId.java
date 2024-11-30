@@ -36,6 +36,19 @@ public class DeviceId implements Parcelable {
         this.deviceType = DeviceType.fromDeviceTypeValue(deviceTypeValue);
     }
 
+    public DeviceId(String uid) {
+        String[] parts = uid.split("-");
+
+        if (parts.length != 3){
+            throw new IllegalArgumentException("Invalid device uid: " + uid);
+        }
+
+        deviceNumber = Integer.parseInt(parts[0]);
+        deviceTypeValue = Integer.parseInt(parts[1]);
+        transmissionType = Integer.parseInt(parts[2]);
+        deviceType = DeviceType.fromDeviceTypeValue(deviceTypeValue);
+    }
+
     @Override
     public void writeToParcel(Parcel out, int flags) {
         out.writeInt(deviceNumber);

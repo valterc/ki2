@@ -2,8 +2,11 @@ package com.valterc.ki2.karoo.service.device;
 
 import android.annotation.SuppressLint;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.RemoteException;
 import android.util.Log;
+
+import androidx.annotation.Nullable;
 
 import com.valterc.ki2.data.connection.ConnectionInfo;
 import com.valterc.ki2.data.device.BatteryInfo;
@@ -11,9 +14,6 @@ import com.valterc.ki2.data.device.DeviceId;
 import com.valterc.ki2.data.input.KarooKeyEvent;
 import com.valterc.ki2.data.preferences.device.DevicePreferencesView;
 import com.valterc.ki2.data.shifting.ShiftingInfo;
-import com.valterc.ki2.input.InputAdapter;
-import com.valterc.ki2.karoo.Ki2Context;
-import com.valterc.ki2.karoo.hooks.RideActivityHook;
 import com.valterc.ki2.karoo.service.listeners.ServiceCallbackRegistration;
 import com.valterc.ki2.services.IKi2Service;
 import com.valterc.ki2.services.callbacks.IBatteryCallback;
@@ -29,7 +29,6 @@ public class DeviceDataFrontend {
 
     private IKi2Service service;
     private final Handler handler;
-    private final InputAdapter inputAdapter;
     private final DeviceDataRouter dataRouter;
 
     private final ServiceCallbackRegistration<IConnectionInfoCallback> registrationConnectionInfo = new ServiceCallbackRegistration<>(new IConnectionInfoCallback.Stub() {
@@ -66,11 +65,7 @@ public class DeviceDataFrontend {
         @Override
         public void onKeyEvent(DeviceId deviceId, KarooKeyEvent keyEvent) {
             handler.post(() -> {
-                try {
-                    inputAdapter.executeKeyEvent(keyEvent);
-                } catch (Exception e) {
-                    Log.e("KI2", "Error handling input", e);
-                }
+                dataRouter.onKeyEvent(deviceId, keyEvent);
                 maybeStopKeyEvents();
             });
         }
@@ -86,11 +81,9 @@ public class DeviceDataFrontend {
         }
     }, callback -> service.registerDevicePreferencesListener(callback), callback -> service.unregisterDevicePreferencesListener(callback));
 
-    public DeviceDataFrontend(Ki2Context ki2Context) {
-        this.handler = ki2Context.getHandler();
-
-        inputAdapter = new InputAdapter(ki2Context);
-        dataRouter = new DeviceDataRouter(ki2Context.getSdkContext());
+    public DeviceDataFrontend() {
+        this.handler = new Handler(Looper.getMainLooper());
+        dataRouter = new DeviceDataRouter();
     }
 
     public void setService(IKi2Service service) {
@@ -155,13 +148,6 @@ public class DeviceDataFrontend {
     public void registerBatteryInfoWeakListener(BiConsumer<DeviceId, BatteryInfo> batteryInfoConsumer) {
         handler.post(() -> {
             dataRouter.registerBatteryInfoWeakListener(batteryInfoConsumer);
-            maybeStartEvents();
-        });
-    }
-
-    public void registerUnfilteredBatteryInfoWeakListener(BiConsumer<DeviceId, BatteryInfo> batteryInfoConsumer) {
-        handler.post(() -> {
-            dataRouter.registerUnfilteredBatteryInfoWeakListener(batteryInfoConsumer);
             maybeStartEvents();
         });
     }
@@ -258,12 +244,19 @@ public class DeviceDataFrontend {
         registrationDevicePreferences.unregister();
     }
 
+    public void registerKeyEventWeakListener(BiConsumer<DeviceId, KarooKeyEvent> keyEventConsumer) {
+        handler.post(() -> {
+            dataRouter.registerKeyEventListener(keyEventConsumer);
+            maybeStartEvents();
+        });
+    }
+
     private void maybeStartKeyEvents() {
         if (service == null) {
             return;
         }
 
-        if (!RideActivityHook.isRideActivityProcess()) {
+        if (!dataRouter.hasKeyListeners()) {
             return;
         }
 
@@ -275,13 +268,14 @@ public class DeviceDataFrontend {
             return;
         }
 
-        if (RideActivityHook.isRideActivityProcess()) {
+        if (dataRouter.hasKeyListeners()) {
             return;
         }
 
         registrationKey.unregister();
     }
 
+    @Nullable
     public DevicePreferencesView getDevicePreferences(DeviceId deviceId) {
         if (service == null) {
             return null;

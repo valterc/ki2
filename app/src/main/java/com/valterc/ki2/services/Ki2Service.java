@@ -17,8 +17,6 @@ import androidx.preference.PreferenceManager;
 
 import com.valterc.ki2.R;
 import com.valterc.ki2.ant.AntManager;
-import com.valterc.ki2.ant.AntSettings;
-import com.valterc.ki2.ant.IAntStateListener;
 import com.valterc.ki2.ant.connection.AntConnectionManager;
 import com.valterc.ki2.ant.connection.IAntDeviceConnection;
 import com.valterc.ki2.ant.connection.IDeviceConnectionListener;
@@ -35,7 +33,6 @@ import com.valterc.ki2.data.device.DeviceStore;
 import com.valterc.ki2.data.info.DataType;
 import com.valterc.ki2.data.info.ManufacturerInfo;
 import com.valterc.ki2.data.input.KarooKeyEvent;
-import com.valterc.ki2.data.message.EnableAntMessage;
 import com.valterc.ki2.data.message.Message;
 import com.valterc.ki2.data.message.MessageManager;
 import com.valterc.ki2.data.message.RideStatusMessage;
@@ -78,7 +75,7 @@ import java.util.stream.Collectors;
 
 import timber.log.Timber;
 
-public class Ki2Service extends Service implements IAntStateListener, IAntScanListener, IDeviceConnectionListener, IUpdateCheckerListener {
+public class Ki2Service extends Service implements IAntScanListener, IDeviceConnectionListener, IUpdateCheckerListener {
 
     /**
      * Get intent to bind to this service.
@@ -499,7 +496,6 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
         public void onReceive(final Context context, final Intent intent) {
             Timber.d("Received reconnect devices broadcast");
             serviceHandler.postRetriableAction(() -> {
-                ensureAntEnabled();
                 antConnectionManager.restartClosedConnections(Ki2Service.this);
             });
         }
@@ -535,7 +531,7 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
         PostUpdateActions.executePreInit(new PostUpdateContext(this, deviceStore));
 
         messageManager = new MessageManager();
-        antManager = new AntManager(this, this);
+        antManager = new AntManager(this);
         antScanner = new AntScanner(antManager, this);
         antConnectionManager = new AntConnectionManager(this, antManager);
         serviceHandler = new ServiceHandler();
@@ -576,6 +572,7 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
         serviceHandler.dispose();
 
         unregisterReceiver(receiverReconnectDevices);
+        unregisterReceiver(receiverInRide);
         super.onDestroy();
     }
 
@@ -638,24 +635,6 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
             Timber.e(e, "Unable to send command %s to device %s", commandType, deviceId);
             throw new RemoteException("Unable to send command");
         }
-    }
-
-    @Override
-    public void onAntServiceStateChange(boolean serviceReady) {
-        serviceHandler.postAction(() -> {
-            antScanner.stopScan();
-            antConnectionManager.disconnectAll();
-
-            if (serviceReady) {
-                serviceHandler.postRetriableAction(Ki2Service.this::processScan);
-                serviceHandler.postRetriableAction(Ki2Service.this::processConnections);
-            }
-        });
-    }
-
-    @Override
-    public void onAntDisabled() {
-        ensureAntEnabled();
     }
 
     @Override
@@ -859,13 +838,4 @@ public class Ki2Service extends Service implements IAntStateListener, IAntScanLi
                 () -> devicePreferencesView, (callback, devicePreferences) -> callback.onDevicePreferences(deviceId, devicePreferences)));
         serviceHandler.postRetriableAction(Ki2Service.this::processConnections);
     }
-
-    private void ensureAntEnabled() {
-        if (AntSettings.isAntEnabled(this)) {
-            return;
-        }
-
-        serviceHandler.postAction(() -> onMessage(new EnableAntMessage()));
-    }
-
 }

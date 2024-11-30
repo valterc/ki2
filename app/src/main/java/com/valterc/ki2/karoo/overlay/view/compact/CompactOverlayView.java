@@ -2,7 +2,6 @@ package com.valterc.ki2.karoo.overlay.view.compact;
 
 import android.os.Handler;
 import android.view.View;
-import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,8 +15,8 @@ import com.valterc.ki2.data.shifting.ShiftingInfo;
 import com.valterc.ki2.data.shifting.UpcomingSynchroShiftType;
 import com.valterc.ki2.karoo.Ki2Context;
 import com.valterc.ki2.karoo.overlay.view.BaseOverlayView;
-import com.valterc.ki2.karoo.shifting.BuzzerTracking;
-import com.valterc.ki2.karoo.shifting.ShiftingGearingHelper;
+import com.valterc.ki2.karoo.extension.shifting.BuzzerTracking;
+import com.valterc.ki2.karoo.extension.shifting.ShiftingGearingHelper;
 
 public abstract class CompactOverlayView extends BaseOverlayView<CompactOverlayViewHolder> {
 

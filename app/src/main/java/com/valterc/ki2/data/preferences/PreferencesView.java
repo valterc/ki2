@@ -279,7 +279,7 @@ public class PreferencesView implements Parcelable {
      * @param context Ki2 application context. Cannot be a context generated from another package.
      * @return Audio alert name for when shifting into the lowest gear.
      */
-    public String getAudioAlertLowestGearEnabled(Context context) {
+    public String getAudioAlertLowestGear(Context context) {
         return getString(context.getString(R.string.preference_audio_alert_lowest_gear),
                 context.getString(R.string.default_preference_audio_alert_shifting_limit));
     }
@@ -290,7 +290,7 @@ public class PreferencesView implements Parcelable {
      * @param context Ki2 application context. Cannot be a context generated from another package.
      * @return Audio alert name for when shifting into the highest gear.
      */
-    public String getAudioAlertHighestGearEnabled(Context context) {
+    public String getAudioAlertHighestGear(Context context) {
         return getString(context.getString(R.string.preference_audio_alert_highest_gear),
                 context.getString(R.string.default_preference_audio_alert_shifting_limit));
     }

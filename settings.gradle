@@ -3,15 +3,35 @@ pluginManagement {
         gradlePluginPortal()
         google()
         mavenCentral()
-        maven { url "https://jitpack.io" }
     }
 }
+
+private def loadLocalProperties() {
+    Properties properties = new Properties()
+    def localPropertiesFile = file('local.properties')
+    if (localPropertiesFile.exists()) {
+        properties.load(file('local.properties').newDataInputStream())
+    }
+    return properties
+}
+
+def properties = loadLocalProperties()
+
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
         google()
         mavenCentral()
         maven { url "https://jitpack.io" }
+        maven {
+            name = "Karoo Extensions"
+            url = uri("https://maven.pkg.github.com/hammerheadnav/karoo-ext")
+            credentials {
+                providers.provider {}
+                username = properties.getProperty("gpr.user", System.getenv("USERNAME"))
+                password = properties.getProperty("gpr.key", System.getenv("TOKEN"))
+            }
+        }
     }
 }
 

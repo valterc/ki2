@@ -14,19 +14,21 @@ import com.valterc.ki2.data.message.AudioAlertMessage;
 import com.valterc.ki2.data.message.AudioAlertToggleMessage;
 import com.valterc.ki2.data.message.ShowOverlayMessage;
 import com.valterc.ki2.data.preferences.PreferencesView;
-import com.valterc.ki2.karoo.Ki2Context;
+import com.valterc.ki2.karoo.extension.Ki2ExtensionContext;
 import com.valterc.ki2.karoo.hooks.RideActivityHook;
 import com.valterc.ki2.utils.ActivityUtils;
 
 import java.util.HashMap;
 import java.util.function.Consumer;
 
+import io.hammerhead.karooext.models.TurnScreenOn;
+
 @SuppressLint("LogNotTimber")
 public class VirtualInputAdapter {
 
     private final HashMap<KarooKey, Consumer<KarooKeyEvent>> keyMapping;
 
-    public VirtualInputAdapter(Ki2Context ki2Context) {
+    public VirtualInputAdapter(Ki2ExtensionContext context) {
         this.keyMapping = new HashMap<>();
         this.keyMapping.put(KarooKey.VIRTUAL_SWITCH_TO_MAP_PAGE, karooKeyEvent -> {
             boolean result = RideActivityHook.switchToMapPage();
@@ -34,48 +36,36 @@ public class VirtualInputAdapter {
                 Log.w("KI2", "Unable to switch to map page");
             }
         });
-        this.keyMapping.put(KarooKey.VIRTUAL_SHOW_OVERLAY, karooKeyEvent -> ki2Context.getServiceClient().sendMessage(new ShowOverlayMessage()));
-        this.keyMapping.put(KarooKey.VIRTUAL_TAKE_SCREENSHOT, karooKeyEvent -> takeScreenshot(ki2Context));
-        this.keyMapping.put(KarooKey.VIRTUAL_TURN_SCREEN_ON, karooKeyEvent -> ki2Context.getScreenHelper().turnScreenOn());
-        this.keyMapping.put(KarooKey.VIRTUAL_TOGGLE_AUDIO_ALERTS, karooKeyEvent -> toggleAudioAlerts(ki2Context));
-        this.keyMapping.put(KarooKey.VIRTUAL_DISABLE_AUDIO_ALERTS, karooKeyEvent -> disableAudioAlerts(ki2Context));
-        this.keyMapping.put(KarooKey.VIRTUAL_ENABLE_AUDIO_ALERTS, karooKeyEvent -> enableAudioAlerts(ki2Context));
-        this.keyMapping.put(KarooKey.VIRTUAL_SINGLE_BEEP, karooKeyEvent -> ki2Context.getServiceClient().sendMessage(new AudioAlertMessage(ki2Context.getSdkContext().getString(R.string.value_preference_audio_alert_single_beep))));
-        this.keyMapping.put(KarooKey.VIRTUAL_DOUBLE_BEEP, karooKeyEvent -> ki2Context.getServiceClient().sendMessage(new AudioAlertMessage(ki2Context.getSdkContext().getString(R.string.value_preference_audio_alert_double_beep))));
-        this.keyMapping.put(KarooKey.VIRTUAL_BELL, karooKeyEvent -> ki2Context.getServiceClient().sendMessage(new AudioAlertMessage(ki2Context.getSdkContext().getString(R.string.value_preference_audio_alert_bell))));
+        this.keyMapping.put(KarooKey.VIRTUAL_SHOW_OVERLAY, karooKeyEvent -> context.getServiceClient().sendMessage(new ShowOverlayMessage()));
+        this.keyMapping.put(KarooKey.VIRTUAL_TURN_SCREEN_ON, karooKeyEvent -> context.getKarooSystem().dispatch(TurnScreenOn.INSTANCE));
+        this.keyMapping.put(KarooKey.VIRTUAL_TOGGLE_AUDIO_ALERTS, karooKeyEvent -> toggleAudioAlerts(context));
+        this.keyMapping.put(KarooKey.VIRTUAL_DISABLE_AUDIO_ALERTS, karooKeyEvent -> disableAudioAlerts(context));
+        this.keyMapping.put(KarooKey.VIRTUAL_ENABLE_AUDIO_ALERTS, karooKeyEvent -> enableAudioAlerts(context));
+        this.keyMapping.put(KarooKey.VIRTUAL_SINGLE_BEEP, karooKeyEvent -> context.getServiceClient().sendMessage(new AudioAlertMessage(context.getContext().getString(R.string.value_preference_audio_alert_single_beep))));
+        this.keyMapping.put(KarooKey.VIRTUAL_DOUBLE_BEEP, karooKeyEvent -> context.getServiceClient().sendMessage(new AudioAlertMessage(context.getContext().getString(R.string.value_preference_audio_alert_double_beep))));
+        this.keyMapping.put(KarooKey.VIRTUAL_BELL, karooKeyEvent -> context.getServiceClient().sendMessage(new AudioAlertMessage(context.getContext().getString(R.string.value_preference_audio_alert_bell))));
     }
 
-    private void showToast(Ki2Context ki2Context, int textResId) {
-        Activity activity = ActivityUtils.getRunningActivity();
-        if (activity != null) {
-            activity.runOnUiThread(() ->
-                    Toast.makeText(ki2Context.getSdkContext(), textResId, Toast.LENGTH_SHORT).show());
-        }
+    private void showToast(Ki2ExtensionContext context, int textResId) {
+        // TODO: show in ride message
     }
 
-    private void toggleAudioAlerts(Ki2Context ki2Context) {
-        PreferencesView preferences = ki2Context.getServiceClient().getPreferences();
-        ki2Context.getServiceClient().sendMessage(new AudioAlertToggleMessage());
+    private void toggleAudioAlerts(Ki2ExtensionContext context) {
+        PreferencesView preferences = context.getServiceClient().getPreferences();
+        context.getServiceClient().sendMessage(new AudioAlertToggleMessage());
         if (preferences != null) {
-            showToast(ki2Context, preferences.isAudioAlertsEnabled(ki2Context.getSdkContext()) ? R.string.text_disabled_audio_alerts : R.string.text_enabled_audio_alerts);
+            showToast(context, preferences.isAudioAlertsEnabled(context.getContext()) ? R.string.text_disabled_audio_alerts : R.string.text_enabled_audio_alerts);
         }
     }
 
-    private void disableAudioAlerts(Ki2Context ki2Context) {
-        ki2Context.getServiceClient().sendMessage(new AudioAlertDisableMessage());
-        showToast(ki2Context, R.string.text_disabled_audio_alerts);
+    private void disableAudioAlerts(Ki2ExtensionContext context) {
+        context.getServiceClient().sendMessage(new AudioAlertDisableMessage());
+        showToast(context, R.string.text_disabled_audio_alerts);
     }
 
-    private void enableAudioAlerts(Ki2Context ki2Context) {
-        ki2Context.getServiceClient().sendMessage(new AudioAlertEnableMessage());
-        showToast(ki2Context, R.string.text_enabled_audio_alerts);
-    }
-
-    private void takeScreenshot(Ki2Context ki2Context) {
-        boolean result = ki2Context.getScreenHelper().takeScreenshot();
-        if (result) {
-            showToast(ki2Context, R.string.text_screenshot_saved);
-        }
+    private void enableAudioAlerts(Ki2ExtensionContext context) {
+        context.getServiceClient().sendMessage(new AudioAlertEnableMessage());
+        showToast(context, R.string.text_enabled_audio_alerts);
     }
 
     public void handleVirtualKeyEvent(KarooKeyEvent keyEvent) {

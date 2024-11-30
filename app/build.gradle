@@ -1,5 +1,6 @@
 plugins {
     id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
 }
 
 private def loadLocalProperties() {
@@ -27,12 +28,12 @@ android {
     }
 
     namespace 'com.valterc.ki2'
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId "com.valterc.ki2"
         minSdk 26
-        targetSdk 33
+        targetSdk 34
 		
         versionCode properties.getProperty("VERSION_CODE", "1") as int
         versionName properties.getProperty("VERSION_NAME", "0.1")
@@ -51,8 +52,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
     lint {
@@ -97,6 +98,7 @@ dependencies {
     implementation 'androidx.preference:preference:1.2.1'
     implementation 'com.google.code.gson:gson:2.10.1'
     implementation 'io.hammerhead:karoo-sdk:0.0.7'
+    implementation 'io.hammerhead:karoo-ext:1.1.1'
     implementation files('libs/fit.jar')
     implementation files('libs/android_antlib_4-16-0.aar')
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'

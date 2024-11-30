@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ExtensionInfo
+    id="ki2"
+    displayName="@string/app_name"
+    icon="@drawable/ic_icon"
+    scansDevices="true">
+    <DataType
+        description="Test"
+        displayName="test"
+        graphical="true"
+        icon="@drawable/ic_add"
+        typeId="test" />
+</ExtensionInfo>

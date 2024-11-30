@@ -8,7 +8,6 @@ import androidx.annotation.Nullable;
 import com.valterc.ki2.BuildConfig;
 import com.valterc.ki2.data.message.RideStatusMessage;
 import com.valterc.ki2.data.ride.RideStatus;
-import com.valterc.ki2.karoo.ant.AntEnablerHandler;
 import com.valterc.ki2.karoo.battery.LowBatteryHandler;
 import com.valterc.ki2.karoo.datatypes.BatteryGraphicalDataType;
 import com.valterc.ki2.karoo.datatypes.BatteryPercentageTextDataType;
@@ -35,8 +34,7 @@ import com.valterc.ki2.karoo.handlers.HandlerManager;
 import com.valterc.ki2.karoo.hooks.ActivityServiceHook;
 import com.valterc.ki2.karoo.hooks.RideActivityHook;
 import com.valterc.ki2.karoo.overlay.manager.OverlayManager;
-import com.valterc.ki2.karoo.shifting.ShiftingAudioAlertHandler;
-import com.valterc.ki2.karoo.shifting.ShiftingReportingManager;
+import com.valterc.ki2.karoo.extension.shifting.ShiftingAudioAlertHandler;
 import com.valterc.ki2.karoo.update.UpdateAvailableHandler;
 import com.valterc.ki2.karoo.update.UpdateAvailableNotification;
 
@@ -53,6 +51,7 @@ import io.hammerhead.sdk.v0.datatype.SdkDataType;
 
 @SuppressWarnings({"unused", "FieldCanBeLocal"})
 @SuppressLint("LogNotTimber")
+@Deprecated
 public class Ki2Module extends Module {
 
     public static final ModuleFactoryI factory = Ki2Module::new;
@@ -71,10 +70,7 @@ public class Ki2Module extends Module {
         if (ActivityServiceHook.isInActivityService()) {
             handlerManager = new HandlerManager(ki2Context, Arrays.asList(
                     new UpdateAvailableHandler(ki2Context),
-                    new LowBatteryHandler(ki2Context),
-                    new ShiftingAudioAlertHandler(ki2Context),
-                    new ShiftingReportingManager(ki2Context),
-                    new AntEnablerHandler(ki2Context)));
+                    new LowBatteryHandler(ki2Context)));
         } else if (RideActivityHook.isRideActivityProcess()) {
             handlerManager = new HandlerManager(ki2Context, Collections.singletonList(new OverlayManager(ki2Context)));
             RideActivityHook.tryEnsureSdkElementsLoaded(ki2Context);

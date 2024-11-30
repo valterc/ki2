@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.ServiceConnection;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.os.RemoteException;
 import android.util.Log;
 
@@ -20,7 +21,6 @@ import com.valterc.ki2.data.message.Message;
 import com.valterc.ki2.data.preferences.PreferencesView;
 import com.valterc.ki2.data.preferences.device.DevicePreferencesView;
 import com.valterc.ki2.data.shifting.ShiftingInfo;
-import com.valterc.ki2.karoo.Ki2Context;
 import com.valterc.ki2.karoo.service.device.DeviceDataFrontend;
 import com.valterc.ki2.karoo.service.listeners.DataStreamWeakListenerList;
 import com.valterc.ki2.karoo.service.listeners.ServiceCallbackRegistration;
@@ -29,6 +29,7 @@ import com.valterc.ki2.services.IKi2Service;
 import com.valterc.ki2.services.Ki2Service;
 import com.valterc.ki2.services.callbacks.IMessageCallback;
 import com.valterc.ki2.services.callbacks.IPreferencesCallback;
+import com.valterc.ki2.services.callbacks.IScanCallback;
 
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -49,11 +50,13 @@ public class ServiceClient {
 
             registrationMessage.setUnregistered();
             registrationPreferences.setUnregistered();
+            registrationScan.setUnregistered();
             deviceDataFrontend.setService(service);
 
             handler.post(() -> {
                 maybeStartPreferencesEvents();
                 maybeStartMessageEvents();
+                maybeStartScanEvents();
             });
         }
 
@@ -63,7 +66,34 @@ public class ServiceClient {
 
             registrationMessage.setUnregistered();
             registrationPreferences.setUnregistered();
+            registrationScan.setUnregistered();
             deviceDataFrontend.setService(null);
+
+            if (disposed) {
+                return;
+            }
+
+            handler.postDelayed(() -> {
+                if (service == null) {
+                    Log.w("KI2", "Attempting to re-bind to service");
+                    context.unbindService(serviceConnection);
+                    attemptBindToService();
+                }
+            }, TIME_MS_ATTEMPT_REBIND);
+        }
+
+        @Override
+        public void onBindingDied(ComponentName name) {
+            service = null;
+
+            registrationMessage.setUnregistered();
+            registrationPreferences.setUnregistered();
+            registrationScan.setUnregistered();
+            deviceDataFrontend.setService(null);
+
+            if (disposed) {
+                return;
+            }
 
             handler.postDelayed(() -> {
                 if (service == null) {
@@ -75,12 +105,15 @@ public class ServiceClient {
         }
     };
 
+    private IKi2Service service;
+    private boolean disposed;
+
     private final Context context;
     private final Handler handler;
     private final CustomMessageClient customMessageClient;
     private final DataStreamWeakListenerList<Message> messageListeners;
     private final DataStreamWeakListenerList<PreferencesView> preferencesListeners;
-    private IKi2Service service;
+    private final DataStreamWeakListenerList<DeviceId> scanListeners;
     private final DeviceDataFrontend deviceDataFrontend;
 
     private final ServiceCallbackRegistration<IMessageCallback> registrationMessage = new ServiceCallbackRegistration<>(new IMessageCallback.Stub() {
@@ -103,14 +136,25 @@ public class ServiceClient {
         }
     }, callback -> service.registerPreferencesListener(callback), callback -> service.unregisterPreferencesListener(callback));
 
-    public ServiceClient(Ki2Context context) {
-        this.context = context.getSdkContext();
+    private final ServiceCallbackRegistration<IScanCallback> registrationScan = new ServiceCallbackRegistration<>(new IScanCallback.Stub() {
+        @Override
+        public void onScanResult(DeviceId deviceId) {
+            handler.post(() -> {
+                scanListeners.pushData(deviceId);
+                maybeStopPreferencesEvents();
+            });
+        }
+    }, callback -> service.registerScanListener(callback), callback -> service.unregisterScanListener(callback));
 
-        handler = context.getHandler();
+    public ServiceClient(Context context) {
+        this.context = context;
+
+        handler = new Handler(Looper.getMainLooper());
         messageListeners = new DataStreamWeakListenerList<>();
         preferencesListeners = new DataStreamWeakListenerList<>();
+        scanListeners = new DataStreamWeakListenerList<>();
         customMessageClient = new CustomMessageClient(this, handler);
-        deviceDataFrontend = new DeviceDataFrontend(context);
+        deviceDataFrontend = new DeviceDataFrontend();
 
         attemptBindToService();
     }
@@ -120,6 +164,12 @@ public class ServiceClient {
         if (!result) {
             handler.postDelayed(this::attemptBindToService, (int) (TIME_MS_ATTEMPT_BIND * (1 + 2 * Math.random())));
         }
+    }
+
+    public void dispose() {
+        disposed = true;
+        context.unbindService(serviceConnection);
+        service = null;
     }
 
     /**
@@ -138,16 +188,6 @@ public class ServiceClient {
      */
     public void registerBatteryInfoWeakListener(BiConsumer<DeviceId, BatteryInfo> batteryInfoConsumer) {
         deviceDataFrontend.registerBatteryInfoWeakListener(batteryInfoConsumer);
-    }
-
-    /**
-     * Register a weak referenced listener that will receive unfiltered battery info.
-     * Unfiltered data means that the listener will received data from all available devices, not just from the main ride device.
-     *
-     * @param batteryInfoConsumer Consumer that will receive battery events. It will be referenced using a weak reference so the owner must keep a strong reference.
-     */
-    public void registerUnfilteredBatteryInfoWeakListener(BiConsumer<DeviceId, BatteryInfo> batteryInfoConsumer) {
-        deviceDataFrontend.registerUnfilteredBatteryInfoWeakListener(batteryInfoConsumer);
     }
 
     /**
@@ -174,6 +214,7 @@ public class ServiceClient {
      * @param deviceId Device identifier.
      * @return Device preference for the specified device. Can be <code>null</code> if the service is not reachable.
      */
+    @Nullable
     public DevicePreferencesView getDevicePreferences(DeviceId deviceId) {
         return deviceDataFrontend.getDevicePreferences(deviceId);
     }
@@ -305,4 +346,41 @@ public class ServiceClient {
         registrationPreferences.unregister();
     }
 
+    public void startDeviceScan(Consumer<DeviceId> deviceIdConsumer) {
+        handler.post(() -> {
+            scanListeners.addListener(deviceIdConsumer);
+            maybeStartScanEvents();
+        });
+    }
+
+    public void stopDeviceScan(Consumer<DeviceId> deviceIdConsumer) {
+        handler.post(() -> {
+            scanListeners.removeListener(deviceIdConsumer);
+            maybeStopScanEvents();
+        });
+    }
+
+    private void maybeStartScanEvents() {
+        if (service == null) {
+            return;
+        }
+
+        if (!scanListeners.hasListeners()) {
+            return;
+        }
+
+        registrationScan.register();
+    }
+
+    private void maybeStopScanEvents() {
+        if (service == null) {
+            return;
+        }
+
+        if (scanListeners.hasListeners()) {
+            return;
+        }
+
+        registrationScan.unregister();
+    }
 }

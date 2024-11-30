@@ -159,12 +159,11 @@ public abstract class BaseOverlayManager {
         }
 
         View viewBase = viewGroupContent.getChildAt(0);
-        if (!(viewBase instanceof ViewGroup)) {
+        if (!(viewBase instanceof ViewGroup viewGroupBase)) {
             Log.w("KI2", "Ride activity root view is not a ViewGroup");
             return false;
         }
 
-        ViewGroup viewGroupBase = (ViewGroup) viewBase;
         OverlayViewBuilderEntry viewBuilder = OverlayViewBuilderRegistry.getBuilder(getOverlayTheme());
 
         if (viewBuilder != null) {

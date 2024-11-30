@@ -25,7 +25,10 @@
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
 
     <application
         android:name=".Ki2Application"
@@ -34,35 +37,30 @@
         android:roundIcon="@drawable/ic_icon_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Ki2.NoActionBar"
-        tools:targetApi="33">
-
+        tools:targetApi="34">
         <activity
             android:name=".activities.devices.details.DeviceDetailsActivity"
             android:exported="false"
             android:theme="@style/Theme.Ki2.NoActionBar.Blue" />
-
         <activity
             android:name=".activities.devices.gearing.DeviceGearingActivity"
             android:exported="false"
             android:theme="@style/Theme.Ki2.NoActionBar.Blue" />
-
         <activity
             android:name=".activities.devices.add.AddDeviceActivity"
             android:exported="false" />
-
         <activity
             android:name=".activities.main.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".activities.settings.SettingsActivity"
             android:exported="true" />
-
         <activity
             android:name=".activities.update.UpdateActivity"
             android:exported="true"
@@ -73,31 +71,27 @@
             </intent-filter>
             <intent-filter>
                 <action android:name="com.valterc.ki2.action.UPDATE" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
 
-        <meta-data
-            android:name="io.hammerhead.sdk.v0.SDK_MODULE"
-            android:value="com.valterc.ki2.karoo.Ki2Module" />
-
-        <receiver
-            android:name="com.valterc.ki2.karoo.Ki2BroadcastReceiver"
-            android:exported="true"
-            tools:ignore="ExportedReceiver">
-            <intent-filter>
-                <category android:name="android.intent.category.DEFAULT" />
-
-                <action android:name="io.hammerhead.sdk.INITIALIZE" />
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver>
-
         <service
-            android:name="com.valterc.ki2.services.Ki2Service"
+            android:name=".services.Ki2Service"
             android:exported="true"
             tools:ignore="ExportedService" />
 
+        <service android:name=".karoo.extension.Ki2ExtensionService"
+            android:exported="true"
+            tools:ignore="ExportedService"
+            android:foregroundServiceType="specialUse">
+            <intent-filter>
+                <action android:name="io.hammerhead.karooext.KAROO_EXTENSION" />
+            </intent-filter>
+            <meta-data
+                android:name="io.hammerhead.karooext.EXTENSION_INFO"
+                android:resource="@xml/karoo_extension_info" />
+        </service>
     </application>
 
 </manifest>

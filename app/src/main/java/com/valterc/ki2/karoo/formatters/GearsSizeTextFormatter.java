@@ -8,7 +8,7 @@ import com.valterc.ki2.data.device.DeviceId;
 import com.valterc.ki2.data.preferences.device.DevicePreferencesView;
 import com.valterc.ki2.data.shifting.ShiftingInfo;
 import com.valterc.ki2.karoo.Ki2Context;
-import com.valterc.ki2.karoo.shifting.ShiftingGearingHelper;
+import com.valterc.ki2.karoo.extension.shifting.ShiftingGearingHelper;
 
 import java.text.DecimalFormat;
 import java.util.function.BiConsumer;

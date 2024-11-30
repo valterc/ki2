@@ -53,39 +53,34 @@ public enum KarooKey {
     VIRTUAL_TURN_SCREEN_ON(VIRTUAL_NONE.keyCode + 3),
 
     /**
-     * Virtual key to take screenshot.
-     */
-    VIRTUAL_TAKE_SCREENSHOT(VIRTUAL_NONE.keyCode + 4),
-
-    /**
      * Virtual key to toggle audio alerts.
      */
-    VIRTUAL_TOGGLE_AUDIO_ALERTS(VIRTUAL_NONE.keyCode + 5),
+    VIRTUAL_TOGGLE_AUDIO_ALERTS(VIRTUAL_NONE.keyCode + 4),
 
     /**
      * Virtual key to disable audio alerts.
      */
-    VIRTUAL_DISABLE_AUDIO_ALERTS(VIRTUAL_NONE.keyCode + 6),
+    VIRTUAL_DISABLE_AUDIO_ALERTS(VIRTUAL_NONE.keyCode + 5),
 
     /**
      * Virtual key to enable audio alerts.
      */
-    VIRTUAL_ENABLE_AUDIO_ALERTS(VIRTUAL_NONE.keyCode + 7),
+    VIRTUAL_ENABLE_AUDIO_ALERTS(VIRTUAL_NONE.keyCode + 6),
 
     /**
      * Virtual key to do single beep.
      */
-    VIRTUAL_SINGLE_BEEP(VIRTUAL_NONE.keyCode + 8),
+    VIRTUAL_SINGLE_BEEP(VIRTUAL_NONE.keyCode + 7),
 
     /**
      * Virtual key to do double beep.
      */
-    VIRTUAL_DOUBLE_BEEP(VIRTUAL_NONE.keyCode + 9),
+    VIRTUAL_DOUBLE_BEEP(VIRTUAL_NONE.keyCode + 8),
 
     /**
      * Virtual key to do a bell beep.
      */
-    VIRTUAL_BELL(VIRTUAL_NONE.keyCode + 10);
+    VIRTUAL_BELL(VIRTUAL_NONE.keyCode + 9);
 
     public static KarooKey fromKeyCode(int keyCode) {
         for (KarooKey karooKey : values()) {
