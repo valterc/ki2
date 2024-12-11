@@ -36,11 +36,8 @@ class ShiftingDevice(
             extension,
             deviceId.uid,
             listOf(
-                DataType.Type.SHIFTING_BATTERY,
-                DataType.Type.SHIFTING_GEARS,
-                DataType.Type.SHIFTING_REAR_GEAR,
-                DataType.Type.SHIFTING_FRONT_GEAR,
-                "TYPE_SHIFTING_MODE_ID"
+                DataType.Source.SHIFTING_FRONT_GEAR,
+                DataType.Source.SHIFTING_REAR_GEAR
             ),
             deviceId.uid
         )
@@ -63,12 +60,36 @@ class ShiftingDevice(
             // Start streaming data
             repeat(Int.MAX_VALUE) {
                 Timber.i("Sending data point for device %s", deviceId.uid)
+
+                emitter.onNext(
+                    OnDataPoint(
+                        DataPoint(
+                            DataType.Type.SHIFTING_FRONT_GEAR,
+                            values = mapOf(
+                                DataType.Field.SHIFTING_FRONT_GEAR to 1.0,
+                                DataType.Field.SHIFTING_FRONT_GEAR_MAX to 2.0),
+                            sourceId = source.uid,
+                        ),
+                    )
+                )
                 emitter.onNext(
                     OnDataPoint(
                         DataPoint(
                             DataType.Type.SHIFTING_REAR_GEAR,
                             values = mapOf(
-                                DataType.Field.SHIFTING_REAR_GEAR to 1.0),
+                                DataType.Field.SHIFTING_REAR_GEAR to 2.0,
+                                DataType.Field.SHIFTING_FRONT_GEAR_TEETH
+                                DataType.Field.SHIFTING_REAR_GEAR_MAX to 2.0),
+                            sourceId = source.uid,
+                        ),
+                    )
+                )
+                emitter.onNext(
+                    OnDataPoint(
+                        DataPoint(
+                            DataType.Type.SHIFTING_BATTERY,
+                            values = mapOf(
+                                DataType.Field.SHIFTING_BATTERY_STATUS to 10.0),
                             sourceId = source.uid,
                         ),
                     )
