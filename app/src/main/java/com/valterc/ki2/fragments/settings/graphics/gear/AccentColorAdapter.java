@@ -47,7 +47,7 @@ public class AccentColorAdapter extends RecyclerView.Adapter<AccentColorViewHold
 
         holder.getRootView().setTag(position);
         holder.getTextViewName().setText(colorTitles[position]);
-        holder.getGearsView().setSelectedGearColor(preferencesView.getAccentColor(layoutInflater.getContext(), KarooTheme.UNKNOWN));
+        holder.getGearsView().setSelectedGearColor(preferencesView.getAccentColor(layoutInflater.getContext(), KarooTheme.WHITE));
     }
 
     @Override

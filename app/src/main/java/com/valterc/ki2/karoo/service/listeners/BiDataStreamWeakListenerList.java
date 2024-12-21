@@ -18,7 +18,7 @@ public class BiDataStreamWeakListenerList<TData1, TData2> {
     }
 
     public boolean hasListeners() {
-        return listeners.size() != 0;
+        return !listeners.isEmpty();
     }
 
     public void addListener(BiConsumer<TData1, TData2> consumer) {

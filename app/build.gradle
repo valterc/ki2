@@ -77,36 +77,33 @@ android {
 
     buildFeatures {
         aidl true
+        buildConfig true
+        compose true
     }
-}
 
-configurations {
-    configureEach {
-        exclude group: 'androidx.lifecycle', module: 'lifecycle-viewmodel-ktx'
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.0"
     }
 }
 
 dependencies {
-    constraints {
-        implementation('org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.10') {
-            because 'Multiple dependencies are pulling different versions of this library and causing Duplicate Class errors.'
-        }
-    }
-
-    implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.9.0'
-    implementation 'androidx.preference:preference:1.2.1'
+    implementation 'androidx.glance:glance-preview:1.1.1'
+    implementation 'androidx.glance:glance:1.1.1'
+    implementation 'androidx.glance:glance-appwidget:1.1.1'
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'com.google.android.material:material:1.12.0'
+    implementation 'androidx.preference:preference-ktx:1.2.1'
     implementation 'com.google.code.gson:gson:2.10.1'
     implementation 'io.hammerhead:karoo-sdk:0.0.7'
-    implementation 'io.hammerhead:karoo-ext:1.1.1'
+    implementation 'io.hammerhead:karoo-ext:1.1.2'
     implementation files('libs/fit.jar')
     implementation files('libs/android_antlib_4-16-0.aar')
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.6.1'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.2.0'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.8.7'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.0'
     testImplementation 'org.junit.jupiter:junit-jupiter-params:5.10.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.0'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+    androidTestImplementation 'androidx.test.ext:junit:1.2.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
 }

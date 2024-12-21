@@ -51,12 +51,12 @@ public abstract class Ki2SdkView extends SdkView {
 
     protected KarooTheme getKarooTheme(View karooHierarchyView){
         if (karooHierarchyView == null) {
-            return KarooTheme.UNKNOWN;
+            return KarooTheme.WHITE;
         }
 
         Integer backgroundColor = getFirstNonTransparentBackgroundColor(karooHierarchyView);
         if (backgroundColor == null){
-            return KarooTheme.UNKNOWN;
+            return KarooTheme.WHITE;
         }
 
         double[] backgroundColorLAB = new double[3];
@@ -75,8 +75,8 @@ public abstract class Ki2SdkView extends SdkView {
             return KarooTheme.WHITE;
         }
 
-        Log.d("KI2", "Karoo theme: " + KarooTheme.UNKNOWN);
-        return KarooTheme.UNKNOWN;
+        Log.d("KI2", "Karoo theme: " + KarooTheme.WHITE);
+        return KarooTheme.WHITE;
     }
 
     public Ki2Context getKi2Context() {

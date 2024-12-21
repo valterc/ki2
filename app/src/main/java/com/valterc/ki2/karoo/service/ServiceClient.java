@@ -31,6 +31,7 @@ import com.valterc.ki2.services.callbacks.IMessageCallback;
 import com.valterc.ki2.services.callbacks.IPreferencesCallback;
 import com.valterc.ki2.services.callbacks.IScanCallback;
 
+import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -154,7 +155,7 @@ public class ServiceClient {
         preferencesListeners = new DataStreamWeakListenerList<>();
         scanListeners = new DataStreamWeakListenerList<>();
         customMessageClient = new CustomMessageClient(this, handler);
-        deviceDataFrontend = new DeviceDataFrontend();
+        deviceDataFrontend = new DeviceDataFrontend(context);
 
         attemptBindToService();
     }
@@ -182,12 +183,66 @@ public class ServiceClient {
     }
 
     /**
+     * Unregister a weak referenced listener that will receive connection info from the main ride device.
+     *
+     * @param connectionInfoConsumer Consumer that will receive connection events. It will be referenced using a weak reference so the owner must keep a strong reference.
+     */
+    public void unregisterConnectionInfoWeakListener(BiConsumer<DeviceId, ConnectionInfo> connectionInfoConsumer) {
+        deviceDataFrontend.unregisterConnectionInfoWeakListener(connectionInfoConsumer);
+    }
+
+    /**
+     * Register a weak referenced listener that will receive connection info from all devices.
+     *
+     * @param connectionInfoConsumer Consumer that will receive connection events. It will be referenced using a weak reference so the owner must keep a strong reference.
+     */
+    public void registerUnfilteredConnectionInfoWeakListener(BiConsumer<DeviceId, ConnectionInfo> connectionInfoConsumer) {
+        deviceDataFrontend.registerUnfilteredConnectionInfoWeakListener(connectionInfoConsumer);
+    }
+
+    /**
+     * Unregister a weak referenced listener that will receive connection info from all devices.
+     *
+     * @param connectionInfoConsumer Consumer that will receive connection events. It will be referenced using a weak reference so the owner must keep a strong reference.
+     */
+    public void unregisterUnfilteredConnectionInfoWeakListener(BiConsumer<DeviceId, ConnectionInfo> connectionInfoConsumer) {
+        deviceDataFrontend.unregisterUnfilteredConnectionInfoWeakListener(connectionInfoConsumer);
+    }
+
+    /**
      * Register a weak referenced listener that will receive battery info from the main ride device.
      *
      * @param batteryInfoConsumer Consumer that will receive battery events. It will be referenced using a weak reference so the owner must keep a strong reference.
      */
     public void registerBatteryInfoWeakListener(BiConsumer<DeviceId, BatteryInfo> batteryInfoConsumer) {
         deviceDataFrontend.registerBatteryInfoWeakListener(batteryInfoConsumer);
+    }
+
+    /**
+     * Unregister a weak referenced listener that will receive battery info from the main ride device.
+     *
+     * @param batteryInfoConsumer Consumer that will receive battery events. It will be referenced using a weak reference so the owner must keep a strong reference.
+     */
+    public void unregisterBatteryInfoWeakListener(BiConsumer<DeviceId, BatteryInfo> batteryInfoConsumer) {
+        deviceDataFrontend.unregisterBatteryInfoWeakListener(batteryInfoConsumer);
+    }
+
+    /**
+     * Register a weak referenced listener that will receive battery info from the all devices.
+     *
+     * @param batteryInfoConsumer Consumer that will receive battery events. It will be referenced using a weak reference so the owner must keep a strong reference.
+     */
+    public void registerUnfilteredBatteryInfoWeakListener(BiConsumer<DeviceId, BatteryInfo> batteryInfoConsumer) {
+        deviceDataFrontend.registerUnfilteredBatteryInfoWeakListener(batteryInfoConsumer);
+    }
+
+    /**
+     * Unregister a weak referenced listener that will receive battery info from the all devices.
+     *
+     * @param batteryInfoConsumer Consumer that will receive battery events. It will be referenced using a weak reference so the owner must keep a strong reference.
+     */
+    public void unregisterUnfilteredBatteryInfoWeakListener(BiConsumer<DeviceId, BatteryInfo> batteryInfoConsumer) {
+        deviceDataFrontend.unregisterUnfilteredBatteryInfoWeakListener(batteryInfoConsumer);
     }
 
     /**
@@ -200,12 +255,66 @@ public class ServiceClient {
     }
 
     /**
+     * Unregister a weak referenced listener that will receive shifting info from the main ride device.
+     *
+     * @param shiftingInfoConsumer Consumer that will receive shifting events. It will be referenced using a weak reference so the owner must keep a strong reference.
+     */
+    public void unregisterShiftingInfoWeakListener(BiConsumer<DeviceId, ShiftingInfo> shiftingInfoConsumer) {
+        deviceDataFrontend.unregisterShiftingInfoWeakListener(shiftingInfoConsumer);
+    }
+
+    /**
+     * Register a weak referenced listener that will receive shifting info from the all devices.
+     *
+     * @param shiftingInfoConsumer Consumer that will receive shifting events. It will be referenced using a weak reference so the owner must keep a strong reference.
+     */
+    public void registerUnfilteredShiftingInfoWeakListener(BiConsumer<DeviceId, ShiftingInfo> shiftingInfoConsumer) {
+        deviceDataFrontend.registerUnfilteredShiftingInfoWeakListener(shiftingInfoConsumer);
+    }
+
+    /**
+     * Unregister a weak referenced listener that will receive shifting info from the all devices.
+     *
+     * @param shiftingInfoConsumer Consumer that will receive shifting events. It will be referenced using a weak reference so the owner must keep a strong reference.
+     */
+    public void unregisterUnfilteredShiftingInfoWeakListener(BiConsumer<DeviceId, ShiftingInfo> shiftingInfoConsumer) {
+        deviceDataFrontend.unregisterUnfilteredShiftingInfoWeakListener(shiftingInfoConsumer);
+    }
+
+    /**
      * Register a weak referenced listener that will receive preferences info from the main ride device.
      *
      * @param devicePreferencesConsumer Consumer that will receive preferences events. It will be referenced using a weak reference so the owner must keep a strong reference.
      */
     public void registerDevicePreferencesWeakListener(BiConsumer<DeviceId, DevicePreferencesView> devicePreferencesConsumer) {
         deviceDataFrontend.registerDevicePreferencesWeakListener(devicePreferencesConsumer);
+    }
+
+    /**
+     * Unregister a weak referenced listener that will receive preferences info from the main ride device.
+     *
+     * @param devicePreferencesConsumer Consumer that will receive preferences events. It will be referenced using a weak reference so the owner must keep a strong reference.
+     */
+    public void unregisterDevicePreferencesWeakListener(BiConsumer<DeviceId, DevicePreferencesView> devicePreferencesConsumer) {
+        deviceDataFrontend.unregisterDevicePreferencesWeakListener(devicePreferencesConsumer);
+    }
+
+    /**
+     * Register a weak referenced listener that will receive preferences info from all devices.
+     *
+     * @param devicePreferencesConsumer Consumer that will receive preferences events. It will be referenced using a weak reference so the owner must keep a strong reference.
+     */
+    public void registerUnfilteredDevicePreferencesWeakListener(BiConsumer<DeviceId, DevicePreferencesView> devicePreferencesConsumer) {
+        deviceDataFrontend.registerUnfilteredDevicePreferencesWeakListener(devicePreferencesConsumer);
+    }
+
+    /**
+     * Unregister a weak referenced listener that will receive preferences info from all devices.
+     *
+     * @param devicePreferencesConsumer Consumer that will receive preferences events. It will be referenced using a weak reference so the owner must keep a strong reference.
+     */
+    public void unregisterUnfilteredDevicePreferencesWeakListener(BiConsumer<DeviceId, DevicePreferencesView> devicePreferencesConsumer) {
+        deviceDataFrontend.unregisterUnfilteredDevicePreferencesWeakListener(devicePreferencesConsumer);
     }
 
     /**
@@ -305,6 +414,26 @@ public class ServiceClient {
             return service.getPreferences();
         } catch (Exception e) {
             Log.e("KI2", "Unable to get preferences", e);
+        }
+
+        return null;
+    }
+
+    /**
+     * Get saved devices.
+     *
+     * @return Saved devices. Can be <code>null</code> if the service is not reachable.
+     */
+    @Nullable
+    public List<DeviceId> getSavedDevices() {
+        if (service == null) {
+            return null;
+        }
+
+        try {
+            return service.getSavedDevices();
+        } catch (Exception e) {
+            Log.e("KI2", "Unable to get saved devices", e);
         }
 
         return null;

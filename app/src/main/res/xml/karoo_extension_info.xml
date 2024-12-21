@@ -4,10 +4,26 @@
     displayName="@string/app_name"
     icon="@drawable/ic_icon"
     scansDevices="true">
+
     <DataType
-        description="Test"
-        displayName="test"
+        description="Gears view with gear index."
+        displayName="Gears"
         graphical="true"
-        icon="@drawable/ic_add"
-        typeId="test" />
+        icon="@drawable/ic_hh_gear"
+        typeId="graphical-gears" />
+
+    <!--
+    <DataType
+        description="Gears view with gear index."
+        displayName="Gears"
+        graphical="true"
+        icon="@drawable/ic_hh_gear"
+        typeId="graphical-gears" />
+    <DataType
+        description="Gears view with gear size."
+        displayName="Gears Size"
+        graphical="true"
+        icon="@drawable/ic_hh_gear"
+        typeId="graphical-gears-size" />
+        -->
 </ExtensionInfo>

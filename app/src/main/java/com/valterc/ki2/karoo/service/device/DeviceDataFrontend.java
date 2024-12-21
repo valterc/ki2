@@ -1,6 +1,7 @@
 package com.valterc.ki2.karoo.service.device;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.RemoteException;
@@ -81,9 +82,9 @@ public class DeviceDataFrontend {
         }
     }, callback -> service.registerDevicePreferencesListener(callback), callback -> service.unregisterDevicePreferencesListener(callback));
 
-    public DeviceDataFrontend() {
+    public DeviceDataFrontend(Context context) {
         this.handler = new Handler(Looper.getMainLooper());
-        dataRouter = new DeviceDataRouter();
+        dataRouter = new DeviceDataRouter(context);
     }
 
     public void setService(IKi2Service service) {
@@ -112,6 +113,27 @@ public class DeviceDataFrontend {
         handler.post(() -> {
             dataRouter.registerConnectionInfoWeakListener(connectionInfoConsumer);
             maybeStartEvents();
+        });
+    }
+
+    public void unregisterConnectionInfoWeakListener(BiConsumer<DeviceId, ConnectionInfo> connectionInfoConsumer) {
+        handler.post(() -> {
+            dataRouter.unregisterConnectionInfoWeakListener(connectionInfoConsumer);
+            maybeStopConnectionEvents();
+        });
+    }
+
+    public void registerUnfilteredConnectionInfoWeakListener(BiConsumer<DeviceId, ConnectionInfo> connectionInfoConsumer) {
+        handler.post(() -> {
+            dataRouter.registerUnfilteredConnectionInfoWeakListener(connectionInfoConsumer);
+            maybeStartEvents();
+        });
+    }
+
+    public void unregisterUnfilteredConnectionInfoWeakListener(BiConsumer<DeviceId, ConnectionInfo> connectionInfoConsumer) {
+        handler.post(() -> {
+            dataRouter.unregisterUnfilteredConnectionInfoWeakListener(connectionInfoConsumer);
+            maybeStopConnectionEvents();
         });
     }
 
@@ -152,6 +174,27 @@ public class DeviceDataFrontend {
         });
     }
 
+    public void unregisterBatteryInfoWeakListener(BiConsumer<DeviceId, BatteryInfo> batteryInfoConsumer) {
+        handler.post(() -> {
+            dataRouter.unregisterBatteryInfoWeakListener(batteryInfoConsumer);
+            maybeStopBatteryEvents();
+        });
+    }
+
+    public void registerUnfilteredBatteryInfoWeakListener(BiConsumer<DeviceId, BatteryInfo> batteryInfoConsumer) {
+        handler.post(() -> {
+            dataRouter.registerUnfilteredBatteryInfoWeakListener(batteryInfoConsumer);
+            maybeStartEvents();
+        });
+    }
+
+    public void unregisterUnfilteredBatteryInfoWeakListener(BiConsumer<DeviceId, BatteryInfo> batteryInfoConsumer) {
+        handler.post(() -> {
+            dataRouter.unregisterUnfilteredBatteryInfoWeakListener(batteryInfoConsumer);
+            maybeStopBatteryEvents();
+        });
+    }
+
     private void maybeStartBatteryEvents() {
         if (service == null) {
             return;
@@ -183,6 +226,27 @@ public class DeviceDataFrontend {
         });
     }
 
+    public void unregisterShiftingInfoWeakListener(BiConsumer<DeviceId, ShiftingInfo> shiftingInfoConsumer) {
+        handler.post(() -> {
+            dataRouter.unregisterShiftingInfoWeakListener(shiftingInfoConsumer);
+            maybeStopShiftingEvents();
+        });
+    }
+
+    public void registerUnfilteredShiftingInfoWeakListener(BiConsumer<DeviceId, ShiftingInfo> shiftingInfoConsumer) {
+        handler.post(() -> {
+            dataRouter.registerUnfilteredShiftingInfoWeakListener(shiftingInfoConsumer);
+            maybeStartEvents();
+        });
+    }
+
+    public void unregisterUnfilteredShiftingInfoWeakListener(BiConsumer<DeviceId, ShiftingInfo> shiftingInfoConsumer) {
+        handler.post(() -> {
+            dataRouter.unregisterUnfilteredShiftingInfoWeakListener(shiftingInfoConsumer);
+            maybeStopShiftingEvents();
+        });
+    }
+
     private void maybeStartShiftingEvents() {
         if (service == null) {
             return;
@@ -211,6 +275,27 @@ public class DeviceDataFrontend {
         handler.post(() -> {
             dataRouter.registerDevicePreferencesWeakListener(devicePreferencesConsumer);
             maybeStartEvents();
+        });
+    }
+
+    public void unregisterDevicePreferencesWeakListener(BiConsumer<DeviceId, DevicePreferencesView> devicePreferencesConsumer) {
+        handler.post(() -> {
+            dataRouter.unregisterDevicePreferencesWeakListener(devicePreferencesConsumer);
+            maybeStopDevicePreferencesEvents();
+        });
+    }
+
+    public void registerUnfilteredDevicePreferencesWeakListener(BiConsumer<DeviceId, DevicePreferencesView> devicePreferencesConsumer) {
+        handler.post(() -> {
+            dataRouter.registerUnfilteredDevicePreferencesWeakListener(devicePreferencesConsumer);
+            maybeStartEvents();
+        });
+    }
+
+    public void unregisterUnfilteredDevicePreferencesWeakListener(BiConsumer<DeviceId, DevicePreferencesView> devicePreferencesConsumer) {
+        handler.post(() -> {
+            dataRouter.unregisterUnfilteredDevicePreferencesWeakListener(devicePreferencesConsumer);
+            maybeStopDevicePreferencesEvents();
         });
     }
 
@@ -248,6 +333,13 @@ public class DeviceDataFrontend {
         handler.post(() -> {
             dataRouter.registerKeyEventListener(keyEventConsumer);
             maybeStartEvents();
+        });
+    }
+
+    public void unregisterKeyEventWeakListener(BiConsumer<DeviceId, KarooKeyEvent> keyEventConsumer) {
+        handler.post(() -> {
+            dataRouter.unregisterKeyEventListener(keyEventConsumer);
+            maybeStopKeyEvents();
         });
     }
 
