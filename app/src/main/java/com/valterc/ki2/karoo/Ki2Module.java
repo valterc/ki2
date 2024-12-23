@@ -72,7 +72,7 @@ public class Ki2Module extends Module {
                     new UpdateAvailableHandler(ki2Context),
                     new LowBatteryHandler(ki2Context)));
         } else if (RideActivityHook.isRideActivityProcess()) {
-            handlerManager = new HandlerManager(ki2Context, Collections.singletonList(new OverlayManager(ki2Context)));
+            handlerManager = null;//new HandlerManager(ki2Context, Collections.singletonList(new OverlayManager(ki2Context)));
             RideActivityHook.tryEnsureSdkElementsLoaded(ki2Context);
         } else {
             handlerManager = null;

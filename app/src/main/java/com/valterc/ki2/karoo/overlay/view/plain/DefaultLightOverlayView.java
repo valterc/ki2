@@ -5,11 +5,12 @@ import android.view.View;
 import com.valterc.ki2.R;
 import com.valterc.ki2.data.preferences.PreferencesView;
 import com.valterc.ki2.karoo.Ki2Context;
+import com.valterc.ki2.karoo.extension.Ki2ExtensionContext;
 import com.valterc.ki2.karoo.views.KarooTheme;
 
 public class DefaultLightOverlayView extends DefaultOverlayView {
 
-    public DefaultLightOverlayView(Ki2Context context, PreferencesView preferences, View view) {
+    public DefaultLightOverlayView(Ki2ExtensionContext context, PreferencesView preferences, View view) {
         super(context, preferences, view);
 
         getViewHolder().getOverlayView().setBackgroundResource(R.drawable.background_overlay_light);

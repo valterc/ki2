@@ -5,10 +5,9 @@ import androidx.annotation.Nullable;
 
 import com.valterc.ki2.data.connection.ConnectionInfo;
 import com.valterc.ki2.data.device.BatteryInfo;
-import com.valterc.ki2.data.preferences.PreferencesView;
 import com.valterc.ki2.data.preferences.device.DevicePreferencesView;
 import com.valterc.ki2.data.shifting.ShiftingInfo;
-import com.valterc.ki2.karoo.Ki2Context;
+import com.valterc.ki2.karoo.extension.Ki2ExtensionContext;
 import com.valterc.ki2.karoo.overlay.OverlayPreferences;
 
 import java.util.function.Consumer;
@@ -52,10 +51,10 @@ public interface IOverlayView {
     /**
      * Apply all preferences in the overlay.
      *
-     * @param ki2Context  Ki2 context.
+     * @param extensionContext  Ki2 extension context.
      * @param preferences Overlay preferences.
      */
-    default void applyPreferences(@NonNull Ki2Context ki2Context, @NonNull OverlayPreferences preferences) {
+    default void applyPreferences(@NonNull Ki2ExtensionContext extensionContext, @NonNull OverlayPreferences preferences) {
         setAlpha(preferences.getOpacity());
     }
 

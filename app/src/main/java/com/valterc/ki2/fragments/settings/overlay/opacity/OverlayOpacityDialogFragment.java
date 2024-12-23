@@ -28,6 +28,7 @@ import com.valterc.ki2.data.shifting.RearTeethPattern;
 import com.valterc.ki2.data.shifting.ShiftingInfo;
 import com.valterc.ki2.data.shifting.ShiftingMode;
 import com.valterc.ki2.karoo.Ki2Context;
+import com.valterc.ki2.karoo.extension.Ki2ExtensionContext;
 import com.valterc.ki2.karoo.overlay.view.IOverlayView;
 import com.valterc.ki2.karoo.overlay.view.builder.OverlayViewBuilderEntry;
 import com.valterc.ki2.karoo.overlay.view.builder.OverlayViewBuilderRegistry;
@@ -62,7 +63,7 @@ public class OverlayOpacityDialogFragment extends DialogFragment {
         PreferencesView preferencesView = new PreferencesView(requireContext());
 
         LinearLayout linearLayoutContainer = view.findViewById(R.id.viewstub_overlay_opacity_view_container);
-        Ki2Context ki2Context = new Ki2Context(SdkContext.buildSdkContext(requireContext()));
+        Ki2ExtensionContext ki2Context = new Ki2ExtensionContext(requireContext());
         OverlayViewBuilderEntry entry = OverlayViewBuilderRegistry.getBuilder(requireArguments().getString(PARAMETER_THEME));
         View viewOverlay = inflater.inflate(entry.getLayoutId(), linearLayoutContainer, false);
 

@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.valterc.ki2.BuildConfig;
+import com.valterc.ki2.data.action.KarooActionEvent;
 import com.valterc.ki2.data.connection.ConnectionInfo;
 import com.valterc.ki2.data.device.BatteryInfo;
 import com.valterc.ki2.data.device.DeviceId;
@@ -171,6 +172,24 @@ public class ServiceClient {
         disposed = true;
         context.unbindService(serviceConnection);
         service = null;
+    }
+
+    /**
+     * Register a weak referenced listener that will receive action events from the main ride device.
+     *
+     * @param actionEventConsumer Consumer that will receive action events. It will be referenced using a weak reference so the owner must keep a strong reference.
+     */
+    public void registerActionEventWeakListener(BiConsumer<DeviceId, KarooActionEvent> actionEventConsumer) {
+        deviceDataFrontend.registerActionEventWeakListener(actionEventConsumer);
+    }
+
+    /**
+     * Unregister a weak referenced listener that will receive action events from the main ride device.
+     *
+     * @param actionEventConsumer Consumer that will receive action events. It will be referenced using a weak reference so the owner must keep a strong reference.
+     */
+    public void unregisterActionEventWeakListener(BiConsumer<DeviceId, KarooActionEvent> actionEventConsumer) {
+        deviceDataFrontend.unregisterActionEventWeakListener(actionEventConsumer);
     }
 
     /**

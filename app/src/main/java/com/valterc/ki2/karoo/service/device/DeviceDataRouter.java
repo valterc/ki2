@@ -2,11 +2,11 @@ package com.valterc.ki2.karoo.service.device;
 
 import android.content.Context;
 
+import com.valterc.ki2.data.action.KarooActionEvent;
 import com.valterc.ki2.data.connection.ConnectionInfo;
 import com.valterc.ki2.data.connection.ConnectionStatus;
 import com.valterc.ki2.data.device.BatteryInfo;
 import com.valterc.ki2.data.device.DeviceId;
-import com.valterc.ki2.data.input.KarooKeyEvent;
 import com.valterc.ki2.data.preferences.device.DevicePreferencesView;
 import com.valterc.ki2.data.shifting.ShiftingInfo;
 import com.valterc.ki2.karoo.service.listeners.BiDataStreamWeakListenerList;
@@ -31,7 +31,7 @@ public class DeviceDataRouter {
     private final BiDataStreamWeakListenerList<DeviceId, ShiftingInfo> shiftingInfoUnfilteredListeners;
     private final BiDataStreamWeakListenerList<DeviceId, DevicePreferencesView> devicePreferencesUnfilteredListener;
 
-    private final BiDataStreamWeakListenerList<DeviceId, KarooKeyEvent> keyEventListeners;
+    private final BiDataStreamWeakListenerList<DeviceId, KarooActionEvent> actionEventListeners;
 
     private final Context context;
     private final Map<DeviceId, DeviceData> deviceDataMap;
@@ -50,7 +50,7 @@ public class DeviceDataRouter {
         shiftingInfoUnfilteredListeners = new BiDataStreamWeakListenerList<>();
         devicePreferencesUnfilteredListener = new BiDataStreamWeakListenerList<>();
 
-        keyEventListeners = new BiDataStreamWeakListenerList<>();
+        actionEventListeners = new BiDataStreamWeakListenerList<>();
 
         deviceDataMap = new HashMap<>();
     }
@@ -135,16 +135,16 @@ public class DeviceDataRouter {
         return devicePreferencesListener.hasListeners() || devicePreferencesUnfilteredListener.hasListeners();
     }
 
-    public void registerKeyEventListener(BiConsumer<DeviceId, KarooKeyEvent> keyEventConsumer) {
-        keyEventListeners.addListener(keyEventConsumer);
+    public void registerActionEventListener(BiConsumer<DeviceId, KarooActionEvent> actionEventConsumer) {
+        actionEventListeners.addListener(actionEventConsumer);
     }
 
-    public void unregisterKeyEventListener(BiConsumer<DeviceId, KarooKeyEvent> keyEventConsumer) {
-        keyEventListeners.removeListener(keyEventConsumer);
+    public void unregisterActionEventListener(BiConsumer<DeviceId, KarooActionEvent> actionEventConsumer) {
+        actionEventListeners.removeListener(actionEventConsumer);
     }
 
     public boolean hasKeyListeners() {
-        return keyEventListeners.hasListeners();
+        return actionEventListeners.hasListeners();
     }
 
     private void attemptToUpdateCurrentDevice() {
@@ -271,8 +271,8 @@ public class DeviceDataRouter {
         devicePreferencesUnfilteredListener.pushData(deviceId, preferences);
     }
 
-    public void onKeyEvent(DeviceId deviceId, KarooKeyEvent keyEvent) {
-        keyEventListeners.pushData(deviceId, keyEvent);
+    public void onActionEvent(DeviceId deviceId, KarooActionEvent actionEvent) {
+        actionEventListeners.pushData(deviceId, actionEvent);
     }
 
 }

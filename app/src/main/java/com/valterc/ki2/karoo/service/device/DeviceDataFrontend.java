@@ -9,18 +9,18 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
+import com.valterc.ki2.data.action.KarooActionEvent;
 import com.valterc.ki2.data.connection.ConnectionInfo;
 import com.valterc.ki2.data.device.BatteryInfo;
 import com.valterc.ki2.data.device.DeviceId;
-import com.valterc.ki2.data.input.KarooKeyEvent;
 import com.valterc.ki2.data.preferences.device.DevicePreferencesView;
 import com.valterc.ki2.data.shifting.ShiftingInfo;
 import com.valterc.ki2.karoo.service.listeners.ServiceCallbackRegistration;
 import com.valterc.ki2.services.IKi2Service;
+import com.valterc.ki2.services.callbacks.IActionCallback;
 import com.valterc.ki2.services.callbacks.IBatteryCallback;
 import com.valterc.ki2.services.callbacks.IConnectionInfoCallback;
 import com.valterc.ki2.services.callbacks.IDevicePreferencesCallback;
-import com.valterc.ki2.services.callbacks.IKeyCallback;
 import com.valterc.ki2.services.callbacks.IShiftingCallback;
 
 import java.util.function.BiConsumer;
@@ -62,15 +62,15 @@ public class DeviceDataFrontend {
         }
     }, callback -> service.registerShiftingListener(callback), callback -> service.unregisterShiftingListener(callback));
 
-    private final ServiceCallbackRegistration<IKeyCallback> registrationKey = new ServiceCallbackRegistration<>(new IKeyCallback.Stub() {
+    private final ServiceCallbackRegistration<IActionCallback> registrationAction = new ServiceCallbackRegistration<>(new IActionCallback.Stub() {
         @Override
-        public void onKeyEvent(DeviceId deviceId, KarooKeyEvent keyEvent) {
+        public void onActionEvent(DeviceId deviceId, KarooActionEvent actionEvent) {
             handler.post(() -> {
-                dataRouter.onKeyEvent(deviceId, keyEvent);
-                maybeStopKeyEvents();
+                dataRouter.onActionEvent(deviceId, actionEvent);
+                maybeStopActionEvents();
             });
         }
-    }, callback -> service.registerKeyListener(callback), callback -> service.unregisterKeyListener(callback));
+    }, callback -> service.registerActionListener(callback), callback -> service.unregisterActionListener(callback));
 
     private final ServiceCallbackRegistration<IDevicePreferencesCallback> registrationDevicePreferences = new ServiceCallbackRegistration<>(new IDevicePreferencesCallback.Stub() {
         @Override
@@ -93,7 +93,7 @@ public class DeviceDataFrontend {
         registrationConnectionInfo.setUnregistered();
         registrationBatteryInfo.setUnregistered();
         registrationShiftingInfo.setUnregistered();
-        registrationKey.setUnregistered();
+        registrationAction.setUnregistered();
         registrationDevicePreferences.setUnregistered();
 
         if (service != null) {
@@ -104,7 +104,7 @@ public class DeviceDataFrontend {
     private void maybeStartEvents() {
         maybeStartConnectionEvents();
         maybeStartBatteryEvents();
-        maybeStartKeyEvents();
+        maybeStartActionEvents();
         maybeStartShiftingEvents();
         maybeStartDevicePreferencesEvents();
     }
@@ -329,21 +329,21 @@ public class DeviceDataFrontend {
         registrationDevicePreferences.unregister();
     }
 
-    public void registerKeyEventWeakListener(BiConsumer<DeviceId, KarooKeyEvent> keyEventConsumer) {
+    public void registerActionEventWeakListener(BiConsumer<DeviceId, KarooActionEvent> actionEventConsumer) {
         handler.post(() -> {
-            dataRouter.registerKeyEventListener(keyEventConsumer);
+            dataRouter.registerActionEventListener(actionEventConsumer);
             maybeStartEvents();
         });
     }
 
-    public void unregisterKeyEventWeakListener(BiConsumer<DeviceId, KarooKeyEvent> keyEventConsumer) {
+    public void unregisterActionEventWeakListener(BiConsumer<DeviceId, KarooActionEvent> actionEventConsumer) {
         handler.post(() -> {
-            dataRouter.unregisterKeyEventListener(keyEventConsumer);
-            maybeStopKeyEvents();
+            dataRouter.unregisterActionEventListener(actionEventConsumer);
+            maybeStopActionEvents();
         });
     }
 
-    private void maybeStartKeyEvents() {
+    private void maybeStartActionEvents() {
         if (service == null) {
             return;
         }
@@ -352,10 +352,10 @@ public class DeviceDataFrontend {
             return;
         }
 
-        registrationKey.register();
+        registrationAction.register();
     }
 
-    private void maybeStopKeyEvents() {
+    private void maybeStopActionEvents() {
         if (service == null) {
             return;
         }
@@ -364,7 +364,7 @@ public class DeviceDataFrontend {
             return;
         }
 
-        registrationKey.unregister();
+        registrationAction.unregister();
     }
 
     @Nullable

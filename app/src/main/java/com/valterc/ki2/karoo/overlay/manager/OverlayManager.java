@@ -1,17 +1,18 @@
 package com.valterc.ki2.karoo.overlay.manager;
 
-import com.valterc.ki2.karoo.Ki2Context;
-import com.valterc.ki2.karoo.handlers.IRideHandler;
+import android.view.ViewGroup;
+
+import com.valterc.ki2.karoo.extension.Ki2ExtensionContext;
 
 /** @noinspection FieldCanBeLocal*/
-public class OverlayManager implements IRideHandler {
+public class OverlayManager {
 
     private final BaseOverlayManager primaryOverlayManager;
     private final BaseOverlayManager secondaryOverlayManager;
 
-    public OverlayManager(Ki2Context ki2Context) {
-        primaryOverlayManager = new PrimaryOverlayManager(ki2Context);
-        secondaryOverlayManager = new SecondaryOverlayManager(ki2Context);
+    public OverlayManager(Ki2ExtensionContext extensionContext) {
+        primaryOverlayManager = new PrimaryOverlayManager(extensionContext);
+        secondaryOverlayManager = new SecondaryOverlayManager(extensionContext);
 
         primaryOverlayManager.setVisibilityListener(visible -> {
             if (secondaryOverlayManager.getOverlayTriggers().isTriggeredByPrimaryHidden()) {

@@ -1,6 +1,7 @@
 package com.valterc.ki2.karoo.overlay.view.compact;
 
 import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -13,7 +14,7 @@ import com.valterc.ki2.data.preferences.PreferencesView;
 import com.valterc.ki2.data.preferences.device.DevicePreferencesView;
 import com.valterc.ki2.data.shifting.ShiftingInfo;
 import com.valterc.ki2.data.shifting.UpcomingSynchroShiftType;
-import com.valterc.ki2.karoo.Ki2Context;
+import com.valterc.ki2.karoo.extension.Ki2ExtensionContext;
 import com.valterc.ki2.karoo.overlay.view.BaseOverlayView;
 import com.valterc.ki2.karoo.extension.shifting.BuzzerTracking;
 import com.valterc.ki2.karoo.extension.shifting.ShiftingGearingHelper;
@@ -31,11 +32,11 @@ public abstract class CompactOverlayView extends BaseOverlayView<CompactOverlayV
 
     private long timestampBlinkStart;
 
-    public CompactOverlayView(Ki2Context ki2Context, PreferencesView preferences, View view) {
-        super(ki2Context.getSdkContext(), preferences, new CompactOverlayViewHolder(view));
-        shiftingGearingHelper = new ShiftingGearingHelper(ki2Context.getSdkContext());
+    public CompactOverlayView(Ki2ExtensionContext ki2Context, PreferencesView preferences, View view) {
+        super(ki2Context.getContext(), preferences, new CompactOverlayViewHolder(view));
+        shiftingGearingHelper = new ShiftingGearingHelper(ki2Context.getContext());
         buzzerTracking = new BuzzerTracking();
-        handler = ki2Context.getHandler();
+        handler = new Handler(Looper.getMainLooper());
     }
 
     @Override

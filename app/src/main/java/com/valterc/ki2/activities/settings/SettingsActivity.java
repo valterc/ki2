@@ -5,15 +5,12 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.valterc.ki2.data.input.KarooKey;
 import com.valterc.ki2.fragments.IKarooKeyListener;
-import com.valterc.ki2.fragments.settings.SettingsFragment;
 import com.valterc.ki2.R;
 import com.valterc.ki2.fragments.settings.SettingsHostFragment;
 
@@ -45,7 +42,7 @@ public class SettingsActivity extends AppCompatActivity {
         if ((currentFocus == null) || !currentFocus.isClickable() && !(currentFocus instanceof Button)) {
             KarooKey karooKey = KarooKey.fromKeyCode(e.getKeyCode());
 
-            if (karooKey != KarooKey.NONE) {
+            if (karooKey != KarooKey.INVALID) {
                 Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.framelayout_settings);
 
                 if (fragment instanceof IKarooKeyListener) {

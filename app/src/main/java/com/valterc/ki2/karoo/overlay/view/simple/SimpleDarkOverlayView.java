@@ -10,13 +10,12 @@ import com.valterc.ki2.data.device.BatteryInfo;
 import com.valterc.ki2.data.preferences.PreferencesView;
 import com.valterc.ki2.data.preferences.device.DevicePreferencesView;
 import com.valterc.ki2.data.shifting.ShiftingInfo;
-import com.valterc.ki2.karoo.Ki2Context;
+import com.valterc.ki2.karoo.extension.Ki2ExtensionContext;
 import com.valterc.ki2.karoo.overlay.view.plain.DefaultDarkOverlayView;
-import com.valterc.ki2.karoo.views.KarooTheme;
 
 public class SimpleDarkOverlayView extends DefaultDarkOverlayView {
 
-    public SimpleDarkOverlayView(Ki2Context context, PreferencesView preferences, View view) {
+    public SimpleDarkOverlayView(Ki2ExtensionContext context, PreferencesView preferences, View view) {
         super(context, preferences, view);
 
         getViewHolder().getLinearLayoutDetails().setVisibility(View.GONE);

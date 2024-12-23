@@ -12,11 +12,12 @@ import com.valterc.ki2.data.preferences.PreferencesView;
 import com.valterc.ki2.data.preferences.device.DevicePreferencesView;
 import com.valterc.ki2.data.shifting.ShiftingInfo;
 import com.valterc.ki2.karoo.Ki2Context;
+import com.valterc.ki2.karoo.extension.Ki2ExtensionContext;
 import com.valterc.ki2.karoo.views.KarooTheme;
 
 public class DefaultLightGearIndexOverlayView extends DefaultLightOverlayView {
 
-    public DefaultLightGearIndexOverlayView(Ki2Context context, PreferencesView preferences, View view) {
+    public DefaultLightGearIndexOverlayView(Ki2ExtensionContext context, PreferencesView preferences, View view) {
         super(context, preferences, view);
 
         getViewHolder().getLinearLayoutGearingRatio().setVisibility(View.GONE);

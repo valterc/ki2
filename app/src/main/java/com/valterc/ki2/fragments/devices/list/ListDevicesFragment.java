@@ -172,7 +172,7 @@ public class ListDevicesFragment extends Fragment implements IKarooKeyListener {
 
     @Override
     public boolean onKarooKeyPressed(KarooKey karooKey) {
-        if (karooKey == KarooKey.CONFIRM) {
+        if (karooKey == KarooKey.BOTTOM_RIGHT) {
             startActivity(new Intent(getContext(), AddDeviceActivity.class));
             return true;
         }

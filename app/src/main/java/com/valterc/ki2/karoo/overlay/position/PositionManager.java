@@ -4,11 +4,13 @@ import android.content.res.Resources;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.RelativeLayout;
 
 public class PositionManager {
 
     private final View overlayView;
+    private final View parentView;
 
     private final int x;
     private final int y;
@@ -22,7 +24,7 @@ public class PositionManager {
     private int lastWidth = -1;
     private int lastHeight = -1;
 
-    public PositionManager(int positionX, int positionY, View overlayView) {
+    public PositionManager(int positionX, int positionY, View overlayView, View parentView) {
         DisplayMetrics displayMetrics = Resources.getSystem().getDisplayMetrics();
         parentWidth = displayMetrics.widthPixels;
         parentHeight = displayMetrics.heightPixels;
@@ -31,6 +33,7 @@ public class PositionManager {
         this.y = positionY;
 
         this.overlayView = overlayView;
+        this.parentView = parentView;
     }
 
     public void updatePosition() {
@@ -74,19 +77,19 @@ public class PositionManager {
             return;
         }
 
-        ViewGroup.LayoutParams layoutParams = overlayView.getLayoutParams();
-        RelativeLayout.LayoutParams layoutParamsRelativeLayout = (RelativeLayout.LayoutParams) layoutParams;
+        RelativeLayout.LayoutParams layoutParamsOverlay = (RelativeLayout.LayoutParams) overlayView.getLayoutParams();
+        WindowManager.LayoutParams layoutParamsParent = (WindowManager.LayoutParams) parentView.getLayoutParams();
 
-        if (layoutParamsRelativeLayout.width != ViewGroup.LayoutParams.MATCH_PARENT) {
-            layoutParamsRelativeLayout.leftMargin = xValue;
+        if (layoutParamsOverlay.width != ViewGroup.LayoutParams.MATCH_PARENT) {
+            layoutParamsParent.x = xValue;
         }
 
-        if (layoutParamsRelativeLayout.height != ViewGroup.LayoutParams.MATCH_PARENT) {
-            layoutParamsRelativeLayout.topMargin = yValue;
+        if (layoutParamsOverlay.height != ViewGroup.LayoutParams.MATCH_PARENT) {
+            layoutParamsParent.y = yValue;
         }
 
         lastX = xValue;
         lastY = yValue;
-        overlayView.setLayoutParams(layoutParamsRelativeLayout);
+        parentView.setLayoutParams(layoutParamsParent);
     }
 }

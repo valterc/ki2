@@ -4,22 +4,21 @@ import com.valterc.ki2.data.device.DeviceId;
 import com.valterc.ki2.data.shifting.BuzzerType;
 import com.valterc.ki2.data.shifting.ShiftingInfo;
 import com.valterc.ki2.karoo.extension.Ki2ExtensionContext;
-import com.valterc.ki2.karoo.handlers.IRideHandler;
+import com.valterc.ki2.karoo.extension.RideHandler;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
 @SuppressWarnings("FieldCanBeLocal")
-public class ShiftingAudioAlertHandler implements IRideHandler {
+public class ShiftingAudioAlertHandler extends RideHandler {
 
-    private final Ki2ExtensionContext context;
     private final Map<DeviceId, ShiftingInfo> deviceShiftingMap;
     private boolean riding;
     private final BiConsumer<DeviceId, ShiftingInfo> onShifting = this::onShifting;
 
     public ShiftingAudioAlertHandler(Ki2ExtensionContext context) {
-        this.context = context;
+        super(context);
         this.deviceShiftingMap = new HashMap<>();
 
         context.getServiceClient().registerShiftingInfoWeakListener(onShifting);
@@ -35,24 +34,24 @@ public class ShiftingAudioAlertHandler implements IRideHandler {
         if (lastShiftingInfo != null &&
                 shiftingInfo.getRearGear() == 1 && shiftingInfo.getFrontGear() == 1 &&
                 (lastShiftingInfo.getRearGear() != 1 || lastShiftingInfo.getFrontGear() != 1)) {
-            context.getAudioManager().playLowestGearAudioAlert();
+            getExtensionContext().getAudioManager().playLowestGearAudioAlert();
             return;
         }
 
         if (lastShiftingInfo != null &&
                 shiftingInfo.getRearGear() == shiftingInfo.getRearGearMax() && shiftingInfo.getFrontGear() == shiftingInfo.getFrontGearMax() &&
                 (lastShiftingInfo.getRearGear() != shiftingInfo.getRearGearMax() || lastShiftingInfo.getFrontGear() != shiftingInfo.getFrontGearMax())) {
-            context.getAudioManager().playHighestGearAudioAlert();
+            getExtensionContext().getAudioManager().playHighestGearAudioAlert();
             return;
         }
 
         if (shiftingInfo.getBuzzerType() == BuzzerType.OVERLIMIT_PROTECTION) {
-            context.getAudioManager().playShiftingLimitAudioAlert();
+            getExtensionContext().getAudioManager().playShiftingLimitAudioAlert();
             return;
         }
 
         if (shiftingInfo.getBuzzerType() == BuzzerType.UPCOMING_SYNCHRO_SHIFT) {
-            context.getAudioManager().playUpcomingSynchroShiftAudioAlert();
+            getExtensionContext().getAudioManager().playUpcomingSynchroShiftAudioAlert();
         }
     }
 

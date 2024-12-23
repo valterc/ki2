@@ -5,10 +5,11 @@ import android.view.View;
 import com.valterc.ki2.R;
 import com.valterc.ki2.data.preferences.PreferencesView;
 import com.valterc.ki2.karoo.Ki2Context;
+import com.valterc.ki2.karoo.extension.Ki2ExtensionContext;
 
 public class SlimLightOverlayView extends SlimOverlayView {
 
-    public SlimLightOverlayView(Ki2Context ki2Context, PreferencesView preferences, View view) {
+    public SlimLightOverlayView(Ki2ExtensionContext ki2Context, PreferencesView preferences, View view) {
         super(ki2Context, preferences, view);
 
         getViewHolder().getOverlayView().setBackgroundColor(getContext().getColor(R.color.hh_black_dark));

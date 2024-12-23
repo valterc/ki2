@@ -1,6 +1,5 @@
 package com.valterc.ki2.activities.main;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -9,7 +8,6 @@ import android.view.View;
 import android.view.inputmethod.BaseInputConnection;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -29,7 +27,6 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int TIME_MS_CHECK_FOR_UPDATES = 3500;
     private static final int KEY_EVENT_SOURCE_OWN = 0x6667;
-    private static final String DEVICE_KAROO_K24 = "k24";
 
     private final Handler handler = new Handler(Looper.getMainLooper());
     private BaseInputConnection baseInputConnection;
@@ -39,21 +36,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if (Build.DEVICE.equals(DEVICE_KAROO_K24)) {
-            new AlertDialog.Builder(this, R.style.AlertDialogStyle)
-                    .setTitle(R.string.text_not_compatible)
-                    .setMessage(getString(R.string.text_k24))
-                    .setPositiveButton(android.R.string.ok, (dialog, whichButton) -> dialog.dismiss())
-                    .show();
-        } else {
-            new AlertDialog.Builder(this, R.style.AlertDialogStyle)
-                    .setTitle("Unsupported app")
-                    .setMessage("This Ki2 version using the Karoo SDK is no longer supported but may remain functional. A new version of the app using the Karoo Extensions is available to download from https://github.com/valterc/ki2.\n\nThe new Ki2 version is not backwards compatible and will not offer all features. You may choose to remain with the old version of use the new one. Only the new Ki2 version will get further updates.")
-                    .setPositiveButton(android.R.string.ok, (dialog, whichButton) -> dialog.dismiss())
-                    .show();
-        }
-
         setContentView(R.layout.activity_main);
         baseInputConnection = new BaseInputConnection(findViewById(android.R.id.content), true);
 
@@ -138,10 +120,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private boolean handleFocusNavigation(KeyEvent e, KarooKey karooKey) {
-        if (karooKey == KarooKey.LEFT || karooKey == KarooKey.RIGHT) {
+        if (karooKey == KarooKey.TOP_LEFT || karooKey == KarooKey.TOP_RIGHT) {
             if (e.getAction() == KeyEvent.ACTION_DOWN) {
                 if (e.getRepeatCount() > 0) {
-                    if (karooKey == KarooKey.LEFT) {
+                    if (karooKey == KarooKey.TOP_LEFT) {
                         viewPager.setCurrentItem(viewPager.getCurrentItem() - 1);
                     } else {
                         viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
@@ -164,8 +146,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private boolean handleKeyEvent(KeyEvent e, View currentFocus, KarooKey karooKey, Adapter<?> viewPagerAdapter) {
-        if (karooKey != KarooKey.NONE &&
-                (karooKey == KarooKey.BACK
+        if (karooKey != KarooKey.INVALID &&
+                (karooKey == KarooKey.BOTTOM_LEFT
                         || currentFocus == null
                         || !currentFocus.isClickable())) {
 

@@ -6,25 +6,21 @@ import android.content.ServiceConnection
 import android.os.IBinder
 import com.valterc.ki2.data.connection.ConnectionDataInfo
 import com.valterc.ki2.data.device.DeviceId
-import com.valterc.ki2.data.input.KarooKeyEvent
+import com.valterc.ki2.data.action.KarooActionEvent
 import com.valterc.ki2.data.message.Message
 import com.valterc.ki2.services.IKi2Service
 import com.valterc.ki2.services.Ki2Service
 import com.valterc.ki2.services.callbacks.IConnectionDataInfoCallback
-import com.valterc.ki2.services.callbacks.IKeyCallback
+import com.valterc.ki2.services.callbacks.IActionCallback
 import com.valterc.ki2.services.callbacks.IMessageCallback
 import com.valterc.ki2.services.callbacks.IScanCallback
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.channels.trySendBlocking
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.shareIn
-import timber.log.Timber
 
 class Ki2ServiceConnection(private val context: Context) {
 
@@ -83,22 +79,22 @@ class Ki2ServiceConnection(private val context: Context) {
         deviceDataFlow.shareIn(CoroutineScope(Dispatchers.IO), SharingStarted.Lazily)
 
     private val inputKeyFlow = callbackFlow {
-        val listener = object : IKeyCallback.Default() {
-            override fun onKeyEvent(deviceId: DeviceId?, keyEvent: KarooKeyEvent?) {
-                keyEvent?.let {
-                    trySend(keyEvent)
+        val listener = object : IActionCallback.Default() {
+            override fun onActionEvent(deviceId: DeviceId?, actionEvent: KarooActionEvent?) {
+                actionEvent?.let {
+                    trySend(actionEvent)
                 }
             }
         }
 
-        ki2Service?.registerKeyListener(listener)
+        ki2Service?.registerActionListener(listener)
 
         awaitClose {
-            ki2Service?.registerKeyListener(listener)
+            ki2Service?.unregisterActionListener(listener)
         }
     }
 
-    fun inputKeyFlow(): SharedFlow<KarooKeyEvent> =
+    fun inputKeyFlow(): SharedFlow<KarooActionEvent> =
         inputKeyFlow.shareIn(CoroutineScope(Dispatchers.IO), SharingStarted.Lazily)
 
     private val messageFlow = callbackFlow {

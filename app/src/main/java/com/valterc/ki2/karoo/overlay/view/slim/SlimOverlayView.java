@@ -1,6 +1,7 @@
 package com.valterc.ki2.karoo.overlay.view.slim;
 
 import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -13,6 +14,7 @@ import com.valterc.ki2.data.preferences.PreferencesView;
 import com.valterc.ki2.data.preferences.device.DevicePreferencesView;
 import com.valterc.ki2.data.shifting.ShiftingInfo;
 import com.valterc.ki2.karoo.Ki2Context;
+import com.valterc.ki2.karoo.extension.Ki2ExtensionContext;
 import com.valterc.ki2.karoo.overlay.view.BaseOverlayView;
 import com.valterc.ki2.karoo.extension.shifting.BuzzerTracking;
 import com.valterc.ki2.karoo.extension.shifting.ShiftingGearingHelper;
@@ -31,11 +33,11 @@ public abstract class SlimOverlayView extends BaseOverlayView<SlimOverlayViewHol
     private long timestampBlinkStart;
     private boolean canBeShown;
 
-    public SlimOverlayView(Ki2Context ki2Context, PreferencesView preferences, View view) {
-        super(ki2Context.getSdkContext(), preferences, new SlimOverlayViewHolder(view));
-        shiftingGearingHelper = new ShiftingGearingHelper(ki2Context.getSdkContext());
+    public SlimOverlayView(Ki2ExtensionContext ki2Context, PreferencesView preferences, View view) {
+        super(ki2Context.getContext(), preferences, new SlimOverlayViewHolder(view));
+        shiftingGearingHelper = new ShiftingGearingHelper(ki2Context.getContext());
         buzzerTracking = new BuzzerTracking();
-        handler = ki2Context.getHandler();
+        handler = new Handler(Looper.getMainLooper());
     }
 
     @Override
