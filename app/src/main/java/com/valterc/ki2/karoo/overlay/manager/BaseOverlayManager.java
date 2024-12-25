@@ -28,6 +28,7 @@ import com.valterc.ki2.karoo.overlay.view.IOverlayView;
 import com.valterc.ki2.karoo.overlay.view.builder.OverlayViewBuilderEntry;
 import com.valterc.ki2.karoo.overlay.view.builder.OverlayViewBuilderRegistry;
 
+import java.util.Collections;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -101,6 +102,7 @@ public abstract class BaseOverlayManager {
         this.handler = new Handler(Looper.getMainLooper());
         this.windowManager = (WindowManager) extensionContext.getContext().getSystemService(Context.WINDOW_SERVICE);
         this.layoutInflater = LayoutInflater.from(extensionContext.getContext());
+        this.overlayTriggers = new OverlayTriggers(Collections.emptySet());
 
         extensionContext.getServiceClient().registerPreferencesWeakListener(preferencesListener);
         extensionContext.getServiceClient().registerShiftingInfoWeakListener(shiftingInfoListener);
