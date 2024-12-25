@@ -22,20 +22,12 @@ public final class DeviceName {
     @NonNull
     public static String getDefaultName(Context context, DeviceId deviceId) {
         String name = String.valueOf(deviceId.getDeviceNumber());
-        switch (deviceId.getDeviceType()) {
-            case SHIMANO_SHIFTING:
-                return context.getString(R.string.text_param_di2_name, name);
-
-            case SHIMANO_EBIKE:
-                return context.getString(R.string.text_param_steps_name, name);
-
-            case MOCK_SHIFTING:
-                return context.getString(R.string.text_param_mock_name, name);
-
-            case UNKNOWN:
-            default:
-                return context.getString(R.string.text_param_sensor_name, name);
-        }
+        return switch (deviceId.getDeviceType()) {
+            case SHIMANO_SHIFTING -> context.getString(R.string.text_param_di2_name, name);
+            case SHIMANO_EBIKE -> context.getString(R.string.text_param_steps_name, name);
+            case MOCK_SHIFTING -> context.getString(R.string.text_param_mock_name, name);
+            default -> context.getString(R.string.text_param_sensor_name, name);
+        };
     }
 
 }

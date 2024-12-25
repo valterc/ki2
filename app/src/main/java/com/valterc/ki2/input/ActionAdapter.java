@@ -54,7 +54,7 @@ public class ActionAdapter {
 
     private void showToast(Ki2ExtensionContext context, int textResId) {
         context.getKarooSystem()
-                .dispatch(new InRideAlert("input", R.drawable.ic_audio_alert, "Audio alert", context.getContext().getString(textResId), 1500L, R.color.grey_100, R.color.black));
+                .dispatch(new InRideAlert("input", R.drawable.ic_audio_alert, context.getContext().getString(R.string.category_preference_audio_alerts), context.getContext().getString(textResId), 3000L, R.color.grey_100, R.color.black));
     }
 
     private void toggleAudioAlerts(Ki2ExtensionContext context) {

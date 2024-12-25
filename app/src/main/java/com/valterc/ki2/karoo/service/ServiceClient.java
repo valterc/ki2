@@ -470,6 +470,18 @@ public class ServiceClient {
         });
     }
 
+    /**
+     * Unregister a weak referenced listener that will receive global preferences.
+     *
+     * @param preferencesConsumer Consumer that will receive global preferences. It will be referenced using a weak reference so the owner must keep a strong reference.
+     */
+    public void unregisterPreferencesWeakListener(Consumer<PreferencesView> preferencesConsumer) {
+        handler.post(() -> {
+            preferencesListeners.removeListener(preferencesConsumer);
+            maybeStopPreferencesEvents();
+        });
+    }
+
     private void maybeStartPreferencesEvents() {
         if (service == null) {
             return;
