@@ -13,7 +13,6 @@ import com.valterc.ki2.ant.AntManager;
 import com.valterc.ki2.ant.channel.AntChannelWrapper;
 import com.valterc.ki2.ant.channel.ScanChannelConfiguration;
 import com.valterc.ki2.data.device.DeviceId;
-import com.valterc.ki2.data.device.DeviceType;
 
 import timber.log.Timber;
 
@@ -48,10 +47,6 @@ public class AntScanner {
         }
 
         try {
-
-            scanListener.onAntScanResult(new DeviceId(10100, DeviceType.MOCK_SHIFTING_VALUE, 5));
-            scanListener.onAntScanResult(new DeviceId(10200, DeviceType.MOCK_SHIFTING_VALUE, 5));
-
             getScanAntChannel(scanChannelConfiguration);
             Timber.i("Scan started");
         } catch (Exception e) {
