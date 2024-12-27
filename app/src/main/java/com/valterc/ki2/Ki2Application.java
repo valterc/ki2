@@ -16,7 +16,7 @@ import androidx.annotation.Nullable;
 import com.valterc.ki2.ant.recorder.AntRecorderManager;
 import com.valterc.ki2.data.connection.ConnectionInfo;
 import com.valterc.ki2.data.device.DeviceId;
-import com.valterc.ki2.karoo.extension.Ki2ExtensionService;
+import com.valterc.ki2.karoo.Ki2ExtensionService;
 import com.valterc.ki2.services.IKi2Service;
 import com.valterc.ki2.services.Ki2Service;
 import com.valterc.ki2.services.callbacks.IConnectionInfoCallback;

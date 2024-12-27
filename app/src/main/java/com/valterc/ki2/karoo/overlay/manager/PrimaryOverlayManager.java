@@ -1,9 +1,7 @@
 package com.valterc.ki2.karoo.overlay.manager;
 
-import android.view.ViewGroup;
-
 import com.valterc.ki2.data.message.ShowOverlayMessage;
-import com.valterc.ki2.karoo.extension.Ki2ExtensionContext;
+import com.valterc.ki2.karoo.Ki2ExtensionContext;
 import com.valterc.ki2.karoo.overlay.OverlayPreferences;
 
 import java.util.Set;

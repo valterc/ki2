@@ -6,11 +6,17 @@
     scansDevices="true">
 
     <DataType
-        description="Gears view with gear index."
-        displayName="Gears"
-        graphical="true"
+        description="Shifting battery %."
+        displayName="Shifting Battery %"
+        icon="@drawable/ic_hh_battery"
+        typeId="TYPE_SHIFTING_BATTERY_PERCENTAGE" />
+
+    <DataType
+        description="Shifting mode."
+        displayName="Shifting mode"
         icon="@drawable/ic_hh_gear"
-        typeId="graphical-gears" />
+        typeId="TYPE_SHIFTING_MODE"
+        graphical="true" />
 
     <!--
     <DataType

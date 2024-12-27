@@ -10,7 +10,7 @@ import com.valterc.ki2.data.message.AudioAlertEnableMessage;
 import com.valterc.ki2.data.message.AudioAlertToggleMessage;
 import com.valterc.ki2.data.message.ShowOverlayMessage;
 import com.valterc.ki2.data.preferences.PreferencesView;
-import com.valterc.ki2.karoo.extension.Ki2ExtensionContext;
+import com.valterc.ki2.karoo.Ki2ExtensionContext;
 
 import java.util.HashMap;
 import java.util.function.Consumer;

@@ -80,10 +80,9 @@
             android:exported="true"
             tools:ignore="ExportedService" />
 
-        <service android:name=".karoo.extension.Ki2ExtensionService"
+        <service android:name=".karoo.Ki2ExtensionService"
             android:exported="true"
-            tools:ignore="ExportedService"
-            android:foregroundServiceType="specialUse">
+            tools:ignore="ExportedService">
             <intent-filter>
                 <action android:name="io.hammerhead.karooext.KAROO_EXTENSION" />
             </intent-filter>

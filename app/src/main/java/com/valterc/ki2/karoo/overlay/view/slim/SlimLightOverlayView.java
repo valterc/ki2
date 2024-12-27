@@ -4,8 +4,7 @@ import android.view.View;
 
 import com.valterc.ki2.R;
 import com.valterc.ki2.data.preferences.PreferencesView;
-import com.valterc.ki2.karoo.Ki2Context;
-import com.valterc.ki2.karoo.extension.Ki2ExtensionContext;
+import com.valterc.ki2.karoo.Ki2ExtensionContext;
 
 public class SlimLightOverlayView extends SlimOverlayView {
 

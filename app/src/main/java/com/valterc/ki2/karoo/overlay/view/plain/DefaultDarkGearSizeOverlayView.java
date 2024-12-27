@@ -11,9 +11,7 @@ import com.valterc.ki2.data.device.BatteryInfo;
 import com.valterc.ki2.data.preferences.PreferencesView;
 import com.valterc.ki2.data.preferences.device.DevicePreferencesView;
 import com.valterc.ki2.data.shifting.ShiftingInfo;
-import com.valterc.ki2.karoo.Ki2Context;
-import com.valterc.ki2.karoo.extension.Ki2ExtensionContext;
-import com.valterc.ki2.karoo.views.KarooTheme;
+import com.valterc.ki2.karoo.Ki2ExtensionContext;
 
 public class DefaultDarkGearSizeOverlayView extends DefaultDarkOverlayView {
 

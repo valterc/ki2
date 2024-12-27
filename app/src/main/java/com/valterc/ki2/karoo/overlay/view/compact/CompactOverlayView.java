@@ -14,10 +14,10 @@ import com.valterc.ki2.data.preferences.PreferencesView;
 import com.valterc.ki2.data.preferences.device.DevicePreferencesView;
 import com.valterc.ki2.data.shifting.ShiftingInfo;
 import com.valterc.ki2.data.shifting.UpcomingSynchroShiftType;
-import com.valterc.ki2.karoo.extension.Ki2ExtensionContext;
+import com.valterc.ki2.karoo.Ki2ExtensionContext;
 import com.valterc.ki2.karoo.overlay.view.BaseOverlayView;
-import com.valterc.ki2.karoo.extension.shifting.BuzzerTracking;
-import com.valterc.ki2.karoo.extension.shifting.ShiftingGearingHelper;
+import com.valterc.ki2.karoo.shifting.BuzzerTracking;
+import com.valterc.ki2.karoo.shifting.ShiftingGearingHelper;
 
 public abstract class CompactOverlayView extends BaseOverlayView<CompactOverlayViewHolder> {
 

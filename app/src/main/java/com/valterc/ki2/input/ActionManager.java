@@ -5,7 +5,7 @@ import android.annotation.SuppressLint;
 import com.valterc.ki2.data.action.KarooActionEvent;
 import com.valterc.ki2.data.device.DeviceId;
 import com.valterc.ki2.data.preferences.PreferencesView;
-import com.valterc.ki2.karoo.extension.Ki2ExtensionContext;
+import com.valterc.ki2.karoo.Ki2ExtensionContext;
 
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;

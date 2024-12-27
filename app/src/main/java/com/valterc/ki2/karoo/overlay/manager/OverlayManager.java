@@ -1,8 +1,6 @@
 package com.valterc.ki2.karoo.overlay.manager;
 
-import android.view.ViewGroup;
-
-import com.valterc.ki2.karoo.extension.Ki2ExtensionContext;
+import com.valterc.ki2.karoo.Ki2ExtensionContext;
 
 /** @noinspection FieldCanBeLocal*/
 public class OverlayManager {
