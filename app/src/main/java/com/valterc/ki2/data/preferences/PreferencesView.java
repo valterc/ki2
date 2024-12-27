@@ -28,7 +28,7 @@ public class PreferencesView implements Parcelable {
 
     private Integer cachedAccentColor;
 
-    public static final Parcelable.Creator<PreferencesView> CREATOR = new Parcelable.Creator<PreferencesView>() {
+    public static final Parcelable.Creator<PreferencesView> CREATOR = new Parcelable.Creator<>() {
         public PreferencesView createFromParcel(Parcel in) {
             return new PreferencesView(in);
         }
@@ -193,17 +193,6 @@ public class PreferencesView implements Parcelable {
         }
 
         return defaultValueSupplier.get();
-    }
-
-    /**
-     * Indicates if FIT Recording setting is enabled.
-     *
-     * @param context Ki2 application context. Cannot be a context generated from another package.
-     * @return True if FIT Recording setting is enabled, false otherwise.
-     */
-    public boolean isFITRecordingEnabled(Context context) {
-        return getBoolean(context.getString(R.string.preference_fit_recording),
-                () -> context.getResources().getBoolean(R.bool.default_preference_fit_recording));
     }
 
     /**
@@ -526,17 +515,17 @@ public class PreferencesView implements Parcelable {
             String colorString = getString(context.getString(R.string.preference_accent_color), () ->
                     context.getResources().getString(R.string.default_preference_accent_color));
 
-            switch (colorString) {
-                case "default": return karooTheme == KarooTheme.WHITE ? context.getColor(R.color.hh_gears_active_light) : context.getColor(R.color.hh_gears_active_dark);
-                case "blue": return context.getColor(R.color.hh_gears_blue);
-                case "red": return context.getColor(R.color.hh_gears_red);
-                case "green": return context.getColor(R.color.hh_gears_green);
-                case "yellow": return context.getColor(R.color.hh_gears_yellow);
-                case "orange": return context.getColor(R.color.hh_orange);
-                case "pink": return context.getColor(R.color.pink);
-            }
+            return switch (colorString) {
+                case "blue" -> context.getColor(R.color.hh_gears_blue);
+                case "red" -> context.getColor(R.color.hh_gears_red);
+                case "green" -> context.getColor(R.color.hh_gears_green);
+                case "yellow" -> context.getColor(R.color.hh_gears_yellow);
+                case "orange" -> context.getColor(R.color.hh_orange);
+                case "pink" -> context.getColor(R.color.pink);
+                default ->
+                        karooTheme == KarooTheme.WHITE ? context.getColor(R.color.hh_gears_active_light) : context.getColor(R.color.hh_gears_active_dark);
+            };
 
-            return karooTheme == KarooTheme.WHITE ? context.getColor(R.color.hh_gears_active_light) : context.getColor(R.color.hh_gears_active_dark);
         }, value -> cachedAccentColor = value);
     }
 

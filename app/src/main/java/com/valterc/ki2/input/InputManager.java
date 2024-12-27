@@ -40,15 +40,16 @@ public class InputManager {
         /*
          *   Single / Double press events
          */
-        preferenceToSwitchKeyMap.put("navigate_left", (switchEvent, converter) -> new KarooActionEvent(KarooAction.TOP_LEFT, switchEvent.getRepeat()));
-        preferenceToSwitchKeyMap.put("navigate_right", (switchEvent, converter) -> new KarooActionEvent(KarooAction.TOP_RIGHT, switchEvent.getRepeat()));
-        preferenceToSwitchKeyMap.put("pause_resume_confirm", (switchEvent, converter) -> new KarooActionEvent(KarooAction.BOTTOM_RIGHT, switchEvent.getRepeat()));
-        preferenceToSwitchKeyMap.put("lap_map_back", (switchEvent, converter) -> new KarooActionEvent(KarooAction.BOTTOM_LEFT,switchEvent.getRepeat()));
+        preferenceToSwitchKeyMap.put("top_left", (switchEvent, converter) -> new KarooActionEvent(KarooAction.TOP_LEFT, switchEvent.getRepeat()));
+        preferenceToSwitchKeyMap.put("top_right", (switchEvent, converter) -> new KarooActionEvent(KarooAction.TOP_RIGHT, switchEvent.getRepeat()));
+        preferenceToSwitchKeyMap.put("bottom_left", (switchEvent, converter) -> new KarooActionEvent(KarooAction.BOTTOM_LEFT,switchEvent.getRepeat()));
+        preferenceToSwitchKeyMap.put("bottom_right", (switchEvent, converter) -> new KarooActionEvent(KarooAction.BOTTOM_RIGHT, switchEvent.getRepeat()));
         preferenceToSwitchKeyMap.put("lap", (switchEvent, converter) -> new KarooActionEvent(KarooAction.VIRTUAL_LAP, switchEvent.getRepeat()));
         preferenceToSwitchKeyMap.put("press_map_graph_zoom_out", (switchEvent, converter) -> new KarooActionEvent(KarooAction.VIRTUAL_ZOOM_OUT, switchEvent.getRepeat()));
         preferenceToSwitchKeyMap.put("press_map_graph_zoom_in", (switchEvent, converter) -> new KarooActionEvent(KarooAction.VIRTUAL_ZOOM_IN, switchEvent.getRepeat()));
         preferenceToSwitchKeyMap.put("press_switch_to_map_page", (switchEvent, converter) -> new KarooActionEvent(KarooAction.VIRTUAL_SWITCH_TO_MAP_PAGE, switchEvent.getRepeat()));
         preferenceToSwitchKeyMap.put("press_turn_screen_on", (switchEvent, converter) -> new KarooActionEvent(KarooAction.VIRTUAL_TURN_SCREEN_ON, switchEvent.getRepeat()));
+        preferenceToSwitchKeyMap.put("press_turn_screen_off", (switchEvent, converter) -> new KarooActionEvent(KarooAction.VIRTUAL_TURN_SCREEN_OFF, switchEvent.getRepeat()));
         preferenceToSwitchKeyMap.put("press_toggle_audio_alerts", (switchEvent, converter) -> new KarooActionEvent(KarooAction.VIRTUAL_TOGGLE_AUDIO_ALERTS, switchEvent.getRepeat()));
         preferenceToSwitchKeyMap.put("press_disable_audio_alerts", (switchEvent, converter) -> new KarooActionEvent(KarooAction.VIRTUAL_DISABLE_AUDIO_ALERTS, switchEvent.getRepeat()));
         preferenceToSwitchKeyMap.put("press_enable_audio_alerts", (switchEvent, converter) -> new KarooActionEvent(KarooAction.VIRTUAL_ENABLE_AUDIO_ALERTS, switchEvent.getRepeat()));
@@ -123,7 +124,13 @@ public class InputManager {
             }
             return converter.apply(new SwitchEvent(switchEvent.getType(), SwitchCommand.SINGLE_CLICK, switchEvent.getRepeat()));
         });
-        preferenceToSwitchKeyMap.put("hold_short_single_pause_resume_confirm", (switchEvent, converter) -> {
+        preferenceToSwitchKeyMap.put("hold_short_single_bottom_left", (switchEvent, converter) -> {
+            if (switchEvent.getCommand() != SwitchCommand.LONG_PRESS_DOWN) {
+                return null;
+            }
+            return new KarooActionEvent(KarooAction.BOTTOM_LEFT, switchEvent.getRepeat());
+        });
+        preferenceToSwitchKeyMap.put("hold_short_single_bottom_right", (switchEvent, converter) -> {
             if (switchEvent.getCommand() != SwitchCommand.LONG_PRESS_DOWN) {
                 return null;
             }
