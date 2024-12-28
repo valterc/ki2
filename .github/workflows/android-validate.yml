@@ -58,5 +58,5 @@ jobs:
         awk '{sub(/\r$/,""); printf "%s\\n", $0}' app/build/release-notes
         sed -i 's|__VERSION_NAME__|8.2|g' app/build/manifest.json
         sed -i 's|__VERSION_CODE__|26|g' app/build/manifest.json
-        sed -i 's|__RELEASE_NOTES__|'"$(echo app/build/release-notes)"'|g' app/build/manifest.json
+        sed -i 's|__RELEASE_NOTES__|'"$(cat app/build/release-notes)"'|g' app/build/manifest.json
         cat app/build/manifest.json
