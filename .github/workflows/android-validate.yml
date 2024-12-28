@@ -41,19 +41,5 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
 
-    - name: Get release notes
-      uses: cardinalby/git-get-release-action@1.2.4
-      id: release-notes
-      env:
-        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-      with:
-        tag: 8.2
-
-    - name: Generate Manifest file
-      run: |
-        mkdir app/build
-        cat > app/build/release-notes<< EOF
-        ${{ steps.release-notes.outputs.body }}
-        EOF
-        python3 .scripts/generate-manifest.py app/manifest-template.json app/build/manifest.json '8.2' '26' app/build/release-notes
-        cat app/build/manifest.json
+    - name: Build with Gradle
+      run: ./gradlew build
