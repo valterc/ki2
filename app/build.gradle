@@ -38,7 +38,7 @@ android {
         versionCode properties.getProperty("VERSION_CODE", "1") as int
         versionName properties.getProperty("VERSION_NAME", "0.1")
 		
-        archivesBaseName = "ki2-$versionName"
+        archivesBaseName = "ki2"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
