@@ -92,7 +92,7 @@
 
         <meta-data
             android:name="io.hammerhead.karooext.MANIFEST_URL"
-            android:value="https://github.com/valterc/ki2/releases/latest/download/ki2-manifest.json" />
+            android:value="https://github.com/valterc/ki2/releases/latest/download/manifest.json" />
 
     </application>
 
