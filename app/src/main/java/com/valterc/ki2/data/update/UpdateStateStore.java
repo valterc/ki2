@@ -22,7 +22,7 @@ public final class UpdateStateStore {
     private static final String PREFERENCE_KEY_NEW_VERSION = "NewVersion";
     private static final String PREFERENCE_KEY_UPDATE_INSTANT = "UpdateInstant";
     private static final String PREFERENCE_KEY_CHECK_INSTANT = "CheckInstant";
-    private static final String PREFERENCE_KEY_FAILED = "FAILED";
+    private static final String PREFERENCE_KEY_FAILED = "Failed";
     private static final String PREFERENCE_KEY_UPDATE_AVAILABLE = "UpdateAvailable";
     private static final String PREFERENCE_KEY_UPDATE_VERSION = "UpdateVersion";
 
