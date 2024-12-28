@@ -58,11 +58,11 @@ jobs:
         cat > app/build/release-notes<< EOF
         ${{ steps.release-notes.outputs.body }}
         EOF
-        awk '{gsub(/\r/$,""); ORS="\\n"}1' app/build/release-notes
+        awk '{sub(/\r$/,""); printf "%s\\n", $0}' app/build/release-notes
         sed -i 's|__VERSION_NAME__|${{ github.ref_name }}|g' app/build/manifest.json
         sed -i 's|__VERSION_CODE__|${{ github.run_number }}|g' app/build/manifest.json
         sed -i 's|__RELEASE_NOTES__|'"$(echo app/build/release-notes)"'|g' app/build/manifest.json
-        cat app/build/manifest.json
+        cat app/build/manifest.json        
 
     - name: Upload APK to release
       uses: svenstaro/upload-release-action@2.3.0
