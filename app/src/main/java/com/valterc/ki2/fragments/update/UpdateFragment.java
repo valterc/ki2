@@ -9,7 +9,6 @@ import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -133,18 +132,6 @@ public class UpdateFragment extends Fragment {
 
         LinearProgressIndicator linearProgressIndicatorProgress = view.findViewById(R.id.linearprogressindicator_update_progress);
 
-        Button buttonCheckForUpdates = view.findViewById(R.id.button_update_check_for_updates);
-        Button buttonUpdate = view.findViewById(R.id.button_update);
-
-        buttonCheckForUpdates.setOnClickListener((event) -> viewModel.checkForUpdates());
-        buttonUpdate.setOnClickListener((event) -> {
-            if (UpdateStateStore.isFirstUpdate(requireContext())) {
-                new UpdateTutorialDialog(requireContext(), null, () -> viewModel.performUpdate(requireActivity())).show();
-            } else {
-                viewModel.performUpdate(requireActivity());
-            }
-        });
-
         viewModel.getErrorMessage().observe(getViewLifecycleOwner(), textViewError::setText);
 
         viewModel.getReleaseInfo().observe(getViewLifecycleOwner(), releaseInfo -> {
@@ -161,35 +148,13 @@ public class UpdateFragment extends Fragment {
 
             switch (updateStatus) {
                 case START:
-                    linearLayoutCheckForUpdates.setVisibility(View.VISIBLE);
-                    break;
-
                 case CHECKING_FOR_UPDATE:
-                    linearLayoutCheckingForUpdates.setVisibility(View.VISIBLE);
-                    break;
-
                 case UPDATE_AVAILABLE:
-                    linearLayoutUpdateAvailable.setVisibility(View.VISIBLE);
-                    ReleaseInfo releaseInfo = viewModel.getReleaseInfo().getValue();
-                    if (releaseInfo != null) {
-                        UpdateStateStore.checkedForUpdates(requireContext(), true, releaseInfo.getName());
-                    }
-                    break;
-
                 case NO_UPDATE_AVAILABLE:
-                    linearLayoutUpdateNotAvailable.setVisibility(View.VISIBLE);
-                    UpdateStateStore.checkedForUpdates(requireContext(), false, null);
-                    break;
-
                 case UPDATING:
                 case UPDATING_USER_ACTION:
-                    linearLayoutUpdateNewVersion.setVisibility(View.VISIBLE);
-                    linearLayoutUpdating.setVisibility(View.VISIBLE);
-                    break;
-
                 case ERROR:
                     linearLayoutError.setVisibility(View.VISIBLE);
-                    linearLayoutCheckForUpdates.setVisibility(View.VISIBLE);
                     break;
 
                 case UPDATE_COMPLETE:
