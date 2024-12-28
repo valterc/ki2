@@ -41,9 +41,6 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
 
-    - name: Build with Gradle
-      run: ./gradlew build
-
     - name: Get release notes
       uses: cardinalby/git-get-release-action@1.2.4
       id: release-notes
