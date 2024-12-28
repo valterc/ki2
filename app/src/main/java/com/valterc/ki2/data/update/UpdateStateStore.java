@@ -22,7 +22,7 @@ public final class UpdateStateStore {
     private static final String PREFERENCE_KEY_NEW_VERSION = "NewVersion";
     private static final String PREFERENCE_KEY_UPDATE_INSTANT = "UpdateInstant";
     private static final String PREFERENCE_KEY_CHECK_INSTANT = "CheckInstant";
-    private static final String PREFERENCE_KEY_FAILED = "LastCheckInstant";
+    private static final String PREFERENCE_KEY_FAILED = "Failed";
     private static final String PREFERENCE_KEY_UPDATE_AVAILABLE = "UpdateAvailable";
     private static final String PREFERENCE_KEY_UPDATE_VERSION = "UpdateVersion";
 
@@ -78,11 +78,22 @@ public final class UpdateStateStore {
     }
 
     public static boolean shouldAutomaticallyCheckForUpdatesInApp(Context context) {
-        return false;
+        SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences sharedPreferences = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
+        return !BuildConfig.DEBUG &&
+                defaultSharedPreferences.getBoolean(context.getString(R.string.preference_auto_update), context.getResources().getBoolean(R.bool.default_preference_auto_update)) &&
+                (sharedPreferences.getBoolean(PREFERENCE_KEY_UPDATE_AVAILABLE, false) ||
+                        Instant.ofEpochMilli(sharedPreferences.getLong(PREFERENCE_KEY_CHECK_INSTANT, 0))
+                                .plus(Period.ofDays(1)).isBefore(Instant.now()));
     }
 
     public static boolean shouldAutomaticallyCheckForUpdatesInBackground(Context context) {
-        return false;
+        SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences sharedPreferences = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
+        return !BuildConfig.DEBUG &&
+                defaultSharedPreferences.getBoolean(context.getString(R.string.preference_auto_update), context.getResources().getBoolean(R.bool.default_preference_auto_update)) &&
+                Instant.ofEpochMilli(sharedPreferences.getLong(PREFERENCE_KEY_CHECK_INSTANT, 0))
+                        .plus(Period.ofDays(1)).isBefore(Instant.now());
     }
 
     public static void checkedForUpdates(Context context, boolean updateAvailable, String updateVersion) {

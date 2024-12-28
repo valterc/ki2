@@ -49,6 +49,10 @@ public class DownloadPackageTask implements Callable<DownloadedPackageInfo> {
             }
 
             File fileDownloadsDirectory = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
+            if (fileDownloadsDirectory == null){
+                throw new Exception("Download directory is not available");
+            }
+
             if (fileDownloadsDirectory.exists() && !fileDownloadsDirectory.isDirectory()) {
                 if (!fileDownloadsDirectory.delete()) {
                     throw new Exception("Download directory is a file and cannot be deleted");
