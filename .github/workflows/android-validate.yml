@@ -40,9 +40,6 @@ jobs:
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
-      
-    - name: Build with Gradle
-      run: ./gradlew build
 
     - uses: cardinalby/git-get-release-action@1.2.4
       id: release-notes
@@ -57,7 +54,7 @@ jobs:
         cat > app/build/release-notes<< EOF
         ${{ steps.release-notes.outputs.body }}
         EOF
-        awk '{gsub(/\r/$,""); ORS="\\n"}1' app/build/release-notes
+        awk '{sub(/\r$/,""); printf "%s\\n", $0}' app/build/release-notes
         sed -i 's|__VERSION_NAME__|8.2|g' app/build/manifest.json
         sed -i 's|__VERSION_CODE__|26|g' app/build/manifest.json
         sed -i 's|__RELEASE_NOTES__|'"$(echo app/build/release-notes)"'|g' app/build/manifest.json
