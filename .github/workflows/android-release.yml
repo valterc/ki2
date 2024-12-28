@@ -44,14 +44,45 @@ jobs:
       
     - name: Build with Gradle
       run: ./gradlew build
-        
-    - name: Upload binaries to release
+
+    - name: Get Release Notes
+      id: release-notes
+      uses: RedCrafter07/release-notes-action@v1
+      with:
+        tag-name: ${{ github.ref_name }}
+        token: ${{ secrets.GH_TOKEN }}
+
+    - name: Generate Manifest file
+      run: |
+        cp app/manifest-template.json app/build/manifest.json
+        sed -i 's/__VERSION_NAME__/${{ github.ref_name }}/g' app/build/manifest.json
+        sed -i 's/__VERSION_CODE__/${{ github.run_number }}/g' app/build/manifest.json
+        sed -i 's/__RELEASE_NOTES__/${{ steps.release-notes.outputs.release-notes }}/g' app/build/manifest.json
+        cat app/build/manifest.json
+
+    - name: Upload APK to release
       uses: svenstaro/upload-release-action@2.3.0
       with:
         repo_name: valterc/ki2
         repo_token: ${{ secrets.GH_TOKEN }}
-        file: app/build/outputs/apk/release/ki2-${{ github.ref_name }}-release.apk
-        asset_name: ki2-${{ github.ref_name }}-release.apk
-        tag: ${{ github.ref }}
+        file: app/build/outputs/apk/release/ki2-release.apk
+        asset_name: ki2-release.apk
         overwrite: true
-        body: "Ki2 ${{ github.ref_name }}"
+
+    - name: Upload Icon to release
+      uses: svenstaro/upload-release-action@2.3.0
+      with:
+        repo_name: valterc/ki2
+        repo_token: ${{ secrets.GH_TOKEN }}
+        file: app/src/main/res/drawable/ic_icon.png
+        asset_name: ki2-icon.png
+        overwrite: true
+
+    - name: Upload Manifest to release
+      uses: svenstaro/upload-release-action@2.3.0
+      with:
+        repo_name: valterc/ki2
+        repo_token: ${{ secrets.GH_TOKEN }}
+        file: app/build/manifest.json
+        asset_name: ki2-manifest.json
+        overwrite: true

@@ -43,3 +43,18 @@ jobs:
       
     - name: Build with Gradle
       run: ./gradlew build
+
+    - name: Get Release Notes
+      id: release-notes
+      uses: RedCrafter07/release-notes-action@v1
+      with:
+        tag-name: ${{ github.ref_name }}
+        token: ${{ secrets.GH_TOKEN }}
+
+    - name: Generate Manifest file
+      run: |
+        cp app/manifest-template.json app/build/manifest.json
+        sed -i 's/__VERSION_NAME__/${{ github.ref_name }}/g' app/build/manifest.json
+        sed -i 's/__VERSION_CODE__/${{ github.run_number }}/g' app/build/manifest.json
+        sed -i 's/__RELEASE_NOTES__/${{ steps.release-notes.outputs.release-notes }}/g' app/build/manifest.json
+        cat app/build/manifest.json

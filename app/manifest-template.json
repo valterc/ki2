@@ -3,9 +3,9 @@
   "packageName": "com.valterc.ki2",
   "iconUrl": "https://github.com/valterc/ki2/releases/latest/download/ki2-icon.png",
   "latestApkUrl": "https://github.com/valterc/ki2/releases/latest/download/ki2-release.apk",
-  "latestVersion": "",
-  "latestVersionCode": ,
+  "latestVersion": "__VERSION_NAME__",
+  "latestVersionCode": __VERSION_CODE__,
   "developer": "Valter C.",
-  "description": "Di2 back to Karoo",
-  "releaseNotes": ""
+  "description": "Di2 back to Karoo.",
+  "releaseNotes": "__RELEASE_NOTES__"
 }
