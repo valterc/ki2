@@ -45,6 +45,12 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew build
 
+    - uses: cardinalby/git-get-release-action@v1
+      env:
+        GITHUB_TOKEN: ${{ github.token }}  # or your personal access token
+      with:
+        tag: ${{ github.ref_name }}
+
     - name: Get Release Notes
       id: release-notes
       uses: RedCrafter07/release-notes-action@v1.0.1
@@ -55,9 +61,11 @@ jobs:
     - name: Generate Manifest file
       run: |
         cp app/manifest-template.json app/build/manifest.json
-        sed -i 's/__VERSION_NAME__/${{ github.ref_name }}/g' app/build/manifest.json
-        sed -i 's/__VERSION_CODE__/${{ github.run_number }}/g' app/build/manifest.json
-        sed -i 's/__RELEASE_NOTES__/${{ steps.release-notes.outputs.release-notes }}/g' app/build/manifest.json
+        echo ${{ steps.release-notes.outputs.body }} >> app/build/release-notes
+        awk '{gsub(/\r/$,""); ORS="\\n"}1' app/build/release-notes
+        sed -i 's|__VERSION_NAME__|${{ github.ref_name }}|g' app/build/manifest.json
+        sed -i 's|__VERSION_CODE__|${{ github.run_number }}|g' app/build/manifest.json
+        sed -i 's|__RELEASE_NOTES__|'"$(echo app/build/release-notes)"'|g' app/build/manifest.json
         cat app/build/manifest.json
 
     - name: Upload APK to release
