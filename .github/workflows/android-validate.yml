@@ -44,12 +44,12 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew build
 
-    - name: Get Release Notes
+    - uses: cardinalby/git-get-release-action@1.2.4
       id: release-notes
-      uses: RedCrafter07/release-notes-action@v1.0.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
       with:
-        tag-name: 8.2
-        token: ${{ secrets.GH_TOKEN }}
+        tag: 8.2
 
     - name: Generate Manifest file
       run: |
