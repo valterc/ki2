@@ -47,7 +47,7 @@ jobs:
 
     - name: Get Release Notes
       id: release-notes
-      uses: RedCrafter07/release-notes-action@v1
+      uses: RedCrafter07/release-notes-action@v1.0.1
       with:
         tag-name: ${{ github.ref_name }}
         token: ${{ secrets.GH_TOKEN }}
