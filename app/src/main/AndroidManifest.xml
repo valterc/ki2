@@ -25,6 +25,7 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
 
     <application
         android:name=".Ki2Application"
@@ -79,7 +80,8 @@
 
         <service android:name=".karoo.Ki2ExtensionService"
             android:exported="true"
-            tools:ignore="ExportedService">
+            tools:ignore="ExportedService"
+            android:foregroundServiceType="specialUse">
             <intent-filter>
                 <action android:name="io.hammerhead.karooext.KAROO_EXTENSION" />
             </intent-filter>
