@@ -78,24 +78,11 @@ public final class UpdateStateStore {
     }
 
     public static boolean shouldAutomaticallyCheckForUpdatesInApp(Context context) {
-        SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        SharedPreferences sharedPreferences = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
-
-        return !BuildConfig.DEBUG &&
-                defaultSharedPreferences.getBoolean(context.getString(R.string.preference_auto_update), context.getResources().getBoolean(R.bool.default_preference_auto_update)) &&
-                (sharedPreferences.getBoolean(PREFERENCE_KEY_UPDATE_AVAILABLE, false) ||
-                        Instant.ofEpochMilli(sharedPreferences.getLong(PREFERENCE_KEY_CHECK_INSTANT, 0))
-                                .plus(Period.ofDays(1)).isBefore(Instant.now()));
+        return false;
     }
 
     public static boolean shouldAutomaticallyCheckForUpdatesInBackground(Context context) {
-        SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        SharedPreferences sharedPreferences = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
-
-        return !BuildConfig.DEBUG &&
-                defaultSharedPreferences.getBoolean(context.getString(R.string.preference_auto_update), context.getResources().getBoolean(R.bool.default_preference_auto_update)) &&
-                Instant.ofEpochMilli(sharedPreferences.getLong(PREFERENCE_KEY_CHECK_INSTANT, 0))
-                        .plus(Period.ofDays(1)).isBefore(Instant.now());
+        return false;
     }
 
     public static void checkedForUpdates(Context context, boolean updateAvailable, String updateVersion) {

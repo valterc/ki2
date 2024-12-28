@@ -40,10 +40,16 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (!BuildConfig.DEBUG && Build.DEVICE.equals(DEVICE_KAROO_K24)) {
+        if (Build.DEVICE.equals(DEVICE_KAROO_K24)) {
             new AlertDialog.Builder(this, R.style.AlertDialogStyle)
                     .setTitle(R.string.text_not_compatible)
                     .setMessage(getString(R.string.text_k24))
+                    .setPositiveButton(android.R.string.ok, (dialog, whichButton) -> dialog.dismiss())
+                    .show();
+        } else {
+            new AlertDialog.Builder(this, R.style.AlertDialogStyle)
+                    .setTitle("Unsupported app")
+                    .setMessage("This Ki2 version using the Karoo SDK is no longer supported but may remain functional. A new version of the app using the Karoo Extensions is available to download from https://github.com/valterc/ki2.\n\nThe new Ki2 version is not backwards compatible and will not offer all features. You may choose to remain with the old version of use the new one. Only the new Ki2 version will get further updates.")
                     .setPositiveButton(android.R.string.ok, (dialog, whichButton) -> dialog.dismiss())
                     .show();
         }

@@ -256,16 +256,6 @@
                 android:orientation="vertical"
                 android:visibility="visible">
 
-                <Button
-                    android:id="@+id/button_update_check_for_updates"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:backgroundTint="@color/hh_light_blue"
-                    android:contentDescription="@string/text_check_for_updates"
-                    android:text="@string/text_check_for_updates"
-                    app:icon="@drawable/ic_update" />
-
             </LinearLayout>
 
             <LinearLayout
@@ -273,8 +263,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="10dp"
-                android:orientation="vertical"
-                android:visibility="gone">
+                android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -292,25 +281,12 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/text_header_error_prefix" />
-
-                    <TextView
                         android:id="@+id/textview_update_error"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textStyle="bold"
-                        tools:text="File not found" />
+                        android:text="This version of Ki2 using the Karoo SDK is no longer supported. Please find a new version at \n\nhttps://github.com/valterc/ki2" />
 
                 </LinearLayout>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/text_report_problems"
-                    android:textColor="@color/hh_faded_gray"
-                    android:textSize="13sp" />
 
             </LinearLayout>
 
