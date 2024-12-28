@@ -50,6 +50,7 @@ jobs:
 
     - name: Generate Manifest file
       run: |
+        mkdir app/build
         cp app/manifest-template.json app/build/manifest.json
         cat > app/build/release-notes<< EOF
         ${{ steps.release-notes.outputs.body }}
