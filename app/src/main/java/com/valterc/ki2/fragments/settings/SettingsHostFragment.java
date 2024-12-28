@@ -34,7 +34,7 @@ public class SettingsHostFragment extends Fragment implements IKarooKeyListener 
 
     @Override
     public boolean onKarooKeyPressed(KarooKey karooKey) {
-        if (karooKey == KarooKey.BACK) {
+        if (karooKey == KarooKey.BOTTOM_LEFT) {
             return getChildFragmentManager().popBackStackImmediate();
         }
 

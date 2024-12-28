@@ -25,12 +25,10 @@ import com.valterc.ki2.data.shifting.FrontTeethPattern;
 import com.valterc.ki2.data.shifting.RearTeethPattern;
 import com.valterc.ki2.data.shifting.ShiftingInfo;
 import com.valterc.ki2.data.shifting.ShiftingMode;
-import com.valterc.ki2.karoo.Ki2Context;
+import com.valterc.ki2.karoo.Ki2ExtensionContext;
 import com.valterc.ki2.karoo.overlay.view.IOverlayView;
 import com.valterc.ki2.karoo.overlay.view.builder.OverlayViewBuilderEntry;
 import com.valterc.ki2.karoo.overlay.view.builder.OverlayViewBuilderRegistry;
-
-import io.hammerhead.sdk.v0.SdkContext;
 
 public class OverlayPositionDialogFragment extends DialogFragment {
 
@@ -68,7 +66,7 @@ public class OverlayPositionDialogFragment extends DialogFragment {
         PreferencesView preferencesView = new PreferencesView(requireContext());
 
         RelativeLayout relativeLayout = view.findViewById(R.id.relativelayout_overlay_position);
-        Ki2Context ki2Context = new Ki2Context(SdkContext.buildSdkContext(requireContext()));
+        Ki2ExtensionContext ki2Context = new Ki2ExtensionContext(requireContext());
 
         OverlayViewBuilderEntry entry = OverlayViewBuilderRegistry.getBuilder(theme);
         assert entry != null;

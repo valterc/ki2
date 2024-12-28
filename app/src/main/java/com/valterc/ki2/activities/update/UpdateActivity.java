@@ -98,7 +98,7 @@ public class UpdateActivity extends AppCompatActivity {
         if ((view == null) || !view.isClickable() && !(view instanceof Button)) {
             KarooKey karooKey = KarooKey.fromKeyCode(e.getKeyCode());
 
-            if (karooKey != KarooKey.NONE) {
+            if (karooKey != KarooKey.INVALID) {
                 Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.container);
 
                 if (fragment instanceof IKarooKeyListener) {

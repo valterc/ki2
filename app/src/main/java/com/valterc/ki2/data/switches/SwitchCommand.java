@@ -1,6 +1,6 @@
 package com.valterc.ki2.data.switches;
 
-import com.valterc.ki2.data.input.KeyAction;
+import com.valterc.ki2.data.action.KeyAction;
 
 public enum SwitchCommand {
 

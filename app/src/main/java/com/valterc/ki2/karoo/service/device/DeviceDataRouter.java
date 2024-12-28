@@ -2,6 +2,7 @@ package com.valterc.ki2.karoo.service.device;
 
 import android.content.Context;
 
+import com.valterc.ki2.data.action.KarooActionEvent;
 import com.valterc.ki2.data.connection.ConnectionInfo;
 import com.valterc.ki2.data.connection.ConnectionStatus;
 import com.valterc.ki2.data.device.BatteryInfo;
@@ -21,9 +22,16 @@ public class DeviceDataRouter {
 
     private final BiDataStreamWeakListenerList<DeviceId, ConnectionInfo> connectionInfoListeners;
     private final BiDataStreamWeakListenerList<DeviceId, BatteryInfo> batteryInfoListeners;
-    private final BiDataStreamWeakListenerList<DeviceId, BatteryInfo> batteryInfoUnfilteredListeners;
     private final BiDataStreamWeakListenerList<DeviceId, ShiftingInfo> shiftingInfoListeners;
     private final BiDataStreamWeakListenerList<DeviceId, DevicePreferencesView> devicePreferencesListener;
+
+
+    private final BiDataStreamWeakListenerList<DeviceId, ConnectionInfo> connectionInfoUnfilteredListeners;
+    private final BiDataStreamWeakListenerList<DeviceId, BatteryInfo> batteryInfoUnfilteredListeners;
+    private final BiDataStreamWeakListenerList<DeviceId, ShiftingInfo> shiftingInfoUnfilteredListeners;
+    private final BiDataStreamWeakListenerList<DeviceId, DevicePreferencesView> devicePreferencesUnfilteredListener;
+
+    private final BiDataStreamWeakListenerList<DeviceId, KarooActionEvent> actionEventListeners;
 
     private final Context context;
     private final Map<DeviceId, DeviceData> deviceDataMap;
@@ -34,9 +42,15 @@ public class DeviceDataRouter {
 
         connectionInfoListeners = new BiDataStreamWeakListenerList<>();
         batteryInfoListeners = new BiDataStreamWeakListenerList<>();
-        batteryInfoUnfilteredListeners = new BiDataStreamWeakListenerList<>();
         shiftingInfoListeners = new BiDataStreamWeakListenerList<>();
         devicePreferencesListener = new BiDataStreamWeakListenerList<>();
+
+        connectionInfoUnfilteredListeners = new BiDataStreamWeakListenerList<>();
+        batteryInfoUnfilteredListeners = new BiDataStreamWeakListenerList<>();
+        shiftingInfoUnfilteredListeners = new BiDataStreamWeakListenerList<>();
+        devicePreferencesUnfilteredListener = new BiDataStreamWeakListenerList<>();
+
+        actionEventListeners = new BiDataStreamWeakListenerList<>();
 
         deviceDataMap = new HashMap<>();
     }
@@ -45,16 +59,36 @@ public class DeviceDataRouter {
         connectionInfoListeners.addListener(connectionInfoConsumer);
     }
 
+    public void unregisterConnectionInfoWeakListener(BiConsumer<DeviceId, ConnectionInfo> connectionInfoConsumer) {
+        connectionInfoListeners.removeListener(connectionInfoConsumer);
+    }
+
+    public void registerUnfilteredConnectionInfoWeakListener(BiConsumer<DeviceId, ConnectionInfo> connectionInfoConsumer) {
+        connectionInfoUnfilteredListeners.addListener(connectionInfoConsumer);
+    }
+
+    public void unregisterUnfilteredConnectionInfoWeakListener(BiConsumer<DeviceId, ConnectionInfo> connectionInfoConsumer) {
+        connectionInfoUnfilteredListeners.removeListener(connectionInfoConsumer);
+    }
+
     public boolean hasConnectionInfoListeners() {
-        return connectionInfoListeners.hasListeners();
+        return connectionInfoListeners.hasListeners() || connectionInfoUnfilteredListeners.hasListeners();
     }
 
     public void registerBatteryInfoWeakListener(BiConsumer<DeviceId, BatteryInfo> batteryInfoConsumer) {
         batteryInfoListeners.addListener(batteryInfoConsumer);
     }
 
+    public void unregisterBatteryInfoWeakListener(BiConsumer<DeviceId, BatteryInfo> batteryInfoConsumer) {
+        batteryInfoListeners.removeListener(batteryInfoConsumer);
+    }
+
     public void registerUnfilteredBatteryInfoWeakListener(BiConsumer<DeviceId, BatteryInfo> batteryInfoConsumer) {
         batteryInfoUnfilteredListeners.addListener(batteryInfoConsumer);
+    }
+
+    public void unregisterUnfilteredBatteryInfoWeakListener(BiConsumer<DeviceId, BatteryInfo> batteryInfoConsumer) {
+        batteryInfoUnfilteredListeners.removeListener(batteryInfoConsumer);
     }
 
     public boolean hasBatteryInfoListeners() {
@@ -65,16 +99,52 @@ public class DeviceDataRouter {
         shiftingInfoListeners.addListener(shiftingInfoConsumer);
     }
 
+    public void unregisterShiftingInfoWeakListener(BiConsumer<DeviceId, ShiftingInfo> shiftingInfoConsumer) {
+        shiftingInfoListeners.removeListener(shiftingInfoConsumer);
+    }
+
+    public void registerUnfilteredShiftingInfoWeakListener(BiConsumer<DeviceId, ShiftingInfo> shiftingInfoConsumer) {
+        shiftingInfoUnfilteredListeners.addListener(shiftingInfoConsumer);
+    }
+
+    public void unregisterUnfilteredShiftingInfoWeakListener(BiConsumer<DeviceId, ShiftingInfo> shiftingInfoConsumer) {
+        shiftingInfoUnfilteredListeners.removeListener(shiftingInfoConsumer);
+    }
+
     public boolean hasShiftingInfoListeners() {
-        return shiftingInfoListeners.hasListeners();
+        return shiftingInfoListeners.hasListeners() || shiftingInfoUnfilteredListeners.hasListeners();
     }
 
     public void registerDevicePreferencesWeakListener(BiConsumer<DeviceId, DevicePreferencesView> devicePreferencesConsumer) {
         devicePreferencesListener.addListener(devicePreferencesConsumer);
     }
 
+    public void unregisterDevicePreferencesWeakListener(BiConsumer<DeviceId, DevicePreferencesView> devicePreferencesConsumer) {
+        devicePreferencesListener.removeListener(devicePreferencesConsumer);
+    }
+
+    public void registerUnfilteredDevicePreferencesWeakListener(BiConsumer<DeviceId, DevicePreferencesView> devicePreferencesConsumer) {
+        devicePreferencesUnfilteredListener.addListener(devicePreferencesConsumer);
+    }
+
+    public void unregisterUnfilteredDevicePreferencesWeakListener(BiConsumer<DeviceId, DevicePreferencesView> devicePreferencesConsumer) {
+        devicePreferencesUnfilteredListener.removeListener(devicePreferencesConsumer);
+    }
+
     public boolean hasDevicePreferencesListeners() {
-        return devicePreferencesListener.hasListeners();
+        return devicePreferencesListener.hasListeners() || devicePreferencesUnfilteredListener.hasListeners();
+    }
+
+    public void registerActionEventListener(BiConsumer<DeviceId, KarooActionEvent> actionEventConsumer) {
+        actionEventListeners.addListener(actionEventConsumer);
+    }
+
+    public void unregisterActionEventListener(BiConsumer<DeviceId, KarooActionEvent> actionEventConsumer) {
+        actionEventListeners.removeListener(actionEventConsumer);
+    }
+
+    public boolean hasKeyListeners() {
+        return actionEventListeners.hasListeners();
     }
 
     private void attemptToUpdateCurrentDevice() {
@@ -162,6 +232,8 @@ public class DeviceDataRouter {
         }
 
         attemptToUpdateCurrentDevice();
+
+        connectionInfoUnfilteredListeners.pushData(deviceId, connectionInfo);
     }
 
     public void onBattery(DeviceId deviceId, BatteryInfo batteryInfo) {
@@ -182,6 +254,8 @@ public class DeviceDataRouter {
         if (Objects.equals(deviceId, currentDeviceId)) {
             shiftingInfoListeners.pushData(deviceId, shiftingInfo);
         }
+
+        shiftingInfoUnfilteredListeners.pushData(deviceId, shiftingInfo);
     }
 
     public void onDevicePreferences(DeviceId deviceId, DevicePreferencesView preferences) {
@@ -193,6 +267,12 @@ public class DeviceDataRouter {
         }
 
         attemptToUpdateCurrentDevice();
+
+        devicePreferencesUnfilteredListener.pushData(deviceId, preferences);
+    }
+
+    public void onActionEvent(DeviceId deviceId, KarooActionEvent actionEvent) {
+        actionEventListeners.pushData(deviceId, actionEvent);
     }
 
 }

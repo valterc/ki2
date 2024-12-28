@@ -1,55 +1,55 @@
 package com.valterc.ki2.karoo.overlay.manager;
 
-import com.valterc.ki2.karoo.Ki2Context;
+import com.valterc.ki2.karoo.Ki2ExtensionContext;
 import com.valterc.ki2.karoo.overlay.OverlayPreferences;
 
 import java.util.Set;
 
 public class SecondaryOverlayManager extends BaseOverlayManager {
 
-    public SecondaryOverlayManager(Ki2Context ki2Context) {
-        super(ki2Context);
+    public SecondaryOverlayManager(Ki2ExtensionContext extensionContext) {
+        super(extensionContext);
     }
 
     @Override
     protected Set<String> getOverlayTriggersSet() {
-        return getPreferences().getSecondaryOverlayTriggers(getKi2Context().getSdkContext());
+        return getPreferences().getSecondaryOverlayTriggers(getExtensionContext().getContext());
     }
 
     @Override
     protected int getOverlayDuration() {
-        return getPreferences().getSecondaryOverlayDuration(getKi2Context().getSdkContext());
+        return getPreferences().getSecondaryOverlayDuration(getExtensionContext().getContext());
     }
 
     @Override
     protected boolean isOverlayEnabled() {
-        return getPreferences().isSecondaryOverlayEnabled(getKi2Context().getSdkContext());
+        return getPreferences().isSecondaryOverlayEnabled(getExtensionContext().getContext());
     }
 
     @Override
     protected int getOverlayPositionY() {
-        return getPreferences().getSecondaryOverlayPositionY(getKi2Context().getSdkContext());
+        return getPreferences().getSecondaryOverlayPositionY(getExtensionContext().getContext());
     }
 
     @Override
     protected int getOverlayPositionX() {
-        return getPreferences().getSecondaryOverlayPositionX(getKi2Context().getSdkContext());
+        return getPreferences().getSecondaryOverlayPositionX(getExtensionContext().getContext());
     }
 
     @Override
     protected String getOverlayTheme() {
-        return getPreferences().getSecondaryOverlayTheme(getKi2Context().getSdkContext());
+        return getPreferences().getSecondaryOverlayTheme(getExtensionContext().getContext());
     }
 
     @Override
     protected OverlayPreferences getOverlayPreferences() {
         return new OverlayPreferences(
-                getPreferences().isSecondaryOverlayEnabled(getKi2Context().getSdkContext()),
-                getPreferences().getSecondaryOverlayTheme(getKi2Context().getSdkContext()),
-                getPreferences().getSecondaryOverlayDuration(getKi2Context().getSdkContext()),
-                getPreferences().getSecondaryOverlayOpacity(getKi2Context().getSdkContext()),
-                getPreferences().getSecondaryOverlayPositionX(getKi2Context().getSdkContext()),
-                getPreferences().getSecondaryOverlayPositionY(getKi2Context().getSdkContext())
+                getPreferences().isSecondaryOverlayEnabled(getExtensionContext().getContext()),
+                getPreferences().getSecondaryOverlayTheme(getExtensionContext().getContext()),
+                getPreferences().getSecondaryOverlayDuration(getExtensionContext().getContext()),
+                getPreferences().getSecondaryOverlayOpacity(getExtensionContext().getContext()),
+                getPreferences().getSecondaryOverlayPositionX(getExtensionContext().getContext()),
+                getPreferences().getSecondaryOverlayPositionY(getExtensionContext().getContext())
         );
     }
 }

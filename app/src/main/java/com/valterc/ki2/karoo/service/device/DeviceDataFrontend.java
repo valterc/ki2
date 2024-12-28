@@ -1,25 +1,26 @@
 package com.valterc.ki2.karoo.service.device;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.RemoteException;
 import android.util.Log;
 
+import androidx.annotation.Nullable;
+
+import com.valterc.ki2.data.action.KarooActionEvent;
 import com.valterc.ki2.data.connection.ConnectionInfo;
 import com.valterc.ki2.data.device.BatteryInfo;
 import com.valterc.ki2.data.device.DeviceId;
-import com.valterc.ki2.data.input.KarooKeyEvent;
 import com.valterc.ki2.data.preferences.device.DevicePreferencesView;
 import com.valterc.ki2.data.shifting.ShiftingInfo;
-import com.valterc.ki2.input.InputAdapter;
-import com.valterc.ki2.karoo.Ki2Context;
-import com.valterc.ki2.karoo.hooks.RideActivityHook;
 import com.valterc.ki2.karoo.service.listeners.ServiceCallbackRegistration;
 import com.valterc.ki2.services.IKi2Service;
+import com.valterc.ki2.services.callbacks.IActionCallback;
 import com.valterc.ki2.services.callbacks.IBatteryCallback;
 import com.valterc.ki2.services.callbacks.IConnectionInfoCallback;
 import com.valterc.ki2.services.callbacks.IDevicePreferencesCallback;
-import com.valterc.ki2.services.callbacks.IKeyCallback;
 import com.valterc.ki2.services.callbacks.IShiftingCallback;
 
 import java.util.function.BiConsumer;
@@ -29,7 +30,6 @@ public class DeviceDataFrontend {
 
     private IKi2Service service;
     private final Handler handler;
-    private final InputAdapter inputAdapter;
     private final DeviceDataRouter dataRouter;
 
     private final ServiceCallbackRegistration<IConnectionInfoCallback> registrationConnectionInfo = new ServiceCallbackRegistration<>(new IConnectionInfoCallback.Stub() {
@@ -62,19 +62,15 @@ public class DeviceDataFrontend {
         }
     }, callback -> service.registerShiftingListener(callback), callback -> service.unregisterShiftingListener(callback));
 
-    private final ServiceCallbackRegistration<IKeyCallback> registrationKey = new ServiceCallbackRegistration<>(new IKeyCallback.Stub() {
+    private final ServiceCallbackRegistration<IActionCallback> registrationAction = new ServiceCallbackRegistration<>(new IActionCallback.Stub() {
         @Override
-        public void onKeyEvent(DeviceId deviceId, KarooKeyEvent keyEvent) {
+        public void onActionEvent(DeviceId deviceId, KarooActionEvent actionEvent) {
             handler.post(() -> {
-                try {
-                    inputAdapter.executeKeyEvent(keyEvent);
-                } catch (Exception e) {
-                    Log.e("KI2", "Error handling input", e);
-                }
-                maybeStopKeyEvents();
+                dataRouter.onActionEvent(deviceId, actionEvent);
+                maybeStopActionEvents();
             });
         }
-    }, callback -> service.registerKeyListener(callback), callback -> service.unregisterKeyListener(callback));
+    }, callback -> service.registerActionListener(callback), callback -> service.unregisterActionListener(callback));
 
     private final ServiceCallbackRegistration<IDevicePreferencesCallback> registrationDevicePreferences = new ServiceCallbackRegistration<>(new IDevicePreferencesCallback.Stub() {
         @Override
@@ -86,11 +82,9 @@ public class DeviceDataFrontend {
         }
     }, callback -> service.registerDevicePreferencesListener(callback), callback -> service.unregisterDevicePreferencesListener(callback));
 
-    public DeviceDataFrontend(Ki2Context ki2Context) {
-        this.handler = ki2Context.getHandler();
-
-        inputAdapter = new InputAdapter(ki2Context);
-        dataRouter = new DeviceDataRouter(ki2Context.getSdkContext());
+    public DeviceDataFrontend(Context context) {
+        this.handler = new Handler(Looper.getMainLooper());
+        dataRouter = new DeviceDataRouter(context);
     }
 
     public void setService(IKi2Service service) {
@@ -99,7 +93,7 @@ public class DeviceDataFrontend {
         registrationConnectionInfo.setUnregistered();
         registrationBatteryInfo.setUnregistered();
         registrationShiftingInfo.setUnregistered();
-        registrationKey.setUnregistered();
+        registrationAction.setUnregistered();
         registrationDevicePreferences.setUnregistered();
 
         if (service != null) {
@@ -110,7 +104,7 @@ public class DeviceDataFrontend {
     private void maybeStartEvents() {
         maybeStartConnectionEvents();
         maybeStartBatteryEvents();
-        maybeStartKeyEvents();
+        maybeStartActionEvents();
         maybeStartShiftingEvents();
         maybeStartDevicePreferencesEvents();
     }
@@ -119,6 +113,27 @@ public class DeviceDataFrontend {
         handler.post(() -> {
             dataRouter.registerConnectionInfoWeakListener(connectionInfoConsumer);
             maybeStartEvents();
+        });
+    }
+
+    public void unregisterConnectionInfoWeakListener(BiConsumer<DeviceId, ConnectionInfo> connectionInfoConsumer) {
+        handler.post(() -> {
+            dataRouter.unregisterConnectionInfoWeakListener(connectionInfoConsumer);
+            maybeStopConnectionEvents();
+        });
+    }
+
+    public void registerUnfilteredConnectionInfoWeakListener(BiConsumer<DeviceId, ConnectionInfo> connectionInfoConsumer) {
+        handler.post(() -> {
+            dataRouter.registerUnfilteredConnectionInfoWeakListener(connectionInfoConsumer);
+            maybeStartEvents();
+        });
+    }
+
+    public void unregisterUnfilteredConnectionInfoWeakListener(BiConsumer<DeviceId, ConnectionInfo> connectionInfoConsumer) {
+        handler.post(() -> {
+            dataRouter.unregisterUnfilteredConnectionInfoWeakListener(connectionInfoConsumer);
+            maybeStopConnectionEvents();
         });
     }
 
@@ -159,10 +174,24 @@ public class DeviceDataFrontend {
         });
     }
 
+    public void unregisterBatteryInfoWeakListener(BiConsumer<DeviceId, BatteryInfo> batteryInfoConsumer) {
+        handler.post(() -> {
+            dataRouter.unregisterBatteryInfoWeakListener(batteryInfoConsumer);
+            maybeStopBatteryEvents();
+        });
+    }
+
     public void registerUnfilteredBatteryInfoWeakListener(BiConsumer<DeviceId, BatteryInfo> batteryInfoConsumer) {
         handler.post(() -> {
             dataRouter.registerUnfilteredBatteryInfoWeakListener(batteryInfoConsumer);
             maybeStartEvents();
+        });
+    }
+
+    public void unregisterUnfilteredBatteryInfoWeakListener(BiConsumer<DeviceId, BatteryInfo> batteryInfoConsumer) {
+        handler.post(() -> {
+            dataRouter.unregisterUnfilteredBatteryInfoWeakListener(batteryInfoConsumer);
+            maybeStopBatteryEvents();
         });
     }
 
@@ -197,6 +226,27 @@ public class DeviceDataFrontend {
         });
     }
 
+    public void unregisterShiftingInfoWeakListener(BiConsumer<DeviceId, ShiftingInfo> shiftingInfoConsumer) {
+        handler.post(() -> {
+            dataRouter.unregisterShiftingInfoWeakListener(shiftingInfoConsumer);
+            maybeStopShiftingEvents();
+        });
+    }
+
+    public void registerUnfilteredShiftingInfoWeakListener(BiConsumer<DeviceId, ShiftingInfo> shiftingInfoConsumer) {
+        handler.post(() -> {
+            dataRouter.registerUnfilteredShiftingInfoWeakListener(shiftingInfoConsumer);
+            maybeStartEvents();
+        });
+    }
+
+    public void unregisterUnfilteredShiftingInfoWeakListener(BiConsumer<DeviceId, ShiftingInfo> shiftingInfoConsumer) {
+        handler.post(() -> {
+            dataRouter.unregisterUnfilteredShiftingInfoWeakListener(shiftingInfoConsumer);
+            maybeStopShiftingEvents();
+        });
+    }
+
     private void maybeStartShiftingEvents() {
         if (service == null) {
             return;
@@ -225,6 +275,27 @@ public class DeviceDataFrontend {
         handler.post(() -> {
             dataRouter.registerDevicePreferencesWeakListener(devicePreferencesConsumer);
             maybeStartEvents();
+        });
+    }
+
+    public void unregisterDevicePreferencesWeakListener(BiConsumer<DeviceId, DevicePreferencesView> devicePreferencesConsumer) {
+        handler.post(() -> {
+            dataRouter.unregisterDevicePreferencesWeakListener(devicePreferencesConsumer);
+            maybeStopDevicePreferencesEvents();
+        });
+    }
+
+    public void registerUnfilteredDevicePreferencesWeakListener(BiConsumer<DeviceId, DevicePreferencesView> devicePreferencesConsumer) {
+        handler.post(() -> {
+            dataRouter.registerUnfilteredDevicePreferencesWeakListener(devicePreferencesConsumer);
+            maybeStartEvents();
+        });
+    }
+
+    public void unregisterUnfilteredDevicePreferencesWeakListener(BiConsumer<DeviceId, DevicePreferencesView> devicePreferencesConsumer) {
+        handler.post(() -> {
+            dataRouter.unregisterUnfilteredDevicePreferencesWeakListener(devicePreferencesConsumer);
+            maybeStopDevicePreferencesEvents();
         });
     }
 
@@ -258,30 +329,45 @@ public class DeviceDataFrontend {
         registrationDevicePreferences.unregister();
     }
 
-    private void maybeStartKeyEvents() {
+    public void registerActionEventWeakListener(BiConsumer<DeviceId, KarooActionEvent> actionEventConsumer) {
+        handler.post(() -> {
+            dataRouter.registerActionEventListener(actionEventConsumer);
+            maybeStartEvents();
+        });
+    }
+
+    public void unregisterActionEventWeakListener(BiConsumer<DeviceId, KarooActionEvent> actionEventConsumer) {
+        handler.post(() -> {
+            dataRouter.unregisterActionEventListener(actionEventConsumer);
+            maybeStopActionEvents();
+        });
+    }
+
+    private void maybeStartActionEvents() {
         if (service == null) {
             return;
         }
 
-        if (!RideActivityHook.isRideActivityProcess()) {
+        if (!dataRouter.hasKeyListeners()) {
             return;
         }
 
-        registrationKey.register();
+        registrationAction.register();
     }
 
-    private void maybeStopKeyEvents() {
+    private void maybeStopActionEvents() {
         if (service == null) {
             return;
         }
 
-        if (RideActivityHook.isRideActivityProcess()) {
+        if (dataRouter.hasKeyListeners()) {
             return;
         }
 
-        registrationKey.unregister();
+        registrationAction.unregister();
     }
 
+    @Nullable
     public DevicePreferencesView getDevicePreferences(DeviceId deviceId) {
         if (service == null) {
             return null;

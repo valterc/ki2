@@ -16,6 +16,7 @@ import androidx.annotation.Nullable;
 import com.valterc.ki2.ant.recorder.AntRecorderManager;
 import com.valterc.ki2.data.connection.ConnectionInfo;
 import com.valterc.ki2.data.device.DeviceId;
+import com.valterc.ki2.karoo.Ki2ExtensionService;
 import com.valterc.ki2.services.IKi2Service;
 import com.valterc.ki2.services.Ki2Service;
 import com.valterc.ki2.services.callbacks.IConnectionInfoCallback;
@@ -26,7 +27,7 @@ public class Ki2Application extends Application {
 
     private static final int UNREGISTER_FROM_SERVICE_DELAY_MS = 30_000;
 
-    private final ServiceConnection serviceConnection = new ServiceConnection() {
+    private final ServiceConnection ki2ServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder binder) {
             Timber.d("Service connected");
@@ -43,6 +44,18 @@ public class Ki2Application extends Application {
             Timber.d("Service disconnected");
             service = null;
             registeredWithService = false;
+        }
+    };
+
+    private final ServiceConnection extensionServiceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder binder) {
+            Timber.d("Extension service connected");
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            Timber.d("Extension service disconnected");
         }
     };
 
@@ -96,7 +109,7 @@ public class Ki2Application extends Application {
     };
 
     private final Handler handler = new Handler();
-    private boolean serviceBound;
+    private boolean ki2ServiceBound;
     private IKi2Service service;
     private int activityCount;
     private boolean registeredWithService;
@@ -133,14 +146,15 @@ public class Ki2Application extends Application {
 
         antRecorderManager = new AntRecorderManager(this);
         registerActivityLifecycleCallbacks(activityLifecycleCallbacks);
-        serviceBound = bindService(Ki2Service.getIntent(), serviceConnection, BIND_AUTO_CREATE);
+        ki2ServiceBound = bindService(Ki2Service.getIntent(), ki2ServiceConnection, BIND_AUTO_CREATE);
+        bindService(Ki2ExtensionService.Companion.getIntent(), extensionServiceConnection, BIND_AUTO_CREATE);
     }
 
     @Override
     public void onTerminate() {
         unregisterConnectionInfoListener();
-        if (serviceBound) {
-            unbindService(serviceConnection);
+        if (ki2ServiceBound) {
+            unbindService(ki2ServiceConnection);
         }
 
         Timber.d("Ki2Application terminated");

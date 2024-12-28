@@ -3,6 +3,8 @@ package com.valterc.ki2.data.device;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.annotation.NonNull;
+
 public class BatteryInfo implements Parcelable {
 
     private int value;
@@ -58,6 +60,7 @@ public class BatteryInfo implements Parcelable {
         return value;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "BatteryInfo{" +

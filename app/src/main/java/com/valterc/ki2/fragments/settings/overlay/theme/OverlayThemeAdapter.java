@@ -20,14 +20,12 @@ import com.valterc.ki2.data.shifting.FrontTeethPattern;
 import com.valterc.ki2.data.shifting.RearTeethPattern;
 import com.valterc.ki2.data.shifting.ShiftingInfo;
 import com.valterc.ki2.data.shifting.ShiftingMode;
-import com.valterc.ki2.karoo.Ki2Context;
+import com.valterc.ki2.karoo.Ki2ExtensionContext;
 import com.valterc.ki2.karoo.overlay.view.IOverlayView;
 import com.valterc.ki2.karoo.overlay.view.builder.OverlayViewBuilderEntry;
 import com.valterc.ki2.karoo.overlay.view.builder.OverlayViewBuilderRegistry;
 
 import java.util.function.Consumer;
-
-import io.hammerhead.sdk.v0.SdkContext;
 
 public class OverlayThemeAdapter extends RecyclerView.Adapter<OverlayThemeViewHolder> {
 
@@ -35,7 +33,7 @@ public class OverlayThemeAdapter extends RecyclerView.Adapter<OverlayThemeViewHo
     private final LayoutInflater layoutInflater;
     private final String[] themeValues;
     private final String[] themeTitles;
-    private final Ki2Context ki2Context;
+    private final Ki2ExtensionContext ki2Context;
 
     private final PreferencesView preferencesView;
     private final DevicePreferencesView devicePreferencesView;
@@ -49,7 +47,7 @@ public class OverlayThemeAdapter extends RecyclerView.Adapter<OverlayThemeViewHo
 
         this.themeValues = context.getResources().getStringArray(R.array.preference_values_overlay_theme);
         this.themeTitles = context.getResources().getStringArray(R.array.preference_titles_overlay_theme);
-        this.ki2Context = new Ki2Context(SdkContext.buildSdkContext(context));
+        this.ki2Context = new Ki2ExtensionContext(context);
         this.preferencesView = new PreferencesView(context);
 
         DeviceId deviceId = new DeviceId(67726, 1, 5);

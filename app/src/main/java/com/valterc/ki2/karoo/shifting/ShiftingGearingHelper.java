@@ -77,6 +77,14 @@ public class ShiftingGearingHelper {
         return shiftingInfo != null && devicePreferences != null;
     }
 
+    public boolean hasFrontGearSize() {
+        return gearTeethCountFront != 0;
+    }
+
+    public boolean hasRearGearSize() {
+        return gearTeethCountRear != 0;
+    }
+
     public boolean hasGearSizes() {
         return gearTeethCountFront != 0 && gearTeethCountRear != 0;
     }

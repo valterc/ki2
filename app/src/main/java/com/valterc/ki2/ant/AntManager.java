@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
-import android.database.ContentObserver;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
@@ -44,9 +43,7 @@ public class AntManager {
 
     private final Context context;
     private final Handler handler;
-    private final IAntStateListener stateListener;
 
-    private ContentObserver antSettingContentObserver;
     private boolean disposed;
     private boolean antServiceBound;
     private AntService antService;
@@ -63,7 +60,6 @@ public class AntManager {
             } catch (RemoteException e) {
                 Timber.e(e, "Unable to get ANT channel provider");
             }
-            triggerStateChange();
         }
 
         @Override
@@ -81,8 +77,6 @@ public class AntManager {
                     }
                 }, TIME_MS_ATTEMPT_REBIND);
             }
-
-            triggerStateChange();
         }
     };
 
@@ -97,47 +91,13 @@ public class AntManager {
         }
     };
 
-    public AntManager(Context context, IAntStateListener stateListener) {
+    public AntManager(Context context) {
         this.context = context;
-        this.stateListener = stateListener;
         this.handler = new Handler(Looper.getMainLooper());
 
         context.registerReceiver(channelProviderStateChangedReceiver, new IntentFilter(AntChannelProvider.ACTION_CHANNEL_PROVIDER_STATE_CHANGED), Context.RECEIVER_EXPORTED);
-        handler.post(this::ensureAntEnabled);
+
         attemptBindToAntService();
-    }
-
-    private void ensureAntEnabled() {
-        if (!AntSettings.isAntEnabled(context)) {
-            if (stateListener != null) {
-                stateListener.onAntDisabled();
-            }
-        }
-
-        if (antSettingContentObserver != null) {
-            return;
-        }
-
-        antSettingContentObserver = new ContentObserver(handler) {
-            @Override
-            public boolean deliverSelfNotifications() {
-                return true;
-            }
-
-            @Override
-            public void onChange(boolean selfChange) {
-                if (AntSettings.isAntEnabled(context)) {
-                    return;
-                }
-
-                Timber.w("ANT disabled");
-                if (stateListener != null) {
-                    stateListener.onAntDisabled();
-                }
-            }
-        };
-
-        context.getContentResolver().registerContentObserver(AntSettings.getEnabledUri(), false, antSettingContentObserver);
     }
 
     private void attemptBindToAntService() {
@@ -149,23 +109,11 @@ public class AntManager {
         }
     }
 
-    private void triggerStateChange() {
-        if (stateListener != null) {
-            stateListener.onAntServiceStateChange(isAntServiceReady());
-        }
-    }
-
     public void dispose() {
         disposed = true;
 
         try {
             context.unregisterReceiver(channelProviderStateChangedReceiver);
-        } catch (Exception e) {
-            // Not bound
-        }
-
-        try {
-            context.getContentResolver().unregisterContentObserver(antSettingContentObserver);
         } catch (Exception e) {
             // Not bound
         }

@@ -1,88 +1,92 @@
 <resources>
     <string-array name="preference_titles_switch_single_press_action">
         <item>None</item>
-        <item>Navigate Left</item>
-        <item>Navigate Right</item>
-        <item>Pause/Resume Ride/Confirm</item>
-        <item>Mark Lap/Cycle Map Zoom/Back</item>
+        <item>Top Left</item>
+        <item>Top Right</item>
+        <item>Bottom Left</item>
+        <item>Bottom Right</item>
         <item>Mark Lap</item>
         <item>Map/Graph Zoom Out</item>
         <item>Map/Graph Zoom In</item>
         <item>Switch to map page</item>
         <item>Show overlay</item>
-        <item>Take screenshot</item>
         <item>Turn Screen On</item>
+        <item>Turn Screen Off</item>
         <item>Toggle Shifting Audio Alerts</item>
         <item>Disable Shifting Audio Alerts</item>
         <item>Enable Shifting Audio Alerts</item>
         <item>Single Beep</item>
         <item>Double Beep</item>
         <item>Bell</item>
+        <item>Control Center</item>
     </string-array>
 
     <string-array name="preference_values_switch_single_press_action">
         <item>none</item>
-        <item>navigate_left</item>
-        <item>navigate_right</item>
-        <item>pause_resume_confirm</item>
-        <item>lap_map_back</item>
+        <item>top_left</item>
+        <item>top_right</item>
+        <item>bottom_left</item>
+        <item>bottom_right</item>
         <item>lap</item>
         <item>press_map_graph_zoom_out</item>
         <item>press_map_graph_zoom_in</item>
         <item>press_switch_to_map_page</item>
         <item>show_overlay</item>
-        <item>press_take_screenshot</item>
         <item>press_turn_screen_on</item>
+        <item>press_turn_screen_off</item>
         <item>press_toggle_audio_alerts</item>
         <item>press_disable_audio_alerts</item>
         <item>press_enable_audio_alerts</item>
         <item>press_single_beep</item>
         <item>press_double_beep</item>
         <item>press_bell</item>
+        <item>press_control_center</item>
     </string-array>
 
     <string-array name="preference_titles_switch_double_press_action">
         <item>None</item>
-        <item>Navigate Left</item>
-        <item>Navigate Right</item>
-        <item>Pause/Resume Ride/Confirm</item>
-        <item>Mark Lap/Cycle Map Zoom/Back</item>
+        <item>Top Left</item>
+        <item>Top Right</item>
+        <item>Bottom Left</item>
+        <item>Bottom Right</item>
         <item>Mark Lap</item>
         <item>Map/Graph Zoom Out</item>
         <item>Map/Graph Zoom In</item>
         <item>Switch to map page</item>
         <item>Duplicate Single Press</item>
         <item>Show overlay</item>
-        <item>Take screenshot</item>
         <item>Turn Screen On</item>
+        <item>Turn Screen Off</item>
         <item>Toggle Shifting Audio Alerts</item>
         <item>Disable Shifting Audio Alerts</item>
         <item>Enable Shifting Audio Alerts</item>
         <item>Single Beep</item>
         <item>Double Beep</item>
         <item>Bell</item>
+        <item>Control Center</item>
     </string-array>
 
     <string-array name="preference_values_switch_double_press_action">
         <item>none</item>
-        <item>navigate_left</item>
-        <item>navigate_right</item>
-        <item>pause_resume_confirm</item>
-        <item>lap_map_back</item>
+        <item>top_left</item>
+        <item>top_right</item>
+        <item>bottom_left</item>
+        <item>bottom_right</item>
         <item>lap</item>
         <item>press_map_graph_zoom_out</item>
         <item>press_map_graph_zoom_in</item>
         <item>press_switch_to_map_page</item>
         <item>double_press_duplicate_single_press</item>
         <item>show_overlay</item>
-        <item>press_take_screenshot</item>
         <item>press_turn_screen_on</item>
+        <item>press_turn_screen_off</item>
         <item>press_toggle_audio_alerts</item>
         <item>press_disable_audio_alerts</item>
         <item>press_enable_audio_alerts</item>
         <item>press_single_beep</item>
         <item>press_double_beep</item>
         <item>press_bell</item>
+        <item>press_control_center</item>
     </string-array>
 
     <string-array name="preference_titles_switch_hold_action">
@@ -94,11 +98,11 @@
         <item>Map/Graph Slow Zoom Out</item>
         <item>Map/Graph Slow Zoom In</item>
         <item>Repeat Single Press</item>
-        <item>Pause/Resume Ride/Confirm</item>
+        <item>Bottom Left</item>
+        <item>Bottom Right</item>
         <item>Mark Lap</item>
         <item>Switch to map page</item>
         <item>Show overlay</item>
-        <item>Take screenshot</item>
         <item>Turn Screen On</item>
         <item>Toggle Shifting Audio Alerts</item>
         <item>Disable Shifting Audio Alerts</item>
@@ -106,6 +110,7 @@
         <item>Single Beep</item>
         <item>Double Beep</item>
         <item>Bell</item>
+        <item>Control Center</item>
         <item>Continuous Single Beep</item>
         <item>Continuous Bell</item>
     </string-array>
@@ -119,11 +124,11 @@
         <item>map_graph_slow_zoom_out</item>
         <item>map_graph_slow_zoom_in</item>
         <item>repeat_single_press</item>
-        <item>hold_short_single_pause_resume_confirm</item>
+        <item>hold_short_single_bottom_left</item>
+        <item>hold_short_single_bottom_right</item>
         <item>hold_short_single_lap</item>
         <item>hold_short_single_switch_to_map_page</item>
         <item>show_overlay</item>
-        <item>hold_short_single_take_screenshot</item>
         <item>hold_short_single_turn_screen_on</item>
         <item>hold_short_single_toggle_audio_alerts</item>
         <item>hold_short_single_disable_audio_alerts</item>
@@ -131,6 +136,7 @@
         <item>hold_short_single_single_beep</item>
         <item>hold_short_single_double_beep</item>
         <item>hold_short_single_bell</item>
+        <item>hold_short_single_control_center</item>
         <item>hold_continuous_single_beep</item>
         <item>hold_continuous_bell</item>
     </string-array>

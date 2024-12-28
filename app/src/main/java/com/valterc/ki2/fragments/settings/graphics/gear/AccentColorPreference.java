@@ -64,7 +64,7 @@ public class AccentColorPreference extends DialogPreference {
 
     private int getColor() {
         PreferencesView preferencesView = new PreferencesView(getContext());
-        return preferencesView.getAccentColor(getContext(), KarooTheme.UNKNOWN);
+        return preferencesView.getAccentColor(getContext(), KarooTheme.WHITE);
     }
 
     @Nullable

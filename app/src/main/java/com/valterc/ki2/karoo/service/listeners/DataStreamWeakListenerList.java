@@ -17,7 +17,7 @@ public class DataStreamWeakListenerList<TData> {
     }
 
     public boolean hasListeners() {
-        return listeners.size() != 0;
+        return !listeners.isEmpty();
     }
 
     public void addListener(Consumer<TData> consumer) {

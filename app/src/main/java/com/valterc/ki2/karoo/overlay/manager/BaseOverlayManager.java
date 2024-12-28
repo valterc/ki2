@@ -1,13 +1,15 @@
 package com.valterc.ki2.karoo.overlay.manager;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
+import android.content.Context;
+import android.graphics.PixelFormat;
 import android.os.Handler;
-import android.util.Log;
+import android.os.Looper;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewParent;
+import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
 import com.valterc.ki2.R;
@@ -17,31 +19,34 @@ import com.valterc.ki2.data.device.DeviceId;
 import com.valterc.ki2.data.preferences.PreferencesView;
 import com.valterc.ki2.data.preferences.device.DevicePreferencesView;
 import com.valterc.ki2.data.shifting.ShiftingInfo;
-import com.valterc.ki2.karoo.Ki2Context;
+import com.valterc.ki2.karoo.Ki2ExtensionContext;
 import com.valterc.ki2.karoo.overlay.OverlayPreferences;
 import com.valterc.ki2.karoo.overlay.OverlayTriggers;
 import com.valterc.ki2.karoo.overlay.position.PositionManager;
 import com.valterc.ki2.karoo.overlay.view.IOverlayView;
 import com.valterc.ki2.karoo.overlay.view.builder.OverlayViewBuilderEntry;
 import com.valterc.ki2.karoo.overlay.view.builder.OverlayViewBuilderRegistry;
-import com.valterc.ki2.utils.ActivityUtils;
 
+import java.util.Collections;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+
+import timber.log.Timber;
 
 @SuppressLint("LogNotTimber")
 public abstract class BaseOverlayManager {
 
     private static final int DURATION_ALWAYS_VISIBLE = -1;
+    private final Ki2ExtensionContext extensionContext;
 
-    private final Ki2Context ki2Context;
+    private final WindowManager windowManager;
     private final LayoutInflater layoutInflater;
     private final Handler handler;
 
+    private FrameLayout parentViewGroup;
     private RelativeLayout parentLayout;
     private PositionManager positionManager;
-    private int activityHashCode;
     private IOverlayView view;
 
     private OverlayTriggers overlayTriggers;
@@ -91,20 +96,22 @@ public abstract class BaseOverlayManager {
         removeView();
     };
 
-    public BaseOverlayManager(Ki2Context ki2Context) {
-        this.ki2Context = ki2Context;
-        this.handler = ki2Context.getHandler();
-        this.layoutInflater = LayoutInflater.from(ki2Context.getSdkContext()).cloneInContext(ki2Context.getSdkContext());
+    public BaseOverlayManager(Ki2ExtensionContext extensionContext) {
+        this.extensionContext = extensionContext;
+        this.handler = new Handler(Looper.getMainLooper());
+        this.windowManager = (WindowManager) extensionContext.getContext().getSystemService(Context.WINDOW_SERVICE);
+        this.layoutInflater = LayoutInflater.from(extensionContext.getContext());
+        this.overlayTriggers = new OverlayTriggers(Collections.emptySet());
 
-        ki2Context.getServiceClient().registerPreferencesWeakListener(preferencesListener);
-        ki2Context.getServiceClient().registerShiftingInfoWeakListener(shiftingInfoListener);
-        ki2Context.getServiceClient().registerDevicePreferencesWeakListener(devicePreferencesListener);
-        ki2Context.getServiceClient().registerBatteryInfoWeakListener(batteryInfoListener);
-        ki2Context.getServiceClient().registerConnectionInfoWeakListener(connectionInfoListener);
+        extensionContext.getServiceClient().registerPreferencesWeakListener(preferencesListener);
+        extensionContext.getServiceClient().registerShiftingInfoWeakListener(shiftingInfoListener);
+        extensionContext.getServiceClient().registerDevicePreferencesWeakListener(devicePreferencesListener);
+        extensionContext.getServiceClient().registerBatteryInfoWeakListener(batteryInfoListener);
+        extensionContext.getServiceClient().registerConnectionInfoWeakListener(connectionInfoListener);
     }
 
-    protected Ki2Context getKi2Context() {
-        return ki2Context;
+    protected Ki2ExtensionContext getExtensionContext() {
+        return extensionContext;
     }
 
     protected PreferencesView getPreferences() {
@@ -121,7 +128,7 @@ public abstract class BaseOverlayManager {
         overlayTriggers = new OverlayTriggers(getOverlayTriggersSet());
     }
 
-    public OverlayTriggers getOverlayTriggers(){
+    public OverlayTriggers getOverlayTriggers() {
         return overlayTriggers;
     }
 
@@ -139,45 +146,44 @@ public abstract class BaseOverlayManager {
 
     protected abstract OverlayPreferences getOverlayPreferences();
 
-    private boolean ensureView() {
-        Activity activity = ActivityUtils.getRunningActivity();
-        if (activity == null) {
-            removeView();
-            return false;
+    @SuppressLint("InflateParams")
+    private void ensureView() {
+        if (view != null) {
+            return;
         }
 
-        if (view != null && activityHashCode == activity.hashCode()) {
-            return true;
-        }
+        parentViewGroup = (FrameLayout) layoutInflater.inflate(R.layout.window, null);
 
-        removeView();
+        var layoutParams = new WindowManager.LayoutParams(
+                WindowManager.LayoutParams.WRAP_CONTENT,
+                WindowManager.LayoutParams.WRAP_CONTENT,
+                WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+                        | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
+                        | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
+                PixelFormat.TRANSLUCENT
+        );
 
-        ViewGroup viewGroupContent = activity.findViewById(android.R.id.content);
-        if (viewGroupContent == null || viewGroupContent.getChildCount() == 0) {
-            Log.w("KI2", "Unable to get ride activity root view");
-            return false;
-        }
+        disableMoveAnimation(layoutParams);
 
-        View viewBase = viewGroupContent.getChildAt(0);
-        if (!(viewBase instanceof ViewGroup)) {
-            Log.w("KI2", "Ride activity root view is not a ViewGroup");
-            return false;
-        }
+        layoutParams.gravity = Gravity.TOP;
+        layoutParams.y = 0;
 
-        ViewGroup viewGroupBase = (ViewGroup) viewBase;
+        windowManager.addView(parentViewGroup, layoutParams);
+
         OverlayViewBuilderEntry viewBuilder = OverlayViewBuilderRegistry.getBuilder(getOverlayTheme());
 
         if (viewBuilder != null) {
-            parentLayout = (RelativeLayout) layoutInflater.inflate(R.layout.view_karoo_overlay_parent, viewGroupBase, false);
-            viewGroupBase.addView(parentLayout);
+            parentLayout = (RelativeLayout) layoutInflater.inflate(R.layout.view_karoo_overlay_parent, parentViewGroup, false);
+            parentViewGroup.addView(parentLayout);
 
             View viewOverlay = layoutInflater.inflate(viewBuilder.getLayoutId(), parentLayout, false);
             parentLayout.addView(viewOverlay);
 
-            view = viewBuilder.createOverlayView(ki2Context, preferences, viewOverlay);
-            view.applyPreferences(ki2Context, getOverlayPreferences());
+            view = viewBuilder.createOverlayView(extensionContext, preferences, viewOverlay);
+            view.applyPreferences(extensionContext, getOverlayPreferences());
             view.setupInRide();
-            positionManager = new PositionManager(getOverlayPositionX(), getOverlayPositionY(), viewOverlay);
+            positionManager = new PositionManager(getOverlayPositionX(), getOverlayPositionY(), viewOverlay, parentViewGroup);
             positionManager.updatePosition();
 
             view.setVisibilityListener(v -> {
@@ -188,23 +194,38 @@ public abstract class BaseOverlayManager {
 
             view.hide();
         }
+    }
 
-        activityHashCode = activity.hashCode();
-        return true;
+    private static void disableMoveAnimation(WindowManager.LayoutParams layoutParams) {
+        try {
+            var field = layoutParams.getClass().getField("privateFlags");
+            Integer currentFlags = (Integer) field.get(layoutParams);
+            if (currentFlags == null) {
+                currentFlags = 0;
+            }
+
+            field.set(layoutParams, currentFlags | 0x00000040);
+        } catch (Exception e) {
+            Timber.w(e, "Unable to disable move animation");
+        }
     }
 
     private void removeView() {
-        if (parentLayout != null) {
-            ViewParent parent = parentLayout.getParent();
-            if (parent != null) {
-                ((ViewGroup) parent).removeView(parentLayout);
-            }
+        if (parentViewGroup != null) {
+            windowManager.removeView(parentViewGroup);
+        }
+
+        if (parentLayout != null && parentViewGroup != null) {
+            parentViewGroup.removeView(parentLayout);
         }
 
         if (view != null) {
             view.remove();
             view = null;
         }
+
+        parentViewGroup = null;
+        parentLayout = null;
     }
 
     protected void showOverlay(boolean force) {
@@ -212,9 +233,7 @@ public abstract class BaseOverlayManager {
             return;
         }
 
-        if (!ensureView()) {
-            return;
-        }
+        ensureView();
 
         if (connectionInfo == null || devicePreferences == null ||
                 (!force && !overlayTriggers.queryAndClearShouldShowOverlay())) {

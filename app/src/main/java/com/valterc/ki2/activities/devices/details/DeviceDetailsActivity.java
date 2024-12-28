@@ -11,9 +11,10 @@ import android.widget.Button;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.valterc.ki2.R;
 import com.valterc.ki2.data.device.DeviceId;
+import com.valterc.ki2.data.input.KarooKey;
 import com.valterc.ki2.fragments.IKarooKeyListener;
 import com.valterc.ki2.fragments.devices.details.DeviceDetailsFragment;
-import com.valterc.ki2.data.input.KarooKey;
+import com.valterc.ki2.data.action.KarooAction;
 
 public class DeviceDetailsActivity extends AppCompatActivity {
 
@@ -47,7 +48,7 @@ public class DeviceDetailsActivity extends AppCompatActivity {
         if ((view == null) || !view.isClickable() && !(view instanceof Button)) {
             KarooKey karooKey = KarooKey.fromKeyCode(e.getKeyCode());
 
-            if (karooKey != KarooKey.NONE) {
+            if (karooKey != KarooKey.INVALID) {
                 Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.container);
 
                 if (fragment instanceof IKarooKeyListener) {

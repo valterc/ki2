@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ExtensionInfo
+    id="ki2"
+    displayName="@string/app_name"
+    icon="@drawable/ic_icon"
+    scansDevices="true">
+
+    <DataType
+        description="Shifting battery %."
+        displayName="Shifting Battery %"
+        icon="@drawable/ic_hh_battery"
+        typeId="TYPE_SHIFTING_BATTERY_PERCENTAGE" />
+
+    <DataType
+        description="Shifting mode."
+        displayName="Shifting mode"
+        icon="@drawable/ic_hh_gear"
+        typeId="TYPE_SHIFTING_MODE"
+        graphical="true" />
+
+    <!--
+    <DataType
+        description="Gears view with gear index."
+        displayName="Gears"
+        graphical="true"
+        icon="@drawable/ic_hh_gear"
+        typeId="graphical-gears" />
+    <DataType
+        description="Gears view with gear size."
+        displayName="Gears Size"
+        graphical="true"
+        icon="@drawable/ic_hh_gear"
+        typeId="graphical-gears-size" />
+        -->
+</ExtensionInfo>
