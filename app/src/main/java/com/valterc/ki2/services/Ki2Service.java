@@ -672,8 +672,6 @@ public class Ki2Service extends Service implements IAntScanListener, IDeviceConn
         serviceHandler.postAction(() -> {
             boolean sendUpdate = connectionsDataManager.onData(deviceId, dataType, data);
             if (sendUpdate) {
-                Timber.d("[%s] Sending update for data (type=%s, value=%s)", deviceId, dataType, data);
-
                 switch (dataType) {
 
                     case SHIFTING:
@@ -716,8 +714,6 @@ public class Ki2Service extends Service implements IAntScanListener, IDeviceConn
                                 (callback, manufacturerInfo) -> callback.onManufacturerInfo(deviceId, manufacturerInfo));
                         break;
 
-                    default:
-                        Timber.d("[%s] Not sending update for data type %s", deviceId, dataType);
                 }
 
                 broadcastData(callbackListConnectionDataInfo,

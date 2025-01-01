@@ -3,7 +3,6 @@ package com.valterc.ki2.ant.connection.handler.profile;
 import com.valterc.ki2.ant.connection.IDeviceConnectionListener;
 import com.valterc.ki2.ant.connection.handler.transport.ITransportHandler;
 import com.valterc.ki2.data.device.DeviceId;
-import com.valterc.ki2.data.device.DeviceType;
 
 import timber.log.Timber;
 

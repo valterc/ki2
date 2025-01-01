@@ -39,13 +39,6 @@ class OverlayWindowHandler(
     private var overlayEnabled = false
     private var inRideApp = false
 
-    @Suppress("DEPRECATION")
-    private fun isForeground() =
-        (service.getSystemService(ACTIVITY_SERVICE) as? ActivityManager)
-            ?.getRunningServices(Integer.MAX_VALUE)
-            ?.find { it.service.className == javaClass.name}
-            ?.foreground == true
-
     private val preferencesListener = Consumer<PreferencesView> { preferences: PreferencesView ->
         overlayEnabled = preferences.isOverlayEnabled(service)
         if (overlayEnabled) {

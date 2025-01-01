@@ -27,7 +27,7 @@ class Ki2ExtensionService : KarooExtension("ki2", BuildConfig.VERSION_NAME) {
             serviceIntent.setComponent(
                 ComponentName(
                     "com.valterc.ki2",
-                    "com.valterc.ki2.karoo.extension.Ki2ExtensionService"
+                    Ki2ExtensionService::class.java.name
                 )
             )
             return serviceIntent
@@ -42,7 +42,7 @@ class Ki2ExtensionService : KarooExtension("ki2", BuildConfig.VERSION_NAME) {
 
     override val types by lazy {
         listOf(
-            ShiftingBatteryPercentageDataType(extension),
+            ShiftingBatteryPercentageDataType(extension, extensionContext),
             ShiftingModeDataType(extension, extensionContext)
         )
     }

@@ -9,9 +9,8 @@ import androidx.glance.appwidget.background
 import androidx.glance.color.ColorProvider
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Box
-import androidx.glance.layout.fillMaxWidth
+import androidx.glance.layout.fillMaxSize
 import androidx.glance.layout.padding
-import androidx.glance.layout.wrapContentHeight
 import androidx.glance.preview.ExperimentalGlancePreviewApi
 import androidx.glance.preview.Preview
 import androidx.glance.text.FontFamily
@@ -22,11 +21,10 @@ import io.hammerhead.karooext.models.ViewConfig
 @OptIn(ExperimentalGlancePreviewApi::class)
 @Preview(widthDp = 100, heightDp = 50)
 @Composable
-fun TextView(text: String? = null, dataAlignment: ViewConfig.Alignment, fontSize: Int = 14) {
+fun NotAvailable(dataAlignment: ViewConfig.Alignment, fontSize: Int = 20) {
     Box(
         modifier = GlanceModifier
-            .fillMaxWidth()
-            .wrapContentHeight()
+            .fillMaxSize()
             .background(Color(1f, 1f, 1f, 1f), Color(0f, 0f, 0f, 1f)),
         contentAlignment = Alignment(
             vertical = Alignment.Vertical.CenterVertically,
@@ -38,9 +36,9 @@ fun TextView(text: String? = null, dataAlignment: ViewConfig.Alignment, fontSize
         ),
     ) {
         Text(
-            text = text ?: "",
+            text = "N/A",
             style = TextStyle(ColorProvider(Color.Black, Color.White), fontSize = fontSize.sp, fontFamily = FontFamily.SansSerif),
-            modifier = GlanceModifier.padding(1.dp).padding(top = (-20).dp)
+            modifier = GlanceModifier.padding(1.dp)
         )
     }
 }

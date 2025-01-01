@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.valterc.ki2.data.preferences.device.DevicePreferencesView;
 import com.valterc.ki2.data.shifting.ShiftingInfo;
+import com.valterc.ki2.data.shifting.ShiftingMode;
 
 public class ShiftingGearingHelper {
 
@@ -75,6 +76,10 @@ public class ShiftingGearingHelper {
 
     public boolean hasValidGearingInfo() {
         return shiftingInfo != null && devicePreferences != null;
+    }
+
+    public ShiftingMode getShiftingMode() {
+        return shiftingInfo == null ? ShiftingMode.INVALID : shiftingInfo.getShiftingMode();
     }
 
     public boolean hasFrontGearSize() {
