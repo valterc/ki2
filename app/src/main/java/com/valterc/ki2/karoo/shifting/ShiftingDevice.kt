@@ -56,8 +56,9 @@ class ShiftingDevice(
 
     private val shiftingGearingHelper =
         ShiftingGearingHelper(extensionContext.context)
-    private var devicePreferencesView: DevicePreferencesView? = null
     private var preferencesView: PreferencesView? = null
+    private var devicePreferencesView: DevicePreferencesView? = null
+    private var connectionInfo: ConnectionInfo? = null
     private var batteryStatus: BatteryStatus? = null
     private var batteryInfo: BatteryInfo? = null
 
@@ -91,8 +92,10 @@ class ShiftingDevice(
                     return@BiConsumer
                 }
 
-                devicePreferencesView?.let {
-                    if (!it.isEnabled(extensionContext.context)) {
+                this.connectionInfo = connectionInfo
+
+                devicePreferencesView?.let { devicePreferencesView ->
+                    if (!devicePreferencesView.isEnabled(extensionContext.context)) {
                         emitter.onNext(OnConnectionStatus(ConnectionStatus.DISABLED))
                         return@BiConsumer
                     }
@@ -179,6 +182,10 @@ class ShiftingDevice(
 
             while (true) {
                 lock.withLock {
+                    if (devicePreferencesView?.isEnabled(extensionContext.context) == false || connectionInfo?.isConnected == false) {
+                        return@withLock
+                    }
+
                     timestampLastEmittedDataPoints?.let { timestampLastEmittedDataPoints ->
                         if (timestampLastEmittedDataPoints.isBefore(now().minusMillis(50_000))) {
                             emitDataPoints(emitter)
