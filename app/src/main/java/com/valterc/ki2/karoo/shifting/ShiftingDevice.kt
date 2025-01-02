@@ -218,12 +218,6 @@ class ShiftingDevice(
     }
 
     private fun emitKarooDataPoints(emitter: Emitter<DeviceEvent>) {
-        Timber.i(
-            "[%s] Will emit shifting data: %s",
-            deviceId.uid,
-            shiftingGearingHelper.hasValidGearingInfo()
-        )
-
         val frontGearFieldMap = mutableMapOf(
             DataType.Field.SHIFTING_FRONT_GEAR to shiftingGearingHelper.frontGear.toDouble(),
             DataType.Field.SHIFTING_FRONT_GEAR_MAX to shiftingGearingHelper.frontGearMax.toDouble(),
