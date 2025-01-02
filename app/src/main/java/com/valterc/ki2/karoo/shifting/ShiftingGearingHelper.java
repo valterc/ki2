@@ -7,7 +7,7 @@ import com.valterc.ki2.data.shifting.ShiftingInfo;
 import com.valterc.ki2.data.shifting.ShiftingMode;
 
 /**
- * @noinspection ALL
+ * @noinspection unused
  */
 public class ShiftingGearingHelper {
 
