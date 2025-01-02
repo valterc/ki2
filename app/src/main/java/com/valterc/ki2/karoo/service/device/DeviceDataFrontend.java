@@ -1,11 +1,9 @@
 package com.valterc.ki2.karoo.service.device;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.RemoteException;
-import android.util.Log;
 
 import androidx.annotation.Nullable;
 
@@ -25,7 +23,8 @@ import com.valterc.ki2.services.callbacks.IShiftingCallback;
 
 import java.util.function.BiConsumer;
 
-@SuppressLint("LogNotTimber")
+import timber.log.Timber;
+
 public class DeviceDataFrontend {
 
     private IKi2Service service;
@@ -376,7 +375,7 @@ public class DeviceDataFrontend {
         try {
             return service.getDevicePreferences(deviceId);
         } catch (Exception e) {
-            Log.e("KI2", "Unable to get device preferences", e);
+            Timber.e(e, "Unable to get device preferences");
         }
 
         return null;
@@ -390,7 +389,7 @@ public class DeviceDataFrontend {
         try {
             service.changeShiftMode(deviceId);
         } catch (RemoteException e) {
-            Log.e("KI2", "Unable to change shift mode", e);
+            Timber.e(e, "Unable to change shift mode");
         }
     }
 

@@ -4,22 +4,15 @@ import com.valterc.ki2.data.connection.ConnectionInfo
 import com.valterc.ki2.data.device.BatteryInfo
 import com.valterc.ki2.data.device.DeviceId
 import com.valterc.ki2.karoo.Ki2ExtensionContext
-import com.valterc.ki2.karoo.streamData
 import io.hammerhead.karooext.extension.DataTypeImpl
 import io.hammerhead.karooext.internal.Emitter
-import io.hammerhead.karooext.models.BatteryStatus
-import io.hammerhead.karooext.models.ConnectionStatus
 import io.hammerhead.karooext.models.DataPoint
 import io.hammerhead.karooext.models.DataType
-import io.hammerhead.karooext.models.OnConnectionStatus
 import io.hammerhead.karooext.models.StreamState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.onCompletion
-import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.launch
-import java.time.Instant.now
 import java.util.concurrent.locks.ReentrantLock
 import java.util.function.BiConsumer
 import kotlin.concurrent.withLock
@@ -102,7 +95,7 @@ class ShiftingBatteryPercentageDataType(
                     emitDataPoint(emitter)
                 }
 
-                delay(10_000)
+                delay(5_000)
             }
         }
 

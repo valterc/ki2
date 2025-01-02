@@ -1,4 +1,4 @@
-package com.valterc.ki2.karoo.datatypes
+package com.valterc.ki2.karoo.datatypes.views
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
@@ -21,11 +21,13 @@ import io.hammerhead.karooext.models.ViewConfig
 @OptIn(ExperimentalGlancePreviewApi::class)
 @Preview(widthDp = 100, heightDp = 50)
 @Composable
-fun Waiting(dataAlignment: ViewConfig.Alignment, fontSize: Int = 20) {
+fun NotAvailable(
+    dataAlignment: ViewConfig.Alignment = ViewConfig.Alignment.RIGHT,
+    fontSize: Int = 20) {
     Box(
         modifier = GlanceModifier
             .fillMaxSize()
-            .background(Color(1f, 1f, 1f, 1f), Color(0f, 0f, 0f, 1f)),
+            .padding(5.dp),
         contentAlignment = Alignment(
             vertical = Alignment.Vertical.CenterVertically,
             horizontal = when (dataAlignment) {
@@ -36,9 +38,10 @@ fun Waiting(dataAlignment: ViewConfig.Alignment, fontSize: Int = 20) {
         ),
     ) {
         Text(
-            text = "...",
+            text = "N/A",
             style = TextStyle(ColorProvider(Color.Black, Color.White), fontSize = fontSize.sp, fontFamily = FontFamily.SansSerif),
-            modifier = GlanceModifier.padding(1.dp)
+            modifier = GlanceModifier
+                .background(Color(1f, 1f, 1f, 1f), Color(0f, 0f, 0f, 1f))
         )
     }
 }

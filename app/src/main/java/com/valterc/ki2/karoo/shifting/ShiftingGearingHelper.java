@@ -6,6 +6,9 @@ import com.valterc.ki2.data.preferences.device.DevicePreferencesView;
 import com.valterc.ki2.data.shifting.ShiftingInfo;
 import com.valterc.ki2.data.shifting.ShiftingMode;
 
+/**
+ * @noinspection ALL
+ */
 public class ShiftingGearingHelper {
 
     private final Context context;
@@ -102,8 +105,8 @@ public class ShiftingGearingHelper {
         return gearTeethCountRear;
     }
 
-    public float getGearRatio() {
-        return gearTeethCountRear == 0 ? 0 : (float) gearTeethCountFront / gearTeethCountRear;
+    public double getGearRatio() {
+        return gearTeethCountRear == 0 ? 0 : ((double) gearTeethCountFront) / gearTeethCountRear;
     }
 
     public int getFrontGear() {

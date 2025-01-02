@@ -80,6 +80,8 @@ class ShiftingDevice(
 
                 if (!preferences.isEnabled(extensionContext.context)) {
                     emitter.onNext(OnConnectionStatus(ConnectionStatus.DISABLED))
+                } else {
+                    emitDataPoints(emitter)
                 }
             }
 

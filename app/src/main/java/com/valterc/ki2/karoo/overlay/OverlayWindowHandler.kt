@@ -131,6 +131,7 @@ class OverlayWindowHandler(
     }
 
     private fun close() {
+        overlayManager?.dispose()
         overlayManager = null
 
         val notificationManager =

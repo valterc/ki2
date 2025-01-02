@@ -1,4 +1,4 @@
-package com.valterc.ki2.karoo.datatypes
+package com.valterc.ki2.karoo.datatypes.views
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
@@ -21,24 +21,35 @@ import io.hammerhead.karooext.models.ViewConfig
 @OptIn(ExperimentalGlancePreviewApi::class)
 @Preview(widthDp = 100, heightDp = 50)
 @Composable
-fun NotAvailable(dataAlignment: ViewConfig.Alignment, fontSize: Int = 20) {
+fun TextView(
+    text: String? = "1.5",
+    dataAlignment: ViewConfig.Alignment = ViewConfig.Alignment.RIGHT,
+    fontSize: Int = 50
+) {
     Box(
         modifier = GlanceModifier
             .fillMaxSize()
-            .background(Color(1f, 1f, 1f, 1f), Color(0f, 0f, 0f, 1f)),
+            .padding(start = 5.dp, top = 0.dp, end = 5.dp, bottom = 5.dp),
         contentAlignment = Alignment(
             vertical = Alignment.Vertical.CenterVertically,
             horizontal = when (dataAlignment) {
                 ViewConfig.Alignment.LEFT -> Alignment.Horizontal.Start
                 ViewConfig.Alignment.CENTER,
-                ViewConfig.Alignment.RIGHT, -> Alignment.Horizontal.End
+                ViewConfig.Alignment.RIGHT,
+                    -> Alignment.Horizontal.End
             },
         ),
     ) {
         Text(
-            text = "N/A",
-            style = TextStyle(ColorProvider(Color.Black, Color.White), fontSize = fontSize.sp, fontFamily = FontFamily.SansSerif),
-            modifier = GlanceModifier.padding(1.dp)
+            text = text ?: "",
+            style = TextStyle(
+                ColorProvider(Color.Black, Color.White),
+                fontSize = fontSize.sp,
+                fontFamily = FontFamily.Monospace
+            ),
+            modifier = GlanceModifier
+                .background(Color(1f, 1f, 1f, 1f), Color(0f, 0f, 0f, 1f))
+                .padding(top = (-5).dp)
         )
     }
 }

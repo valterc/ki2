@@ -2,7 +2,9 @@ package com.valterc.ki2.karoo.overlay.manager;
 
 import com.valterc.ki2.karoo.Ki2ExtensionContext;
 
-/** @noinspection FieldCanBeLocal*/
+/**
+ * @noinspection FieldCanBeLocal
+ */
 public class OverlayManager {
 
     private final BaseOverlayManager primaryOverlayManager;
@@ -21,5 +23,10 @@ public class OverlayManager {
                 }
             }
         });
+    }
+
+    public void dispose() {
+        primaryOverlayManager.dispose();
+        secondaryOverlayManager.dispose();
     }
 }

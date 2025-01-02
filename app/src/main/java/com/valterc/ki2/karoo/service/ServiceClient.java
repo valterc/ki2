@@ -1,6 +1,5 @@
 package com.valterc.ki2.karoo.service;
 
-import android.annotation.SuppressLint;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.ServiceConnection;
@@ -8,7 +7,6 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.RemoteException;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -36,7 +34,9 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-@SuppressLint("LogNotTimber")
+import timber.log.Timber;
+
+/** @noinspection unused*/
 public class ServiceClient {
 
     private static final int TIME_MS_ATTEMPT_BIND = 500;
@@ -77,7 +77,7 @@ public class ServiceClient {
 
             handler.postDelayed(() -> {
                 if (service == null) {
-                    Log.w("KI2", "Attempting to re-bind to service");
+                    Timber.w("Attempting to re-bind to service");
                     context.unbindService(serviceConnection);
                     attemptBindToService();
                 }
@@ -99,7 +99,7 @@ public class ServiceClient {
 
             handler.postDelayed(() -> {
                 if (service == null) {
-                    Log.w("KI2", "Attempting to re-bind to service");
+                    Timber.w("Attempting to re-bind to service");
                     context.unbindService(serviceConnection);
                     attemptBindToService();
                 }
@@ -381,7 +381,7 @@ public class ServiceClient {
         try {
             service.sendMessage(message);
         } catch (RemoteException e) {
-            Log.e("KI2", "Unable to send message", e);
+            Timber.e(e, "Unable to send message");
         }
     }
 
@@ -432,7 +432,7 @@ public class ServiceClient {
         try {
             return service.getPreferences();
         } catch (Exception e) {
-            Log.e("KI2", "Unable to get preferences", e);
+            Timber.e(e, "Unable to get preferences");
         }
 
         return null;
@@ -452,7 +452,7 @@ public class ServiceClient {
         try {
             return service.getSavedDevices();
         } catch (Exception e) {
-            Log.e("KI2", "Unable to get saved devices", e);
+            Timber.e(e, "Unable to get saved devices");
         }
 
         return null;
