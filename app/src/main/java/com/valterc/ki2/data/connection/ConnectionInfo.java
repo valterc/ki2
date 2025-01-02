@@ -7,7 +7,7 @@ public class ConnectionInfo implements Parcelable {
 
     private final ConnectionStatus status;
 
-    public static final Parcelable.Creator<ConnectionInfo> CREATOR = new Parcelable.Creator<ConnectionInfo>() {
+    public static final Parcelable.Creator<ConnectionInfo> CREATOR = new Parcelable.Creator<>() {
         public ConnectionInfo createFromParcel(Parcel in) {
             return new ConnectionInfo(in);
         }
