@@ -36,7 +36,7 @@ class GearRatioDataType(extension: String, private val extensionContext: Ki2Exte
 
     private val glance = GlanceRemoteViews()
     private val lock: ReentrantLock = ReentrantLock()
-    private val decimalFormat = DecimalFormat("0.00")
+    private val decimalFormat = DecimalFormat("#.00")
     private var connectionInfo: ConnectionInfo? = null
     private var shiftingGearingHelper = ShiftingGearingHelper(extensionContext.context)
 
