@@ -8,8 +8,7 @@ import com.valterc.ki2.data.preferences.PreferencesView
 import com.valterc.ki2.data.preferences.device.DevicePreferencesView
 import com.valterc.ki2.data.shifting.ShiftingInfo
 import com.valterc.ki2.karoo.Ki2ExtensionContext
-import com.valterc.ki2.karoo.datatypes.ShiftingBatteryPercentageDataType
-import com.valterc.ki2.karoo.datatypes.ShiftingModeDataType
+import com.valterc.ki2.karoo.datatypes.Ki2DataType
 import io.hammerhead.karooext.internal.Emitter
 import io.hammerhead.karooext.models.BatteryStatus
 import io.hammerhead.karooext.models.ConnectionStatus
@@ -45,8 +44,9 @@ class ShiftingDevice(
                 DataType.Source.SHIFTING_FRONT_GEAR,
                 DataType.Source.SHIFTING_REAR_GEAR,
                 DataType.Source.SHIFTING_BATTERY,
-                DataType.dataTypeId(extension, ShiftingBatteryPercentageDataType.TYPE_ID),
-                DataType.dataTypeId(extension, ShiftingModeDataType.TYPE_ID)
+                DataType.dataTypeId(extension, Ki2DataType.Type.DFLY),
+                DataType.dataTypeId(extension, Ki2DataType.Type.DI2),
+                DataType.dataTypeId(extension, Ki2DataType.Type.STEPS)
             ),
             extensionContext.serviceClient.getDevicePreferences(deviceId)
                 ?.getName(extensionContext.context)
@@ -60,12 +60,9 @@ class ShiftingDevice(
     private var preferencesView: PreferencesView? = null
     private var batteryStatus: BatteryStatus? = null
     private var batteryInfo: BatteryInfo? = null
-    private var shiftingInfo: ShiftingInfo? = null
 
-    private val lock: ReentrantLock = ReentrantLock();
+    private val lock: ReentrantLock = ReentrantLock()
     private var timestampLastEmittedDataPoints: Instant? = null
-    private var frontGearFieldMap: MutableMap<String, Double>? = null
-    private var rearGearFieldMap: MutableMap<String, Double>? = null
 
     private val preferencesListener = Consumer<PreferencesView> { preferences: PreferencesView ->
         preferencesView = preferences
@@ -79,9 +76,12 @@ class ShiftingDevice(
                 }
 
                 devicePreferencesView = preferences
+                shiftingGearingHelper.setDevicePreferences(preferences)
 
                 if (!preferences.isEnabled(extensionContext.context)) {
                     emitter.onNext(OnConnectionStatus(ConnectionStatus.DISABLED))
+                } else {
+                    emitDataPoints(emitter)
                 }
             }
 
@@ -143,35 +143,7 @@ class ShiftingDevice(
                     else -> BatteryStatus.OK
                 }
 
-                batteryStatus?.let {
-                    emitter.onNext(OnBatteryStatus(it))
-                    emitter.onNext(
-                        OnDataPoint(
-                            DataPoint(
-                                DataType.Type.SHIFTING_BATTERY,
-                                mapOf(
-                                    DataType.Field.SHIFTING_BATTERY_STATUS to it.ordinal.toDouble()
-                                ),
-                                source.uid
-                            )
-                        )
-                    )
-                }
-
-                emitter.onNext(
-                    OnDataPoint(
-                        DataPoint(
-                            DataType.dataTypeId(
-                                extension,
-                                ShiftingBatteryPercentageDataType.TYPE_ID
-                            ),
-                            mapOf(
-                                DataType.Field.SINGLE to batteryInfo.value.toDouble()
-                            ),
-                            source.uid
-                        )
-                    )
-                )
+                emitDataPoints(emitter)
             }
 
         val shiftingInfoListener =
@@ -180,34 +152,9 @@ class ShiftingDevice(
                     return@BiConsumer
                 }
 
-                this.shiftingInfo = shiftingInfo
-                shiftingGearingHelper.setShiftingInfo(shiftingInfo)
-
-                val frontGearFieldMap = mutableMapOf(
-                    DataType.Field.SHIFTING_FRONT_GEAR to shiftingGearingHelper.frontGear.toDouble(),
-                    DataType.Field.SHIFTING_FRONT_GEAR_MAX to shiftingGearingHelper.frontGearMax.toDouble(),
-                )
-
-                if (shiftingGearingHelper.hasFrontGearSize()) {
-                    frontGearFieldMap[DataType.Field.SHIFTING_FRONT_GEAR_TEETH] =
-                        shiftingGearingHelper.frontGearTeethCount.toDouble()
-                }
-
-                val rearGearFieldMap = mutableMapOf(
-                    DataType.Field.SHIFTING_REAR_GEAR to shiftingGearingHelper.rearGear.toDouble(),
-                    DataType.Field.SHIFTING_REAR_GEAR_MAX to shiftingGearingHelper.rearGearMax.toDouble(),
-                )
-
-                if (shiftingGearingHelper.hasRearGearSize()) {
-                    rearGearFieldMap[DataType.Field.SHIFTING_REAR_GEAR_TEETH] =
-                        shiftingGearingHelper.rearGearTeethCount.toDouble()
-                }
-
                 lock.withLock {
-                    this.frontGearFieldMap = frontGearFieldMap
-                    this.rearGearFieldMap = rearGearFieldMap
-
-                    emitDataPoints(emitter, frontGearFieldMap, rearGearFieldMap)
+                    shiftingGearingHelper.setShiftingInfo(shiftingInfo)
+                    emitDataPoints(emitter)
                 }
             }
 
@@ -217,22 +164,24 @@ class ShiftingDevice(
             emitter.onNext(OnConnectionStatus(ConnectionStatus.SEARCHING))
             delay(5_000)
             extensionContext.serviceClient.registerPreferencesWeakListener(preferencesListener)
-            extensionContext.serviceClient.registerDevicePreferencesWeakListener(
+            extensionContext.serviceClient.registerUnfilteredDevicePreferencesWeakListener(
                 devicePreferencesListener
             )
-            extensionContext.serviceClient.registerConnectionInfoWeakListener(connectionInfoListener)
-            extensionContext.serviceClient.registerBatteryInfoWeakListener(batteryInfoListener)
-            extensionContext.serviceClient.registerShiftingInfoWeakListener(shiftingInfoListener)
+            extensionContext.serviceClient.registerUnfilteredConnectionInfoWeakListener(
+                connectionInfoListener
+            )
+            extensionContext.serviceClient.registerUnfilteredBatteryInfoWeakListener(
+                batteryInfoListener
+            )
+            extensionContext.serviceClient.registerUnfilteredShiftingInfoWeakListener(
+                shiftingInfoListener
+            )
 
             while (true) {
                 lock.withLock {
                     timestampLastEmittedDataPoints?.let { timestampLastEmittedDataPoints ->
                         if (timestampLastEmittedDataPoints.isBefore(now().minusMillis(50_000))) {
-                            frontGearFieldMap?.let { frontGearFieldMap ->
-                                rearGearFieldMap?.let { rearGearFieldMap ->
-                                    emitDataPoints(emitter, frontGearFieldMap, rearGearFieldMap)
-                                }
-                            }
+                            emitDataPoints(emitter)
                         }
                     }
                 }
@@ -245,23 +194,49 @@ class ShiftingDevice(
             Timber.i("[%s] Device disconnect", deviceId.uid)
             job.cancel()
             extensionContext.serviceClient.unregisterPreferencesWeakListener(preferencesListener)
-            extensionContext.serviceClient.unregisterDevicePreferencesWeakListener(
+            extensionContext.serviceClient.unregisterUnfilteredDevicePreferencesWeakListener(
                 devicePreferencesListener
             )
-            extensionContext.serviceClient.unregisterConnectionInfoWeakListener(
+            extensionContext.serviceClient.unregisterUnfilteredConnectionInfoWeakListener(
                 connectionInfoListener
             )
-            extensionContext.serviceClient.unregisterBatteryInfoWeakListener(batteryInfoListener)
-            extensionContext.serviceClient.unregisterShiftingInfoWeakListener(shiftingInfoListener)
+            extensionContext.serviceClient.unregisterUnfilteredBatteryInfoWeakListener(
+                batteryInfoListener
+            )
+            extensionContext.serviceClient.unregisterUnfilteredShiftingInfoWeakListener(
+                shiftingInfoListener
+            )
         }
     }
 
-    private fun emitDataPoints(
-        emitter: Emitter<DeviceEvent>,
-        frontGearFieldMap: MutableMap<String, Double>,
-        rearGearFieldMap: MutableMap<String, Double>
-    ) {
+    private fun emitDataPoints(emitter: Emitter<DeviceEvent>) {
         timestampLastEmittedDataPoints = now()
+
+        emitKarooDataPoints(emitter)
+        emitDi2DataPoints(emitter)
+        emitSTEPSDataPoints(emitter)
+    }
+
+    private fun emitKarooDataPoints(emitter: Emitter<DeviceEvent>) {
+        val frontGearFieldMap = mutableMapOf(
+            DataType.Field.SHIFTING_FRONT_GEAR to shiftingGearingHelper.frontGear.toDouble(),
+            DataType.Field.SHIFTING_FRONT_GEAR_MAX to shiftingGearingHelper.frontGearMax.toDouble(),
+        )
+
+        if (shiftingGearingHelper.hasFrontGearSize()) {
+            frontGearFieldMap[DataType.Field.SHIFTING_FRONT_GEAR_TEETH] =
+                shiftingGearingHelper.frontGearTeethCount.toDouble()
+        }
+
+        val rearGearFieldMap = mutableMapOf(
+            DataType.Field.SHIFTING_REAR_GEAR to shiftingGearingHelper.rearGear.toDouble(),
+            DataType.Field.SHIFTING_REAR_GEAR_MAX to shiftingGearingHelper.rearGearMax.toDouble(),
+        )
+
+        if (shiftingGearingHelper.hasRearGearSize()) {
+            rearGearFieldMap[DataType.Field.SHIFTING_REAR_GEAR_TEETH] =
+                shiftingGearingHelper.rearGearTeethCount.toDouble()
+        }
 
         emitter.onNext(
             OnDataPoint(
@@ -283,20 +258,6 @@ class ShiftingDevice(
             )
         )
 
-        shiftingInfo?.let { shiftingInfo ->
-            emitter.onNext(
-                OnDataPoint(
-                    DataPoint(
-                        DataType.dataTypeId(extension, ShiftingModeDataType.TYPE_ID),
-                        mapOf(
-                            DataType.Field.SINGLE to shiftingInfo.shiftingMode.value.toDouble()
-                        ),
-                        source.uid
-                    )
-                )
-            )
-        }
-
         batteryStatus?.let { batteryStatus ->
             emitter.onNext(OnBatteryStatus(batteryStatus))
             emitter.onNext(
@@ -311,19 +272,68 @@ class ShiftingDevice(
                 )
             )
         }
+    }
+
+    private fun emitDi2DataPoints(emitter: Emitter<DeviceEvent>) {
+        if (shiftingGearingHelper.hasInvalidGearingInfo()) {
+            return
+        }
+
+        val fieldMap = mutableMapOf(
+            Ki2DataType.Field.DI2_FRONT_GEAR_INDEX to shiftingGearingHelper.frontGear.toDouble(),
+            Ki2DataType.Field.DI2_FRONT_GEAR_MAX to shiftingGearingHelper.frontGearMax.toDouble(),
+
+            Ki2DataType.Field.DI2_REAR_GEAR_INDEX to shiftingGearingHelper.rearGear.toDouble(),
+            Ki2DataType.Field.DI2_REAR_GEAR_MAX to shiftingGearingHelper.rearGearMax.toDouble(),
+        )
+
+        if (shiftingGearingHelper.hasFrontGearSize()) {
+            fieldMap[Ki2DataType.Field.DI2_FRONT_GEAR_TEETH] =
+                shiftingGearingHelper.frontGearTeethCount.toDouble()
+        }
+
+        if (shiftingGearingHelper.hasRearGearSize()) {
+            fieldMap[Ki2DataType.Field.DI2_REAR_GEAR_TEETH] =
+                shiftingGearingHelper.rearGearTeethCount.toDouble()
+        }
 
         batteryInfo?.let { batteryInfo ->
-            emitter.onNext(
-                OnDataPoint(
-                    DataPoint(
-                        DataType.dataTypeId(extension, ShiftingBatteryPercentageDataType.TYPE_ID),
-                        mapOf(
-                            DataType.Field.SINGLE to batteryInfo.value.toDouble()
-                        ),
-                        source.uid
-                    )
+            fieldMap[Ki2DataType.Field.DI2_BATTERY] = batteryInfo.value.toDouble()
+        }
+
+        fieldMap[Ki2DataType.Field.DI2_SHIFTING_MODE] =
+            shiftingGearingHelper.shiftingMode.value.toDouble()
+
+        emitter.onNext(
+            OnDataPoint(
+                DataPoint(
+                    DataType.dataTypeId(extension, Ki2DataType.Type.DI2),
+                    fieldMap,
+                    source.uid
                 )
             )
+        )
+    }
+
+    private fun emitSTEPSDataPoints(emitter: Emitter<DeviceEvent>) {
+        if (batteryInfo == null) {
+            return
         }
+
+        val fieldMap = mutableMapOf<String, Double>()
+
+        batteryInfo?.let { batteryInfo ->
+            fieldMap[Ki2DataType.Field.STEPS_BATTERY] = batteryInfo.value.toDouble()
+        }
+
+        emitter.onNext(
+            OnDataPoint(
+                DataPoint(
+                    DataType.dataTypeId(extension, Ki2DataType.Type.STEPS),
+                    fieldMap,
+                    source.uid
+                )
+            )
+        )
     }
 }

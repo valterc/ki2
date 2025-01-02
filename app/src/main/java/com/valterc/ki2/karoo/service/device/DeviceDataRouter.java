@@ -9,6 +9,7 @@ import com.valterc.ki2.data.device.BatteryInfo;
 import com.valterc.ki2.data.device.DeviceId;
 import com.valterc.ki2.data.preferences.device.DevicePreferencesView;
 import com.valterc.ki2.data.shifting.ShiftingInfo;
+import com.valterc.ki2.karoo.service.listeners.KeyedDataStreamWeakListenerList;
 import com.valterc.ki2.karoo.service.listeners.BiDataStreamWeakListenerList;
 
 import java.util.HashMap;
@@ -26,10 +27,10 @@ public class DeviceDataRouter {
     private final BiDataStreamWeakListenerList<DeviceId, DevicePreferencesView> devicePreferencesListener;
 
 
-    private final BiDataStreamWeakListenerList<DeviceId, ConnectionInfo> connectionInfoUnfilteredListeners;
-    private final BiDataStreamWeakListenerList<DeviceId, BatteryInfo> batteryInfoUnfilteredListeners;
-    private final BiDataStreamWeakListenerList<DeviceId, ShiftingInfo> shiftingInfoUnfilteredListeners;
-    private final BiDataStreamWeakListenerList<DeviceId, DevicePreferencesView> devicePreferencesUnfilteredListener;
+    private final KeyedDataStreamWeakListenerList<DeviceId, ConnectionInfo> connectionInfoUnfilteredListeners;
+    private final KeyedDataStreamWeakListenerList<DeviceId, BatteryInfo> batteryInfoUnfilteredListeners;
+    private final KeyedDataStreamWeakListenerList<DeviceId, ShiftingInfo> shiftingInfoUnfilteredListeners;
+    private final KeyedDataStreamWeakListenerList<DeviceId, DevicePreferencesView> devicePreferencesUnfilteredListener;
 
     private final BiDataStreamWeakListenerList<DeviceId, KarooActionEvent> actionEventListeners;
 
@@ -45,10 +46,10 @@ public class DeviceDataRouter {
         shiftingInfoListeners = new BiDataStreamWeakListenerList<>();
         devicePreferencesListener = new BiDataStreamWeakListenerList<>();
 
-        connectionInfoUnfilteredListeners = new BiDataStreamWeakListenerList<>();
-        batteryInfoUnfilteredListeners = new BiDataStreamWeakListenerList<>();
-        shiftingInfoUnfilteredListeners = new BiDataStreamWeakListenerList<>();
-        devicePreferencesUnfilteredListener = new BiDataStreamWeakListenerList<>();
+        connectionInfoUnfilteredListeners = new KeyedDataStreamWeakListenerList<>();
+        batteryInfoUnfilteredListeners = new KeyedDataStreamWeakListenerList<>();
+        shiftingInfoUnfilteredListeners = new KeyedDataStreamWeakListenerList<>();
+        devicePreferencesUnfilteredListener = new KeyedDataStreamWeakListenerList<>();
 
         actionEventListeners = new BiDataStreamWeakListenerList<>();
 
@@ -157,7 +158,6 @@ public class DeviceDataRouter {
 
             if (newDeviceData.getBatteryInfo() != null) {
                 batteryInfoListeners.pushData(currentDeviceId, newDeviceData.getBatteryInfo());
-                batteryInfoUnfilteredListeners.pushData(currentDeviceId, newDeviceData.getBatteryInfo());
             }
 
             if (newDeviceData.getShiftingInfo() != null) {
@@ -272,7 +272,7 @@ public class DeviceDataRouter {
     }
 
     public void onActionEvent(DeviceId deviceId, KarooActionEvent actionEvent) {
-        actionEventListeners.pushData(deviceId, actionEvent);
+        actionEventListeners.pushData(deviceId, actionEvent, false);
     }
 
 }

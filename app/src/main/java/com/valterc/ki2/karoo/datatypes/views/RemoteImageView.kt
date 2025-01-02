@@ -1,4 +1,4 @@
-package com.valterc.ki2.karoo.datatypes
+package com.valterc.ki2.karoo.datatypes.views
 
 import android.graphics.Bitmap
 import androidx.compose.runtime.Composable

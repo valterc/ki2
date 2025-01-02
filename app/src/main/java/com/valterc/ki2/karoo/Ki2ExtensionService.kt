@@ -4,6 +4,7 @@ import android.content.ComponentName
 import android.content.Intent
 import com.valterc.ki2.BuildConfig
 import com.valterc.ki2.data.device.DeviceId
+import com.valterc.ki2.karoo.datatypes.GearRatioDataType
 import com.valterc.ki2.karoo.datatypes.ShiftingBatteryPercentageDataType
 import com.valterc.ki2.karoo.datatypes.ShiftingModeDataType
 import com.valterc.ki2.karoo.overlay.OverlayWindowHandler
@@ -14,6 +15,7 @@ import io.hammerhead.karooext.extension.KarooExtension
 import io.hammerhead.karooext.internal.Emitter
 import io.hammerhead.karooext.models.Device
 import io.hammerhead.karooext.models.DeviceEvent
+import io.hammerhead.karooext.models.RequestAnt
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -27,7 +29,7 @@ class Ki2ExtensionService : KarooExtension("ki2", BuildConfig.VERSION_NAME) {
             serviceIntent.setComponent(
                 ComponentName(
                     "com.valterc.ki2",
-                    "com.valterc.ki2.karoo.extension.Ki2ExtensionService"
+                    Ki2ExtensionService::class.java.name
                 )
             )
             return serviceIntent
@@ -42,8 +44,9 @@ class Ki2ExtensionService : KarooExtension("ki2", BuildConfig.VERSION_NAME) {
 
     override val types by lazy {
         listOf(
-            ShiftingBatteryPercentageDataType(extension),
-            ShiftingModeDataType(extension, extensionContext)
+            ShiftingBatteryPercentageDataType(extension, extensionContext),
+            ShiftingModeDataType(extension, extensionContext),
+            GearRatioDataType(extension, extensionContext)
         )
     }
 
@@ -55,6 +58,7 @@ class Ki2ExtensionService : KarooExtension("ki2", BuildConfig.VERSION_NAME) {
             extensionContext.karooSystem.connect { connected ->
                 Timber.i("Connected to Karoo System: $connected")
 
+                extensionContext.karooSystem.dispatch(RequestAnt(extension))
                 handlers.add(UpdateHandler(extensionContext))
                 handlers.add(OverlayWindowHandler(this, extensionContext))
                 handlers.add(ShiftingAudioAlertHandler(extensionContext))

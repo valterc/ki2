@@ -9,13 +9,20 @@
         description="Shifting battery %."
         displayName="Shifting Battery %"
         icon="@drawable/ic_hh_battery"
-        typeId="TYPE_SHIFTING_BATTERY_PERCENTAGE" />
+        typeId="DATATYPE_SHIFTING_BATTERY_PERCENTAGE" />
 
     <DataType
         description="Shifting mode."
-        displayName="Shifting mode"
+        displayName="Shifting Mode"
         icon="@drawable/ic_hh_gear"
-        typeId="TYPE_SHIFTING_MODE"
+        typeId="DATATYPE_SHIFTING_MODE"
+        graphical="true" />
+
+    <DataType
+        description="Gear ratio."
+        displayName="Gear Ratio"
+        icon="@drawable/ic_hh_gear"
+        typeId="DATATYPE_GEAR_RATIO"
         graphical="true" />
 
     <!--

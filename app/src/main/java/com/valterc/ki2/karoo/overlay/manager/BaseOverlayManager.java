@@ -53,6 +53,7 @@ public abstract class BaseOverlayManager {
     private long timestampLastTrigger;
     private boolean overlayEnabled;
     private int overlayDuration;
+    private boolean disposed;
 
     private PreferencesView preferences;
     private ConnectionInfo connectionInfo;
@@ -130,6 +131,11 @@ public abstract class BaseOverlayManager {
 
     public OverlayTriggers getOverlayTriggers() {
         return overlayTriggers;
+    }
+
+    public void dispose(){
+        disposed = true;
+        removeView();
     }
 
     protected abstract Set<String> getOverlayTriggersSet();
@@ -229,7 +235,7 @@ public abstract class BaseOverlayManager {
     }
 
     protected void showOverlay(boolean force) {
-        if (!overlayEnabled || preferences == null) {
+        if (disposed || !overlayEnabled || preferences == null) {
             return;
         }
 
