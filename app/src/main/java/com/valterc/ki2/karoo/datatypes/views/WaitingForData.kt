@@ -23,7 +23,8 @@ import io.hammerhead.karooext.models.ViewConfig
 @Composable
 fun Waiting(
     dataAlignment: ViewConfig.Alignment = ViewConfig.Alignment.RIGHT,
-    fontSize: Int = 20) {
+    fontSize: Int = 20
+) {
     Box(
         modifier = GlanceModifier
             .fillMaxSize()
@@ -33,13 +34,18 @@ fun Waiting(
             horizontal = when (dataAlignment) {
                 ViewConfig.Alignment.LEFT -> Alignment.Horizontal.Start
                 ViewConfig.Alignment.CENTER,
-                ViewConfig.Alignment.RIGHT, -> Alignment.Horizontal.End
+                ViewConfig.Alignment.RIGHT,
+                    -> Alignment.Horizontal.End
             },
         ),
     ) {
         Text(
             text = "...",
-            style = TextStyle(ColorProvider(Color.Black, Color.White), fontSize = fontSize.sp, fontFamily = FontFamily.SansSerif),
+            style = TextStyle(
+                ColorProvider(Color.Black, Color.White),
+                fontSize = fontSize.sp,
+                fontFamily = FontFamily.SansSerif
+            ),
             modifier = GlanceModifier
                 .background(Color(1f, 1f, 1f, 1f), Color(0f, 0f, 0f, 1f))
         )
