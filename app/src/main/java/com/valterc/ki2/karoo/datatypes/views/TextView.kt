@@ -22,7 +22,7 @@ import io.hammerhead.karooext.models.ViewConfig
 @Preview(widthDp = 100, heightDp = 50)
 @Composable
 fun TextView(
-    text: String? = "1.5",
+    text: String? = "",
     dataAlignment: ViewConfig.Alignment = ViewConfig.Alignment.RIGHT,
     fontSize: Int = 50
 ) {
