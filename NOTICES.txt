@@ -1,8 +1,8 @@
 THIS PROJECT IS NOT OWNED, COMMISSIONED BY OR ASSOCIATED WITH HAMMERHEAD OR SRAM OR SHIMANO.
 
-----
+---
 
-Karoo SDK licensed under Apache, Version 2.0:
+Karoo Extensions (karoo-ext library) licensed under Apache, Version 2.0:
 
                                  Apache License
                            Version 2.0, January 2004
@@ -192,7 +192,7 @@ Karoo SDK licensed under Apache, Version 2.0:
       same "printed page" as the copyright notice for easier
       identification within third-party archives.
 
-   Copyright 2020 Hammerhead Navigation, Inc. All Rights Reserved.
+   Copyright (c) 2024 SRAM LLC. All Rights Reserved.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -206,9 +206,8 @@ Karoo SDK licensed under Apache, Version 2.0:
    See the License for the specific language governing permissions and
    limitations under the License.
 
+---
 
-----
-
-"Hammerhead", "Karoo", "Karoo SDK", and "Karoo 2" may be copyright and/or trademark and/or property of Hammerhead Navigation Inc or a parent or subsidiary company. 
+"Hammerhead", "Karoo", "Karoo SDK", "Karoo 2", "Karoo Extensions" and "karoo-ext" may be copyright and/or trademark and/or property of Hammerhead Navigation Inc or a parent or subsidiary company. 
 
 "Shimano", "Di2", "STEPS", the Di2 logo, and the Shimano STEPS logo may be copyright and/or trademark and/or property of Shimano Inc or a parent or subsidiary company.

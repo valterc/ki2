@@ -3,6 +3,7 @@ package com.valterc.ki2.ant.recorder;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import androidx.annotation.Nullable;
 import androidx.preference.PreferenceManager;
 
 import com.valterc.ki2.R;
@@ -29,8 +30,8 @@ public class AntRecorderManager {
         preferences.registerOnSharedPreferenceChangeListener(this::OnSharedPreferenceChangeListener);
     }
 
-    private void OnSharedPreferenceChangeListener(SharedPreferences sharedPreferences, String key) {
-        if (key.equals(context.getString(R.string.preference_ant_recording))) {
+    private void OnSharedPreferenceChangeListener(SharedPreferences sharedPreferences, @Nullable String key) {
+        if (key != null && key.equals(context.getString(R.string.preference_ant_recording))) {
             setupRecording(sharedPreferences);
         }
     }

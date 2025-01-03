@@ -61,7 +61,7 @@
     <string name="text_waiting_for_state">Waiting for state…</string>
     <string name="text_param_dbm">%d dBm</string>
     <string name="text_dismiss">Dismiss</string>
-    <string name="text_param_low_battery">Battery of %s at %d%%</string>
+    <string name="text_param_low_battery">Battery of %1$s at %2$d%%</string>
     <string name="text_di2_low_battery">Di2 low battery</string>
     <string name="text_update_complete">Update complete</string>
     <string name="text_update_complete_restart">Update complete, please restart Karoo</string>
@@ -105,8 +105,8 @@
     <string name="text_drag">Drag</string>
     <string name="text_gearing">Gearing</string>
     <string name="text_detect_automatically">Detect automatically</string>
-    <string name="text_param_gearing_detect_automatically">Detect automatically\nFront: %s\nRear: %s</string>
-    <string name="text_param_gearing_custom">Custom\nFront: %s\nRear: %s</string>
+    <string name="text_param_gearing_detect_automatically">Detect automatically\nFront: %1$s\nRear: %2$s</string>
+    <string name="text_param_gearing_custom">Custom\nFront: %1$s\nRear: %2$s</string>
     <string name="text_unknown">Unknown</string>
     <string name="text_automatically_detected">Automatically detected</string>
     <string name="text_detect_gearing_automatically_warning">Detect gearing automatically. Might not be supported in some systems.</string>
@@ -118,7 +118,7 @@
     <string name="text_invalid_gears_message">Some of the custom gears are invalid.\n\nThe latest changes might not be saved if you exit now.</string>
     <string name="text_exit">Exit</string>
     <string name="text_invalid_gear">Invalid gear</string>
-    <string name="text_param_gearing">F%02d - R%02d</string>
+    <string name="text_param_gearing">F%1$02d - R%2$02d</string>
     <string name="text_param_gearing_single">%02d</string>
     <string name="text_param_ratio">%01.2f</string>
     <string name="text_synchro">SYNCHRO</string>

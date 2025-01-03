@@ -98,22 +98,15 @@ public class AntDebugRecorder extends Timber.DebugTree implements Closeable {
     }
 
     private String getPriorityString(int priority) {
-        switch (priority) {
-            case Log.VERBOSE:
-                return "V";
-            case Log.DEBUG:
-                return "D";
-            case Log.INFO:
-                return "I";
-            case Log.WARN:
-                return "W";
-            case Log.ERROR:
-                return "E";
-            case Log.ASSERT:
-                return "A";
-        }
-
-        return "_";
+        return switch (priority) {
+            case Log.VERBOSE -> "V";
+            case Log.DEBUG -> "D";
+            case Log.INFO -> "I";
+            case Log.WARN -> "W";
+            case Log.ERROR -> "E";
+            case Log.ASSERT -> "A";
+            default -> "_";
+        };
     }
 
     @Override
