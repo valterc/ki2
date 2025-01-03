@@ -1,10 +1,10 @@
 <resources>
     <string-array name="preference_titles_switch_single_press_action">
         <item>None</item>
-        <item>Top Left</item>
-        <item>Top Right</item>
-        <item>Bottom Left</item>
-        <item>Bottom Right</item>
+        <item>Top Left Button</item>
+        <item>Top Right Button</item>
+        <item>Bottom Left Button</item>
+        <item>Bottom Right Button</item>
         <item>Mark Lap</item>
         <item>Map/Graph Zoom Out</item>
         <item>Map/Graph Zoom In</item>
@@ -45,10 +45,10 @@
 
     <string-array name="preference_titles_switch_double_press_action">
         <item>None</item>
-        <item>Top Left</item>
-        <item>Top Right</item>
-        <item>Bottom Left</item>
-        <item>Bottom Right</item>
+        <item>Top Left Button</item>
+        <item>Top Right Button</item>
+        <item>Bottom Left Button</item>
+        <item>Bottom Right Button</item>
         <item>Mark Lap</item>
         <item>Map/Graph Zoom Out</item>
         <item>Map/Graph Zoom In</item>
@@ -142,7 +142,6 @@
     </string-array>
 
     <string-array name="preference_titles_battery_level_low">
-        <item>60%</item>
         <item>50%</item>
         <item>40%</item>
         <item>30%</item>
@@ -151,7 +150,6 @@
     </string-array>
 
     <string-array name="preference_values_battery_level_low">
-        <item>60</item>
         <item>50</item>
         <item>40</item>
         <item>30</item>

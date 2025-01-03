@@ -1,6 +1,7 @@
 package com.valterc.ki2.karoo.shifting
 
 import com.valterc.ki2.data.connection.ConnectionInfo
+import com.valterc.ki2.data.connection.ConnectionStatus
 import com.valterc.ki2.data.device.BatteryInfo
 import com.valterc.ki2.data.device.DeviceId
 import com.valterc.ki2.data.device.DeviceName
@@ -11,7 +12,7 @@ import com.valterc.ki2.karoo.Ki2ExtensionContext
 import com.valterc.ki2.karoo.datatypes.Ki2DataType
 import io.hammerhead.karooext.internal.Emitter
 import io.hammerhead.karooext.models.BatteryStatus
-import io.hammerhead.karooext.models.ConnectionStatus
+import io.hammerhead.karooext.models.ConnectionStatus as KarooConnectionStatus
 import io.hammerhead.karooext.models.DataPoint
 import io.hammerhead.karooext.models.DataType
 import io.hammerhead.karooext.models.Device
@@ -80,7 +81,7 @@ class ShiftingDevice(
                 shiftingGearingHelper.setDevicePreferences(preferences)
 
                 if (!preferences.isEnabled(extensionContext.context)) {
-                    emitter.onNext(OnConnectionStatus(ConnectionStatus.DISABLED))
+                    emitter.onNext(OnConnectionStatus(KarooConnectionStatus.DISABLED))
                 } else {
                     emitDataPoints(emitter)
                 }
@@ -96,33 +97,33 @@ class ShiftingDevice(
 
                 devicePreferencesView?.let { devicePreferencesView ->
                     if (!devicePreferencesView.isEnabled(extensionContext.context)) {
-                        emitter.onNext(OnConnectionStatus(ConnectionStatus.DISABLED))
+                        emitter.onNext(OnConnectionStatus(KarooConnectionStatus.DISABLED))
                         return@BiConsumer
                     }
                 }
 
                 when (connectionInfo.connectionStatus) {
-                    com.valterc.ki2.data.connection.ConnectionStatus.INVALID -> emitter.onNext(
-                        OnConnectionStatus(ConnectionStatus.DISCONNECTED)
+                    ConnectionStatus.INVALID -> emitter.onNext(
+                        OnConnectionStatus(KarooConnectionStatus.DISCONNECTED)
                     )
 
-                    com.valterc.ki2.data.connection.ConnectionStatus.NEW -> emitter.onNext(
-                        OnConnectionStatus(ConnectionStatus.SEARCHING)
+                    ConnectionStatus.NEW -> emitter.onNext(
+                        OnConnectionStatus(KarooConnectionStatus.SEARCHING)
                     )
 
-                    com.valterc.ki2.data.connection.ConnectionStatus.CONNECTING -> emitter.onNext(
-                        OnConnectionStatus(ConnectionStatus.SEARCHING)
+                    ConnectionStatus.CONNECTING -> emitter.onNext(
+                        OnConnectionStatus(KarooConnectionStatus.SEARCHING)
                     )
 
-                    com.valterc.ki2.data.connection.ConnectionStatus.ESTABLISHED -> emitter.onNext(
-                        OnConnectionStatus(ConnectionStatus.CONNECTED)
+                    ConnectionStatus.ESTABLISHED -> emitter.onNext(
+                        OnConnectionStatus(KarooConnectionStatus.CONNECTED)
                     )
 
-                    com.valterc.ki2.data.connection.ConnectionStatus.CLOSED -> emitter.onNext(
-                        OnConnectionStatus(ConnectionStatus.DISCONNECTED)
+                    ConnectionStatus.CLOSED -> emitter.onNext(
+                        OnConnectionStatus(KarooConnectionStatus.DISCONNECTED)
                     )
 
-                    else -> emitter.onNext(OnConnectionStatus(ConnectionStatus.DISCONNECTED))
+                    else -> emitter.onNext(OnConnectionStatus(KarooConnectionStatus.DISCONNECTED))
                 }
             }
 
@@ -140,7 +141,7 @@ class ShiftingDevice(
 
                 batteryStatus = when {
                     batteryInfo.value >= 80 -> BatteryStatus.NEW
-                    batteryInfo.value >= 50 -> BatteryStatus.GOOD
+                    batteryInfo.value >= 60 -> BatteryStatus.GOOD
                     criticalLevel != null && batteryInfo.value <= criticalLevel -> BatteryStatus.CRITICAL
                     lowLevel != null && batteryInfo.value <= lowLevel -> BatteryStatus.LOW
                     else -> BatteryStatus.OK
@@ -164,7 +165,7 @@ class ShiftingDevice(
         Timber.i("[%s] Device connect", deviceId.uid)
 
         val job = CoroutineScope(Dispatchers.IO).launch {
-            emitter.onNext(OnConnectionStatus(ConnectionStatus.SEARCHING))
+            emitter.onNext(OnConnectionStatus(KarooConnectionStatus.SEARCHING))
             delay(5_000)
             extensionContext.serviceClient.registerPreferencesWeakListener(preferencesListener)
             extensionContext.serviceClient.registerUnfilteredDevicePreferencesWeakListener(
