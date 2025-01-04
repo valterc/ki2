@@ -78,11 +78,13 @@ class ShiftingDevice(
                 }
 
                 devicePreferencesView = preferences
-                shiftingGearingHelper.setDevicePreferences(preferences)
 
                 if (!preferences.isEnabled(extensionContext.context)) {
                     emitter.onNext(OnConnectionStatus(KarooConnectionStatus.DISABLED))
-                } else {
+                }
+
+                lock.withLock {
+                    shiftingGearingHelper.setDevicePreferences(preferences)
                     emitDataPoints(emitter)
                 }
             }
@@ -124,6 +126,10 @@ class ShiftingDevice(
                     )
 
                     else -> emitter.onNext(OnConnectionStatus(KarooConnectionStatus.DISCONNECTED))
+                }
+
+                if (connectionInfo.connectionStatus == ConnectionStatus.ESTABLISHED) {
+                    emitDataPoints(emitter)
                 }
             }
 
@@ -183,10 +189,6 @@ class ShiftingDevice(
 
             while (true) {
                 lock.withLock {
-                    if (devicePreferencesView?.isEnabled(extensionContext.context) == false || connectionInfo?.isConnected == false) {
-                        return@withLock
-                    }
-
                     timestampLastEmittedDataPoints?.let { timestampLastEmittedDataPoints ->
                         if (timestampLastEmittedDataPoints.isBefore(now().minusMillis(50_000))) {
                             emitDataPoints(emitter)
@@ -218,6 +220,10 @@ class ShiftingDevice(
     }
 
     private fun emitDataPoints(emitter: Emitter<DeviceEvent>) {
+        if (devicePreferencesView?.isEnabled(extensionContext.context) == false || connectionInfo?.isConnected == false) {
+            return
+        }
+
         timestampLastEmittedDataPoints = now()
 
         emitKarooDataPoints(emitter)
