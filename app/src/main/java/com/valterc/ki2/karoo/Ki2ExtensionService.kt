@@ -18,6 +18,7 @@ import io.hammerhead.karooext.models.DeviceEvent
 import io.hammerhead.karooext.models.RequestAnt
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -68,6 +69,7 @@ class Ki2ExtensionService : KarooExtension("ki2", BuildConfig.VERSION_NAME) {
 
     override fun startScan(emitter: Emitter<Device>) {
         val job = CoroutineScope(Dispatchers.IO).launch {
+            delay(1000)
             extensionContext.serviceClient.savedDevices?.let {
                 for (device: DeviceId in it) {
                     val shiftingDevice = ShiftingDevice(extension, extensionContext, device).source
