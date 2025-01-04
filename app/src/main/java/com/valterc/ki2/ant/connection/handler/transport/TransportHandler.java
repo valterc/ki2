@@ -93,7 +93,7 @@ public class TransportHandler implements ITransportHandler {
     }
 
     private void processAntEvent(ChannelEventMessage channelEventMessage) {
-        Timber.d("Received ANT message %s: %s", channelEventMessage.getEventCode(), channelEventMessage);
+        Timber.d("[%s] Received ANT message %s: %s", deviceId, channelEventMessage.getEventCode(), channelEventMessage);
 
         switch (channelEventMessage.getEventCode()) {
             case RX_SEARCH_TIMEOUT:

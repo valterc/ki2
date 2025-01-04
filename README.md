@@ -1,6 +1,6 @@
 # Ki2
 
-Ki2 is an app for Hammerhead Karoo. It is a companion app for electronic shifting groupsets produced by a Japanese company.
+Ki2 is an extension for Hammerhead Karoo cycling computers. It is a companion app for electronic shifting groupsets produced by a Japanese company.
 
 [![Buy me a coffee](https://img.shields.io/badge/☕-Buy%20me%20a%20coffee-blue)](https://www.paypal.com/donate/?business=N6PWH859NY7W6&no_recurring=1&item_name=Buy+me+a+coffee&currency_code=EUR) [![Validate workflow](https://github.com/valterc/ki2/actions/workflows/android-validate.yml/badge.svg?branch=main)](https://github.com/valterc/ki2/actions/workflows/android-validate.yml) [![Latest Release](https://img.shields.io/github/v/release/valterc/ki2?label=Latest%20Release)](https://github.com/valterc/ki2/releases/latest/)
 
@@ -58,6 +58,8 @@ These screenshots have been _slightly_ edited.
 6. Use default Karoo shifting elements or Ki2 elements in your ride profile
 7. Customize battery alerts, shifting audio alerts, button controls, overlays and other features from Ki2
 
+**Note:** It is important that the gearing configuration is set correctly in Ki2, and that the order of shifting sensors in the Karoo sensors list matches with the order of shifting devices in Ki2. The first shifting device (from the top of the list) that is connected, will be used as the main source for the shifting data.
+
 ### Supported Karoo software versions
 
 For best experience please use the latest Karoo software and the [latest Ki2 version](https://github.com/valterc/ki2/releases/latest/). Please report any issues if you experience problems after updating your Karoo.
@@ -76,10 +78,10 @@ While the implementation is fairly tidy and optimized, this app will be yet anot
 | Built-in GPS                                      |
 | Audio alerts on (navigation + radar)              |
 
-| Setup         | Distance | Ride Duration | Recorded Ascent | Avg Speed | Avg Temperature | Total Shifts | Battery Usage                                           |
-|---------------|----------|---------------|-----------------|-----------|-----------------|--------------|---------------------------------------------------------|
-| Karoo 2       | 52.6km   | 2:06:03       | 592m            | 25.1km/h  | 25C             | 410          | **18%**<br> **8.5% / hour**<br> (Start: 98% - End: 80%) |
-| Karoo 2 + Ki2 | 52.6km   | 1:58:21       | 585m            | 26.7km/h  | 21C             | 368          | **15%**<br> **7.5% / hour**<br> (Start: 97% - End: 82%) |
+| Setup         | Distance | Ride Duration | Avg Temperature | Total Shifts | Battery Usage                                           |
+|---------------|----------|---------------|-----------------|--------------|---------------------------------------------------------|
+| Karoo 2       | 52.6km   | 2:06:03       | 25C             | 410          | **18%**<br> **8.5% / hour**<br> (Start: 98% - End: 80%) |
+| Karoo 2 + Ki2 | 52.6km   | 1:58:21       | 21C             | 368          | **15%**<br> **7.5% / hour**<br> (Start: 97% - End: 82%) |
 
 Tested in the same route in different days. Similar profile in Karoo with the original shifting data elements and then the equivalent ones from Ki2.
 

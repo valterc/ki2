@@ -1,6 +1,7 @@
 package com.valterc.ki2.karoo.datatypes
 
 import com.valterc.ki2.data.connection.ConnectionInfo
+import com.valterc.ki2.data.connection.ConnectionStatus
 import com.valterc.ki2.data.device.BatteryInfo
 import com.valterc.ki2.data.device.DeviceId
 import com.valterc.ki2.karoo.Ki2ExtensionContext
@@ -112,13 +113,13 @@ class ShiftingBatteryPercentageDataType(
 
     private fun emitDataPoint(emitter: Emitter<StreamState>) {
         when (connectionInfo?.connectionStatus) {
-            com.valterc.ki2.data.connection.ConnectionStatus.INVALID,
-            com.valterc.ki2.data.connection.ConnectionStatus.NEW,
-            com.valterc.ki2.data.connection.ConnectionStatus.CONNECTING -> emitter.onNext(
+            ConnectionStatus.INVALID,
+            ConnectionStatus.NEW,
+            ConnectionStatus.CONNECTING -> emitter.onNext(
                 StreamState.Searching
             )
 
-            com.valterc.ki2.data.connection.ConnectionStatus.ESTABLISHED ->
+            ConnectionStatus.ESTABLISHED ->
                 batteryInfo.let { batteryInfo ->
                     if (batteryInfo != null) {
                         emitter.onNext(

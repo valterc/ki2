@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'org.jetbrains.kotlin.plugin.compose'
 }
 
 private def loadLocalProperties() {
@@ -30,6 +31,10 @@ android {
     namespace 'com.valterc.ki2'
     compileSdk 34
 
+    base {
+        archivesName = "ki2"
+    }
+
     defaultConfig {
         applicationId "com.valterc.ki2"
         minSdk 26
@@ -37,8 +42,6 @@ android {
 		
         versionCode properties.getProperty("VERSION_CODE", "1") as int
         versionName properties.getProperty("VERSION_NAME", "0.1")
-		
-        archivesBaseName = "ki2"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
