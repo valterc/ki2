@@ -61,7 +61,7 @@ jobs:
         python3 .scripts/generate-manifest.py app/manifest-template.json app/build/manifest.json '${{ github.ref_name }}' '${{ github.run_number }}' app/build/release-notes   
 
     - name: Upload APK to release
-      uses: svenstaro/upload-release-action@2.3.0
+      uses: svenstaro/upload-release-action@v2
       with:
         repo_name: valterc/ki2
         repo_token: ${{ secrets.GH_TOKEN }}
@@ -70,7 +70,7 @@ jobs:
         overwrite: true
 
     - name: Upload Icon to release
-      uses: svenstaro/upload-release-action@2.3.0
+      uses: svenstaro/upload-release-action@v2
       with:
         repo_name: valterc/ki2
         repo_token: ${{ secrets.GH_TOKEN }}
@@ -79,7 +79,7 @@ jobs:
         overwrite: true
 
     - name: Upload Manifest to release
-      uses: svenstaro/upload-release-action@2.3.0
+      uses: svenstaro/upload-release-action@v2
       with:
         repo_name: valterc/ki2
         repo_token: ${{ secrets.GH_TOKEN }}
