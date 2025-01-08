@@ -9,6 +9,7 @@ import android.widget.RelativeLayout;
 
 public class PositionManager {
 
+    private final WindowManager windowManager;
     private final View overlayView;
     private final View parentView;
 
@@ -24,7 +25,7 @@ public class PositionManager {
     private int lastWidth = -1;
     private int lastHeight = -1;
 
-    public PositionManager(int positionX, int positionY, View overlayView, View parentView) {
+    public PositionManager(int positionX, int positionY, WindowManager windowManager, View overlayView, View parentView) {
         DisplayMetrics displayMetrics = Resources.getSystem().getDisplayMetrics();
         parentWidth = displayMetrics.widthPixels;
         parentHeight = displayMetrics.heightPixels;
@@ -32,6 +33,7 @@ public class PositionManager {
         this.x = positionX;
         this.y = positionY;
 
+        this.windowManager = windowManager;
         this.overlayView = overlayView;
         this.parentView = parentView;
     }
@@ -90,6 +92,6 @@ public class PositionManager {
 
         lastX = xValue;
         lastY = yValue;
-        parentView.setLayoutParams(layoutParamsParent);
+        windowManager.updateViewLayout(parentView, layoutParamsParent);
     }
 }
