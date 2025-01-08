@@ -6,8 +6,6 @@ Ki2 is an extension for Hammerhead Karoo cycling computers. It is a companion ap
 
 ## Screenshots
 
-### Connection to devices and configuration
-
 ![Ki2 main application](media/image_1.png?raw=true "Ki2 main application")
 ![Device information](media/image_2.png?raw=true "Device information")
 ![Device information](media/image_3.png?raw=true "Device information")
