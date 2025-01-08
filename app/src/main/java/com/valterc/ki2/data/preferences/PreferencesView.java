@@ -318,6 +318,17 @@ public class PreferencesView implements Parcelable {
     }
 
     /**
+     * Frequency multiplier for audio alerts.
+     *
+     * @param context Ki2 application context. Cannot be a context generated from another package.
+     * @return Frequency multiplier for audio alerts.
+     */
+    public double getAudioAlertFrequencyMultiplier(Context context) {
+        return Double.parseDouble(getString(context.getString(R.string.preference_audio_alert_frequency_multiplier),
+                context.getString(R.string.default_preference_audio_alert_frequency_multiplier)));
+    }
+
+    /**
      * Indicates if the overlay is enabled.
      *
      * @param context Ki2 application context. Cannot be a context generated from another package.

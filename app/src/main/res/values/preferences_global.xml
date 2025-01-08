@@ -12,6 +12,7 @@
     <string name="category_preference_battery_notification">Battery Notification</string>
     <string name="category_preference_update">Update</string>
     <string name="category_preference_audio_alerts">Audio Alerts</string>
+    <string name="category_preference_audio_alert_settings">Audio Alert Settings</string>
     <string name="category_preference_general_settings">General Settings</string>
     <string name="category_preference_overlay">Overlay</string>
     <string name="category_preference_secondary_overlay">Secondary overlay</string>
@@ -30,6 +31,7 @@
     <string name="title_preference_audio_alert_shifting_limit">Shifting Limit</string>
     <string name="title_preference_audio_alert_upcoming_synchro_shift">Upcoming Synchro Shift</string>
     <string name="title_preference_audio_alert_delay">Delay between audio alerts</string>
+    <string name="title_preference_audio_alert_frequency_multiplier">Audio Alert Intensity</string>
     <string name="title_preference_overlay_enabled">Enable Overlay</string>
     <string name="title_preference_overlay_triggers">Triggers</string>
     <string name="title_preference_overlay_duration">Duration</string>
@@ -48,6 +50,7 @@
     <string name="summary_preference_audio_alert_shifting_limit">Audio alert when attempting to shift while already on the gear limit</string>
     <string name="summary_preference_audio_alert_upcoming_synchro_shift">Audio alert when the next shift can trigger a synchronized shift (on S2 mode)</string>
     <string name="summary_preference_audio_alert_delay">Minimum delay between audio alerts</string>
+    <string name="summary_preference_audio_alert_frequency_multiplier">Perceived intensity of the audio alerts</string>
     <string name="summary_preference_overlay">Show an Overlay with shifting information in Ride</string>
     <string name="summary_preference_graphics">Customize graphical setting of Ki2 elements</string>
     <string name="summary_preference_overlay_enabled">Enable Overlay in Ride</string>
@@ -72,6 +75,7 @@
     <string name="default_preference_battery_level_critical">10</string>
     <bool name="default_preference_audio_alerts_enabled">true</bool>
     <string name="default_preference_audio_alert_delay">0</string>
+    <string name="default_preference_audio_alert_frequency_multiplier">1.0</string>
     <string name="default_preference_audio_alert_shifting_limit">@string/value_preference_audio_alert_disabled</string>
     <string name="default_preference_audio_alert_upcoming_synchro_shift">@string/value_preference_audio_alert_disabled</string>
     <bool name="default_preference_auto_update">true</bool>
@@ -117,6 +121,7 @@
     <string name="preference_audio_alert_shifting_limit">AUDIO_ALERT_SHIFTING_LIMIT</string>
     <string name="preference_audio_alert_upcoming_synchro_shift">AUDIO_ALERT_UPCOMING_SYNCHRO_SHIFT</string>
     <string name="preference_audio_alert_delay">AUDIO_ALERT_DELAY</string>
+    <string name="preference_audio_alert_frequency_multiplier">AUDIO_ALERT_FREQUENCY_MULTIPLIER</string>
     <string name="preference_overlay_enabled">OVERLAY_ENABLED</string>
     <string name="preference_overlay_triggers">OVERLAY_TRIGGERS</string>
     <string name="preference_overlay_duration">OVERLAY_DURATION</string>
