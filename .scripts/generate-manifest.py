@@ -13,7 +13,7 @@ with open(manifestTemplateFilePath) as file:
 with open(releaseNotesFilePath) as file:
     releaseNotes = file.read()
 
-releaseNotes = json.dumps(releaseNotes.replace("\r", "").replace("\n", "\\n"))
+releaseNotes = json.dumps(releaseNotes.strip().replace("\r", "").replace("\n", "\\n"))
 
 manifest = manifestTemplate.replace("__VERSION_NAME__", versionName).replace("__VERSION_CODE__", versionCode).replace("__RELEASE_NOTES__", releaseNotes)
 
