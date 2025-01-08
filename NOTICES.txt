@@ -210,4 +210,4 @@ Karoo Extensions (karoo-ext library) licensed under Apache, Version 2.0:
 
 "Hammerhead", "Karoo", "Karoo SDK", "Karoo 2", "Karoo Extensions" and "karoo-ext" may be copyright and/or trademark and/or property of Hammerhead Navigation Inc or a parent or subsidiary company. 
 
-"Shimano", "Di2", "STEPS", the Di2 logo, and the Shimano STEPS logo may be copyright and/or trademark and/or property of Shimano Inc or a parent or subsidiary company.
+"Shimano", "D-Fly", "Di2", "STEPS", the Di2 logo, and the Shimano STEPS logo may be copyright and/or trademark and/or property of Shimano Inc or a parent or subsidiary company.

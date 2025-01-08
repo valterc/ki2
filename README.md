@@ -4,38 +4,22 @@ Ki2 is an extension for Hammerhead Karoo cycling computers. It is a companion ap
 
 [![Buy me a coffee](https://img.shields.io/badge/☕-Buy%20me%20a%20coffee-blue)](https://www.paypal.com/donate/?business=N6PWH859NY7W6&no_recurring=1&item_name=Buy+me+a+coffee&currency_code=EUR) [![Validate workflow](https://github.com/valterc/ki2/actions/workflows/android-validate.yml/badge.svg?branch=main)](https://github.com/valterc/ki2/actions/workflows/android-validate.yml) [![Latest Release](https://img.shields.io/github/v/release/valterc/ki2?label=Latest%20Release)](https://github.com/valterc/ki2/releases/latest/)
 
----
-
-## NOTICE
-
-A new version of Ki2 using the Karoo Extensions will be released soon. This version will be compatible with Karoo 2 and Karoo 3.
-
-**It will not be backwards compatible with older versions of Ki2 and will have a reduced feature set until Hammerhead improves the new Karoo extensions.**
-
-You may choose to keep using the old Ki2 version, but it will be unsupported and have no further updates.
-
-This README does not reflect the latest Ki2 version, please hold on :)
-
----
-
 ## Screenshots
 
-![Ki2 main application](media/image_0.png?raw=true "Ki2 main application")
-![Ki2 settings](media/image_1.png?raw=true "Ki2 settings")
-![Connection to device](media/image_2.png?raw=true "Connection to device")
-![Gears information](media/image_3.png?raw=true "Gears information")
-![Overlay in Ride](media/image_7.png?raw=true "Overlay in Ride")
-
-These screenshots have been _slightly_ edited.
+![Ki2 main application](media/image_1.png?raw=true "Ki2 main application")
+![Device information](media/image_2.png?raw=true "Device information")
+![Device information](media/image_3.png?raw=true "Device information")
+![Ki2 settings](media/image_4.png?raw=true "Ki2 settings")
+![Ride elements](media/image_5.png?raw=true "Ride elements")
+![Overlay](media/overlay.gif?raw=true "Overlay")
 
 ## Features
 
 - Pair and connect to electronic shifting groupsets
-- Configure actions for hood buttons
+- Integrate shifting information with native Karoo elements
+- Control Karoo screens and trigger actions from the shifting buttons
 - Change shifting mode
-- Setup Karoo ride profiles with shifting data elements
-- While in a ride, control Karoo from the shifting buttons
-- Overlay with shifting information while in Ride
+- Overlay shifting information on top of the ride display
 - Receive notifications when shifting battery is low
 - Audio alerts before upcoming synchro shift or when reaching shifting limits
 
@@ -46,9 +30,9 @@ These screenshots have been _slightly_ edited.
 3. [Connect to shifting devices from Ki2](https://user-images.githubusercontent.com/1299179/204136334-c8a5a395-c6b5-4d16-a8d5-ff1fa2dd726d.mp4)
    - Open Ki2
    - Press the `+` button
-   - Make sure a wireless shifting device is nearby and that it is active
-   - Press the `Add` button to add a device once it is found
-4. Configure the shifting device from Karoo (for example: rename the device)
+   - Make sure a wireless shifting device is nearby and that it is active (perform a shift or press a button to wake up the shifting system)
+   - Press the `Add` button in Ki2 to add a device once it is found
+4. Configure the shifting device from Karoo (for example: rename the device - optional)
 5. Add the Ki2 devices to Karoo
    - Open Karoo sensors
    - Press the `+` button to add a new sensor
