@@ -6,6 +6,6 @@
   "latestVersion": "__VERSION_NAME__",
   "latestVersionCode": __VERSION_CODE__,
   "developer": "Valter C.",
-  "description": "Connect to Di2 shifting systems, display gearing information and shifting battery. Control Karoo screens and actions from the Di2 buttons.",
+  "description": "Connect to Di2 shifting systems and STEPS e-bikes, display gear information and shifting battery. Control Karoo screens and trigger actions from the Di2 buttons.",
   "releaseNotes": __RELEASE_NOTES__
 }
