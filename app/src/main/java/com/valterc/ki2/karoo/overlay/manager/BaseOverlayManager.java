@@ -189,7 +189,7 @@ public abstract class BaseOverlayManager {
             view = viewBuilder.createOverlayView(extensionContext, preferences, viewOverlay);
             view.applyPreferences(extensionContext, getOverlayPreferences());
             view.setupInRide();
-            positionManager = new PositionManager(getOverlayPositionX(), getOverlayPositionY(), viewOverlay, parentViewGroup);
+            positionManager = new PositionManager(getOverlayPositionX(), getOverlayPositionY(), windowManager, viewOverlay, parentViewGroup);
             positionManager.updatePosition();
 
             view.setVisibilityListener(v -> {
