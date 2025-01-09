@@ -17,7 +17,7 @@ class AudioManager(private val context: Ki2ExtensionContext) {
     private var audioAlertUpcomingSynchroShift: String? = null
     private var delayBetweenAlerts: Int = 0
     private var timestampLastAlert: Long = 0
-    private var frequencyMultiplier: Double = 1.0
+    private var intensity: AudioIntensity = AudioIntensity.Normal
 
     private val playAudioConsumer = Consumer<AudioAlertMessage> {
         playAudio(it.name)
@@ -30,7 +30,7 @@ class AudioManager(private val context: Ki2ExtensionContext) {
         audioAlertShiftingLimit = preferences.getAudioAlertShiftingLimit(context.context)
         audioAlertUpcomingSynchroShift = preferences.getAudioAlertUpcomingSynchroShift(context.context)
         delayBetweenAlerts = preferences.getDelayBetweenAudioAlerts(context.context)
-        frequencyMultiplier = preferences.getAudioAlertFrequencyMultiplier(context.context)
+        intensity = preferences.getAudioAlertIntensity(context.context)
     }
 
     init {
@@ -51,15 +51,11 @@ class AudioManager(private val context: Ki2ExtensionContext) {
     }
 
     private fun adjustFrequency(frequency: Int): Int {
-        return (frequency * frequencyMultiplier).toInt()
+        return (frequency * intensity.frequencyMultiplier).toInt()
     }
 
     private fun adjustDuration(duration: Int): Int {
-        if (frequencyMultiplier < 0.1) {
-           return max((duration * 0.7).toInt(), 50)
-        }
-
-        return duration
+        return max((duration * intensity.durationMultiplier).toInt(), 50)
     }
 
     fun playSingleBeep() {
@@ -74,7 +70,7 @@ class AudioManager(private val context: Ki2ExtensionContext) {
             PlayBeepPattern(
                 listOf(
                     PlayBeepPattern.Tone(adjustFrequency(5000), adjustDuration(350)),
-                    PlayBeepPattern.Tone(null, 150),
+                    PlayBeepPattern.Tone(null, adjustDuration(150)),
                     PlayBeepPattern.Tone(adjustFrequency(5000), adjustDuration(350))
                 )
             )
@@ -86,11 +82,11 @@ class AudioManager(private val context: Ki2ExtensionContext) {
             PlayBeepPattern(
                 listOf(
                     PlayBeepPattern.Tone(adjustFrequency(5000), adjustDuration(350)),
-                    PlayBeepPattern.Tone(null, 100),
+                    PlayBeepPattern.Tone(null, adjustDuration(100)),
                     PlayBeepPattern.Tone(adjustFrequency(4250), adjustDuration(100)),
-                    PlayBeepPattern.Tone(null, 50),
+                    PlayBeepPattern.Tone(null, adjustDuration(50)),
                     PlayBeepPattern.Tone(adjustFrequency(4250), adjustDuration(100)),
-                    PlayBeepPattern.Tone(null, 50),
+                    PlayBeepPattern.Tone(null, adjustDuration(50)),
                     PlayBeepPattern.Tone(adjustFrequency(4250), adjustDuration(100))
                 )
             )
@@ -104,9 +100,9 @@ class AudioManager(private val context: Ki2ExtensionContext) {
                     PlayBeepPattern.Tone(adjustFrequency(5000), adjustDuration(350)),
                     PlayBeepPattern.Tone(null, 100),
                     PlayBeepPattern.Tone(adjustFrequency(4250), adjustDuration(100)),
-                    PlayBeepPattern.Tone(null, 50),
+                    PlayBeepPattern.Tone(null, adjustDuration(50)),
                     PlayBeepPattern.Tone(adjustFrequency(4250), adjustDuration(100)),
-                    PlayBeepPattern.Tone(null, 50),
+                    PlayBeepPattern.Tone(null, adjustDuration(50)),
                     PlayBeepPattern.Tone(adjustFrequency(4250), adjustDuration(100))
                 )
             )
@@ -119,7 +115,7 @@ class AudioManager(private val context: Ki2ExtensionContext) {
                 listOf(
                     PlayBeepPattern.Tone(adjustFrequency(3750), adjustDuration(50)),
                     PlayBeepPattern.Tone(adjustFrequency(5800), adjustDuration(200)),
-                    PlayBeepPattern.Tone(null, 50),
+                    PlayBeepPattern.Tone(null, adjustDuration(50)),
                     PlayBeepPattern.Tone(adjustFrequency(3750), adjustDuration(50)),
                     PlayBeepPattern.Tone(adjustFrequency(5800), adjustDuration(300))
                 )

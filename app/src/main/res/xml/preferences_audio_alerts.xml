@@ -19,12 +19,12 @@
             app:dependency="@string/preference_audio_alerts_enabled" />
 
         <com.valterc.ki2.views.preference.AudioPlaybackPreference
-            app:defaultValue="@string/default_preference_audio_alert_frequency_multiplier"
-            app:entries="@array/preference_titles_audio_alert_frequency_multiplier"
-            app:entryValues="@array/preference_values_audio_alert_frequency_multiplier"
-            app:key="@string/preference_audio_alert_frequency_multiplier"
-            app:summary="@string/summary_preference_audio_alert_frequency_multiplier"
-            app:title="@string/title_preference_audio_alert_frequency_multiplier"
+            app:defaultValue="@string/default_preference_audio_alert_intensity"
+            app:entries="@array/preference_titles_audio_alert_intensity"
+            app:entryValues="@array/preference_values_audio_alert_intensity"
+            app:key="@string/preference_audio_alert_intensity"
+            app:summary="@string/summary_preference_audio_alert_intensity"
+            app:title="@string/title_preference_audio_alert_intensity"
             app:dependency="@string/preference_audio_alerts_enabled" />
 
     </PreferenceCategory>

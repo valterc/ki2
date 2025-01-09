@@ -189,18 +189,18 @@
         <item>15000</item>
     </string-array>
 
-    <string-array name="preference_titles_audio_alert_frequency_multiplier">
+    <string-array name="preference_titles_audio_alert_intensity">
         <item>Quiet</item>
         <item>Low</item>
         <item>Reduced</item>
         <item>Normal</item>
     </string-array>
 
-    <string-array name="preference_values_audio_alert_frequency_multiplier">
-        <item>0.01</item>
-        <item>0.1</item>
-        <item>0.4</item>
-        <item>1.0</item>
+    <string-array name="preference_values_audio_alert_intensity">
+        <item>quiet</item>
+        <item>low</item>
+        <item>reduced</item>
+        <item>normal</item>
     </string-array>
 
     <string-array name="preference_titles_audio_alert_type">
