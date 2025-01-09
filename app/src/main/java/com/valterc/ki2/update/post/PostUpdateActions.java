@@ -6,6 +6,7 @@ import com.valterc.ki2.data.update.PostUpdateActionsStore;
 import com.valterc.ki2.update.post.actions.IPostInitPostUpdateAction;
 import com.valterc.ki2.update.post.actions.IPostUpdateAction;
 import com.valterc.ki2.update.post.actions.IPreInitPostUpdateAction;
+import com.valterc.ki2.update.post.actions.KarooAudioAlertsUpdateAction;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,6 +23,7 @@ public final class PostUpdateActions {
 
     static {
         preInitActionMap = new HashMap<>();
+        preInitActionMap.put(KarooAudioAlertsUpdateAction.class.getSimpleName(), new KarooAudioAlertsUpdateAction());
         postInitActionMap = new HashMap<>();
     }
 

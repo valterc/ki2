@@ -28,7 +28,8 @@ class AudioManager(private val context: Ki2ExtensionContext) {
         audioAlertLowestGear = preferences.getAudioAlertLowestGear(context.context)
         audioAlertHighestGear = preferences.getAudioAlertHighestGear(context.context)
         audioAlertShiftingLimit = preferences.getAudioAlertShiftingLimit(context.context)
-        audioAlertUpcomingSynchroShift = preferences.getAudioAlertUpcomingSynchroShift(context.context)
+        audioAlertUpcomingSynchroShift =
+            preferences.getAudioAlertUpcomingSynchroShift(context.context)
         delayBetweenAlerts = preferences.getDelayBetweenAudioAlerts(context.context)
         intensity = preferences.getAudioAlertIntensity(context.context)
     }
@@ -40,8 +41,7 @@ class AudioManager(private val context: Ki2ExtensionContext) {
 
     private fun playAudio(audio: String?) {
         when (audio) {
-            "karoo_workout_interval" -> playKarooWorkoutInterval()
-            "karoo_auto_lap" -> playKarooAutoLap()
+            "karoo_generic" -> playKarooGeneric()
             "karoo_bell" -> playKarooBell()
             "custom_single_beep" -> playSingleBeep()
             "custom_double_beep" -> playDoubleBeep()
@@ -50,17 +50,18 @@ class AudioManager(private val context: Ki2ExtensionContext) {
         }
     }
 
-    private fun adjustFrequency(frequency: Int): Int {
-        return (frequency * intensity.frequencyMultiplier).toInt()
-    }
+    private val Int.f: Int
+        get() = times(intensity.frequencyMultiplier).toInt()
 
-    private fun adjustDuration(duration: Int): Int {
-        return max((duration * intensity.durationMultiplier).toInt(), 50)
-    }
+    private val Int.d: Int
+        get() = max(times(intensity.durationMultiplier).toInt(), 50)
 
     fun playSingleBeep() {
         context.karooSystem.dispatch(
-            PlayBeepPattern(listOf(PlayBeepPattern.Tone(adjustFrequency(5000), adjustDuration(350)))
+            PlayBeepPattern(
+                listOf(
+                    PlayBeepPattern.Tone(5000.f, 350.d)
+                )
             )
         )
     }
@@ -69,41 +70,25 @@ class AudioManager(private val context: Ki2ExtensionContext) {
         context.karooSystem.dispatch(
             PlayBeepPattern(
                 listOf(
-                    PlayBeepPattern.Tone(adjustFrequency(5000), adjustDuration(350)),
-                    PlayBeepPattern.Tone(null, adjustDuration(150)),
-                    PlayBeepPattern.Tone(adjustFrequency(5000), adjustDuration(350))
+                    PlayBeepPattern.Tone(5000.f, 350.d),
+                    PlayBeepPattern.Tone(null, 150.d),
+                    PlayBeepPattern.Tone(5000.f, 350.d)
                 )
             )
         )
     }
 
-    private fun playKarooWorkoutInterval() {
+    private fun playKarooGeneric() {
         context.karooSystem.dispatch(
             PlayBeepPattern(
                 listOf(
-                    PlayBeepPattern.Tone(adjustFrequency(5000), adjustDuration(350)),
-                    PlayBeepPattern.Tone(null, adjustDuration(100)),
-                    PlayBeepPattern.Tone(adjustFrequency(4250), adjustDuration(100)),
-                    PlayBeepPattern.Tone(null, adjustDuration(50)),
-                    PlayBeepPattern.Tone(adjustFrequency(4250), adjustDuration(100)),
-                    PlayBeepPattern.Tone(null, adjustDuration(50)),
-                    PlayBeepPattern.Tone(adjustFrequency(4250), adjustDuration(100))
-                )
-            )
-        )
-    }
-
-    private fun playKarooAutoLap() {
-        context.karooSystem.dispatch(
-            PlayBeepPattern(
-                listOf(
-                    PlayBeepPattern.Tone(adjustFrequency(5000), adjustDuration(350)),
-                    PlayBeepPattern.Tone(null, 100),
-                    PlayBeepPattern.Tone(adjustFrequency(4250), adjustDuration(100)),
-                    PlayBeepPattern.Tone(null, adjustDuration(50)),
-                    PlayBeepPattern.Tone(adjustFrequency(4250), adjustDuration(100)),
-                    PlayBeepPattern.Tone(null, adjustDuration(50)),
-                    PlayBeepPattern.Tone(adjustFrequency(4250), adjustDuration(100))
+                    PlayBeepPattern.Tone(5000.f, 350.d),
+                    PlayBeepPattern.Tone(null, 100.d),
+                    PlayBeepPattern.Tone(4250.f, 100.d),
+                    PlayBeepPattern.Tone(null, 50.d),
+                    PlayBeepPattern.Tone(4250.f, 100.d),
+                    PlayBeepPattern.Tone(null, 50.d),
+                    PlayBeepPattern.Tone(4250.f, 100.d)
                 )
             )
         )
@@ -113,11 +98,11 @@ class AudioManager(private val context: Ki2ExtensionContext) {
         context.karooSystem.dispatch(
             PlayBeepPattern(
                 listOf(
-                    PlayBeepPattern.Tone(adjustFrequency(3750), adjustDuration(50)),
-                    PlayBeepPattern.Tone(adjustFrequency(5800), adjustDuration(200)),
-                    PlayBeepPattern.Tone(null, adjustDuration(50)),
-                    PlayBeepPattern.Tone(adjustFrequency(3750), adjustDuration(50)),
-                    PlayBeepPattern.Tone(adjustFrequency(5800), adjustDuration(300))
+                    PlayBeepPattern.Tone(3750.f, 50.d),
+                    PlayBeepPattern.Tone(5800.f, 200.d),
+                    PlayBeepPattern.Tone(null, 50.d),
+                    PlayBeepPattern.Tone(3750.f, 50.d),
+                    PlayBeepPattern.Tone(5800.f, 300.d)
                 )
             )
         )

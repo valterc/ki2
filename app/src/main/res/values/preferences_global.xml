@@ -94,9 +94,6 @@
 
     <string name="value_preference_battery_level_off">off</string>
     <string name="value_preference_audio_alert_disabled">disabled</string>
-    <string name="value_preference_audio_alert_single_beep">custom_single_beep</string>
-    <string name="value_preference_audio_alert_double_beep">custom_double_beep</string>
-    <string name="value_preference_audio_alert_bell">karoo_bell</string>
 
     <string name="preference_switch_ch1_single_press">SWITCH_CH1_SINGLE_PRESS</string>
     <string name="preference_switch_ch1_double_press">SWITCH_CH1_DOUBLE_PRESS</string>
