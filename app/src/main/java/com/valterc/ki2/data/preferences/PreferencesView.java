@@ -6,9 +6,12 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import androidx.annotation.ColorInt;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.preference.PreferenceManager;
 
 import com.valterc.ki2.R;
+import com.valterc.ki2.karoo.audio.AudioIntensity;
 import com.valterc.ki2.karoo.overlay.view.builder.OverlayViewBuilderEntry;
 import com.valterc.ki2.karoo.overlay.view.builder.OverlayViewBuilderRegistry;
 import com.valterc.ki2.karoo.views.KarooTheme;
@@ -224,6 +227,7 @@ public class PreferencesView implements Parcelable {
      * @return Integer value corresponding to the battery level in percentage.
      * Null to indicate that there is no low battery level.
      */
+    @Nullable
     public Integer getBatteryLevelLow(Context context) {
         String value = getString(context.getString(R.string.preference_battery_level_low), context.getString(R.string.default_preference_battery_level_low));
 
@@ -241,6 +245,7 @@ public class PreferencesView implements Parcelable {
      * @return Integer value corresponding to the battery level in percentage.
      * Null to indicate that there is no critical battery level.
      */
+    @Nullable
     public Integer getBatteryLevelCritical(Context context) {
         String value = getString(context.getString(R.string.preference_battery_level_critical), context.getString(R.string.default_preference_battery_level_critical));
 
@@ -268,6 +273,7 @@ public class PreferencesView implements Parcelable {
      * @param context Ki2 application context. Cannot be a context generated from another package.
      * @return Audio alert name for when shifting into the lowest gear.
      */
+    @NonNull
     public String getAudioAlertLowestGear(Context context) {
         return getString(context.getString(R.string.preference_audio_alert_lowest_gear),
                 context.getString(R.string.default_preference_audio_alert_shifting_limit));
@@ -279,6 +285,7 @@ public class PreferencesView implements Parcelable {
      * @param context Ki2 application context. Cannot be a context generated from another package.
      * @return Audio alert name for when shifting into the highest gear.
      */
+    @NonNull
     public String getAudioAlertHighestGear(Context context) {
         return getString(context.getString(R.string.preference_audio_alert_highest_gear),
                 context.getString(R.string.default_preference_audio_alert_shifting_limit));
@@ -290,6 +297,7 @@ public class PreferencesView implements Parcelable {
      * @param context Ki2 application context. Cannot be a context generated from another package.
      * @return Audio alert name for shifting limit.
      */
+    @NonNull
     public String getAudioAlertShiftingLimit(Context context) {
         return getString(context.getString(R.string.preference_audio_alert_shifting_limit),
                 context.getString(R.string.default_preference_audio_alert_shifting_limit));
@@ -301,6 +309,7 @@ public class PreferencesView implements Parcelable {
      * @param context Ki2 application context. Cannot be a context generated from another package.
      * @return Audio alert name for synchronized shift.
      */
+    @NonNull
     public String getAudioAlertUpcomingSynchroShift(Context context) {
         return getString(context.getString(R.string.preference_audio_alert_upcoming_synchro_shift),
                 context.getString(R.string.default_preference_audio_alert_upcoming_synchro_shift));
@@ -315,6 +324,18 @@ public class PreferencesView implements Parcelable {
     public int getDelayBetweenAudioAlerts(Context context) {
         return Integer.parseInt(getString(context.getString(R.string.preference_audio_alert_delay),
                 context.getString(R.string.default_preference_audio_alert_delay)));
+    }
+
+    /**
+     * Audio alert intensity.
+     *
+     * @param context Ki2 application context. Cannot be a context generated from another package.
+     * @return Audio alert intensity.
+     */
+    @NonNull
+    public AudioIntensity getAudioAlertIntensity(Context context) {
+        return AudioIntensity.Companion.fromName(getString(context.getString(R.string.preference_audio_alert_intensity),
+                context.getString(R.string.default_preference_audio_alert_intensity)));
     }
 
     /**
@@ -333,6 +354,7 @@ public class PreferencesView implements Parcelable {
      * @param context Ki2 application context. Cannot be a context generated from another package.
      * @return Set with overlay triggers, can be empty.
      */
+    @NonNull
     public Set<String> getOverlayTriggers(Context context) {
         return getStringSet(context.getString(R.string.preference_overlay_triggers), () -> new HashSet<>(Arrays.asList(context.getResources().getStringArray(R.array.preference_values_overlay_triggers))));
     }
@@ -353,6 +375,7 @@ public class PreferencesView implements Parcelable {
      * @param context Ki2 application context. Cannot be a context generated from another package.
      * @return Overlay theme.
      */
+    @NonNull
     public String getOverlayTheme(Context context) {
         return getString(context.getString(R.string.preference_overlay_theme), () -> context.getString(R.string.default_preference_overlay_theme));
     }
@@ -420,6 +443,7 @@ public class PreferencesView implements Parcelable {
      * @param context Ki2 application context. Cannot be a context generated from another package.
      * @return Set with secondary overlay triggers, can be empty.
      */
+    @NonNull
     public Set<String> getSecondaryOverlayTriggers(Context context) {
         return getStringSet(context.getString(R.string.preference_secondary_overlay_triggers), () -> new HashSet<>(Arrays.asList(context.getResources().getStringArray(R.array.default_preference_secondary_overlay_triggers))));
     }
@@ -440,6 +464,7 @@ public class PreferencesView implements Parcelable {
      * @param context Ki2 application context. Cannot be a context generated from another package.
      * @return Secondary overlay theme.
      */
+    @NonNull
     public String getSecondaryOverlayTheme(Context context) {
         return getString(context.getString(R.string.preference_secondary_overlay_theme), () -> context.getString(R.string.default_preference_secondary_overlay_theme));
     }
@@ -497,6 +522,7 @@ public class PreferencesView implements Parcelable {
      * @param context Ki2 application context. Cannot be a context generated from another package.
      * @return Accent color in raw string format.
      */
+    @NonNull
     public String getAccentColorRaw(Context context) {
         return getString(context.getString(R.string.preference_accent_color), () ->
                 context.getResources().getString(R.string.default_preference_accent_color));

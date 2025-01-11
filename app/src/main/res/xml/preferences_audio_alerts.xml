@@ -1,7 +1,7 @@
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
     app:title="@string/category_preference_audio_alerts">
 
-    <PreferenceCategory app:title="@string/category_preference_audio_alerts">
+    <PreferenceCategory app:title="@string/category_preference_audio_alert_settings" >
 
         <SwitchPreference
             app:defaultValue="@bool/default_preference_audio_alerts_enabled"
@@ -9,15 +9,27 @@
             app:summary="@string/summary_preference_audio_alerts_enabled"
             app:title="@string/title_preference_audio_alerts_enabled" />
 
-        <ListPreference
+        <com.valterc.ki2.views.preference.SummaryAndValueListPreference
             app:defaultValue="@string/default_preference_audio_alert_delay"
             app:entries="@array/preference_titles_audio_alert_delay"
             app:entryValues="@array/preference_values_audio_alert_delay"
             app:key="@string/preference_audio_alert_delay"
             app:summary="@string/summary_preference_audio_alert_delay"
             app:title="@string/title_preference_audio_alert_delay"
-            app:useSimpleSummaryProvider="true"
             app:dependency="@string/preference_audio_alerts_enabled" />
+
+        <com.valterc.ki2.views.preference.AudioPlaybackPreference
+            app:defaultValue="@string/default_preference_audio_alert_intensity"
+            app:entries="@array/preference_titles_audio_alert_intensity"
+            app:entryValues="@array/preference_values_audio_alert_intensity"
+            app:key="@string/preference_audio_alert_intensity"
+            app:summary="@string/summary_preference_audio_alert_intensity"
+            app:title="@string/title_preference_audio_alert_intensity"
+            app:dependency="@string/preference_audio_alerts_enabled" />
+
+    </PreferenceCategory>
+    
+    <PreferenceCategory app:title="@string/category_preference_audio_alerts">
 
         <com.valterc.ki2.views.preference.AudioAlertPreference
             app:defaultValue="@string/default_preference_audio_alert_shifting_limit"
