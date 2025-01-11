@@ -28,8 +28,7 @@
             app:dependency="@string/preference_audio_alerts_enabled" />
 
     </PreferenceCategory>
-
-
+    
     <PreferenceCategory app:title="@string/category_preference_audio_alerts">
 
         <com.valterc.ki2.views.preference.AudioAlertPreference
@@ -69,7 +68,5 @@
             app:dependency="@string/preference_audio_alerts_enabled" />
 
     </PreferenceCategory>
-
-
 
 </PreferenceScreen>
