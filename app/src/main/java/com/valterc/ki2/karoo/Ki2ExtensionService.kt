@@ -5,6 +5,7 @@ import android.content.Intent
 import com.valterc.ki2.BuildConfig
 import com.valterc.ki2.data.device.DeviceId
 import com.valterc.ki2.karoo.datatypes.GearRatioDataType
+import com.valterc.ki2.karoo.datatypes.GearsDataType
 import com.valterc.ki2.karoo.datatypes.ShiftingBatteryPercentageDataType
 import com.valterc.ki2.karoo.datatypes.ShiftingModeDataType
 import com.valterc.ki2.karoo.overlay.OverlayWindowHandler
@@ -47,7 +48,8 @@ class Ki2ExtensionService : KarooExtension("ki2", BuildConfig.VERSION_NAME) {
         listOf(
             ShiftingBatteryPercentageDataType(extension, extensionContext),
             ShiftingModeDataType(extension, extensionContext),
-            GearRatioDataType(extension, extensionContext)
+            GearRatioDataType(extension, extensionContext),
+            GearsDataType(extension, extensionContext)
         )
     }
 

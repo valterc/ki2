@@ -25,6 +25,13 @@
         typeId="DATATYPE_GEAR_RATIO"
         graphical="true" />
 
+    <DataType
+        description="Gears view with gear size."
+        displayName="Gears Size"
+        graphical="true"
+        icon="@drawable/ic_hh_gear"
+        typeId="DATATYPE_GRAPHICAL_GEARS" />
+
     <!--
     <DataType
         description="Gears view with gear index."
@@ -37,6 +44,6 @@
         displayName="Gears Size"
         graphical="true"
         icon="@drawable/ic_hh_gear"
-        typeId="graphical-gears-size" />
+        typeId="DATATYPE_GRAPHICAL_GEARS" />
         -->
 </ExtensionInfo>

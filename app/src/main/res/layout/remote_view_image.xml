@@ -7,6 +7,7 @@
         android:id="@+id/widget_image"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+        android:scaleType="fitXY"
         android:contentDescription="@string/app_name" />
     
 </LinearLayout>

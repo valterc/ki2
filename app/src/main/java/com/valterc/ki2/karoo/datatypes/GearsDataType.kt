@@ -1,9 +1,11 @@
 package com.valterc.ki2.karoo.datatypes
 
 import android.content.Context
+import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
+import android.view.View
 import android.widget.RemoteViews
 import androidx.glance.appwidget.ExperimentalGlanceRemoteViewsApi
 import androidx.glance.appwidget.GlanceRemoteViews
@@ -29,7 +31,7 @@ import timber.log.Timber
 class GearsDataType(
     extension: String,
     private val extensionContext: Ki2ExtensionContext
-) : DataTypeImpl(extension, "graphical-gears") {
+) : DataTypeImpl(extension, "DATATYPE_GRAPHICAL_GEARS") {
 
     private val glance = GlanceRemoteViews()
 
@@ -47,31 +49,54 @@ class GearsDataType(
     override fun startView(context: Context, config: ViewConfig, emitter: ViewEmitter) {
         Timber.d("Starting speed view with $emitter")
 
-
-
-        val gearsView =
-            GearsExtensionView(extensionContext)
+        val gearsView = GearsExtensionView(extensionContext)
         val view = gearsView.createView(config)
 
-        view.measure(440, 200)
-        view.layout(0, 0, 440, 200)
-
         val bitmap = Bitmap.createBitmap(
-            440,
-            200,
+            config.viewSize.first,
+            config.viewSize.second,
             Bitmap.Config.ARGB_8888
         )
         val canvas = Canvas(bitmap)
-        view.draw(canvas);
 
-        emitter.onNext(UpdateGraphicConfig(showHeader = true))
+        bitmap.eraseColor(Color.TRANSPARENT)
+        view.forceLayout()
+        view.measure(
+            View.MeasureSpec.makeMeasureSpec(
+                config.viewSize.first,
+                View.MeasureSpec.EXACTLY
+            ),
+            View.MeasureSpec.makeMeasureSpec(
+                config.viewSize.second,
+                View.MeasureSpec.EXACTLY
+            )
+        )
+        view.layout(view.left, view.top, view.right, view.bottom)
+        view.draw(canvas)
+
+        Timber.i("[%s, %s] Update view", dataTypeId, emitter)
+
+        val remoteViews = RemoteViews(context.packageName, R.layout.remote_view_image)
+        remoteViews.setImageViewBitmap(R.id.widget_image, bitmap)
+
+        emitter.updateView(remoteViews)
+        emitter.onNext(UpdateGraphicConfig(showHeader = false))
 
         gearsView.setViewUpdateListener {
-            CoroutineScope(Dispatchers.IO).launch {
+            CoroutineScope(Dispatchers.Main).launch {
                 bitmap.eraseColor(Color.TRANSPARENT)
-                canvas.drawColor(Color.RED)
-                view.invalidate()
                 view.forceLayout()
+                view.measure(
+                    View.MeasureSpec.makeMeasureSpec(
+                        config.viewSize.first,
+                        View.MeasureSpec.EXACTLY
+                    ),
+                    View.MeasureSpec.makeMeasureSpec(
+                        config.viewSize.second,
+                        View.MeasureSpec.EXACTLY
+                    )
+                )
+                view.layout(view.left, view.top, view.right, view.bottom)
                 view.draw(canvas)
 
                 Timber.i("[%s, %s] Update view", dataTypeId, emitter)

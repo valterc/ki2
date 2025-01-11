@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.valterc.ki2.R;
 import com.valterc.ki2.data.connection.ConnectionInfo;
@@ -54,12 +55,10 @@ public class GearsExtensionView extends Ki2ExtensionView {
     private BatteryInfo batteryInfo;
     private PreferencesView preferencesView;
 
-    private KarooTheme karooTheme;
     private TextView textViewWaitingForData;
     private GearsView gearsView;
     private BatteryView batteryView;
     private TextView textViewGears;
-
 
     public GearsExtensionView(@NonNull Ki2ExtensionContext context) {
         super(context);
@@ -74,6 +73,18 @@ public class GearsExtensionView extends Ki2ExtensionView {
     @Override
     protected View createView(@NonNull LayoutInflater layoutInflater, ViewConfig viewConfig) {
         View inflatedView = layoutInflater.inflate(R.layout.view_karoo_gears, null);
+
+        var params = new ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_CONSTRAINT, ConstraintLayout.LayoutParams.MATCH_CONSTRAINT);
+        params.matchConstraintMinWidth = viewConfig.getViewSize().getFirst();
+        params.matchConstraintMinHeight = viewConfig.getViewSize().getSecond();
+
+        inflatedView.setLayoutParams(params);
+        inflatedView.forceLayout();
+        inflatedView.measure(
+                View.MeasureSpec.makeMeasureSpec(viewConfig.getViewSize().getFirst(), View.MeasureSpec.EXACTLY),
+                View.MeasureSpec.makeMeasureSpec(viewConfig.getViewSize().getSecond(), View.MeasureSpec.EXACTLY));
+        inflatedView.layout(inflatedView.getLeft(), inflatedView.getTop(), inflatedView.getRight(), inflatedView.getBottom());
+
         textViewWaitingForData = inflatedView.findViewById(R.id.textview_karoo_gears_waiting_for_data);
         batteryView = inflatedView.findViewById(R.id.batteryview_karoo_gears);
         textViewGears = inflatedView.findViewById(R.id.textview_karoo_gears);
@@ -91,7 +102,6 @@ public class GearsExtensionView extends Ki2ExtensionView {
             gearsView.setSelectedGearColor(getContext().getColor(R.color.hh_gears_active_dark));
         }
 
-        updateGearsView();
         return inflatedView;
     }
 
@@ -101,9 +111,9 @@ public class GearsExtensionView extends Ki2ExtensionView {
         }
 
         if (shiftingInfo == null || connectionStatus != ConnectionStatus.ESTABLISHED || preferencesView == null) {
-            gearsView.setVisibility(View.VISIBLE);
-            batteryView.setVisibility(View.VISIBLE);
-            textViewGears.setVisibility(View.VISIBLE);
+            gearsView.setVisibility(View.INVISIBLE);
+            batteryView.setVisibility(View.INVISIBLE);
+            textViewGears.setVisibility(View.INVISIBLE);
             textViewWaitingForData.setVisibility(View.VISIBLE);
 
             viewUpdated();
@@ -124,7 +134,7 @@ public class GearsExtensionView extends Ki2ExtensionView {
         textViewGears.setText(getContext().getString(R.string.text_param_gearing,
                 shiftingInfo.getFrontGear(),
                 shiftingInfo.getRearGear()));
-        gearsView.setSelectedGearColor(preferencesView.getAccentColor(getContext(), karooTheme));
+        gearsView.setSelectedGearColor(preferencesView.getAccentColor(getContext(), getKarooTheme()));
 
         if (batteryInfo == null) {
             batteryView.setForegroundColor(getContext().getColor(R.color.battery_background_dark));
@@ -132,14 +142,13 @@ public class GearsExtensionView extends Ki2ExtensionView {
         } else {
             batteryView.setValue((float) batteryInfo.getValue() / 100);
 
-            if (preferencesView != null &&
-                    preferencesView.getBatteryLevelCritical(getContext()) != null &&
-                    batteryInfo.getValue() <= preferencesView.getBatteryLevelCritical(getContext())) {
+            var criticalBatteryLevel = preferencesView.getBatteryLevelCritical(getContext());
+            var lowBatteryLevel = preferencesView.getBatteryLevelLow(getContext());
+
+            if (criticalBatteryLevel != null && batteryInfo.getValue() <= criticalBatteryLevel) {
                 batteryView.setForegroundColor(getContext().getColor(R.color.hh_red));
                 batteryView.setBorderColor(getContext().getColor(R.color.hh_red));
-            } else if (preferencesView != null &&
-                    preferencesView.getBatteryLevelLow(getContext()) != null &&
-                    batteryInfo.getValue() <= preferencesView.getBatteryLevelLow(getContext())) {
+            } else if (lowBatteryLevel != null && batteryInfo.getValue() <= lowBatteryLevel) {
                 batteryView.setForegroundColor(getContext().getColor(R.color.hh_yellow_darker));
                 batteryView.setBorderColor(getContext().getColor(R.color.hh_yellow_darker));
             } else {

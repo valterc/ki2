@@ -57,5 +57,4 @@ public abstract class Ki2ExtensionView {
     public View createView(ViewConfig viewConfig) {
         return createView(LayoutInflater.from(getContext()), viewConfig);
     }
-
 }
