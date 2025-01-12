@@ -31,8 +31,8 @@ import java.util.function.BiConsumer
 import kotlin.concurrent.withLock
 
 @OptIn(ExperimentalGlanceRemoteViewsApi::class)
-class GearRatioDataType(extension: String, private val extensionContext: Ki2ExtensionContext) :
-    DataTypeImpl(extension, "DATATYPE_GEAR_RATIO") {
+class GearRatioDataType(private val extensionContext: Ki2ExtensionContext) :
+    DataTypeImpl(extensionContext.extension, "DATATYPE_GEAR_RATIO") {
 
     private val glance = GlanceRemoteViews()
     private val lock: ReentrantLock = ReentrantLock()

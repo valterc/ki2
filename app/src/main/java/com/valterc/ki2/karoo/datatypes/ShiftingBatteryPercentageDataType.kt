@@ -19,9 +19,8 @@ import java.util.function.BiConsumer
 import kotlin.concurrent.withLock
 
 class ShiftingBatteryPercentageDataType(
-    extension: String,
     private val extensionContext: Ki2ExtensionContext
-) : DataTypeImpl(extension, DATA_TYPE) {
+) : DataTypeImpl(extensionContext.extension, DATA_TYPE) {
 
     companion object {
         private const val DATA_TYPE = "DATATYPE_SHIFTING_BATTERY_PERCENTAGE"

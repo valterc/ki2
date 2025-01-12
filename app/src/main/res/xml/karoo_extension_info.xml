@@ -26,11 +26,32 @@
         graphical="true" />
 
     <DataType
-        description="Gears view with gear size."
-        displayName="Gears Size"
+        description="Gears visual view with gear index."
+        displayName="Gears Index (visual)"
         graphical="true"
         icon="@drawable/ic_hh_gear"
-        typeId="DATATYPE_GRAPHICAL_GEARS" />
+        typeId="DATATYPE_VISUAL_GEARS_INDEX" />
+
+    <DataType
+        description="Gears visual view with gear size (teeth count)."
+        displayName="Gears Size (visual)"
+        graphical="true"
+        icon="@drawable/ic_hh_gear"
+        typeId="DATATYPE_VISUAL_GEARS_SIZE" />
+
+    <DataType
+        description="Drivetrain visual view with gear index."
+        displayName="Drivetrain Index (visual)"
+        graphical="true"
+        icon="@drawable/ic_hh_gear"
+        typeId="DATATYPE_VISUAL_DRIVETRAIN_INDEX" />
+
+    <DataType
+        description="Drivetrain visual view with gear size (teeth count)."
+        displayName="Drivetrain Size (visual)"
+        graphical="true"
+        icon="@drawable/ic_hh_gear"
+        typeId="DATATYPE_VISUAL_DRIVETRAIN_SIZE" />
 
     <!--
     <DataType

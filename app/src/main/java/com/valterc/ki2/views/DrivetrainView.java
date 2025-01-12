@@ -14,6 +14,7 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.valterc.ki2.R;
@@ -96,8 +97,7 @@ public class DrivetrainView extends View {
         super(context, attrs);
         initPaint();
 
-        TypedArray array = context.getTheme().obtainStyledAttributes(attrs, R.styleable.DrivetrainView, 0, 0);
-        try {
+        try (TypedArray array = context.getTheme().obtainStyledAttributes(attrs, R.styleable.DrivetrainView, 0, 0)) {
             setFrontGearMax(array.getInt(R.styleable.DrivetrainView_frontGearMax, DEFAULT_FRONT_GEAR_MAX));
             setRearGearMax(array.getInt(R.styleable.DrivetrainView_rearGearMax, DEFAULT_REAR_GEAR_MAX));
             setFrontGear(array.getInt(R.styleable.DrivetrainView_frontGear, DEFAULT_FRONT_GEAR));
@@ -150,8 +150,6 @@ public class DrivetrainView extends View {
                 context.getTheme().resolveAttribute(android.R.attr.textColorPrimary, colorValue, true);
                 setTextColor(colorValue.data);
             }
-        } finally {
-            array.recycle();
         }
 
         setFocusable(false);
@@ -231,6 +229,9 @@ public class DrivetrainView extends View {
         rearGearRadius = Math.min(horizontalCenter * 0.5f, drivetrainBoxHeight * 0.4f) * 0.5f;
         frontGearRadius = Math.min(horizontalCenter * 0.75f, drivetrainBoxHeight * 0.75f) * 0.5f;
 
+        rearGearPositionX = Math.max(rearGearPositionX, getPaddingStart() + rearGearRadius + drivetrainPaint.getStrokeWidth());
+        frontGearPositionX = Math.min(frontGearPositionX, drivetrainBoxWidth - frontGearRadius - getPaddingEnd());
+
         frontGearPositionY = verticalCenter * 0.9f;
         rearGearPositionY = frontGearPositionY - frontGearRadius + rearGearRadius;
 
@@ -242,8 +243,8 @@ public class DrivetrainView extends View {
         rearTopDerailleurPositionX = rearGearPositionX + rearGearRadius * 0.5f;
         rearTopDerailleurPositionY = rearGearPositionY + rearGearRadius + rearDerailleurRadius + drivetrainPaint.getStrokeWidth();
 
-        rearBottomDerailleurPositionX = rearGearPositionX - rearGearRadius + ((1 - (float)(rearGear - 1) / rearGearMax) * (rearGearRadius * 2f));
-        rearBottomDerailleurPositionY = rearTopDerailleurPositionY + rearDerailleurRadius * 3 + drivetrainPaint.getStrokeWidth() * 2;
+        rearBottomDerailleurPositionX = rearGearPositionX - rearGearRadius + ((1 - (float) (rearGear - 1) / rearGearMax) * (rearGearRadius * 2f));
+        rearBottomDerailleurPositionY = Math.min(rearTopDerailleurPositionY + rearDerailleurRadius * 3 + drivetrainPaint.getStrokeWidth() * 2, drivetrainBoxHeight - rearDerailleurRadius - drivetrainPaint.getStrokeWidth() * 2);
 
         currentRearGearRadius = rearGearRadius - (rearGearSpacing * (rearGear - 1));
         currentFrontGearRadius = frontGearRadius - (frontGearSpacing * (frontGearMax - frontGear));
@@ -385,7 +386,7 @@ public class DrivetrainView extends View {
                 startAngle, -sweepAngle * 2f);
     }
 
-    private void drawPicture(){
+    private void drawPicture() {
         picture = new Picture();
         Canvas canvas = picture.beginRecording(getWidth(), getHeight());
 
@@ -430,11 +431,10 @@ public class DrivetrainView extends View {
     }
 
     @Override
-    public void draw(Canvas canvas) {
+    public void draw(@NonNull Canvas canvas) {
         super.draw(canvas);
 
-        if (picture != null)
-        {
+        if (picture != null) {
             canvas.drawPicture(picture);
         }
     }
@@ -569,7 +569,7 @@ public class DrivetrainView extends View {
             throw new IllegalArgumentException("Invalid front gear max value: " + frontGearMax);
         }
 
-        if (this.frontGearMax !=  frontGearMax) {
+        if (this.frontGearMax != frontGearMax) {
             this.frontGearMax = frontGearMax;
 
             if (initialized) {

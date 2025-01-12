@@ -18,7 +18,7 @@ public final class ShiftingInfo implements Parcelable {
     private final FrontTeethPattern frontTeethPattern;
     private final RearTeethPattern rearTeethPattern;
 
-    public static final Parcelable.Creator<ShiftingInfo> CREATOR = new Parcelable.Creator<ShiftingInfo>() {
+    public static final Parcelable.Creator<ShiftingInfo> CREATOR = new Parcelable.Creator<>() {
         public ShiftingInfo createFromParcel(Parcel in) {
             return new ShiftingInfo(in);
         }

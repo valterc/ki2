@@ -57,18 +57,20 @@
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 
-            <androidx.appcompat.widget.AppCompatTextView
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAlignment="viewEnd"
-                android:layout_marginStart="5dp"
+                android:layout_marginStart="10dp"
                 android:textColor="@color/white_100"
                 android:textSize="20sp"
                 android:includeFontPadding="false"
                 android:lineSpacingMultiplier="0.7"
                 android:textAllCaps="true"
                 android:fontFamily="ibm-plex-sans-condensed"
-                android:text="Gears" />
+                android:maxLines="1"
+                android:ellipsize="marquee"
+                android:text="@string/text_gears" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 

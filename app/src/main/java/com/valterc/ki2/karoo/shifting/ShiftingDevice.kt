@@ -33,21 +33,20 @@ import java.util.function.Consumer
 import kotlin.concurrent.withLock
 
 class ShiftingDevice(
-    private val extension: String,
     private val extensionContext: Ki2ExtensionContext,
     val deviceId: DeviceId
 ) {
     val source by lazy {
         Device(
-            extension,
+            extensionContext.extension,
             deviceId.uid,
             listOf(
                 DataType.Source.SHIFTING_FRONT_GEAR,
                 DataType.Source.SHIFTING_REAR_GEAR,
                 DataType.Source.SHIFTING_BATTERY,
-                DataType.dataTypeId(extension, Ki2DataType.Type.DFLY),
-                DataType.dataTypeId(extension, Ki2DataType.Type.DI2),
-                DataType.dataTypeId(extension, Ki2DataType.Type.STEPS)
+                DataType.dataTypeId(extensionContext.extension, Ki2DataType.Type.DFLY),
+                DataType.dataTypeId(extensionContext.extension, Ki2DataType.Type.DI2),
+                DataType.dataTypeId(extensionContext.extension, Ki2DataType.Type.STEPS)
             ),
             extensionContext.serviceClient.getDevicePreferences(deviceId)
                 ?.getName(extensionContext.context)
@@ -321,7 +320,7 @@ class ShiftingDevice(
         emitter.onNext(
             OnDataPoint(
                 DataPoint(
-                    DataType.dataTypeId(extension, Ki2DataType.Type.DI2),
+                    DataType.dataTypeId(extensionContext.extension, Ki2DataType.Type.DI2),
                     fieldMap,
                     source.uid
                 )
@@ -343,7 +342,7 @@ class ShiftingDevice(
         emitter.onNext(
             OnDataPoint(
                 DataPoint(
-                    DataType.dataTypeId(extension, Ki2DataType.Type.STEPS),
+                    DataType.dataTypeId(extensionContext.extension, Ki2DataType.Type.STEPS),
                     fieldMap,
                     source.uid
                 )
