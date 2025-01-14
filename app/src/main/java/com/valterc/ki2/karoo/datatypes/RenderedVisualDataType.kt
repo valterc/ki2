@@ -12,17 +12,9 @@ import com.valterc.ki2.R
 import com.valterc.ki2.karoo.Ki2ExtensionContext
 import com.valterc.ki2.karoo.views.Ki2ExtensionView
 import io.hammerhead.karooext.extension.DataTypeImpl
-import io.hammerhead.karooext.internal.Emitter
 import io.hammerhead.karooext.internal.ViewEmitter
-import io.hammerhead.karooext.models.DataPoint
-import io.hammerhead.karooext.models.DataType
-import io.hammerhead.karooext.models.StreamState
 import io.hammerhead.karooext.models.UpdateGraphicConfig
 import io.hammerhead.karooext.models.ViewConfig
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-
 
 @Suppress("unused")
 @OptIn(ExperimentalGlanceRemoteViewsApi::class)
@@ -33,23 +25,6 @@ open class RenderedVisualDataType(
 ) : DataTypeImpl(extensionContext.extension, dataTypeId) {
 
     private val glance = GlanceRemoteViews()
-
-    override fun startStream(emitter: Emitter<StreamState>) {
-        val job = CoroutineScope(Dispatchers.IO).launch {
-            emitter.onNext(
-                StreamState.Streaming(
-                    DataPoint(
-                        dataTypeId,
-                        mapOf(DataType.Field.SINGLE to 1.0),
-                        extension
-                    )
-                )
-            )
-        }
-        emitter.setCancellable {
-            job.cancel()
-        }
-    }
 
     override fun startView(context: Context, config: ViewConfig, emitter: ViewEmitter) {
         val extensionView = extensionViewProvider(extensionContext)
@@ -70,11 +45,9 @@ open class RenderedVisualDataType(
         emitter.updateView(remoteViews)
 
         extensionView.setViewUpdateListener {
-            CoroutineScope(Dispatchers.Main).launch {
-                renderView(bitmap, view, config, canvas)
-                remoteViews.setImageViewBitmap(R.id.widget_image, bitmap)
-                emitter.updateView(remoteViews)
-            }
+            renderView(bitmap, view, config, canvas)
+            remoteViews.setImageViewBitmap(R.id.widget_image, bitmap)
+            emitter.updateView(remoteViews)
         }
 
         emitter.setCancellable {
