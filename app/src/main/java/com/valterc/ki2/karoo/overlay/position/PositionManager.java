@@ -2,6 +2,7 @@ package com.valterc.ki2.karoo.overlay.position;
 
 import android.content.res.Resources;
 import android.util.DisplayMetrics;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -84,10 +85,12 @@ public class PositionManager {
 
         if (layoutParamsOverlay.width != ViewGroup.LayoutParams.MATCH_PARENT) {
             layoutParamsParent.x = xValue;
+            layoutParamsParent.gravity |= Gravity.START;
         }
 
         if (layoutParamsOverlay.height != ViewGroup.LayoutParams.MATCH_PARENT) {
             layoutParamsParent.y = yValue;
+            layoutParamsParent.gravity |= Gravity.TOP;
         }
 
         lastX = xValue;
