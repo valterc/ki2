@@ -12,7 +12,11 @@ import com.valterc.ki2.R
 import com.valterc.ki2.karoo.Ki2ExtensionContext
 import com.valterc.ki2.karoo.views.Ki2ExtensionView
 import io.hammerhead.karooext.extension.DataTypeImpl
+import io.hammerhead.karooext.internal.Emitter
 import io.hammerhead.karooext.internal.ViewEmitter
+import io.hammerhead.karooext.models.DataPoint
+import io.hammerhead.karooext.models.DataType
+import io.hammerhead.karooext.models.StreamState
 import io.hammerhead.karooext.models.UpdateGraphicConfig
 import io.hammerhead.karooext.models.ViewConfig
 
@@ -25,6 +29,18 @@ open class RenderedVisualDataType(
 ) : DataTypeImpl(extensionContext.extension, dataTypeId) {
 
     private val glance = GlanceRemoteViews()
+
+    override fun startStream(emitter: Emitter<StreamState>) {
+        emitter.onNext(
+            StreamState.Streaming(
+                DataPoint(
+                    dataTypeId,
+                    mapOf(DataType.Field.SINGLE to 1.0),
+                    extension
+                )
+            )
+        )
+    }
 
     override fun startView(context: Context, config: ViewConfig, emitter: ViewEmitter) {
         val extensionView = extensionViewProvider(extensionContext)
