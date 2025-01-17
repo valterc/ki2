@@ -41,12 +41,12 @@ open class RenderedVisualDataType(
         emitter.onNext(UpdateGraphicConfig(showHeader = false))
 
         renderView(bitmap, view, config, canvas)
-        remoteViews.setImageViewBitmap(R.id.widget_image, bitmap)
+        remoteViews.setImageViewBitmap(R.id.imageView_remote, bitmap)
         emitter.updateView(remoteViews)
 
         extensionView.setViewUpdateListener {
             renderView(bitmap, view, config, canvas)
-            remoteViews.setImageViewBitmap(R.id.widget_image, bitmap)
+            remoteViews.setImageViewBitmap(R.id.imageView_remote, bitmap)
             emitter.updateView(remoteViews)
         }
 
