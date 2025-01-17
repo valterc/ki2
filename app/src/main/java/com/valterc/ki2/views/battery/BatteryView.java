@@ -10,6 +10,7 @@ import android.util.TypedValue;
 import android.view.View;
 
 import androidx.annotation.ColorInt;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.valterc.ki2.R;
@@ -36,12 +37,10 @@ public class BatteryView extends View {
     private float borderStrokeWidth;
     private float value;
 
-
     public BatteryView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
 
-        TypedArray array = context.getTheme().obtainStyledAttributes(attrs, R.styleable.BatteryView, 0, 0);
-        try {
+        try (TypedArray array = context.getTheme().obtainStyledAttributes(attrs, R.styleable.BatteryView, 0, 0)) {
             setValue(array.getFloat(R.styleable.BatteryView_value, 0));
             setOrientation(array.getInt(R.styleable.BatteryView_orientation, Orientation.HORIZONTAL_LEFT.ordinal()));
 
@@ -53,8 +52,6 @@ public class BatteryView extends View {
             setBackgroundColor(array.getColor(R.styleable.BatteryView_backgroundColor, Color.TRANSPARENT));
             setForegroundColor(array.getColor(R.styleable.BatteryView_foregroundColor, defaultColor));
             setBorderStrokeWidth(array.getFloat(R.styleable.BatteryView_borderStrokeWidth, 1));
-        } finally {
-            array.recycle();
         }
 
         initialized = true;
@@ -78,7 +75,7 @@ public class BatteryView extends View {
     }
 
     @Override
-    protected void onDraw(Canvas canvas) {
+    protected void onDraw(@NonNull Canvas canvas) {
         super.onDraw(canvas);
 
         if (picture != null) {
@@ -218,7 +215,7 @@ public class BatteryView extends View {
     }
 
     public void setBorderStrokeWidth(float borderStrokeWidth) {
-        if (borderStrokeWidth < 0){
+        if (borderStrokeWidth < 0) {
             throw new IllegalArgumentException("Invalid border stroke width value: " + borderStrokeWidth);
         }
 

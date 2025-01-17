@@ -1,17 +1,14 @@
 package com.valterc.ki2.views;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Picture;
 import android.util.AttributeSet;
-import android.util.TypedValue;
 import android.view.View;
 
-import androidx.annotation.ColorInt;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.valterc.ki2.R;
@@ -40,8 +37,7 @@ public class SlimGearsView extends View {
         super(context, attrs);
         initPaint();
 
-        TypedArray array = context.getTheme().obtainStyledAttributes(attrs, R.styleable.SlimGearsView, 0, 0);
-        try {
+        try (TypedArray array = context.getTheme().obtainStyledAttributes(attrs, R.styleable.SlimGearsView, 0, 0)) {
             setFrontGearMax(array.getInt(R.styleable.SlimGearsView_frontGearMax, DEFAULT_FRONT_GEAR_MAX));
             setRearGearMax(array.getInt(R.styleable.SlimGearsView_rearGearMax, DEFAULT_REAR_GEAR_MAX));
             setFrontGear(array.getInt(R.styleable.SlimGearsView_frontGear, DEFAULT_FRONT_GEAR));
@@ -67,8 +63,6 @@ public class SlimGearsView extends View {
             } else {
                 setGearColor(context.getColor(R.color.hh_black_dark));
             }
-        } finally {
-            array.recycle();
         }
 
         setFocusable(false);
@@ -146,7 +140,7 @@ public class SlimGearsView extends View {
     }
 
     @Override
-    protected void onDraw(Canvas canvas) {
+    protected void onDraw(@NonNull Canvas canvas) {
         super.onDraw(canvas);
 
         if (picture != null) {

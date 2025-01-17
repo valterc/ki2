@@ -14,6 +14,7 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.valterc.ki2.R;
@@ -57,8 +58,7 @@ public class GearsView extends View {
         super(context, attrs);
         initPaint();
 
-        TypedArray array = context.getTheme().obtainStyledAttributes(attrs, R.styleable.GearsView, 0, 0);
-        try {
+        try (TypedArray array = context.getTheme().obtainStyledAttributes(attrs, R.styleable.GearsView, 0, 0)) {
             setFrontGearMax(array.getInt(R.styleable.GearsView_frontGearMax, DEFAULT_FRONT_GEAR_MAX));
             setRearGearMax(array.getInt(R.styleable.GearsView_rearGearMax, DEFAULT_REAR_GEAR_MAX));
             setFrontGear(array.getInt(R.styleable.GearsView_frontGear, DEFAULT_FRONT_GEAR));
@@ -100,8 +100,6 @@ public class GearsView extends View {
             } else {
                 setUnselectedGearBorderColor(context.getColor(R.color.hh_gears_border_dark));
             }
-        } finally {
-            array.recycle();
         }
 
         setFocusable(false);
@@ -267,7 +265,7 @@ public class GearsView extends View {
     }
 
     @Override
-    protected void onDraw(Canvas canvas) {
+    protected void onDraw(@NonNull Canvas canvas) {
         super.onDraw(canvas);
 
         if (picture != null) {
@@ -478,7 +476,7 @@ public class GearsView extends View {
     }
 
     public void setTextColor(int textColor) {
-        if (textPaint.getColor() == textColor){
+        if (textPaint.getColor() == textColor) {
             return;
         }
 
@@ -495,7 +493,7 @@ public class GearsView extends View {
     }
 
     public void setTextEnabled(boolean textEnabled) {
-        if (this.textEnabled == textEnabled){
+        if (this.textEnabled == textEnabled) {
             return;
         }
 

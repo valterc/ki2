@@ -24,14 +24,13 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import java.util.concurrent.locks.ReentrantLock
 import java.util.function.BiConsumer
 import kotlin.concurrent.withLock
 
 @OptIn(ExperimentalGlanceRemoteViewsApi::class)
-class ShiftingModeDataType(extension: String, private val extensionContext: Ki2ExtensionContext) :
-    DataTypeImpl(extension, "DATATYPE_SHIFTING_MODE") {
+class ShiftingModeDataType(private val extensionContext: Ki2ExtensionContext) :
+    DataTypeImpl(extensionContext.extension, "DATATYPE_SHIFTING_MODE") {
 
     private val glance = GlanceRemoteViews()
 

@@ -13,6 +13,7 @@ import android.util.TypedValue;
 import android.view.View;
 
 import androidx.annotation.ColorInt;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.valterc.ki2.R;
@@ -40,8 +41,7 @@ public class FillView extends View {
         paintForegroundStroke.setAlpha(128);
         paintForegroundStroke.setStrokeWidth(4f);
 
-        TypedArray array = context.getTheme().obtainStyledAttributes(attrs, R.styleable.FillView, 0, 0);
-        try {
+        try (TypedArray array = context.getTheme().obtainStyledAttributes(attrs, R.styleable.FillView, 0, 0)) {
             setValue(array.getFloat(R.styleable.FillView_value, 0));
 
             TypedValue colorValue = new TypedValue();
@@ -49,8 +49,6 @@ public class FillView extends View {
             int defaultColor = colorValue.data;
 
             setForegroundColor(array.getColor(R.styleable.FillView_foregroundColor, defaultColor));
-        } finally {
-            array.recycle();
         }
 
         initialized = true;
@@ -91,7 +89,7 @@ public class FillView extends View {
     }
 
     @Override
-    protected void onDraw(Canvas canvas) {
+    protected void onDraw(@NonNull Canvas canvas) {
         super.onDraw(canvas);
 
         if (picture != null) {

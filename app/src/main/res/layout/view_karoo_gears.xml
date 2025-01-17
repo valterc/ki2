@@ -20,33 +20,57 @@
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical|end">
+            android:padding="3dp">
 
-            <com.valterc.ki2.views.battery.BatteryView
-                android:id="@+id/batteryview_karoo_gears"
-                android:layout_width="12dp"
-                android:layout_height="20dp"
-                android:layout_gravity="center_vertical"
-                android:visibility="gone"
-                app:borderColor="@color/hh_green"
-                app:foregroundColor="@color/hh_green"
-                app:orientation="vertical_top"
-                app:borderStrokeWidth="4"
-                tools:value=".5"
-                tools:visibility="visible" />
-
-            <TextView
-                android:id="@+id/textview_karoo_gears"
+            <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAlignment="center"
-                android:layout_marginStart="5dp"
-                android:fontFamily="monospace"
-                android:paddingTop="3dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical|end">
+
+                <com.valterc.ki2.views.battery.BatteryView
+                    android:id="@+id/batteryview_karoo_gears"
+                    android:layout_width="12dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center_vertical"
+                    android:visibility="gone"
+                    app:borderColor="@color/hh_green"
+                    app:foregroundColor="@color/hh_green"
+                    app:orientation="vertical_top"
+                    app:borderStrokeWidth="4"
+                    tools:value=".5"
+                    tools:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/textview_karoo_gears"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:layout_marginStart="5dp"
+                    android:textColor="@color/white_100"
+                    android:textSize="20sp"
+                    android:includeFontPadding="false"
+                    android:lineSpacingMultiplier="0.7"
+                    android:textAllCaps="true"
+                    android:fontFamily="ibm-plex-sans-condensed"
+                    tools:text="F11 - R11" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="viewEnd"
+                android:layout_marginStart="10dp"
                 android:textColor="@color/white_100"
                 android:textSize="20sp"
-                tools:text="F11 - R11" />
+                android:includeFontPadding="false"
+                android:lineSpacingMultiplier="0.7"
+                android:textAllCaps="true"
+                android:fontFamily="ibm-plex-sans-condensed"
+                android:maxLines="1"
+                android:ellipsize="marquee"
+                android:text="@string/text_gears" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -57,6 +81,7 @@
             android:textColor="@color/white_100"
             android:visibility="gone"
             app:selectedGearColor="@color/hh_gears_active_dark"
+            app:unselectedGearBorderColor="@color/hh_light_grey"
             tools:layout_height="160dp"
             app:textEnabled="false"
             tools:visibility="visible" />

@@ -25,6 +25,7 @@ import com.valterc.ki2.karoo.overlay.view.IOverlayView;
 import com.valterc.ki2.karoo.overlay.view.builder.OverlayViewBuilderEntry;
 import com.valterc.ki2.karoo.overlay.view.builder.OverlayViewBuilderRegistry;
 
+import java.util.Objects;
 import java.util.function.Consumer;
 
 public class OverlayThemeAdapter extends RecyclerView.Adapter<OverlayThemeViewHolder> {
@@ -47,7 +48,7 @@ public class OverlayThemeAdapter extends RecyclerView.Adapter<OverlayThemeViewHo
 
         this.themeValues = context.getResources().getStringArray(R.array.preference_values_overlay_theme);
         this.themeTitles = context.getResources().getStringArray(R.array.preference_titles_overlay_theme);
-        this.ki2Context = new Ki2ExtensionContext(context);
+        this.ki2Context = new Ki2ExtensionContext("ki2", context);
         this.preferencesView = new PreferencesView(context);
 
         DeviceId deviceId = new DeviceId(67726, 1, 5);
@@ -68,7 +69,7 @@ public class OverlayThemeAdapter extends RecyclerView.Adapter<OverlayThemeViewHo
     @Override
     public void onBindViewHolder(@NonNull OverlayThemeViewHolder holder, int position) {
         OverlayViewBuilderEntry entry = OverlayViewBuilderRegistry.getBuilder(themeValues[position]);
-        View viewOverlay = layoutInflater.inflate(entry.getLayoutId(), holder.getLinearLayoutViewContainer(), false);
+        View viewOverlay = layoutInflater.inflate(Objects.requireNonNull(entry).getLayoutId(), holder.getLinearLayoutViewContainer(), false);
 
         holder.getRootView().setTag(position);
         holder.getTextViewName().setText(themeTitles[position]);

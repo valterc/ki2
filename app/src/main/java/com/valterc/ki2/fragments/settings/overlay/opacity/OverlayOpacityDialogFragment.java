@@ -31,6 +31,7 @@ import com.valterc.ki2.karoo.overlay.view.builder.OverlayViewBuilderEntry;
 import com.valterc.ki2.karoo.overlay.view.builder.OverlayViewBuilderRegistry;
 
 import java.util.Locale;
+import java.util.Objects;
 
 public class OverlayOpacityDialogFragment extends DialogFragment {
 
@@ -58,9 +59,9 @@ public class OverlayOpacityDialogFragment extends DialogFragment {
         PreferencesView preferencesView = new PreferencesView(requireContext());
 
         LinearLayout linearLayoutContainer = view.findViewById(R.id.viewstub_overlay_opacity_view_container);
-        Ki2ExtensionContext ki2Context = new Ki2ExtensionContext(requireContext());
+        Ki2ExtensionContext ki2Context = new Ki2ExtensionContext("ki2", requireContext());
         OverlayViewBuilderEntry entry = OverlayViewBuilderRegistry.getBuilder(requireArguments().getString(PARAMETER_THEME));
-        View viewOverlay = inflater.inflate(entry.getLayoutId(), linearLayoutContainer, false);
+        View viewOverlay = inflater.inflate(Objects.requireNonNull(entry).getLayoutId(), linearLayoutContainer, false);
 
         DeviceId deviceId = new DeviceId(67726, 1, 5);
         DevicePreferencesView devicePreferencesView = new DevicePreferencesView(requireContext(), deviceId);
@@ -86,7 +87,7 @@ public class OverlayOpacityDialogFragment extends DialogFragment {
         buttonOk.setOnClickListener(v -> {
             Bundle bundle = new Bundle(1);
             bundle.putFloat(RESULT_VALUE, slider.getValue());
-            getParentFragmentManager().setFragmentResult(requireArguments().getString(PREFERENCE_KEY), bundle);
+            getParentFragmentManager().setFragmentResult(Objects.requireNonNull(requireArguments().getString(PREFERENCE_KEY)), bundle);
             dismiss();
         });
 
@@ -100,7 +101,7 @@ public class OverlayOpacityDialogFragment extends DialogFragment {
         if (dialog != null) {
             int width = ViewGroup.LayoutParams.MATCH_PARENT;
             int height = ViewGroup.LayoutParams.WRAP_CONTENT;
-            dialog.getWindow().setLayout(width, height);
+            Objects.requireNonNull(dialog.getWindow()).setLayout(width, height);
         }
     }
 }

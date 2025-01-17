@@ -66,7 +66,7 @@ public class OverlayPositionDialogFragment extends DialogFragment {
         PreferencesView preferencesView = new PreferencesView(requireContext());
 
         RelativeLayout relativeLayout = view.findViewById(R.id.relativelayout_overlay_position);
-        Ki2ExtensionContext ki2Context = new Ki2ExtensionContext(requireContext());
+        Ki2ExtensionContext ki2Context = new Ki2ExtensionContext("ki2", requireContext());
 
         OverlayViewBuilderEntry entry = OverlayViewBuilderRegistry.getBuilder(theme);
         assert entry != null;
