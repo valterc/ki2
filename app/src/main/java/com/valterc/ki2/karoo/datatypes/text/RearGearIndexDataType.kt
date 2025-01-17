@@ -1,4 +1,4 @@
-package com.valterc.ki2.karoo.datatypes
+package com.valterc.ki2.karoo.datatypes.text
 
 import android.content.Context
 import androidx.compose.ui.unit.DpSize
@@ -21,18 +21,15 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.text.DecimalFormat
 import java.util.function.BiConsumer
 
 @OptIn(ExperimentalGlanceRemoteViewsApi::class)
-class GearsSizeDataType(private val extensionContext: Ki2ExtensionContext) :
-    DataTypeImpl(extensionContext.extension, "DATATYPE_GEARS_SIZE") {
+class RearGearIndexDataType(private val extensionContext: Ki2ExtensionContext) :
+    DataTypeImpl(extensionContext.extension, "DATATYPE_REAR_GEAR_INDEX") {
 
     private val glance = GlanceRemoteViews()
-    private val decimalFormat = DecimalFormat("00")
     private var connectionInfo: ConnectionInfo? = null
     private var shiftingGearingHelper = ShiftingGearingHelper(extensionContext.context)
-
 
     override fun startView(context: Context, config: ViewConfig, emitter: ViewEmitter) {
         emitter.onNext(UpdateGraphicConfig(showHeader = true))
@@ -93,12 +90,7 @@ class GearsSizeDataType(private val extensionContext: Ki2ExtensionContext) :
         val compositionResult =
             if (connectionInfo?.isConnected == true && shiftingGearingHelper.hasValidGearingInfo()) {
                 glance.compose(context, DpSize.Unspecified) {
-                    TextView(
-                        "${decimalFormat.format(shiftingGearingHelper.frontGearTeethCount)}-${
-                            decimalFormat.format(
-                                shiftingGearingHelper.rearGearTeethCount
-                            )
-                        }",
+                    TextView(shiftingGearingHelper.rearGear.toString(),
                         dataAlignment = config.alignment,
                         fontSize = config.textSize
                     )

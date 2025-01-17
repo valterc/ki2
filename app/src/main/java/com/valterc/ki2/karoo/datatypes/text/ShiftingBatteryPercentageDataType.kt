@@ -1,4 +1,4 @@
-package com.valterc.ki2.karoo.datatypes
+package com.valterc.ki2.karoo.datatypes.text
 
 import com.valterc.ki2.data.connection.ConnectionInfo
 import com.valterc.ki2.data.connection.ConnectionStatus
@@ -20,46 +20,7 @@ import kotlin.concurrent.withLock
 
 class ShiftingBatteryPercentageDataType(
     private val extensionContext: Ki2ExtensionContext
-) : DataTypeImpl(extensionContext.extension, DATA_TYPE) {
-
-    companion object {
-        private const val DATA_TYPE = "DATATYPE_SHIFTING_BATTERY_PERCENTAGE"
-    }
-
-    /*
-    override fun startStream(emitter: Emitter<StreamState>) {
-        val job = CoroutineScope(Dispatchers.IO).launch {
-            extensionContext.karooSystem.streamData(
-                DataType.dataTypeId(
-                    extension,
-                    Ki2DataType.Type.DI2
-                )
-            ).transform { streamState ->
-                when (streamState) {
-                    is StreamState.Streaming -> {
-                        streamState.dataPoint.values[Ki2DataType.Field.DI2_BATTERY]?.let { batteryValue ->
-                            emit(
-                                StreamState.Streaming(
-                                    DataPoint(
-                                        dataTypeId,
-                                        values = mapOf(DataType.Field.SINGLE to batteryValue),
-                                    )
-                                )
-                            )
-                        }
-                    }
-                    else -> emit(streamState)
-                }
-            }.collect {
-                emitter.onNext(it)
-            }
-        }
-
-        emitter.setCancellable {
-            job.cancel()
-        }
-    }
-    */
+) : DataTypeImpl(extensionContext.extension, "DATATYPE_SHIFTING_BATTERY_PERCENTAGE") {
 
     private val lock: ReentrantLock = ReentrantLock()
     private var connectionInfo: ConnectionInfo? = null
