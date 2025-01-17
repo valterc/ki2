@@ -21,7 +21,6 @@ import io.hammerhead.karooext.models.ViewConfig
 import java.util.function.BiConsumer
 import java.util.function.Consumer
 
-
 class GearsExtensionView(context: Ki2ExtensionContext, private val showGearSize: Boolean = false) : Ki2ExtensionView(context) {
     private val devicePreferencesConsumer =
         BiConsumer<DeviceId, DevicePreferencesView> { _: DeviceId?, devicePreferences: DevicePreferencesView? ->
