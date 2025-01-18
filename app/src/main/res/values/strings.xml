@@ -132,4 +132,5 @@
     <string name="text_warning_ant_recording">WARNING!\n\nANT recording will record all ANT events to a file for debugging purposes.\n\nEnable ONLY when troubleshooting ANT issues, this feature vastly increases resource usage and battery consumption.\n\nUse at your own risk.</string>
     <string name="text_gears">Gears</string>
     <string name="text_drivetrain">Drivetrain</string>
+    <string name="text_bike_battery">Bike Battery</string>
 </resources>

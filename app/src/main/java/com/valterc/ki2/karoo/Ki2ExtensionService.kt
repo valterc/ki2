@@ -6,17 +6,18 @@ import com.valterc.ki2.BuildConfig
 import com.valterc.ki2.data.device.DeviceId
 import com.valterc.ki2.karoo.datatypes.text.FrontGearIndexDataType
 import com.valterc.ki2.karoo.datatypes.text.FrontGearSizeDataType
-import com.valterc.ki2.karoo.datatypes.visual.DrivetrainIndexVisualDataType
-import com.valterc.ki2.karoo.datatypes.visual.DrivetrainSizeVisualDataType
 import com.valterc.ki2.karoo.datatypes.text.GearRatioDataType
 import com.valterc.ki2.karoo.datatypes.text.GearsIndexDataType
 import com.valterc.ki2.karoo.datatypes.text.GearsSizeDataType
 import com.valterc.ki2.karoo.datatypes.text.RearGearIndexDataType
 import com.valterc.ki2.karoo.datatypes.text.RearGearSizeDataType
-import com.valterc.ki2.karoo.datatypes.visual.GearsIndexVisualDataType
-import com.valterc.ki2.karoo.datatypes.visual.GearsSizeVisualDataType
 import com.valterc.ki2.karoo.datatypes.text.ShiftingBatteryPercentageDataType
 import com.valterc.ki2.karoo.datatypes.text.ShiftingModeDataType
+import com.valterc.ki2.karoo.datatypes.visual.BikeBatteryVisualDataType
+import com.valterc.ki2.karoo.datatypes.visual.DrivetrainIndexVisualDataType
+import com.valterc.ki2.karoo.datatypes.visual.DrivetrainSizeVisualDataType
+import com.valterc.ki2.karoo.datatypes.visual.GearsIndexVisualDataType
+import com.valterc.ki2.karoo.datatypes.visual.GearsSizeVisualDataType
 import com.valterc.ki2.karoo.overlay.OverlayWindowHandler
 import com.valterc.ki2.karoo.shifting.ShiftingAudioAlertHandler
 import com.valterc.ki2.karoo.shifting.ShiftingDevice
@@ -68,7 +69,8 @@ class Ki2ExtensionService : KarooExtension("ki2", BuildConfig.VERSION_NAME) {
             GearsIndexVisualDataType(extensionContext),
             GearsSizeVisualDataType(extensionContext),
             DrivetrainIndexVisualDataType(extensionContext),
-            DrivetrainSizeVisualDataType(extensionContext)
+            DrivetrainSizeVisualDataType(extensionContext),
+            BikeBatteryVisualDataType(extensionContext),
         )
     }
 

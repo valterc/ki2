@@ -185,8 +185,8 @@ class DrivetrainExtensionView(context: Ki2ExtensionContext, private val showGear
                 batteryView.setForegroundColor(context.getColor(R.color.hh_yellow_darker))
                 batteryView.setBorderColor(context.getColor(R.color.hh_yellow_darker))
             } else {
-                batteryView.setForegroundColor(context.getColor(R.color.hh_green))
-                batteryView.setBorderColor(context.getColor(R.color.hh_green))
+                batteryView.setForegroundColor(context.getColor(R.color.hh_success_green_600))
+                batteryView.setBorderColor(context.getColor(R.color.hh_success_green_600))
             }
         } ?: run {
             batteryView.setForegroundColor(context.getColor(R.color.battery_background_dark))
