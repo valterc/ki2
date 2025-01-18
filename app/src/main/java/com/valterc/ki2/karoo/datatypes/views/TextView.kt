@@ -44,12 +44,12 @@ fun TextView(
             text = text ?: "",
             style = TextStyle(
                 ColorProvider(Color.Black, Color.White),
-                fontSize = fontSize.sp,
+                fontSize = (fontSize * 0.97).sp,
                 fontFamily = FontFamily.Monospace
             ),
             modifier = GlanceModifier
                 .background(Color(1f, 1f, 1f, 1f), Color(0f, 0f, 0f, 1f))
-                .padding(top = (-5).dp)
+                .padding(top = (-fontSize * 0.1).dp)
         )
     }
 }

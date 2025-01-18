@@ -53,6 +53,48 @@
         icon="@drawable/ic_hh_gear"
         typeId="DATATYPE_VISUAL_DRIVETRAIN_SIZE" />
 
+    <DataType
+        description="View with gears index."
+        displayName="Gears"
+        graphical="true"
+        icon="@drawable/ic_hh_gear"
+        typeId="DATATYPE_GEARS_INDEX" />
+
+    <DataType
+        description="View with gears size (teeth count)."
+        displayName="Gears T"
+        graphical="true"
+        icon="@drawable/ic_hh_gear"
+        typeId="DATATYPE_GEARS_SIZE" />
+
+    <DataType
+        description="View with front gear index."
+        displayName="Front Gear"
+        graphical="true"
+        icon="@drawable/ic_hh_gear"
+        typeId="DATATYPE_FRONT_GEARS_INDEX" />
+
+    <DataType
+        description="View with front gear size (teeth count)."
+        displayName="Front Gear T"
+        graphical="true"
+        icon="@drawable/ic_hh_gear"
+        typeId="DATATYPE_FRONT_GEARS_SIZE" />
+
+    <DataType
+        description="View with rear gear index."
+        displayName="Rear Gear"
+        graphical="true"
+        icon="@drawable/ic_hh_gear"
+        typeId="DATATYPE_REAR_GEARS_INDEX" />
+
+    <DataType
+        description="View with rear gear size (teeth count)."
+        displayName="Rear Gear T"
+        graphical="true"
+        icon="@drawable/ic_hh_gear"
+        typeId="DATATYPE_REAR_GEARS_SIZE" />
+
     <!--
     <DataType
         description="Gears view with gear index."

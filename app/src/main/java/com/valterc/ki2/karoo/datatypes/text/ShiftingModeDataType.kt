@@ -1,4 +1,4 @@
-package com.valterc.ki2.karoo.datatypes
+package com.valterc.ki2.karoo.datatypes.text
 
 import android.content.Context
 import androidx.compose.ui.unit.DpSize
@@ -7,11 +7,10 @@ import androidx.glance.appwidget.GlanceRemoteViews
 import com.valterc.ki2.data.connection.ConnectionInfo
 import com.valterc.ki2.data.connection.ConnectionStatus
 import com.valterc.ki2.data.device.DeviceId
-import com.valterc.ki2.data.preferences.device.DevicePreferencesView
 import com.valterc.ki2.data.shifting.ShiftingInfo
+import com.valterc.ki2.data.shifting.ShiftingMode
 import com.valterc.ki2.karoo.Ki2ExtensionContext
 import com.valterc.ki2.karoo.datatypes.views.TextView
-import com.valterc.ki2.karoo.shifting.ShiftingGearingHelper
 import com.valterc.ki2.karoo.streamData
 import io.hammerhead.karooext.extension.DataTypeImpl
 import io.hammerhead.karooext.internal.Emitter
@@ -25,20 +24,18 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.text.DecimalFormat
 import java.util.concurrent.locks.ReentrantLock
 import java.util.function.BiConsumer
 import kotlin.concurrent.withLock
 
 @OptIn(ExperimentalGlanceRemoteViewsApi::class)
-class GearRatioDataType(private val extensionContext: Ki2ExtensionContext) :
-    DataTypeImpl(extensionContext.extension, "DATATYPE_GEAR_RATIO") {
+class ShiftingModeDataType(private val extensionContext: Ki2ExtensionContext) :
+    DataTypeImpl(extensionContext.extension, "DATATYPE_SHIFTING_MODE") {
 
     private val glance = GlanceRemoteViews()
     private val lock: ReentrantLock = ReentrantLock()
-    private val decimalFormat = DecimalFormat("#.00")
     private var connectionInfo: ConnectionInfo? = null
-    private var shiftingGearingHelper = ShiftingGearingHelper(extensionContext.context)
+    private var shiftingInfo: ShiftingInfo? = null
 
     override fun startStream(emitter: Emitter<StreamState>) {
         val connectionInfoListener =
@@ -49,18 +46,10 @@ class GearRatioDataType(private val extensionContext: Ki2ExtensionContext) :
                 }
             }
 
-        val devicePreferencesConsumer =
-            BiConsumer<DeviceId, DevicePreferencesView> { _: DeviceId, devicePreferences: DevicePreferencesView ->
-                lock.withLock {
-                    shiftingGearingHelper.setDevicePreferences(devicePreferences)
-                    emitDataPoint(emitter)
-                }
-            }
-
         val shiftingInfoConsumer =
             BiConsumer<DeviceId, ShiftingInfo> { _: DeviceId, shiftingInfo: ShiftingInfo ->
                 lock.withLock {
-                    shiftingGearingHelper.setShiftingInfo(shiftingInfo)
+                    this.shiftingInfo = shiftingInfo
                     emitDataPoint(emitter)
                 }
             }
@@ -68,9 +57,6 @@ class GearRatioDataType(private val extensionContext: Ki2ExtensionContext) :
         val job = CoroutineScope(Dispatchers.IO).launch {
             extensionContext.serviceClient.registerConnectionInfoWeakListener(
                 connectionInfoListener
-            )
-            extensionContext.serviceClient.registerDevicePreferencesWeakListener(
-                devicePreferencesConsumer
             )
             extensionContext.serviceClient.registerShiftingInfoWeakListener(
                 shiftingInfoConsumer
@@ -90,9 +76,6 @@ class GearRatioDataType(private val extensionContext: Ki2ExtensionContext) :
             extensionContext.serviceClient.unregisterConnectionInfoWeakListener(
                 connectionInfoListener
             )
-            extensionContext.serviceClient.unregisterDevicePreferencesWeakListener(
-                devicePreferencesConsumer
-            )
             extensionContext.serviceClient.unregisterShiftingInfoWeakListener(
                 shiftingInfoConsumer
             )
@@ -108,19 +91,21 @@ class GearRatioDataType(private val extensionContext: Ki2ExtensionContext) :
             )
 
             ConnectionStatus.ESTABLISHED ->
-                if (shiftingGearingHelper.hasValidGearingInfo()) {
-                    emitter.onNext(
-                        StreamState.Streaming(
-                            DataPoint(
-                                dataTypeId,
-                                values = mapOf(DataType.Field.SINGLE to shiftingGearingHelper.gearRatio),
+                shiftingInfo.let { shiftingInfo ->
+                    if (shiftingInfo != null) {
+                        emitter.onNext(
+                            StreamState.Streaming(
+                                DataPoint(
+                                    dataTypeId,
+                                    values = mapOf(DataType.Field.SINGLE to shiftingInfo.shiftingMode.value.toDouble()),
+                                )
                             )
                         )
-                    )
-                } else {
-                    emitter.onNext(
-                        StreamState.Searching
-                    )
+                    } else {
+                        emitter.onNext(
+                            StreamState.Searching
+                        )
+                    }
                 }
 
             else -> emitter.onNext(
@@ -140,10 +125,10 @@ class GearRatioDataType(private val extensionContext: Ki2ExtensionContext) :
             flow.collect { streamState ->
                 val compositionResult = when (streamState) {
                     is StreamState.Streaming -> {
-                        streamState.dataPoint.singleValue?.let { gearRatio ->
+                        streamState.dataPoint.singleValue?.let { shiftingModeValue ->
                             glance.compose(context, DpSize.Unspecified) {
                                 TextView(
-                                    decimalFormat.format(gearRatio),
+                                    ShiftingMode.fromValue(shiftingModeValue.toInt()).mode,
                                     config.alignment,
                                     config.textSize
                                 )

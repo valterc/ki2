@@ -43,6 +43,10 @@ public class ConnectionInfo implements Parcelable {
         return status == ConnectionStatus.CONNECTING;
     }
 
+    public boolean isClosed() {
+        return status == ConnectionStatus.CLOSED;
+    }
+
     public boolean isNewOrConnecting() {
         return status == ConnectionStatus.NEW || status == ConnectionStatus.CONNECTING;
     }
