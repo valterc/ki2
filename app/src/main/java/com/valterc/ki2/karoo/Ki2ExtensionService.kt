@@ -4,9 +4,15 @@ import android.content.ComponentName
 import android.content.Intent
 import com.valterc.ki2.BuildConfig
 import com.valterc.ki2.data.device.DeviceId
+import com.valterc.ki2.karoo.datatypes.text.FrontGearIndexDataType
+import com.valterc.ki2.karoo.datatypes.text.FrontGearSizeDataType
 import com.valterc.ki2.karoo.datatypes.visual.DrivetrainIndexVisualDataType
 import com.valterc.ki2.karoo.datatypes.visual.DrivetrainSizeVisualDataType
 import com.valterc.ki2.karoo.datatypes.text.GearRatioDataType
+import com.valterc.ki2.karoo.datatypes.text.GearsIndexDataType
+import com.valterc.ki2.karoo.datatypes.text.GearsSizeDataType
+import com.valterc.ki2.karoo.datatypes.text.RearGearIndexDataType
+import com.valterc.ki2.karoo.datatypes.text.RearGearSizeDataType
 import com.valterc.ki2.karoo.datatypes.visual.GearsIndexVisualDataType
 import com.valterc.ki2.karoo.datatypes.visual.GearsSizeVisualDataType
 import com.valterc.ki2.karoo.datatypes.text.ShiftingBatteryPercentageDataType
@@ -52,6 +58,13 @@ class Ki2ExtensionService : KarooExtension("ki2", BuildConfig.VERSION_NAME) {
             ShiftingBatteryPercentageDataType(extensionContext),
             ShiftingModeDataType(extensionContext),
             GearRatioDataType(extensionContext),
+            GearsIndexDataType(extensionContext),
+            GearsSizeDataType(extensionContext),
+            FrontGearIndexDataType(extensionContext),
+            FrontGearSizeDataType(extensionContext),
+            RearGearIndexDataType(extensionContext),
+            RearGearSizeDataType(extensionContext),
+
             GearsIndexVisualDataType(extensionContext),
             GearsSizeVisualDataType(extensionContext),
             DrivetrainIndexVisualDataType(extensionContext),
