@@ -14,16 +14,16 @@
     <DataType
         description="Shifting mode."
         displayName="Shifting Mode"
+        graphical="true"
         icon="@drawable/ic_hh_gear"
-        typeId="DATATYPE_SHIFTING_MODE"
-        graphical="true" />
+        typeId="DATATYPE_SHIFTING_MODE" />
 
     <DataType
         description="Gear ratio."
         displayName="Gear Ratio"
+        graphical="true"
         icon="@drawable/ic_hh_gear"
-        typeId="DATATYPE_GEAR_RATIO"
-        graphical="true" />
+        typeId="DATATYPE_GEAR_RATIO" />
 
     <DataType
         description="View with gears index."
@@ -66,6 +66,34 @@
         graphical="true"
         icon="@drawable/ic_hh_gear"
         typeId="DATATYPE_REAR_GEARS_SIZE" />
+
+    <DataType
+        description="Gears visual view with gear index."
+        displayName="Gears Index (visual)"
+        graphical="true"
+        icon="@drawable/ic_hh_gear"
+        typeId="DATATYPE_VISUAL_GEARS_INDEX" />
+
+    <DataType
+        description="Gears visual view with gear size (teeth count)."
+        displayName="Gears Size (visual)"
+        graphical="true"
+        icon="@drawable/ic_hh_gear"
+        typeId="DATATYPE_VISUAL_GEARS_SIZE" />
+
+    <DataType
+        description="Drivetrain visual view with gear index."
+        displayName="Drivetrain Index (visual)"
+        graphical="true"
+        icon="@drawable/ic_hh_gear"
+        typeId="DATATYPE_VISUAL_DRIVETRAIN_INDEX" />
+
+    <DataType
+        description="Drivetrain visual view with gear size (teeth count)."
+        displayName="Drivetrain Size (visual)"
+        graphical="true"
+        icon="@drawable/ic_hh_gear"
+        typeId="DATATYPE_VISUAL_DRIVETRAIN_SIZE" />
 
     <DataType
         description="Visual bike battery."
@@ -74,60 +102,4 @@
         icon="@drawable/ic_hh_battery"
         typeId="DATATYPE_VISUAL_BIKE_BATTERY" />
 
-    <DataType
-        description="View with gears index."
-        displayName="Gears"
-        graphical="true"
-        icon="@drawable/ic_hh_gear"
-        typeId="DATATYPE_GEARS_INDEX" />
-
-    <DataType
-        description="View with gears size (teeth count)."
-        displayName="Gears T"
-        graphical="true"
-        icon="@drawable/ic_hh_gear"
-        typeId="DATATYPE_GEARS_SIZE" />
-
-    <DataType
-        description="View with front gear index."
-        displayName="Front Gear"
-        graphical="true"
-        icon="@drawable/ic_hh_gear"
-        typeId="DATATYPE_FRONT_GEARS_INDEX" />
-
-    <DataType
-        description="View with front gear size (teeth count)."
-        displayName="Front Gear T"
-        graphical="true"
-        icon="@drawable/ic_hh_gear"
-        typeId="DATATYPE_FRONT_GEARS_SIZE" />
-
-    <DataType
-        description="View with rear gear index."
-        displayName="Rear Gear"
-        graphical="true"
-        icon="@drawable/ic_hh_gear"
-        typeId="DATATYPE_REAR_GEARS_INDEX" />
-
-    <DataType
-        description="View with rear gear size (teeth count)."
-        displayName="Rear Gear T"
-        graphical="true"
-        icon="@drawable/ic_hh_gear"
-        typeId="DATATYPE_REAR_GEARS_SIZE" />
-
-    <!--
-    <DataType
-        description="Gears view with gear index."
-        displayName="Gears"
-        graphical="true"
-        icon="@drawable/ic_hh_gear"
-        typeId="graphical-gears" />
-    <DataType
-        description="Gears view with gear size."
-        displayName="Gears Size"
-        graphical="true"
-        icon="@drawable/ic_hh_gear"
-        typeId="DATATYPE_GRAPHICAL_GEARS" />
-        -->
 </ExtensionInfo>
