@@ -96,8 +96,8 @@
         typeId="DATATYPE_VISUAL_DRIVETRAIN_SIZE" />
 
     <DataType
-        description="Visual bike battery."
-        displayName="Bike Battery"
+        description="Visual bike battery view with shifting battery percentage."
+        displayName="Bike Battery (visual)"
         graphical="true"
         icon="@drawable/ic_hh_battery"
         typeId="DATATYPE_VISUAL_BIKE_BATTERY" />
