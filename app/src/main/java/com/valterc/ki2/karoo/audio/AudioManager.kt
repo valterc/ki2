@@ -3,6 +3,7 @@ package com.valterc.ki2.karoo.audio
 import com.valterc.ki2.data.message.AudioAlertMessage
 import com.valterc.ki2.data.preferences.PreferencesView
 import com.valterc.ki2.karoo.Ki2ExtensionContext
+import io.hammerhead.karooext.models.HardwareType
 import io.hammerhead.karooext.models.PlayBeepPattern
 import timber.log.Timber
 import java.util.function.Consumer
@@ -51,10 +52,16 @@ class AudioManager(private val context: Ki2ExtensionContext) {
     }
 
     private val Int.f: Int
-        get() = times(intensity.frequencyMultiplier).toInt()
+        get() = when (context.karooSystem.hardwareType) {
+            HardwareType.K2 -> times(intensity.frequencyMultiplierK2).toInt()
+            else -> times(intensity.frequencyMultiplierK24).toInt()
+        }
 
     private val Int.d: Int
-        get() = max(times(intensity.durationMultiplier).toInt(), 50)
+        get() = when (context.karooSystem.hardwareType) {
+            HardwareType.K2 -> max(times(intensity.durationMultiplierK2).toInt(), 50)
+            else -> max(times(intensity.durationMultiplierK24).toInt(), 50)
+        }
 
     fun playSingleBeep() {
         context.karooSystem.dispatch(
