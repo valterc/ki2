@@ -133,7 +133,7 @@ public abstract class BaseOverlayManager {
         return overlayTriggers;
     }
 
-    public void dispose(){
+    public void dispose() {
         disposed = true;
         removeView();
     }
@@ -265,6 +265,14 @@ public abstract class BaseOverlayManager {
     protected void hideOverlay() {
         if (view != null) {
             view.hide();
+        }
+    }
+
+    protected void toggleOverlay() {
+        if (view != null && view.isVisible()) {
+            hideOverlay();
+        } else {
+            showOverlay(true);
         }
     }
 

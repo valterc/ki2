@@ -9,7 +9,9 @@
         <item>Map/Graph Zoom Out</item>
         <item>Map/Graph Zoom In</item>
         <item>Switch to map page</item>
-        <item>Show overlay</item>
+        <item>Toggle Overlay</item>
+        <item>Hide Overlay</item>
+        <item>Show Overlay</item>
         <item>Turn Screen On</item>
         <item>Turn Screen Off</item>
         <item>Toggle Shifting Audio Alerts</item>
@@ -31,7 +33,9 @@
         <item>press_map_graph_zoom_out</item>
         <item>press_map_graph_zoom_in</item>
         <item>press_switch_to_map_page</item>
-        <item>show_overlay</item>
+        <item>press_toggle_overlay</item>
+        <item>press_hide_overlay</item>
+        <item>press_show_overlay</item>
         <item>press_turn_screen_on</item>
         <item>press_turn_screen_off</item>
         <item>press_toggle_audio_alerts</item>
@@ -54,7 +58,9 @@
         <item>Map/Graph Zoom In</item>
         <item>Switch to map page</item>
         <item>Duplicate Single Press</item>
-        <item>Show overlay</item>
+        <item>Toggle Overlay</item>
+        <item>Hide Overlay</item>
+        <item>Show Overlay</item>
         <item>Turn Screen On</item>
         <item>Turn Screen Off</item>
         <item>Toggle Shifting Audio Alerts</item>
@@ -77,7 +83,9 @@
         <item>press_map_graph_zoom_in</item>
         <item>press_switch_to_map_page</item>
         <item>double_press_duplicate_single_press</item>
-        <item>show_overlay</item>
+        <item>press_toggle_overlay</item>
+        <item>press_hide_overlay</item>
+        <item>press_show_overlay</item>
         <item>press_turn_screen_on</item>
         <item>press_turn_screen_off</item>
         <item>press_toggle_audio_alerts</item>
@@ -102,7 +110,10 @@
         <item>Bottom Right</item>
         <item>Mark Lap</item>
         <item>Switch to map page</item>
-        <item>Show overlay</item>
+        <item>Toggle Overlay</item>
+        <item>Hide Overlay</item>
+        <item>Show Overlay</item>
+        <item>View Overlay</item>
         <item>Turn Screen On</item>
         <item>Toggle Shifting Audio Alerts</item>
         <item>Disable Shifting Audio Alerts</item>
@@ -128,7 +139,10 @@
         <item>hold_short_single_bottom_right</item>
         <item>hold_short_single_lap</item>
         <item>hold_short_single_switch_to_map_page</item>
-        <item>show_overlay</item>
+        <item>hold_short_single_toggle_overlay</item>
+        <item>hold_short_single_hide_overlay</item>
+        <item>hold_short_single_show_overlay</item>
+        <item>view_overlay</item>
         <item>hold_short_single_turn_screen_on</item>
         <item>hold_short_single_toggle_audio_alerts</item>
         <item>hold_short_single_disable_audio_alerts</item>

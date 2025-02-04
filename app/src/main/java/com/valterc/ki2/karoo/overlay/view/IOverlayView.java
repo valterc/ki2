@@ -35,6 +35,13 @@ public interface IOverlayView {
     void hide();
 
     /**
+     * Indicates if the overlay is visible.
+     *
+     * @return True if the overlay is visible, False otherwise.
+     */
+    boolean isVisible();
+
+    /**
      * Set a listener to be notified when visibility of the overlay changes.
      *
      * @param visibilityListener Visibility listener or null to clear.
@@ -51,8 +58,8 @@ public interface IOverlayView {
     /**
      * Apply all preferences in the overlay.
      *
-     * @param extensionContext  Ki2 extension context.
-     * @param preferences Overlay preferences.
+     * @param extensionContext Ki2 extension context.
+     * @param preferences      Overlay preferences.
      */
     default void applyPreferences(@NonNull Ki2ExtensionContext extensionContext, @NonNull OverlayPreferences preferences) {
         setAlpha(preferences.getOpacity());

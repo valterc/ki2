@@ -3,10 +3,12 @@ package com.valterc.ki2.karoo.service.messages;
 import android.os.Handler;
 
 import com.valterc.ki2.data.message.AudioAlertMessage;
+import com.valterc.ki2.data.message.HideOverlayMessage;
 import com.valterc.ki2.data.message.Message;
 import com.valterc.ki2.data.message.MessageType;
 import com.valterc.ki2.data.message.RideStatusMessage;
 import com.valterc.ki2.data.message.ShowOverlayMessage;
+import com.valterc.ki2.data.message.ToggleOverlayMessage;
 import com.valterc.ki2.data.message.UpdateAvailableMessage;
 import com.valterc.ki2.karoo.service.ServiceClient;
 
@@ -14,6 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
+/** @noinspection unused*/
 @SuppressWarnings({"unchecked", "FieldCanBeLocal"})
 public class CustomMessageClient {
 
@@ -28,6 +31,8 @@ public class CustomMessageClient {
         customMessageHandlers = new HashMap<>();
         customMessageHandlers.put(MessageType.RIDE_STATUS, new CustomMessageHandler<>(MessageType.RIDE_STATUS, RideStatusMessage::parse));
         customMessageHandlers.put(MessageType.UPDATE_AVAILABLE, new CustomMessageHandler<>(MessageType.UPDATE_AVAILABLE, UpdateAvailableMessage::parse));
+        customMessageHandlers.put(MessageType.TOGGLE_OVERLAY, new CustomMessageHandler<>(MessageType.TOGGLE_OVERLAY, ToggleOverlayMessage::parse));
+        customMessageHandlers.put(MessageType.HIDE_OVERLAY, new CustomMessageHandler<>(MessageType.HIDE_OVERLAY, HideOverlayMessage::parse));
         customMessageHandlers.put(MessageType.SHOW_OVERLAY, new CustomMessageHandler<>(MessageType.SHOW_OVERLAY, ShowOverlayMessage::parse));
         customMessageHandlers.put(MessageType.AUDIO_ALERT, new CustomMessageHandler<>(MessageType.AUDIO_ALERT, AudioAlertMessage::parse));
 
@@ -65,6 +70,36 @@ public class CustomMessageClient {
         handler.post(() -> {
             CustomMessageHandler<UpdateAvailableMessage> customMessageHandler =
                     (CustomMessageHandler<UpdateAvailableMessage>) customMessageHandlers.get(MessageType.UPDATE_AVAILABLE);
+            if (customMessageHandler != null) {
+                customMessageHandler.addListener(consumer);
+            }
+        });
+    }
+
+    /**
+     * Register a weak referenced listener that will receive Toggle Overlay messages.
+     *
+     * @param consumer Consumer that will receive Toggle Overlay messages. It will be referenced using a weak reference so the owner must keep a strong reference.
+     */
+    public void registerToggleOverlayWeakListener(Consumer<ToggleOverlayMessage> consumer) {
+        handler.post(() -> {
+            CustomMessageHandler<ToggleOverlayMessage> customMessageHandler =
+                    (CustomMessageHandler<ToggleOverlayMessage>) customMessageHandlers.get(MessageType.TOGGLE_OVERLAY);
+            if (customMessageHandler != null) {
+                customMessageHandler.addListener(consumer);
+            }
+        });
+    }
+
+    /**
+     * Register a weak referenced listener that will receive Hide Overlay messages.
+     *
+     * @param consumer Consumer that will receive Hide Overlay messages. It will be referenced using a weak reference so the owner must keep a strong reference.
+     */
+    public void registerHideOverlayWeakListener(Consumer<HideOverlayMessage> consumer) {
+        handler.post(() -> {
+            CustomMessageHandler<HideOverlayMessage> customMessageHandler =
+                    (CustomMessageHandler<HideOverlayMessage>) customMessageHandlers.get(MessageType.HIDE_OVERLAY);
             if (customMessageHandler != null) {
                 customMessageHandler.addListener(consumer);
             }

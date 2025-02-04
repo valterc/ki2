@@ -57,7 +57,7 @@ public class Message implements Parcelable {
     private Message(Parcel in) {
         key = in.readString();
         bundle = in.readBundle(getClass().getClassLoader());
-        messageType = MessageType.fromValue(in.readInt());
+        messageType = MessageType.fromOrdinal(in.readInt());
         persistent = in.readByte() == 1;
         classType = in.readString();
     }
