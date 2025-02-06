@@ -119,6 +119,7 @@
     <string name="text_exit">Exit</string>
     <string name="text_invalid_gear">Invalid gear</string>
     <string name="text_param_gearing">F%1$02d - R%2$02d</string>
+    <string name="text_param_gearing_detailed">F%1$02d [%2$02d] | R%3$02d [%4$02d]</string>
     <string name="text_param_gearing_single">%02d</string>
     <string name="text_param_ratio">%01.2f</string>
     <string name="text_synchro">SYNCHRO</string>

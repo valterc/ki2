@@ -16,6 +16,7 @@ import com.valterc.ki2.karoo.datatypes.text.ShiftingModeDataType
 import com.valterc.ki2.karoo.datatypes.visual.BikeBatteryVisualDataType
 import com.valterc.ki2.karoo.datatypes.visual.DrivetrainIndexVisualDataType
 import com.valterc.ki2.karoo.datatypes.visual.DrivetrainSizeVisualDataType
+import com.valterc.ki2.karoo.datatypes.visual.GearsDetailedVisualDataType
 import com.valterc.ki2.karoo.datatypes.visual.GearsIndexVisualDataType
 import com.valterc.ki2.karoo.datatypes.visual.GearsSizeVisualDataType
 import com.valterc.ki2.karoo.overlay.OverlayWindowHandler
@@ -68,6 +69,7 @@ class Ki2ExtensionService : KarooExtension("ki2", BuildConfig.VERSION_NAME) {
 
             GearsIndexVisualDataType(extensionContext),
             GearsSizeVisualDataType(extensionContext),
+            GearsDetailedVisualDataType(extensionContext),
             DrivetrainIndexVisualDataType(extensionContext),
             DrivetrainSizeVisualDataType(extensionContext),
             BikeBatteryVisualDataType(extensionContext),
