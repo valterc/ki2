@@ -82,6 +82,13 @@
         typeId="DATATYPE_VISUAL_GEARS_SIZE" />
 
     <DataType
+        description="Gears visual view with battery percentage, gear index and size (teeth count)."
+        displayName="Gears Detailed (visual)"
+        graphical="true"
+        icon="@drawable/ic_hh_gear"
+        typeId="DATATYPE_VISUAL_GEARS_DETAILED" />
+
+    <DataType
         description="Drivetrain visual view with gear index."
         displayName="Drivetrain Index (visual)"
         graphical="true"
