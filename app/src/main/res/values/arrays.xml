@@ -142,7 +142,7 @@
         <item>hold_short_single_toggle_overlay</item>
         <item>hold_short_single_hide_overlay</item>
         <item>hold_short_single_show_overlay</item>
-        <item>view_overlay</item>
+        <item>hold_continuous_view_overlay</item>
         <item>hold_short_single_turn_screen_on</item>
         <item>hold_short_single_toggle_audio_alerts</item>
         <item>hold_short_single_disable_audio_alerts</item>

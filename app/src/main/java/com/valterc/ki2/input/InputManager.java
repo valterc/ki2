@@ -222,7 +222,7 @@ public class InputManager {
             }
             return new KarooActionEvent(KarooAction.VIRTUAL_SHOW_OVERLAY, switchEvent.getRepeat());
         });
-        preferenceToSwitchKeyMap.put("view_overlay", (switchEvent, converter) -> {
+        preferenceToSwitchKeyMap.put("hold_continuous_view_overlay", (switchEvent, converter) -> {
             if (switchEvent.getCommand() == SwitchCommand.LONG_PRESS_UP) {
                 return new KarooActionEvent(KarooAction.VIRTUAL_HIDE_OVERLAY, switchEvent.getRepeat());
             }

@@ -90,7 +90,7 @@ public class Message implements Parcelable {
     public void writeToParcel(Parcel out, int flags) {
         out.writeString(key);
         out.writeBundle(bundle);
-        out.writeInt(messageType.getValue());
+        out.writeInt(messageType.ordinal());
         out.writeByte((byte) (persistent ? 1 : 0));
         out.writeString(classType);
     }
