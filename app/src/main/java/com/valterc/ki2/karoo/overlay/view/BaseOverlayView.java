@@ -63,6 +63,11 @@ public abstract class BaseOverlayView<TViewHolder extends BaseOverlayViewHolder>
     }
 
     @Override
+    public boolean isVisible() {
+        return viewHolder.getOverlayView().getVisibility() == View.VISIBLE;
+    }
+
+    @Override
     public void setVisibilityListener(Consumer<Boolean> visibilityListener) {
         this.visibilityListener = visibilityListener;
     }

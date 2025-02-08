@@ -2,34 +2,26 @@ package com.valterc.ki2.data.message;
 
 public enum MessageType {
 
-    UNKNOWN(0),
-    LOW_BATTERY(1),
-    RIDE_STATUS(2),
-    UPDATE_AVAILABLE(3),
-    SHOW_OVERLAY(4),
-    AUDIO_ALERT(5),
-    AUDIO_ALERT_TOGGLE(6),
-    AUDIO_ALERT_DISABLE(7),
-    AUDIO_ALERT_ENABLE(8);
+    UNKNOWN,
+    LOW_BATTERY,
+    RIDE_STATUS,
+    UPDATE_AVAILABLE,
+    TOGGLE_OVERLAY,
+    HIDE_OVERLAY,
+    SHOW_OVERLAY,
+    AUDIO_ALERT,
+    AUDIO_ALERT_TOGGLE,
+    AUDIO_ALERT_DISABLE,
+    AUDIO_ALERT_ENABLE;
 
-    public static MessageType fromValue(int value) {
+    public static MessageType fromOrdinal(int ordinal) {
         for (MessageType messageType : values()) {
-            if (messageType.value == value) {
+            if (messageType.ordinal() == ordinal) {
                 return messageType;
             }
         }
 
         return UNKNOWN;
-    }
-
-    private final int value;
-
-    MessageType(int value) {
-        this.value = value;
-    }
-
-    public int getValue() {
-        return value;
     }
 
 }

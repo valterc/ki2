@@ -1,6 +1,8 @@
 package com.valterc.ki2.karoo.overlay.manager;
 
+import com.valterc.ki2.data.message.HideOverlayMessage;
 import com.valterc.ki2.data.message.ShowOverlayMessage;
+import com.valterc.ki2.data.message.ToggleOverlayMessage;
 import com.valterc.ki2.karoo.Ki2ExtensionContext;
 import com.valterc.ki2.karoo.overlay.OverlayPreferences;
 
@@ -10,11 +12,19 @@ import java.util.function.Consumer;
 public class PrimaryOverlayManager extends BaseOverlayManager {
 
     @SuppressWarnings("FieldCanBeLocal")
+    private final Consumer<ToggleOverlayMessage> toggleOverlayListener = (toggleOverlayMessage) -> toggleOverlay();
+
+    @SuppressWarnings("FieldCanBeLocal")
+    private final Consumer<HideOverlayMessage> hideOverlayListener = (hideOverlayMessage) -> hideOverlay();
+
+    @SuppressWarnings("FieldCanBeLocal")
     private final Consumer<ShowOverlayMessage> showOverlayListener = (showOverlayMessage) -> showOverlay(true);
 
     public PrimaryOverlayManager(Ki2ExtensionContext ki2Context) {
         super(ki2Context);
 
+        ki2Context.getServiceClient().getCustomMessageClient().registerToggleOverlayWeakListener(toggleOverlayListener);
+        ki2Context.getServiceClient().getCustomMessageClient().registerHideOverlayWeakListener(hideOverlayListener);
         ki2Context.getServiceClient().getCustomMessageClient().registerShowOverlayWeakListener(showOverlayListener);
     }
 

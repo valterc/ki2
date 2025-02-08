@@ -8,7 +8,9 @@ import com.valterc.ki2.data.action.KarooActionEvent;
 import com.valterc.ki2.data.message.AudioAlertDisableMessage;
 import com.valterc.ki2.data.message.AudioAlertEnableMessage;
 import com.valterc.ki2.data.message.AudioAlertToggleMessage;
+import com.valterc.ki2.data.message.HideOverlayMessage;
 import com.valterc.ki2.data.message.ShowOverlayMessage;
+import com.valterc.ki2.data.message.ToggleOverlayMessage;
 import com.valterc.ki2.data.preferences.PreferencesView;
 import com.valterc.ki2.karoo.Ki2ExtensionContext;
 
@@ -36,6 +38,8 @@ public class ActionAdapter {
         this.keyMapping.put(KarooAction.TOP_RIGHT, karooKeyEvent -> context.getKarooSystem().dispatch(PerformHardwareAction.TopRightPress.INSTANCE));
         this.keyMapping.put(KarooAction.BOTTOM_RIGHT, karooKeyEvent -> context.getKarooSystem().dispatch(PerformHardwareAction.BottomRightPress.INSTANCE));
 
+        this.keyMapping.put(KarooAction.VIRTUAL_TOGGLE_OVERLAY, karooKeyEvent -> context.getServiceClient().sendMessage(new ToggleOverlayMessage()));
+        this.keyMapping.put(KarooAction.VIRTUAL_HIDE_OVERLAY, karooKeyEvent -> context.getServiceClient().sendMessage(new HideOverlayMessage()));
         this.keyMapping.put(KarooAction.VIRTUAL_SHOW_OVERLAY, karooKeyEvent -> context.getServiceClient().sendMessage(new ShowOverlayMessage()));
         this.keyMapping.put(KarooAction.VIRTUAL_TURN_SCREEN_ON, karooKeyEvent -> context.getKarooSystem().dispatch(TurnScreenOn.INSTANCE));
         this.keyMapping.put(KarooAction.VIRTUAL_TURN_SCREEN_OFF, karooKeyEvent -> context.getKarooSystem().dispatch(TurnScreenOff.INSTANCE));
