@@ -50,7 +50,7 @@ Ki2 is an extension for Hammerhead Karoo cycling computers. It is a companion ap
 7. Customize battery alerts, shifting audio alerts, button controls, overlays and other features from Ki2
 
 > [!NOTE]
-> It is important that the gearing configuration is set correctly in Ki2, and that the order of shifting sensors in the Karoo sensors list matches with the order of shifting devices in Ki2. The first shifting device (from the top of the list) that is connected, will be used as the main source for the shifting data.
+> It is important that the gearing configuration is correctly set in Ki2, and that the order of shifting sensors in the Karoo sensors list matches with the order of shifting devices in Ki2. The first shifting device (from the top of the list) that is connected, will be used as the main source for the shifting data.
 
 ### Supported Karoo software versions
 
