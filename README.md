@@ -24,9 +24,9 @@ Ki2 is an extension for Hammerhead Karoo cycling computers. It is a companion ap
 - Audio alerts before upcoming synchro shift or when reaching shifting limits
 
 > [!NOTE]
-> The following features require the Ki2 devices to be added to Karoo extension sensors:
+> The following features require the Ki2 shifting devices to be added to Karoo as extension sensors:
 >
-> - Use of native Karoo ride data fields
+> - Use of native Karoo ride elements
 > - FIT file recording of gear shifts
 > - Battery alerts
 
@@ -49,7 +49,8 @@ Ki2 is an extension for Hammerhead Karoo cycling computers. It is a companion ap
 6. Use default Karoo shifting elements or Ki2 elements in your ride profile
 7. Customize battery alerts, shifting audio alerts, button controls, overlays and other features from Ki2
 
-**Note:** It is important that the gearing configuration is set correctly in Ki2, and that the order of shifting sensors in the Karoo sensors list matches with the order of shifting devices in Ki2. The first shifting device (from the top of the list) that is connected, will be used as the main source for the shifting data.
+> [!NOTE]
+> It is important that the gearing configuration is set correctly in Ki2, and that the order of shifting sensors in the Karoo sensors list matches with the order of shifting devices in Ki2. The first shifting device (from the top of the list) that is connected, will be used as the main source for the shifting data.
 
 ### Supported Karoo software versions
 
