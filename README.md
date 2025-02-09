@@ -28,7 +28,7 @@ Ki2 is an extension for Hammerhead Karoo cycling computers. It is a companion ap
 >
 > - Use of native Karoo ride elements
 > - FIT file recording of gear shifts
-> - Battery alerts
+> - Low battery notifications
 
 ## How can I install the app?
 
