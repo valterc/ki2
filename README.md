@@ -23,6 +23,13 @@ Ki2 is an extension for Hammerhead Karoo cycling computers. It is a companion ap
 - Receive notifications when shifting battery is low
 - Audio alerts before upcoming synchro shift or when reaching shifting limits
 
+> [!NOTE]
+> The following features require the Ki2 devices to be added to Karoo extension sensors:
+>
+> - Use of native Karoo ride data fields
+> - FIT file recording of gear shifts
+> - Battery alerts
+
 ## How can I install the app?
 
 1. Find the link to the Ki2 APK file from the latest [release page](https://github.com/valterc/ki2/releases/latest/)
@@ -33,7 +40,7 @@ Ki2 is an extension for Hammerhead Karoo cycling computers. It is a companion ap
    - Make sure a wireless shifting device is nearby and that it is active (perform a shift or press a button to wake up the shifting system)
    - Press the `Add` button in Ki2 to add a device once it is found
 4. Configure the shifting device from Karoo (for example: rename the device - optional)
-5. Add the Ki2 devices to Karoo
+5. Add the Ki2 devices to Karoo (important for all features to work)
    - Open Karoo sensors
    - Press the `+` button to add a new sensor
    - Choose the `Extensions` sensor type (the icon with the puzzle piece)
