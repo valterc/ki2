@@ -127,6 +127,7 @@
     <string name="text_synchro_down">SYNCHRO ↓</string>
     <string name="text_limit">LIMIT</string>
     <string name="text_default">Default</string>
+    <string name="text_ok">OK</string>
     <string name="text_disabled_audio_alerts">Disabled Shifting audio alerts</string>
     <string name="text_enabled_audio_alerts">Enabled Shifting audio alerts</string>
     <string name="text_ant_recording">ANT Recording</string>
@@ -134,4 +135,5 @@
     <string name="text_gears">Gears</string>
     <string name="text_drivetrain">Drivetrain</string>
     <string name="text_bike_battery">Bike Battery</string>
+    <string name="text_yes">Yes</string>
 </resources>

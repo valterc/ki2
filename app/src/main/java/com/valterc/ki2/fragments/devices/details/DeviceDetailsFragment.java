@@ -184,7 +184,7 @@ public class DeviceDetailsFragment extends Fragment implements IKarooKeyListener
                 .setTitle(R.string.text_remove)
                 .setMessage(getString(R.string.text_param_question_remove, viewModel.getDevicePreferences(requireContext()).getName()))
                 .setIcon(R.drawable.ic_delete)
-                .setPositiveButton(android.R.string.yes, (dialog, whichButton) ->
+                .setPositiveButton(R.string.text_yes, (dialog, whichButton) ->
                 {
                     try {
                         viewModel.remove();
@@ -208,8 +208,8 @@ public class DeviceDetailsFragment extends Fragment implements IKarooKeyListener
                     .setTitle(R.string.text_rename)
                     .setIcon(R.drawable.ic_edit)
                     .setView(dialogView)
-                    .setNegativeButton(android.R.string.cancel, null)
-                    .setPositiveButton(android.R.string.ok, (dialog, whichButton) -> {
+                    .setNegativeButton(R.string.text_cancel, null)
+                    .setPositiveButton(R.string.text_ok, (dialog, whichButton) -> {
                         String newName = editText.getText().toString();
                         viewModel.getDevicePreferences(requireContext()).setName(newName);
                         textViewName.setText(viewModel.getDevicePreferences(requireContext()).getName());

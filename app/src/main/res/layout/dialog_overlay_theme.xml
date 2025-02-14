@@ -25,6 +25,6 @@
         android:layout_gravity="end"
         android:layout_marginTop="5dp"
         android:background="?attr/selectableItemBackground"
-        android:text="@android:string/cancel" />
+        android:text="@string/text_cancel" />
 
 </LinearLayout>
