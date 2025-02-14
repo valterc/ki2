@@ -15,11 +15,11 @@ enum class AudioIntensity(
     ),
     Reduced(
         0.4, 0.9,
-        0.4, 0.6
+        0.4, 0.7
     ),
     Normal(
         1.0, 1.0,
-        1.0, 0.7
+        1.0, 0.8
     );
 
     companion object {
