@@ -67,7 +67,7 @@
             android:minHeight="0dp"
             android:paddingHorizontal="10dp"
             android:paddingVertical="5dp"
-            android:text="@android:string/cancel" />
+            android:text="@string/text_cancel" />
 
         <Button
             android:id="@+id/button_overlay_position_ok"
@@ -79,7 +79,7 @@
             android:minHeight="0dp"
             android:paddingHorizontal="10dp"
             android:paddingVertical="5dp"
-            android:text="@android:string/ok" />
+            android:text="@string/text_ok" />
 
     </LinearLayout>
 

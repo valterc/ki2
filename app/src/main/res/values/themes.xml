@@ -1,6 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-
     <style name="Theme.Ki2.NoActionBar" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/hh_yellow_darker</item>
@@ -11,9 +10,12 @@
         <item name="colorSecondary">@color/hh_light_blue_dark</item>
         <item name="colorSecondaryVariant">@color/hh_dark_blue</item>
         <item name="colorOnSecondary">@color/hh_black</item>
+
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
-        <!-- Customize your theme here. -->
+
+        <!-- Dialog preference style. -->
+        <item name="dialogPreferenceStyle">@style/Theme.Ki2.Preference.Dialog</item>
     </style>
 
     <style name="Theme.Ki2.ActionBar" parent="Theme.MaterialComponents.Light.DarkActionBar">
@@ -21,13 +23,17 @@
         <item name="colorPrimary">@color/hh_yellow_darker</item>
         <item name="colorPrimaryVariant">@color/hh_yellow_dark</item>
         <item name="colorOnPrimary">@color/hh_black</item>
+
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/hh_light_blue_dark</item>
         <item name="colorSecondaryVariant">@color/hh_dark_blue</item>
         <item name="colorOnSecondary">@color/hh_black</item>
+
         <!-- Status bar color. -->
         <item name="android:statusBarColor" >?attr/colorPrimaryVariant</item>
-        <!-- Customize your theme here. -->
+
+        <!-- Dialog preference style. -->
+        <item name="dialogPreferenceStyle">@style/Theme.Ki2.Preference.Dialog</item>
     </style>
 
     <style name="Theme.Ki2.NoActionBar.Blue" parent="Theme.MaterialComponents.Light.NoActionBar">
@@ -40,9 +46,17 @@
         <item name="colorSecondary">@color/hh_light_blue_dark</item>
         <item name="colorSecondaryVariant">@color/hh_dark_blue</item>
         <item name="colorOnSecondary">@color/hh_black</item>
+
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
-        <!-- Customize your theme here. -->
+
+        <!-- Dialog preference style. -->
+        <item name="dialogPreferenceStyle">@style/Theme.Ki2.Preference.Dialog</item>
+    </style>
+
+    <style name="Theme.Ki2.Preference.Dialog" parent="Preference.Material">
+        <item name="positiveButtonText">@string/text_ok</item>
+        <item name="negativeButtonText">@string/text_cancel</item>
     </style>
 
 </resources>
