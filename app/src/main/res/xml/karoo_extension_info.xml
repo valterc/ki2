@@ -68,6 +68,13 @@
         typeId="DATATYPE_REAR_GEARS_SIZE" />
 
     <DataType
+        description="View with shift count."
+        displayName="Shift Count"
+        graphical="true"
+        icon="@drawable/ic_hh_gear"
+        typeId="DATATYPE_SHIFT_COUNT" />
+
+    <DataType
         description="Gears visual view with gear index."
         displayName="Gears Index (visual)"
         graphical="true"
