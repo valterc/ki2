@@ -410,7 +410,7 @@ public class DeviceDetailsFragment extends Fragment implements IKarooKeyListener
             switch (switchEvent.getCommand()) {
                 case LONG_PRESS_UP:
                 case NO_SWITCH:
-                    textViewSwitch.setText(R.string.text_no_action);
+                    textViewSwitch.setText(R.string.dash);
                     break;
 
                 case SINGLE_CLICK:
@@ -433,19 +433,19 @@ public class DeviceDetailsFragment extends Fragment implements IKarooKeyListener
                 handler.postDelayed(() -> {
                     if (switchEvent.getType() == SwitchType.D_FLY_CH1) {
                         if (System.currentTimeMillis() - timestampSwitchCH1 > SWITCH_AUTO_CLEAR_DELAY_MS * 0.8) {
-                            textViewSwitchCH1.setText(R.string.text_no_action);
+                            textViewSwitchCH1.setText(R.string.dash);
                         }
                     } else if (switchEvent.getType() == SwitchType.D_FLY_CH2) {
                         if (System.currentTimeMillis() - timestampSwitchCH2 > SWITCH_AUTO_CLEAR_DELAY_MS * 0.8) {
-                            textViewSwitchCH2.setText(R.string.text_no_action);
+                            textViewSwitchCH2.setText(R.string.dash);
                         }
                     } else if (switchEvent.getType() == SwitchType.D_FLY_CH3) {
                         if (System.currentTimeMillis() - timestampSwitchCH3 > SWITCH_AUTO_CLEAR_DELAY_MS * 0.8) {
-                            textViewSwitchCH3.setText(R.string.text_no_action);
+                            textViewSwitchCH3.setText(R.string.dash);
                         }
                     } else if (switchEvent.getType() == SwitchType.D_FLY_CH4) {
                         if (System.currentTimeMillis() - timestampSwitchCH4 > SWITCH_AUTO_CLEAR_DELAY_MS * 0.8) {
-                            textViewSwitchCH4.setText(R.string.text_no_action);
+                            textViewSwitchCH4.setText(R.string.dash);
                         }
                     }
                 }, SWITCH_AUTO_CLEAR_DELAY_MS);
