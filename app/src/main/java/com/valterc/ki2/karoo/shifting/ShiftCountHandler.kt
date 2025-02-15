@@ -4,6 +4,7 @@ import com.valterc.ki2.data.device.DeviceId
 import com.valterc.ki2.data.shifting.ShiftingInfo
 import com.valterc.ki2.karoo.Ki2ExtensionContext
 import com.valterc.ki2.karoo.RideHandler
+import io.hammerhead.karooext.models.RideState
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -13,7 +14,8 @@ import kotlin.math.abs
 
 class ShiftCountHandler(extensionContext: Ki2ExtensionContext) : RideHandler(extensionContext) {
 
-    private var previousShiftingInfo: ShiftingInfo? = null
+    private var lastReceivedShiftingInfo: ShiftingInfo? = null
+    private var previouslyUsedShiftingInfo: ShiftingInfo? = null
     private val listeners: MutableList<Consumer<ShiftCountHandler>> = mutableListOf()
 
     var frontShiftCount = 0
@@ -25,27 +27,38 @@ class ShiftCountHandler(extensionContext: Ki2ExtensionContext) : RideHandler(ext
 
     val shiftingInfoConsumer =
         BiConsumer<DeviceId, ShiftingInfo> { _: DeviceId, shiftingInfo: ShiftingInfo ->
-            if (previousShiftingInfo == null) {
-                previousShiftingInfo = shiftingInfo
+            lastReceivedShiftingInfo = shiftingInfo
+
+            if (rideState !is RideState.Recording) {
                 return@BiConsumer
             }
 
-            val lastShiftingInfo = previousShiftingInfo ?: return@BiConsumer
+            if (previouslyUsedShiftingInfo == null) {
+                previouslyUsedShiftingInfo = shiftingInfo
+                return@BiConsumer
+            }
 
-            frontShiftCount += abs(lastShiftingInfo.frontGear - shiftingInfo.frontGear)
-            rearShiftCount += abs(lastShiftingInfo.rearGear - shiftingInfo.rearGear)
-
-            previousShiftingInfo = shiftingInfo
-
-            listeners.forEach { it.accept(this) }
+            updateShiftCount(shiftingInfo)
         }
 
-    override fun onRideStart() {
-        super.onRideStart()
+    private fun updateShiftCount(shiftingInfo: ShiftingInfo) {
+        val previousShiftingInfo = previouslyUsedShiftingInfo ?: return
 
+        frontShiftCount += abs(previousShiftingInfo.frontGear - shiftingInfo.frontGear)
+        rearShiftCount += abs(previousShiftingInfo.rearGear - shiftingInfo.rearGear)
+
+        previouslyUsedShiftingInfo = shiftingInfo
+        listeners.forEach { it.accept(this) }
+    }
+
+    override fun onRideStart() {
         extensionContext.serviceClient.registerShiftingInfoWeakListener(
             shiftingInfoConsumer
         )
+    }
+
+    override fun onRideResume() {
+        lastReceivedShiftingInfo?.let { updateShiftCount(it) }
     }
 
     override fun onRideEnd() {

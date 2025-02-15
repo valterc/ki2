@@ -23,7 +23,6 @@ import com.valterc.ki2.karoo.datatypes.visual.GearsDetailedVisualDataType
 import com.valterc.ki2.karoo.datatypes.visual.GearsIndexVisualDataType
 import com.valterc.ki2.karoo.datatypes.visual.GearsSizeVisualDataType
 import com.valterc.ki2.karoo.overlay.OverlayWindowHandler
-import com.valterc.ki2.karoo.shifting.ShiftCountHandler
 import com.valterc.ki2.karoo.shifting.ShiftingAudioAlertHandler
 import com.valterc.ki2.karoo.shifting.ShiftingDevice
 import com.valterc.ki2.karoo.update.UpdateHandler
@@ -95,7 +94,6 @@ class Ki2ExtensionService : KarooExtension("ki2", BuildConfig.VERSION_NAME) {
                 handlers.add(UpdateHandler(extensionContext))
                 handlers.add(OverlayWindowHandler(this, extensionContext))
                 handlers.add(ShiftingAudioAlertHandler(extensionContext))
-                handlers.add(extensionContext.shiftCountHandler)
             }
         }
     }
