@@ -68,11 +68,25 @@
         typeId="DATATYPE_REAR_GEARS_SIZE" />
 
     <DataType
-        description="View with shift count."
+        description="View with total shift count."
         displayName="Shift Count"
         graphical="true"
         icon="@drawable/ic_hh_gear"
         typeId="DATATYPE_SHIFT_COUNT" />
+
+    <DataType
+        description="View with front shift count."
+        displayName="F Shift Count"
+        graphical="true"
+        icon="@drawable/ic_hh_gear"
+        typeId="DATATYPE_FRONT_SHIFT_COUNT" />
+
+    <DataType
+        description="View with rear shift count."
+        displayName="R Shift Count"
+        graphical="true"
+        icon="@drawable/ic_hh_gear"
+        typeId="DATATYPE_REAR_SHIFT_COUNT" />
 
     <DataType
         description="Gears visual view with gear index."
