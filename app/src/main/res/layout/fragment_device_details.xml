@@ -157,6 +157,8 @@
                         android:background="?attr/selectableItemBackgroundBorderless"
                         android:button="@null"
                         android:drawableEnd="?android:attr/listChoiceIndicatorMultiple"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
                         android:paddingHorizontal="20dp"
                         android:text="@string/text_enabled" />
 
@@ -176,6 +178,8 @@
                         android:backgroundTint="@color/white"
                         android:contentDescription="@string/text_reconnect"
                         android:enabled="false"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
                         android:text="@string/text_reconnect"
                         android:textAlignment="viewStart"
                         android:textAllCaps="false"
@@ -194,6 +198,8 @@
                         android:layout_height="wrap_content"
                         android:background="?attr/selectableItemBackgroundBorderless"
                         android:backgroundTint="@color/white"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
                         android:text="@string/text_rename"
                         android:textAlignment="viewStart"
                         android:textAllCaps="false"
@@ -212,6 +218,8 @@
                         android:background="?attr/selectableItemBackgroundBorderless"
                         android:backgroundTint="@color/white"
                         android:enabled="false"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
                         android:paddingVertical="0dp"
                         android:text="@string/text_remove"
                         android:textAlignment="viewStart"
@@ -253,6 +261,8 @@
                         android:background="?attr/selectableItemBackgroundBorderless"
                         android:button="@null"
                         android:drawableEnd="?android:attr/listChoiceIndicatorMultiple"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
                         android:paddingHorizontal="20dp"
                         android:text="@string/text_switches_only" />
 
@@ -271,7 +281,9 @@
                         android:layout_height="wrap_content"
                         android:background="?attr/selectableItemBackgroundBorderless"
                         android:backgroundTint="@color/white"
-                        android:clickable="true">
+                        android:clickable="true"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -281,8 +293,8 @@
                             android:text="@string/text_gearing"
                             android:textColor="@color/black"
                             android:textSize="14sp"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintBottom_toTopOf="@id/textview_device_details_gearing"/>
+                            app:layout_constraintBottom_toTopOf="@id/textview_device_details_gearing"
+                            app:layout_constraintStart_toStartOf="parent" />
 
                         <TextView
                             android:id="@+id/textview_device_details_gearing"
@@ -291,10 +303,10 @@
                             android:paddingHorizontal="20dp"
                             android:paddingBottom="10dp"
                             android:text="@string/text_detect_automatically"
-                            android:textSize="13sp"
                             android:textColor="@color/hh_faded_gray"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintBottom_toBottomOf="parent"/>
+                            android:textSize="13sp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -712,6 +724,8 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:backgroundTint="@color/hh_light_blue"
+                                android:focusable="false"
+                                android:focusableInTouchMode="false"
                                 android:text="@string/text_change_mode" />
 
                         </LinearLayout>
@@ -781,7 +795,7 @@
                                 android:id="@+id/textview_device_details_switch_ch1"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/text_no_action"
+                                android:text="@string/dash"
                                 android:textColor="@color/hh_black"
                                 android:textStyle="bold" />
 
@@ -805,7 +819,7 @@
                                 android:id="@+id/textview_device_details_switch_ch2"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/text_no_action"
+                                android:text="@string/dash"
                                 android:textColor="@color/hh_black"
                                 android:textStyle="bold" />
 
@@ -839,7 +853,7 @@
                                 android:id="@+id/textview_device_details_switch_ch3"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/text_no_action"
+                                android:text="@string/dash"
                                 android:textColor="@color/hh_black"
                                 android:textStyle="bold" />
 
@@ -863,7 +877,7 @@
                                 android:id="@+id/textview_device_details_switch_ch4"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/text_no_action"
+                                android:text="@string/dash"
                                 android:textColor="@color/hh_black"
                                 android:textStyle="bold" />
 
