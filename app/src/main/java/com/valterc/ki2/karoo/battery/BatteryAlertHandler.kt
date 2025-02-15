@@ -108,7 +108,7 @@ class BatteryAlertHandler(extensionContext: Ki2ExtensionContext) : RideHandler(e
             batteryAlertRecord.alertedInRide = true
             extensionContext.karooSystem.dispatch(
                 InRideAlert(
-                    "ki2-battery-alert-${batteryAlertRecord.deviceId.uid}",
+                    "ki2-ride-alert-battery-${batteryAlertRecord.deviceId.uid}",
                     R.drawable.ic_hh_battery,
                     title,
                     detail,
@@ -122,7 +122,7 @@ class BatteryAlertHandler(extensionContext: Ki2ExtensionContext) : RideHandler(e
 
         extensionContext.karooSystem.dispatch(
             SystemNotification(
-                "ki2-battery-notification-${batteryAlertRecord.deviceId.uid}",
+                "ki2-notification-battery-${batteryAlertRecord.deviceId.uid}",
                 detail,
                 header = title,
                 style = if (batteryAlertType == BatteryAlertType.Critical) SystemNotification.Style.ERROR else SystemNotification.Style.EVENT
