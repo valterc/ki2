@@ -49,7 +49,7 @@ fun TextView(
             ),
             modifier = GlanceModifier
                 .background(Color(1f, 1f, 1f, 1f), Color(0f, 0f, 0f, 1f))
-                .padding(top = (-fontSize * 0.1).dp)
+                .padding(top = (-fontSize * 0.09).dp)
         )
     }
 }

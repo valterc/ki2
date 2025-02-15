@@ -6,11 +6,13 @@ import com.valterc.ki2.BuildConfig
 import com.valterc.ki2.data.device.DeviceId
 import com.valterc.ki2.karoo.datatypes.text.FrontGearIndexDataType
 import com.valterc.ki2.karoo.datatypes.text.FrontGearSizeDataType
+import com.valterc.ki2.karoo.datatypes.text.FrontShiftCountDataType
 import com.valterc.ki2.karoo.datatypes.text.GearRatioDataType
 import com.valterc.ki2.karoo.datatypes.text.GearsIndexDataType
 import com.valterc.ki2.karoo.datatypes.text.GearsSizeDataType
 import com.valterc.ki2.karoo.datatypes.text.RearGearIndexDataType
 import com.valterc.ki2.karoo.datatypes.text.RearGearSizeDataType
+import com.valterc.ki2.karoo.datatypes.text.RearShiftCountDataType
 import com.valterc.ki2.karoo.datatypes.text.ShiftCountDataType
 import com.valterc.ki2.karoo.datatypes.text.ShiftingBatteryPercentageDataType
 import com.valterc.ki2.karoo.datatypes.text.ShiftingModeDataType
@@ -21,6 +23,7 @@ import com.valterc.ki2.karoo.datatypes.visual.GearsDetailedVisualDataType
 import com.valterc.ki2.karoo.datatypes.visual.GearsIndexVisualDataType
 import com.valterc.ki2.karoo.datatypes.visual.GearsSizeVisualDataType
 import com.valterc.ki2.karoo.overlay.OverlayWindowHandler
+import com.valterc.ki2.karoo.shifting.ShiftCountHandler
 import com.valterc.ki2.karoo.shifting.ShiftingAudioAlertHandler
 import com.valterc.ki2.karoo.shifting.ShiftingDevice
 import com.valterc.ki2.karoo.update.UpdateHandler
@@ -68,6 +71,8 @@ class Ki2ExtensionService : KarooExtension("ki2", BuildConfig.VERSION_NAME) {
             RearGearIndexDataType(extensionContext),
             RearGearSizeDataType(extensionContext),
             ShiftCountDataType(extensionContext),
+            FrontShiftCountDataType(extensionContext),
+            RearShiftCountDataType(extensionContext),
 
             GearsIndexVisualDataType(extensionContext),
             GearsSizeVisualDataType(extensionContext),
@@ -90,6 +95,7 @@ class Ki2ExtensionService : KarooExtension("ki2", BuildConfig.VERSION_NAME) {
                 handlers.add(UpdateHandler(extensionContext))
                 handlers.add(OverlayWindowHandler(this, extensionContext))
                 handlers.add(ShiftingAudioAlertHandler(extensionContext))
+                handlers.add(extensionContext.shiftCountHandler)
             }
         }
     }

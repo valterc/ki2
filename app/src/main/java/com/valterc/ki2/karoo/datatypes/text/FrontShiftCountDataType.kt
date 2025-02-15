@@ -20,8 +20,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalGlanceRemoteViewsApi::class)
-class ShiftCountDataType(private val extensionContext: Ki2ExtensionContext) :
-    DataTypeImpl(extensionContext.extension, "DATATYPE_SHIFT_COUNT") {
+class FrontShiftCountDataType(private val extensionContext: Ki2ExtensionContext) :
+    DataTypeImpl(extensionContext.extension, "DATATYPE_FRONT_SHIFT_COUNT") {
 
     private val glance = GlanceRemoteViews()
 
@@ -44,7 +44,7 @@ class ShiftCountDataType(private val extensionContext: Ki2ExtensionContext) :
             delay(2_000)
             emitViewUpdate(context, config, emitter, 0)
             extensionContext.shiftCountHandler.stream().collect {
-                emitViewUpdate(context, config, emitter, it.shiftCount)
+                emitViewUpdate(context, config, emitter, it.frontShiftCount)
             }
         }
 
