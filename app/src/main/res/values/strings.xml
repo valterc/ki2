@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Ki2</string>
 
+    <string name="dash">-</string>
+
     <string name="text_main_message">Di2 back to Karoo</string>
     <string name="text_param_found_devices">Found %d device(s)</string>
     <string name="text_searching_for_devices">Searching for devices…</string>
@@ -136,5 +138,5 @@
     <string name="text_drivetrain">Drivetrain</string>
     <string name="text_bike_battery">Bike Battery</string>
     <string name="text_yes">Yes</string>
-    <string name="dash">-</string>
+    <string name="text_overlay_permission">Please allow Ki2 to <b>Display Over Other Apps</b>.</string>
 </resources>
