@@ -115,6 +115,20 @@ class AudioManager(private val context: Ki2ExtensionContext) {
         )
     }
 
+    fun playKarooDeviceWarning() {
+        context.karooSystem.dispatch(
+            PlayBeepPattern(
+                listOf(
+                    PlayBeepPattern.Tone(1975.f, 125.d),
+                    PlayBeepPattern.Tone(null, 125.d),
+                    PlayBeepPattern.Tone(1975.f, 125.d),
+                    PlayBeepPattern.Tone(null, 125.d),
+                    PlayBeepPattern.Tone(1975.f, 125.d)
+                )
+            )
+        )
+    }
+
     fun playLowestGearAudioAlert() {
         tryTriggerAudioAlert {
             playAudio(audioAlertLowestGear)

@@ -4,6 +4,7 @@ import android.content.ComponentName
 import android.content.Intent
 import com.valterc.ki2.BuildConfig
 import com.valterc.ki2.data.device.DeviceId
+import com.valterc.ki2.karoo.battery.BatteryAlertHandler
 import com.valterc.ki2.karoo.datatypes.text.FrontGearIndexDataType
 import com.valterc.ki2.karoo.datatypes.text.FrontGearSizeDataType
 import com.valterc.ki2.karoo.datatypes.text.FrontShiftCountDataType
@@ -24,7 +25,7 @@ import com.valterc.ki2.karoo.datatypes.visual.GearsIndexVisualDataType
 import com.valterc.ki2.karoo.datatypes.visual.GearsSizeVisualDataType
 import com.valterc.ki2.karoo.overlay.OverlayWindowHandler
 import com.valterc.ki2.karoo.shifting.ShiftingAudioAlertHandler
-import com.valterc.ki2.karoo.shifting.ShiftingDevice
+import com.valterc.ki2.karoo.device.ShiftingDevice
 import com.valterc.ki2.karoo.update.UpdateHandler
 import io.hammerhead.karooext.extension.KarooExtension
 import io.hammerhead.karooext.internal.Emitter
@@ -94,6 +95,7 @@ class Ki2ExtensionService : KarooExtension("ki2", BuildConfig.VERSION_NAME) {
                 handlers.add(UpdateHandler(extensionContext))
                 handlers.add(OverlayWindowHandler(this, extensionContext))
                 handlers.add(ShiftingAudioAlertHandler(extensionContext))
+                handlers.add(BatteryAlertHandler(extensionContext))
             }
         }
     }
@@ -116,7 +118,9 @@ class Ki2ExtensionService : KarooExtension("ki2", BuildConfig.VERSION_NAME) {
 
     override fun connectDevice(uid: String, emitter: Emitter<DeviceEvent>) {
         Timber.i("[%s] Device connect", uid)
-        ShiftingDevice(extensionContext, DeviceId(uid)).connect(emitter)
+        val deviceId = DeviceId(uid)
+        extensionContext.karooDeviceTracking.deviceConnect(deviceId)
+        ShiftingDevice(extensionContext, deviceId).connect(emitter)
     }
 
     override fun onDestroy() {

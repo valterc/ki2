@@ -1,4 +1,4 @@
-package com.valterc.ki2.karoo.shifting
+package com.valterc.ki2.karoo.device
 
 import com.valterc.ki2.data.connection.ConnectionInfo
 import com.valterc.ki2.data.connection.ConnectionStatus
@@ -10,6 +10,7 @@ import com.valterc.ki2.data.preferences.device.DevicePreferencesView
 import com.valterc.ki2.data.shifting.ShiftingInfo
 import com.valterc.ki2.karoo.Ki2ExtensionContext
 import com.valterc.ki2.karoo.datatypes.Ki2DataType
+import com.valterc.ki2.karoo.shifting.ShiftingGearingHelper
 import io.hammerhead.karooext.internal.Emitter
 import io.hammerhead.karooext.models.BatteryStatus
 import io.hammerhead.karooext.models.ConnectionStatus as KarooConnectionStatus
