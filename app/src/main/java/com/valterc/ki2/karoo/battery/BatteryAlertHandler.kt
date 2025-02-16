@@ -64,7 +64,7 @@ class BatteryAlertHandler(extensionContext: Ki2ExtensionContext) : RideHandler(e
     }
 
     private fun checkBatteryAndNotify(batteryAlertRecord: BatteryAlertRecord) {
-        if (extensionContext.deviceTracking.isDeviceConnected(batteryAlertRecord.deviceId)) {
+        if (extensionContext.karooDeviceTracking.isDeviceConnected(batteryAlertRecord.deviceId)) {
             // If the device was added to Karoo, let Karoo handle the battery notification
             return
         }

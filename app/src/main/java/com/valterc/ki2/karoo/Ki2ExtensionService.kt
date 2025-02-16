@@ -119,7 +119,7 @@ class Ki2ExtensionService : KarooExtension("ki2", BuildConfig.VERSION_NAME) {
     override fun connectDevice(uid: String, emitter: Emitter<DeviceEvent>) {
         Timber.i("[%s] Device connect", uid)
         val deviceId = DeviceId(uid)
-        extensionContext.deviceTracking.deviceConnect(deviceId)
+        extensionContext.karooDeviceTracking.deviceConnect(deviceId)
         ShiftingDevice(extensionContext, deviceId).connect(emitter)
     }
 

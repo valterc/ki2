@@ -15,5 +15,5 @@ class Ki2ExtensionContext(val extension: String, val context: Context) {
     val audioManager: AudioManager = AudioManager(this)
     val actionManager: ActionManager = ActionManager(this)
     val shiftCountHandler: ShiftCountHandler = ShiftCountHandler(this)
-    val deviceTracking: KarooSensorDeviceTracking = KarooSensorDeviceTracking()
+    val karooDeviceTracking: KarooSensorDeviceTracking = KarooSensorDeviceTracking()
 }
