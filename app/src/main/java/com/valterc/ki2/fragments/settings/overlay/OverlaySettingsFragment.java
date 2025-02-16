@@ -1,13 +1,12 @@
 package com.valterc.ki2.fragments.settings.overlay;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.TypedValue;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -16,7 +15,6 @@ import androidx.fragment.app.DialogFragment;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
-import androidx.preference.PreferenceManager;
 import androidx.preference.SwitchPreference;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -38,6 +36,10 @@ public class OverlaySettingsFragment extends PreferenceFragmentCompat {
 
         SwitchPreference preferenceOverlayEnabled = findPreference(getString(R.string.preference_overlay_enabled));
 
+        if (!Settings.canDrawOverlays(requireContext())) {
+            Objects.requireNonNull(preferenceOverlayEnabled).setChecked(false);
+        }
+
         var startForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
             if (Settings.canDrawOverlays(requireContext())) {
                 Objects.requireNonNull(preferenceOverlayEnabled).setChecked(true);
@@ -47,6 +49,9 @@ public class OverlaySettingsFragment extends PreferenceFragmentCompat {
         Objects.requireNonNull(preferenceOverlayEnabled).setOnPreferenceChangeListener((preference, newValue) -> {
             if (Objects.equals(newValue, Boolean.TRUE)) {
                 if (!Settings.canDrawOverlays(requireContext())) {
+                    Toast toast = Toast.makeText(requireContext(), getString(R.string.text_overlay_permission), Toast.LENGTH_LONG);
+                    toast.show();
+
                     startForResult.launch(new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION));
                     return false;
                 }
