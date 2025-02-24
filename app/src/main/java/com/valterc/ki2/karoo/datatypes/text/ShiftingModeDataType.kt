@@ -49,18 +49,14 @@ class ShiftingModeDataType(private val extensionContext: Ki2ExtensionContext) :
                 }
             }
 
-        val startupJob = CoroutineScope(Dispatchers.IO).launch {
-            extensionContext.serviceClient.registerConnectionInfoWeakListener(
-                connectionInfoListener
-            )
-            extensionContext.serviceClient.registerShiftingInfoWeakListener(
-                shiftingInfoConsumer
-            )
-        }
+        extensionContext.serviceClient.registerConnectionInfoWeakListener(
+            connectionInfoListener
+        )
+        extensionContext.serviceClient.registerShiftingInfoWeakListener(
+            shiftingInfoConsumer
+        )
 
         emitter.setCancellable {
-            startupJob.cancel()
-
             extensionContext.serviceClient.unregisterConnectionInfoWeakListener(
                 connectionInfoListener
             )
@@ -91,9 +87,7 @@ class ShiftingModeDataType(private val extensionContext: Ki2ExtensionContext) :
                 }
             }
 
-        compositionResult.let {
-            emitter.updateView(compositionResult.remoteViews)
-        }
+        emitter.updateView(compositionResult.remoteViews)
     }
 
 }

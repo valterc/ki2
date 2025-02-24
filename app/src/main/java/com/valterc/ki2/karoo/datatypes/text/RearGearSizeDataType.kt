@@ -60,22 +60,17 @@ class RearGearSizeDataType(private val extensionContext: Ki2ExtensionContext) :
                 }
             }
 
-        val startupJob = CoroutineScope(Dispatchers.IO).launch {
-            delay(2_000)
-            extensionContext.serviceClient.registerConnectionInfoWeakListener(
-                connectionInfoListener
-            )
-            extensionContext.serviceClient.registerDevicePreferencesWeakListener(
-                devicePreferencesConsumer
-            )
-            extensionContext.serviceClient.registerShiftingInfoWeakListener(
-                shiftingInfoConsumer
-            )
-        }
+        extensionContext.serviceClient.registerConnectionInfoWeakListener(
+            connectionInfoListener
+        )
+        extensionContext.serviceClient.registerDevicePreferencesWeakListener(
+            devicePreferencesConsumer
+        )
+        extensionContext.serviceClient.registerShiftingInfoWeakListener(
+            shiftingInfoConsumer
+        )
 
         emitter.setCancellable {
-            startupJob.cancel()
-
             extensionContext.serviceClient.unregisterConnectionInfoWeakListener(
                 connectionInfoListener
             )
@@ -107,9 +102,7 @@ class RearGearSizeDataType(private val extensionContext: Ki2ExtensionContext) :
                 }
             }
 
-        compositionResult.let {
-            emitter.updateView(compositionResult.remoteViews)
-        }
+        emitter.updateView(compositionResult.remoteViews)
     }
 
 }
