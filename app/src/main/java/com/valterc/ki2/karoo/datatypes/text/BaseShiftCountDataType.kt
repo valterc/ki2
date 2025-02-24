@@ -8,16 +8,12 @@ import com.valterc.ki2.karoo.Ki2ExtensionContext
 import com.valterc.ki2.karoo.datatypes.views.TextView
 import com.valterc.ki2.karoo.shifting.ShiftCountHandler
 import io.hammerhead.karooext.extension.DataTypeImpl
-import io.hammerhead.karooext.internal.Emitter
 import io.hammerhead.karooext.internal.ViewEmitter
-import io.hammerhead.karooext.models.DataPoint
-import io.hammerhead.karooext.models.DataType
-import io.hammerhead.karooext.models.StreamState
+import io.hammerhead.karooext.models.ShowCustomStreamState
 import io.hammerhead.karooext.models.UpdateGraphicConfig
 import io.hammerhead.karooext.models.ViewConfig
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalGlanceRemoteViewsApi::class)
@@ -26,23 +22,11 @@ abstract class BaseShiftCountDataType(private val extensionContext: Ki2Extension
 
     private val glance = GlanceRemoteViews()
 
-    override fun startStream(emitter: Emitter<StreamState>) {
-        emitter.onNext(
-            StreamState.Streaming(
-                DataPoint(
-                    dataTypeId,
-                    mapOf(DataType.Field.SINGLE to 1.0),
-                    extension
-                )
-            )
-        )
-    }
-
     override fun startView(context: Context, config: ViewConfig, emitter: ViewEmitter) {
         emitter.onNext(UpdateGraphicConfig(showHeader = true))
+        emitter.onNext(ShowCustomStreamState(message = "", color = null))
 
         val job = CoroutineScope(Dispatchers.IO).launch {
-            delay(2_000)
             emitViewUpdate(context, config, emitter, 0)
             extensionContext.shiftCountHandler.stream().collect {
                 emitViewUpdate(context, config, emitter, getShiftCountValue(it))
