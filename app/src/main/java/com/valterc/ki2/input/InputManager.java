@@ -56,6 +56,7 @@ public class InputManager {
         preferenceToSwitchKeyMap.put("press_double_beep", (switchEvent, converter) -> new KarooActionEvent(KarooAction.VIRTUAL_DOUBLE_BEEP, switchEvent.getRepeat()));
         preferenceToSwitchKeyMap.put("press_bell", (switchEvent, converter) -> new KarooActionEvent(KarooAction.VIRTUAL_BELL, switchEvent.getRepeat()));
         preferenceToSwitchKeyMap.put("press_control_center", (switchEvent, converter) -> new KarooActionEvent(KarooAction.VIRTUAL_CONTROL_CENTER, switchEvent.getRepeat()));
+        preferenceToSwitchKeyMap.put("press_drawer_action", (switchEvent, converter) -> new KarooActionEvent(KarooAction.VIRTUAL_DRAWER_ACTION, switchEvent.getRepeat()));
         preferenceToSwitchKeyMap.put("press_toggle_overlay", (switchEvent, converter) -> new KarooActionEvent(KarooAction.VIRTUAL_TOGGLE_OVERLAY, switchEvent.getRepeat()));
         preferenceToSwitchKeyMap.put("press_hide_overlay", (switchEvent, converter) -> new KarooActionEvent(KarooAction.VIRTUAL_HIDE_OVERLAY, switchEvent.getRepeat()));
         preferenceToSwitchKeyMap.put("press_show_overlay", (switchEvent, converter) -> new KarooActionEvent(KarooAction.VIRTUAL_SHOW_OVERLAY, switchEvent.getRepeat()));
@@ -103,6 +104,13 @@ public class InputManager {
             }
 
             return new KarooActionEvent(KarooAction.VIRTUAL_CONTROL_CENTER, 0);
+        });
+        preferenceToSwitchKeyMap.put("hold_short_single_drawer_action", (switchEvent, converter) -> {
+            if (switchEvent.getCommand() != SwitchCommand.LONG_PRESS_DOWN) {
+                return null;
+            }
+
+            return new KarooActionEvent(KarooAction.VIRTUAL_DRAWER_ACTION, 0);
         });
         preferenceToSwitchKeyMap.put("map_graph_slow_zoom_out", (switchEvent, converter) -> {
             if (switchEvent.getCommand() == SwitchCommand.LONG_PRESS_UP ||

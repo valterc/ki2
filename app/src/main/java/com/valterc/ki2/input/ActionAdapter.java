@@ -54,6 +54,7 @@ public class ActionAdapter {
         this.keyMapping.put(KarooAction.VIRTUAL_ZOOM_IN, karooKeyEvent -> context.getKarooSystem().dispatch(new ZoomPage(true)));
         this.keyMapping.put(KarooAction.VIRTUAL_ZOOM_OUT, karooKeyEvent -> context.getKarooSystem().dispatch(new ZoomPage(false)));
         this.keyMapping.put(KarooAction.VIRTUAL_CONTROL_CENTER, karooKeyEvent -> context.getKarooSystem().dispatch(PerformHardwareAction.ControlCenterComboPress.INSTANCE));
+        this.keyMapping.put(KarooAction.VIRTUAL_DRAWER_ACTION, karooKeyEvent -> context.getKarooSystem().dispatch(PerformHardwareAction.DrawerActionComboPress.INSTANCE));
     }
 
     private void showToast(Ki2ExtensionContext context, int textResId) {
