@@ -21,6 +21,7 @@
         <item>Double Beep</item>
         <item>Bell</item>
         <item>Control Center</item>
+        <item>Drawer</item>
     </string-array>
 
     <string-array name="preference_values_switch_single_press_action">
@@ -45,6 +46,7 @@
         <item>press_double_beep</item>
         <item>press_bell</item>
         <item>press_control_center</item>
+        <item>press_drawer_action</item>
     </string-array>
 
     <string-array name="preference_titles_switch_double_press_action">
@@ -70,6 +72,7 @@
         <item>Double Beep</item>
         <item>Bell</item>
         <item>Control Center</item>
+        <item>Drawer</item>
     </string-array>
 
     <string-array name="preference_values_switch_double_press_action">
@@ -95,6 +98,7 @@
         <item>press_double_beep</item>
         <item>press_bell</item>
         <item>press_control_center</item>
+        <item>press_drawer_action</item>
     </string-array>
 
     <string-array name="preference_titles_switch_hold_action">
@@ -122,6 +126,7 @@
         <item>Double Beep</item>
         <item>Bell</item>
         <item>Control Center</item>
+        <item>Drawer</item>
         <item>Continuous Single Beep</item>
         <item>Continuous Bell</item>
     </string-array>
@@ -151,6 +156,7 @@
         <item>hold_short_single_double_beep</item>
         <item>hold_short_single_bell</item>
         <item>hold_short_single_control_center</item>
+        <item>hold_short_single_drawer_action</item>
         <item>hold_continuous_single_beep</item>
         <item>hold_continuous_bell</item>
     </string-array>

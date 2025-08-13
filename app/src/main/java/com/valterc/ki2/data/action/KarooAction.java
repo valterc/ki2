@@ -27,7 +27,8 @@ public enum KarooAction {
     VIRTUAL_LAP,
     VIRTUAL_ZOOM_OUT,
     VIRTUAL_ZOOM_IN,
-    VIRTUAL_CONTROL_CENTER;
+    VIRTUAL_CONTROL_CENTER,
+    VIRTUAL_DRAWER_ACTION;
 
     private static final KarooAction[] values = KarooAction.values();
 
