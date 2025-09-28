@@ -1,11 +1,9 @@
 package com.valterc.ki2.karoo.overlay
 
 import android.annotation.SuppressLint
-import android.app.ActivityManager
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.app.Service.ACTIVITY_SERVICE
 import android.app.Service.NOTIFICATION_SERVICE
 import android.app.Service.RECEIVER_EXPORTED
 import android.content.BroadcastReceiver
