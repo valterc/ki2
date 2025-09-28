@@ -495,9 +495,7 @@ public class Ki2Service extends Service implements IAntScanListener, IDeviceConn
         @Override
         public void onReceive(final Context context, final Intent intent) {
             Timber.d("Received reconnect devices broadcast");
-            serviceHandler.postRetriableAction(() -> {
-                antConnectionManager.restartClosedConnections(Ki2Service.this);
-            });
+            serviceHandler.postRetriableAction(() -> antConnectionManager.restartClosedConnections(Ki2Service.this));
         }
     };
 
@@ -576,7 +574,7 @@ public class Ki2Service extends Service implements IAntScanListener, IDeviceConn
         super.onDestroy();
     }
 
-    private void processScan() throws Exception {
+    private void processScan() {
         if (callbackListScan.getRegisteredCallbackCount() != 0) {
             if (antManager.isAntServiceReady()) {
                 antScanner.startScan(ConfigurationStore.getScanChannelConfiguration(Ki2Service.this));
