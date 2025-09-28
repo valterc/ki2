@@ -29,7 +29,7 @@ fun TextView(
     Box(
         modifier = GlanceModifier
             .fillMaxSize()
-            .padding(start = 5.dp, top = 0.dp, end = 5.dp, bottom = 5.dp),
+            .padding(start = 5.dp, top = 0.dp, end = 5.dp, bottom = 0.dp),
         contentAlignment = Alignment(
             vertical = Alignment.Vertical.CenterVertically,
             horizontal = when (dataAlignment) {
