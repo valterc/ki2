@@ -63,26 +63,48 @@ class AudioManager(private val context: Ki2ExtensionContext) {
             else -> max(times(intensity.durationMultiplierK24).toInt(), 50)
         }
 
-    fun playSingleBeep() {
-        context.karooSystem.dispatch(
-            PlayBeepPattern(
-                listOf(
-                    PlayBeepPattern.Tone(5000.f, 350.d)
+    fun playSingleBeep(adjustVolume: Boolean = true) {
+        if (adjustVolume){
+            context.karooSystem.dispatch(
+                PlayBeepPattern(
+                    listOf(
+                        PlayBeepPattern.Tone(5000.f, 350.d)
+                    )
                 )
             )
-        )
+        } else {
+            context.karooSystem.dispatch(
+                PlayBeepPattern(
+                    listOf(
+                        PlayBeepPattern.Tone(5000, 350)
+                    )
+                )
+            )
+        }
     }
 
-    fun playDoubleBeep() {
-        context.karooSystem.dispatch(
-            PlayBeepPattern(
-                listOf(
-                    PlayBeepPattern.Tone(5000.f, 350.d),
-                    PlayBeepPattern.Tone(null, 150.d),
-                    PlayBeepPattern.Tone(5000.f, 350.d)
+    fun playDoubleBeep(adjustVolume: Boolean = true) {
+        if (adjustVolume) {
+            context.karooSystem.dispatch(
+                PlayBeepPattern(
+                    listOf(
+                        PlayBeepPattern.Tone(5000.f, 350.d),
+                        PlayBeepPattern.Tone(null, 150.d),
+                        PlayBeepPattern.Tone(5000.f, 350.d)
+                    )
                 )
             )
-        )
+        } else {
+            context.karooSystem.dispatch(
+                PlayBeepPattern(
+                    listOf(
+                        PlayBeepPattern.Tone(5000, 350),
+                        PlayBeepPattern.Tone(null, 150),
+                        PlayBeepPattern.Tone(5000, 350)
+                    )
+                )
+            )
+        }
     }
 
     private fun playKarooGeneric() {
@@ -101,18 +123,32 @@ class AudioManager(private val context: Ki2ExtensionContext) {
         )
     }
 
-    fun playKarooBell() {
-        context.karooSystem.dispatch(
-            PlayBeepPattern(
-                listOf(
-                    PlayBeepPattern.Tone(3750.f, 50.d),
-                    PlayBeepPattern.Tone(5800.f, 200.d),
-                    PlayBeepPattern.Tone(null, 50.d),
-                    PlayBeepPattern.Tone(3750.f, 50.d),
-                    PlayBeepPattern.Tone(5800.f, 300.d)
+    fun playKarooBell(adjustVolume: Boolean = true) {
+        if (adjustVolume){
+            context.karooSystem.dispatch(
+                PlayBeepPattern(
+                    listOf(
+                        PlayBeepPattern.Tone(2349.f, 31.d),
+                        PlayBeepPattern.Tone(3520.f, 125.d),
+                        PlayBeepPattern.Tone(null, 31.d),
+                        PlayBeepPattern.Tone(2349.f, 31.d),
+                        PlayBeepPattern.Tone(3520.f, 406.d)
+                    )
                 )
             )
-        )
+        } else {
+            context.karooSystem.dispatch(
+                PlayBeepPattern(
+                    listOf(
+                        PlayBeepPattern.Tone(2349, 31),
+                        PlayBeepPattern.Tone(3520, 125),
+                        PlayBeepPattern.Tone(null, 31),
+                        PlayBeepPattern.Tone(2349, 31),
+                        PlayBeepPattern.Tone(3520, 406)
+                    )
+                )
+            )
+        }
     }
 
     fun playKarooDeviceWarning() {

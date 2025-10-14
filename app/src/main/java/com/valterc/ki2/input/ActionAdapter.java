@@ -47,9 +47,9 @@ public class ActionAdapter {
         this.keyMapping.put(KarooAction.VIRTUAL_TOGGLE_AUDIO_ALERTS, karooKeyEvent -> toggleAudioAlerts(context));
         this.keyMapping.put(KarooAction.VIRTUAL_DISABLE_AUDIO_ALERTS, karooKeyEvent -> disableAudioAlerts(context));
         this.keyMapping.put(KarooAction.VIRTUAL_ENABLE_AUDIO_ALERTS, karooKeyEvent -> enableAudioAlerts(context));
-        this.keyMapping.put(KarooAction.VIRTUAL_SINGLE_BEEP, karooKeyEvent -> context.getAudioManager().playSingleBeep());
-        this.keyMapping.put(KarooAction.VIRTUAL_DOUBLE_BEEP, karooKeyEvent -> context.getAudioManager().playDoubleBeep());
-        this.keyMapping.put(KarooAction.VIRTUAL_BELL, karooKeyEvent -> context.getAudioManager().playKarooBell());
+        this.keyMapping.put(KarooAction.VIRTUAL_SINGLE_BEEP, karooKeyEvent -> context.getAudioManager().playSingleBeep(false));
+        this.keyMapping.put(KarooAction.VIRTUAL_DOUBLE_BEEP, karooKeyEvent -> context.getAudioManager().playDoubleBeep(false));
+        this.keyMapping.put(KarooAction.VIRTUAL_BELL, karooKeyEvent -> context.getAudioManager().playKarooBell(false));
         this.keyMapping.put(KarooAction.VIRTUAL_LAP, karooKeyEvent -> context.getKarooSystem().dispatch(MarkLap.INSTANCE));
         this.keyMapping.put(KarooAction.VIRTUAL_ZOOM_IN, karooKeyEvent -> context.getKarooSystem().dispatch(new ZoomPage(true)));
         this.keyMapping.put(KarooAction.VIRTUAL_ZOOM_OUT, karooKeyEvent -> context.getKarooSystem().dispatch(new ZoomPage(false)));
