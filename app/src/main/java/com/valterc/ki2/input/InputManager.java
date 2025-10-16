@@ -54,7 +54,8 @@ public class InputManager {
         preferenceToSwitchKeyMap.put("press_enable_audio_alerts", (switchEvent, converter) -> new KarooActionEvent(KarooAction.VIRTUAL_ENABLE_AUDIO_ALERTS, switchEvent.getRepeat()));
         preferenceToSwitchKeyMap.put("press_single_beep", (switchEvent, converter) -> new KarooActionEvent(KarooAction.VIRTUAL_SINGLE_BEEP, switchEvent.getRepeat()));
         preferenceToSwitchKeyMap.put("press_double_beep", (switchEvent, converter) -> new KarooActionEvent(KarooAction.VIRTUAL_DOUBLE_BEEP, switchEvent.getRepeat()));
-        preferenceToSwitchKeyMap.put("press_bell", (switchEvent, converter) -> new KarooActionEvent(KarooAction.VIRTUAL_BELL, switchEvent.getRepeat()));
+        preferenceToSwitchKeyMap.put("press_bell_old", (switchEvent, converter) -> new KarooActionEvent(KarooAction.VIRTUAL_BELL_OLD, switchEvent.getRepeat()));
+        preferenceToSwitchKeyMap.put("press_bell_new", (switchEvent, converter) -> new KarooActionEvent(KarooAction.VIRTUAL_BELL_NEW, switchEvent.getRepeat()));
         preferenceToSwitchKeyMap.put("press_control_center", (switchEvent, converter) -> new KarooActionEvent(KarooAction.VIRTUAL_CONTROL_CENTER, switchEvent.getRepeat()));
         preferenceToSwitchKeyMap.put("press_drawer_action", (switchEvent, converter) -> new KarooActionEvent(KarooAction.VIRTUAL_DRAWER_ACTION, switchEvent.getRepeat()));
         preferenceToSwitchKeyMap.put("press_toggle_overlay", (switchEvent, converter) -> new KarooActionEvent(KarooAction.VIRTUAL_TOGGLE_OVERLAY, switchEvent.getRepeat()));
@@ -200,17 +201,29 @@ public class InputManager {
             }
             return new KarooActionEvent(KarooAction.VIRTUAL_SINGLE_BEEP, switchEvent.getRepeat());
         });
-        preferenceToSwitchKeyMap.put("hold_short_single_bell", (switchEvent, converter) -> {
+        preferenceToSwitchKeyMap.put("hold_short_single_bell_old", (switchEvent, converter) -> {
             if (switchEvent.getCommand() != SwitchCommand.LONG_PRESS_DOWN) {
                 return null;
             }
-            return new KarooActionEvent(KarooAction.VIRTUAL_BELL, switchEvent.getRepeat());
+            return new KarooActionEvent(KarooAction.VIRTUAL_BELL_OLD, switchEvent.getRepeat());
         });
-        preferenceToSwitchKeyMap.put("hold_continuous_bell", (switchEvent, converter) -> {
+        preferenceToSwitchKeyMap.put("hold_short_single_bell_new", (switchEvent, converter) -> {
+            if (switchEvent.getCommand() != SwitchCommand.LONG_PRESS_DOWN) {
+                return null;
+            }
+            return new KarooActionEvent(KarooAction.VIRTUAL_BELL_NEW, switchEvent.getRepeat());
+        });
+        preferenceToSwitchKeyMap.put("hold_continuous_bell_old", (switchEvent, converter) -> {
             if (switchEvent.getCommand() == SwitchCommand.LONG_PRESS_UP) {
                 return null;
             }
-            return new KarooActionEvent(KarooAction.VIRTUAL_BELL, switchEvent.getRepeat());
+            return new KarooActionEvent(KarooAction.VIRTUAL_BELL_OLD, switchEvent.getRepeat());
+        });
+        preferenceToSwitchKeyMap.put("hold_continuous_bell_new", (switchEvent, converter) -> {
+            if (switchEvent.getCommand() == SwitchCommand.LONG_PRESS_UP) {
+                return null;
+            }
+            return new KarooActionEvent(KarooAction.VIRTUAL_BELL_NEW, switchEvent.getRepeat());
         });
         preferenceToSwitchKeyMap.put("hold_short_single_toggle_overlay", (switchEvent, converter) -> {
             if (switchEvent.getCommand() != SwitchCommand.LONG_PRESS_DOWN) {
