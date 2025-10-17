@@ -87,6 +87,7 @@ public class DeviceDataFrontend {
     }
 
     public void setService(IKi2Service service) {
+        Timber.i("Setting service reference to: %s", service != null ? "Ki2Service" : "null");
         this.service = service;
 
         registrationConnectionInfo.setUnregistered();
@@ -148,6 +149,7 @@ public class DeviceDataFrontend {
             return;
         }
 
+        Timber.i("Registering for connection events");
         registrationConnectionInfo.register();
     }
 
@@ -203,6 +205,7 @@ public class DeviceDataFrontend {
             return;
         }
 
+        Timber.i("Registering for battery events");
         registrationBatteryInfo.register();
     }
 
@@ -255,6 +258,7 @@ public class DeviceDataFrontend {
             return;
         }
 
+        Timber.i("Registering for shifting events");
         registrationShiftingInfo.register();
     }
 
