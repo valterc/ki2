@@ -55,7 +55,7 @@ public class AudioAlertPreference extends SummaryAndValueListPreference {
 
         try {
             if (service != null) {
-                service.sendMessage(new AudioAlertMessage(value));
+                service.sendMessage(new AudioAlertMessage(value, true));
             }
         } catch (Exception e) {
             Timber.w(e, "Unable to send message");

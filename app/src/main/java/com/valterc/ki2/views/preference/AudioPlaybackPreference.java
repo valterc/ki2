@@ -55,7 +55,7 @@ public class AudioPlaybackPreference extends SummaryAndValueListPreference {
 
         try {
             if (service != null) {
-                service.sendMessage(new AudioAlertMessage("custom_single_beep"));
+                service.sendMessage(new AudioAlertMessage("custom_single_beep", true));
             }
         } catch (Exception e) {
             Timber.w(e, "Unable to send message");

@@ -57,17 +57,25 @@ public class SwitchListPreference extends ListPreference {
         try {
             if (service != null) {
                 switch (value) {
-                    case "press_single_beep": service.sendMessage(new AudioAlertMessage("custom_single_beep", false));
-                    case "press_double_beep": service.sendMessage(new AudioAlertMessage("custom_double_beep", false));
-                    case "press_bell_old": service.sendMessage(new AudioAlertMessage("karoo_bell_old", false));
-                    case "press_bell_new": service.sendMessage(new AudioAlertMessage("karoo_bell_new", false));
-                    case "hold_short_single_single_beep": service.sendMessage(new AudioAlertMessage("custom_single_beep", false));
-                    case "hold_short_single_double_beep": service.sendMessage(new AudioAlertMessage("custom_double_beep", false));
-                    case "hold_short_single_bell_old": service.sendMessage(new AudioAlertMessage("karoo_bell_old", false));
-                    case "hold_short_single_bell_new": service.sendMessage(new AudioAlertMessage("karoo_bell_new", false));
-                    case "hold_continuous_single_beep": service.sendMessage(new AudioAlertMessage("custom_single_beep", false));
-                    case "hold_continuous_bell_old": service.sendMessage(new AudioAlertMessage("karoo_bell_old", false));
-                    case "hold_continuous_bell_new": service.sendMessage(new AudioAlertMessage("karoo_bell_new", false));
+                    case "press_single_beep":
+                    case "hold_short_single_single_beep":
+                    case "hold_continuous_single_beep":
+                        service.sendMessage(new AudioAlertMessage("custom_single_beep", false));
+                        break;
+                    case "press_double_beep":
+                    case "hold_short_single_double_beep":
+                        service.sendMessage(new AudioAlertMessage("custom_double_beep", false));
+                        break;
+                    case "press_bell_old":
+                    case "hold_short_single_bell_old":
+                    case "hold_continuous_bell_old":
+                        service.sendMessage(new AudioAlertMessage("karoo_bell_old", false));
+                        break;
+                    case "press_bell_new" :
+                    case "hold_short_single_bell_new":
+                    case "hold_continuous_bell_new":
+                        service.sendMessage(new AudioAlertMessage("karoo_bell_new", false));
+                        break;
                 }
             }
         } catch (Exception e) {

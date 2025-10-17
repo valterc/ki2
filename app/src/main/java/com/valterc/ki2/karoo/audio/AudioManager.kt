@@ -21,7 +21,7 @@ class AudioManager(private val context: Ki2ExtensionContext) {
     private var intensity: AudioIntensity = AudioIntensity.Normal
 
     private val playAudioConsumer = Consumer<AudioAlertMessage> {
-        playAudio(it.name)
+        playAudio(it.name, it.adjustIntensity)
     }
 
     private val preferencesConsumer = Consumer<PreferencesView> { preferences ->
@@ -40,13 +40,13 @@ class AudioManager(private val context: Ki2ExtensionContext) {
         context.serviceClient.registerPreferencesWeakListener(preferencesConsumer)
     }
 
-    private fun playAudio(audio: String?) {
+    private fun playAudio(audio: String?, adjustIntensity: Boolean = true) {
         when (audio) {
-            "karoo_generic" -> playKarooGeneric()
-            "karoo_bell_old" -> playKarooBellOld()
-            "karoo_bell_new" -> playKarooBellNew()
-            "custom_single_beep" -> playSingleBeep()
-            "custom_double_beep" -> playDoubleBeep()
+            "karoo_generic" -> playKarooGeneric(adjustIntensity)
+            "karoo_bell_old" -> playKarooBellOld(adjustIntensity)
+            "karoo_bell_new" -> playKarooBellNew(adjustIntensity)
+            "custom_single_beep" -> playSingleBeep(adjustIntensity)
+            "custom_double_beep" -> playDoubleBeep(adjustIntensity)
             "disabled" -> return
             else -> Timber.i("Unknown audio requested '%s'", audio)
         }
@@ -108,20 +108,36 @@ class AudioManager(private val context: Ki2ExtensionContext) {
         }
     }
 
-    private fun playKarooGeneric() {
-        context.karooSystem.dispatch(
-            PlayBeepPattern(
-                listOf(
-                    PlayBeepPattern.Tone(5000.f, 350.d),
-                    PlayBeepPattern.Tone(null, 100.d),
-                    PlayBeepPattern.Tone(4250.f, 100.d),
-                    PlayBeepPattern.Tone(null, 50.d),
-                    PlayBeepPattern.Tone(4250.f, 100.d),
-                    PlayBeepPattern.Tone(null, 50.d),
-                    PlayBeepPattern.Tone(4250.f, 100.d)
+    private fun playKarooGeneric(adjustIntensity: Boolean = true) {
+        if (adjustIntensity) {
+            context.karooSystem.dispatch(
+                PlayBeepPattern(
+                    listOf(
+                        PlayBeepPattern.Tone(5000.f, 350.d),
+                        PlayBeepPattern.Tone(null, 100.d),
+                        PlayBeepPattern.Tone(4250.f, 100.d),
+                        PlayBeepPattern.Tone(null, 50.d),
+                        PlayBeepPattern.Tone(4250.f, 100.d),
+                        PlayBeepPattern.Tone(null, 50.d),
+                        PlayBeepPattern.Tone(4250.f, 100.d)
+                    )
                 )
             )
-        )
+        } else {
+            context.karooSystem.dispatch(
+                PlayBeepPattern(
+                    listOf(
+                        PlayBeepPattern.Tone(5000, 350),
+                        PlayBeepPattern.Tone(null, 100),
+                        PlayBeepPattern.Tone(4250, 100),
+                        PlayBeepPattern.Tone(null, 50),
+                        PlayBeepPattern.Tone(4250, 100),
+                        PlayBeepPattern.Tone(null, 50),
+                        PlayBeepPattern.Tone(4250, 100)
+                    )
+                )
+            )
+        }
     }
 
     fun playKarooBellOld(adjustIntensity: Boolean = true) {
