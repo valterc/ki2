@@ -19,7 +19,8 @@
         <item>Enable Shifting Audio Alerts</item>
         <item>Single Beep</item>
         <item>Double Beep</item>
-        <item>Bell</item>
+        <item>Bell (old)</item>
+        <item>Bell (new)</item>
         <item>Control Center</item>
         <item>Drawer</item>
     </string-array>
@@ -44,7 +45,8 @@
         <item>press_enable_audio_alerts</item>
         <item>press_single_beep</item>
         <item>press_double_beep</item>
-        <item>press_bell</item>
+        <item>press_bell_old</item>
+        <item>press_bell_new</item>
         <item>press_control_center</item>
         <item>press_drawer_action</item>
     </string-array>
@@ -70,7 +72,8 @@
         <item>Enable Shifting Audio Alerts</item>
         <item>Single Beep</item>
         <item>Double Beep</item>
-        <item>Bell</item>
+        <item>Bell (old)</item>
+        <item>Bell (new)</item>
         <item>Control Center</item>
         <item>Drawer</item>
     </string-array>
@@ -96,7 +99,8 @@
         <item>press_enable_audio_alerts</item>
         <item>press_single_beep</item>
         <item>press_double_beep</item>
-        <item>press_bell</item>
+        <item>press_bell_old</item>
+        <item>press_bell_new</item>
         <item>press_control_center</item>
         <item>press_drawer_action</item>
     </string-array>
@@ -124,11 +128,13 @@
         <item>Enable Shifting Audio Alerts</item>
         <item>Single Beep</item>
         <item>Double Beep</item>
-        <item>Bell</item>
+        <item>Bell (old)</item>
+        <item>Bell (new)</item>
         <item>Control Center</item>
         <item>Drawer</item>
         <item>Continuous Single Beep</item>
-        <item>Continuous Bell</item>
+        <item>Continuous Bell (old)</item>
+        <item>Continuous Bell (new)</item>
     </string-array>
 
     <string-array name="preference_values_switch_hold_action">
@@ -154,11 +160,13 @@
         <item>hold_short_single_enable_audio_alerts</item>
         <item>hold_short_single_single_beep</item>
         <item>hold_short_single_double_beep</item>
-        <item>hold_short_single_bell</item>
+        <item>hold_short_single_bell_old</item>
+        <item>hold_short_single_bell_new</item>
         <item>hold_short_single_control_center</item>
         <item>hold_short_single_drawer_action</item>
         <item>hold_continuous_single_beep</item>
-        <item>hold_continuous_bell</item>
+        <item>hold_continuous_bell_old</item>
+        <item>hold_continuous_bell_new</item>
     </string-array>
 
     <string-array name="preference_titles_battery_level_low">
@@ -225,18 +233,20 @@
 
     <string-array name="preference_titles_audio_alert_type">
         <item>Disabled</item>
-        <item>Karoo - Generic</item>
-        <item>Karoo - Bell</item>
         <item>Single Beep</item>
         <item>Double Beep</item>
+        <item>Karoo - Generic</item>
+        <item>Karoo - Bell (old)</item>
+        <item>Karoo - Bell (new)</item>
     </string-array>
 
     <string-array name="preference_values_audio_alert_type">
         <item>@string/value_preference_audio_alert_disabled</item>
-        <item>karoo_generic</item>
-        <item>karoo_bell</item>
         <item>custom_single_beep</item>
         <item>custom_double_beep</item>
+        <item>karoo_generic</item>
+        <item>karoo_bell_old</item>
+        <item>karoo_bell_new</item>
     </string-array>
 
     <string-array name="preference_titles_overlay_triggers">

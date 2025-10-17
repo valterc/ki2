@@ -8,6 +8,7 @@ import android.util.AttributeSet;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.preference.ListPreference;
 
 import com.valterc.ki2.data.message.AudioAlertMessage;
 import com.valterc.ki2.services.IKi2Service;
@@ -16,7 +17,7 @@ import com.valterc.ki2.services.Ki2Service;
 import timber.log.Timber;
 
 @SuppressWarnings("unused")
-public class AudioPlaybackPreference extends SummaryAndValueListPreference {
+public class SwitchListPreference extends ListPreference {
 
     private final ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
@@ -33,19 +34,19 @@ public class AudioPlaybackPreference extends SummaryAndValueListPreference {
     private IKi2Service service;
     private boolean serviceBound;
 
-    public AudioPlaybackPreference(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public SwitchListPreference(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
-    public AudioPlaybackPreference(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public SwitchListPreference(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
-    public AudioPlaybackPreference(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public SwitchListPreference(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public AudioPlaybackPreference(@NonNull Context context) {
+    public SwitchListPreference(@NonNull Context context) {
         super(context);
     }
 
@@ -55,7 +56,27 @@ public class AudioPlaybackPreference extends SummaryAndValueListPreference {
 
         try {
             if (service != null) {
-                service.sendMessage(new AudioAlertMessage("custom_single_beep", true));
+                switch (value) {
+                    case "press_single_beep":
+                    case "hold_short_single_single_beep":
+                    case "hold_continuous_single_beep":
+                        service.sendMessage(new AudioAlertMessage("custom_single_beep", false));
+                        break;
+                    case "press_double_beep":
+                    case "hold_short_single_double_beep":
+                        service.sendMessage(new AudioAlertMessage("custom_double_beep", false));
+                        break;
+                    case "press_bell_old":
+                    case "hold_short_single_bell_old":
+                    case "hold_continuous_bell_old":
+                        service.sendMessage(new AudioAlertMessage("karoo_bell_old", false));
+                        break;
+                    case "press_bell_new" :
+                    case "hold_short_single_bell_new":
+                    case "hold_continuous_bell_new":
+                        service.sendMessage(new AudioAlertMessage("karoo_bell_new", false));
+                        break;
+                }
             }
         } catch (Exception e) {
             Timber.w(e, "Unable to send message");
