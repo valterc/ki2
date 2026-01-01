@@ -12,7 +12,7 @@
         typeId="DATATYPE_SHIFTING_BATTERY_PERCENTAGE" />
 
     <DataType
-        description="Shifting mode."
+        description="Shifting mode. Pressing the text will change the shifting mode."
         displayName="Shifting Mode"
         graphical="true"
         icon="@drawable/ic_hh_gear"

@@ -5,6 +5,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.glance.GlanceModifier
+import androidx.glance.action.Action
+import androidx.glance.action.clickable
 import androidx.glance.appwidget.background
 import androidx.glance.color.ColorProvider
 import androidx.glance.layout.Alignment
@@ -24,12 +26,19 @@ import io.hammerhead.karooext.models.ViewConfig
 fun TextView(
     text: String? = "",
     dataAlignment: ViewConfig.Alignment = ViewConfig.Alignment.RIGHT,
-    fontSize: Int = 50
+    fontSize: Int = 50,
+    action: Action? = null,
 ) {
+    var boxModifier = GlanceModifier
+        .fillMaxSize()
+        .padding(start = 5.dp, top = 0.dp, end = 5.dp, bottom = 0.dp)
+
+    if (action != null) {
+        boxModifier = boxModifier.clickable(action)
+    }
+
     Box(
-        modifier = GlanceModifier
-            .fillMaxSize()
-            .padding(start = 5.dp, top = 0.dp, end = 5.dp, bottom = 0.dp),
+        modifier = boxModifier,
         contentAlignment = Alignment(
             vertical = Alignment.Vertical.CenterVertically,
             horizontal = when (dataAlignment) {
