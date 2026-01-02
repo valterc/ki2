@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.compose.ui.unit.DpSize
 import androidx.glance.appwidget.ExperimentalGlanceRemoteViewsApi
 import androidx.glance.appwidget.GlanceRemoteViews
+import androidx.glance.appwidget.action.actionSendBroadcast
 import com.valterc.ki2.data.connection.ConnectionInfo
 import com.valterc.ki2.data.device.DeviceId
 import com.valterc.ki2.data.shifting.ShiftingInfo
@@ -11,6 +12,7 @@ import com.valterc.ki2.karoo.Ki2ExtensionContext
 import com.valterc.ki2.karoo.datatypes.views.NotAvailable
 import com.valterc.ki2.karoo.datatypes.views.TextView
 import com.valterc.ki2.karoo.datatypes.views.Waiting
+import com.valterc.ki2.receivers.ChangeShiftModeReceiver
 import io.hammerhead.karooext.extension.DataTypeImpl
 import io.hammerhead.karooext.internal.ViewEmitter
 import io.hammerhead.karooext.models.ShowCustomStreamState
@@ -26,6 +28,7 @@ class ShiftingModeDataType(private val extensionContext: Ki2ExtensionContext) :
     DataTypeImpl(extensionContext.extension, "DATATYPE_SHIFTING_MODE") {
 
     private val glance = GlanceRemoteViews()
+    private var deviceId: DeviceId? = null
     private var connectionInfo: ConnectionInfo? = null
     private var shiftingInfo: ShiftingInfo? = null
 
@@ -34,7 +37,8 @@ class ShiftingModeDataType(private val extensionContext: Ki2ExtensionContext) :
         emitter.onNext(ShowCustomStreamState(message = "", color = null))
 
         val connectionInfoListener =
-            BiConsumer<DeviceId, ConnectionInfo> { _: DeviceId, connectionInfo: ConnectionInfo ->
+            BiConsumer<DeviceId, ConnectionInfo> { deviceId: DeviceId, connectionInfo: ConnectionInfo ->
+                this.deviceId = deviceId
                 this.connectionInfo = connectionInfo
                 CoroutineScope(Dispatchers.IO).launch {
                     emitViewUpdate(context, config, emitter)
@@ -68,13 +72,16 @@ class ShiftingModeDataType(private val extensionContext: Ki2ExtensionContext) :
 
     private suspend fun emitViewUpdate(context: Context, config: ViewConfig, emitter: ViewEmitter) {
         val shiftingInfo = shiftingInfo
+        val deviceId = deviceId
+
         val compositionResult =
-            if (connectionInfo?.isConnected == true && shiftingInfo != null) {
+            if (deviceId != null && connectionInfo?.isConnected == true && shiftingInfo != null) {
                 glance.compose(context, DpSize.Unspecified) {
                     TextView(
                         shiftingInfo.shiftingMode.mode,
                         config.alignment,
-                        config.textSize
+                        config.textSize,
+                        actionSendBroadcast(ChangeShiftModeReceiver.getIntent(context, deviceId))
                     )
                 }
             } else if (connectionInfo?.isClosed == true) {

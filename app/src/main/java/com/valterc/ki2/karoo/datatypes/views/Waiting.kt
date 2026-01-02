@@ -28,7 +28,7 @@ fun Waiting(
     Box(
         modifier = GlanceModifier
             .fillMaxSize()
-            .padding(5.dp),
+            .padding(5.dp, 0.dp),
         contentAlignment = Alignment(
             vertical = Alignment.Vertical.CenterVertically,
             horizontal = when (dataAlignment) {
