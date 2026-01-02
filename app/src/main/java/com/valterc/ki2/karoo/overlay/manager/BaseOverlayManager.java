@@ -282,5 +282,4 @@ public abstract class BaseOverlayManager {
             handler.post(() -> parentViewGroup.setVisibility(View.VISIBLE));
         });
     }
-
 }
