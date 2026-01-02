@@ -494,7 +494,7 @@ public class Ki2Service extends Service implements IAntScanListener, IDeviceConn
     private final BroadcastReceiver receiverReconnectDevices = new BroadcastReceiver() {
         @Override
         public void onReceive(final Context context, final Intent intent) {
-            Timber.d("Received reconnect devices broadcast");
+            Timber.i("Received reconnect devices broadcast");
             serviceHandler.postRetriableAction(() -> antConnectionManager.restartClosedConnections(Ki2Service.this));
         }
     };
@@ -502,7 +502,7 @@ public class Ki2Service extends Service implements IAntScanListener, IDeviceConn
     private final BroadcastReceiver receiverInRide = new BroadcastReceiver() {
         @Override
         public void onReceive(final Context context, final Intent intent) {
-            Timber.d("Received In Ride broadcast");
+            Timber.i("Received In Ride broadcast");
             serviceHandler.postRetriableAction(() -> onMessage(new RideStatusMessage(RideStatus.ONGOING)));
         }
     };
@@ -551,6 +551,7 @@ public class Ki2Service extends Service implements IAntScanListener, IDeviceConn
 
     @Override
     public void onDestroy() {
+        Timber.i("Service destroyed");
         antConnectionManager.disconnectAll();
 
         antManager.dispose();

@@ -48,6 +48,7 @@ public class ServiceClient {
     private final ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder binder) {
+            Timber.i("[%s] Service connected", name.getShortClassName());
             service = IKi2Service.Stub.asInterface(binder);
 
             registrationMessage.setUnregistered();
@@ -64,6 +65,7 @@ public class ServiceClient {
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
+            Timber.w("[%s] Service disconnected", name.getShortClassName());
             service = null;
 
             registrationMessage.setUnregistered();
@@ -86,6 +88,7 @@ public class ServiceClient {
 
         @Override
         public void onBindingDied(ComponentName name) {
+            Timber.w("[%s] Service bind died", name.getShortClassName());
             service = null;
 
             registrationMessage.setUnregistered();
@@ -162,7 +165,8 @@ public class ServiceClient {
     }
 
     private void attemptBindToService() {
-        boolean result = context.bindService(Ki2Service.getIntent(), serviceConnection, Context.BIND_AUTO_CREATE);
+        boolean result = context.bindService(Ki2Service.getIntent(), serviceConnection, Context.BIND_AUTO_CREATE | Context.BIND_IMPORTANT);
+        Timber.i("Service bind result = %s", result);
         if (!result) {
             handler.postDelayed(this::attemptBindToService, (int) (TIME_MS_ATTEMPT_BIND * (1 + 2 * Math.random())));
         }

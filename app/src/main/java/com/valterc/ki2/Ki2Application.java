@@ -146,8 +146,8 @@ public class Ki2Application extends Application {
 
         antRecorderManager = new AntRecorderManager(this);
         registerActivityLifecycleCallbacks(activityLifecycleCallbacks);
-        ki2ServiceBound = bindService(Ki2Service.getIntent(), ki2ServiceConnection, BIND_AUTO_CREATE);
-        bindService(Ki2ExtensionService.Companion.getIntent(), extensionServiceConnection, BIND_AUTO_CREATE);
+        ki2ServiceBound = bindService(Ki2Service.getIntent(), ki2ServiceConnection, BIND_AUTO_CREATE | BIND_IMPORTANT);
+        bindService(Ki2ExtensionService.Companion.getIntent(), extensionServiceConnection, BIND_AUTO_CREATE | BIND_IMPORTANT);
     }
 
     @Override
