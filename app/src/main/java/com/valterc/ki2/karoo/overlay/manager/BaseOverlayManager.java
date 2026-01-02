@@ -276,4 +276,11 @@ public abstract class BaseOverlayManager {
         }
     }
 
+    protected void refreshOverlay() {
+        handler.post(() -> {
+            parentViewGroup.setVisibility(View.INVISIBLE);
+            handler.post(() -> parentViewGroup.setVisibility(View.VISIBLE));
+        });
+    }
+
 }

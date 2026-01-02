@@ -29,4 +29,9 @@ public class OverlayManager {
         primaryOverlayManager.dispose();
         secondaryOverlayManager.dispose();
     }
+
+    public void refreshOverlays() {
+        primaryOverlayManager.refreshOverlay();
+        secondaryOverlayManager.refreshOverlay();
+    }
 }

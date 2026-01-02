@@ -62,6 +62,13 @@ class OverlayWindowHandler(
         }
     }
 
+    private val receiverScreenOn: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            Timber.d("Received Screen On")
+            overlayManager?.refreshOverlays()
+        }
+    }
+
     init {
         extensionContext.serviceClient.registerPreferencesWeakListener(preferencesListener)
         extensionContext.karooSystem.addConsumer { rideState: RideState ->
@@ -80,6 +87,12 @@ class OverlayWindowHandler(
         service.registerReceiver(
             receiverRideAppClosed,
             IntentFilter("io.hammerhead.hx.intent.action.RIDE_STOP"),
+            RECEIVER_EXPORTED
+        )
+
+        service.registerReceiver(
+            receiverScreenOn,
+            IntentFilter(Intent.ACTION_SCREEN_ON),
             RECEIVER_EXPORTED
         )
     }
