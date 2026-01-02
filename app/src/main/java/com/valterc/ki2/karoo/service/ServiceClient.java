@@ -48,7 +48,7 @@ public class ServiceClient {
     private final ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder binder) {
-            Timber.i("Service connected");
+            Timber.i("[%s] Service connected", name.getShortClassName());
             service = IKi2Service.Stub.asInterface(binder);
 
             registrationMessage.setUnregistered();
@@ -65,7 +65,7 @@ public class ServiceClient {
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-            Timber.w("[%s] Service disconnected", name);
+            Timber.w("[%s] Service disconnected", name.getShortClassName());
             service = null;
 
             registrationMessage.setUnregistered();
@@ -88,7 +88,7 @@ public class ServiceClient {
 
         @Override
         public void onBindingDied(ComponentName name) {
-            Timber.w("[%s] Service bind died", name);
+            Timber.w("[%s] Service bind died", name.getShortClassName());
             service = null;
 
             registrationMessage.setUnregistered();
