@@ -23,6 +23,7 @@ import com.valterc.ki2.ant.connection.IDeviceConnectionListener;
 import com.valterc.ki2.ant.scanner.AntScanner;
 import com.valterc.ki2.ant.scanner.IAntScanListener;
 import com.valterc.ki2.data.action.KarooActionEvent;
+import com.valterc.ki2.data.action.Ki2ActionEvent;
 import com.valterc.ki2.data.command.CommandType;
 import com.valterc.ki2.data.configuration.ConfigurationStore;
 import com.valterc.ki2.data.connection.ConnectionDataManager;
@@ -46,6 +47,8 @@ import com.valterc.ki2.data.ride.RideStatus;
 import com.valterc.ki2.data.shifting.ShiftingInfo;
 import com.valterc.ki2.data.switches.SwitchEvent;
 import com.valterc.ki2.data.update.ReleaseInfo;
+import com.valterc.ki2.external.ExternalActionManager;
+import com.valterc.ki2.external.ExternalActionTarget;
 import com.valterc.ki2.input.InputManager;
 import com.valterc.ki2.services.callbacks.IActionCallback;
 import com.valterc.ki2.services.callbacks.IBatteryCallback;
@@ -507,6 +510,15 @@ public class Ki2Service extends Service implements IAntScanListener, IDeviceConn
         }
     };
 
+    private final BroadcastReceiver receiverPackageUpdates = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (externalActionManager != null) {
+                externalActionManager.refreshProviders();
+            }
+        }
+    };
+
     private MessageManager messageManager;
     private AntManager antManager;
     private AntScanner antScanner;
@@ -516,6 +528,7 @@ public class Ki2Service extends Service implements IAntScanListener, IDeviceConn
     private ConnectionsDataManager connectionsDataManager;
     private InputManager inputManager;
     private BackgroundUpdateChecker backgroundUpdateChecker;
+    private ExternalActionManager externalActionManager;
     private PreferencesStore preferencesStore;
     private DevicePreferencesStore devicePreferencesStore;
 
@@ -536,6 +549,8 @@ public class Ki2Service extends Service implements IAntScanListener, IDeviceConn
         deviceStore = new DeviceStore(this);
         connectionsDataManager = new ConnectionsDataManager();
         inputManager = new InputManager(this);
+        externalActionManager = ExternalActionManager.getInstance(this);
+        externalActionManager.start();
         backgroundUpdateChecker = new BackgroundUpdateChecker(this, this);
         preferencesStore = new PreferencesStore(this, this::onPreferences);
         devicePreferencesStore = new DevicePreferencesStore(this, this::onDevicePreferences);
@@ -546,6 +561,12 @@ public class Ki2Service extends Service implements IAntScanListener, IDeviceConn
 
         registerReceiver(receiverReconnectDevices, new IntentFilter("io.hammerhead.action.RECONNECT_DEVICES"), Context.RECEIVER_EXPORTED);
         registerReceiver(receiverInRide, new IntentFilter("io.hammerhead.action.IN_RIDE"), Context.RECEIVER_EXPORTED);
+        IntentFilter packageFilter = new IntentFilter();
+        packageFilter.addAction(Intent.ACTION_PACKAGE_ADDED);
+        packageFilter.addAction(Intent.ACTION_PACKAGE_REMOVED);
+        packageFilter.addAction(Intent.ACTION_PACKAGE_CHANGED);
+        packageFilter.addDataScheme("package");
+        registerReceiver(receiverPackageUpdates, packageFilter, Context.RECEIVER_EXPORTED);
         Timber.i("Service created");
     }
 
@@ -572,6 +593,10 @@ public class Ki2Service extends Service implements IAntScanListener, IDeviceConn
 
         unregisterReceiver(receiverReconnectDevices);
         unregisterReceiver(receiverInRide);
+        unregisterReceiver(receiverPackageUpdates);
+        if (externalActionManager != null) {
+            externalActionManager.shutdown();
+        }
         super.onDestroy();
     }
 
@@ -693,11 +718,31 @@ public class Ki2Service extends Service implements IAntScanListener, IDeviceConn
                                     (callback, se) -> callback.onSwitchEvent(deviceId, se));
                         }
 
-                        KarooActionEvent actionEvent = inputManager.onSwitch(switchEvent);
+                        Ki2ActionEvent actionEvent = inputManager.onSwitch(switchEvent);
                         if (actionEvent != null) {
-                            broadcastData(callbackListAction,
-                                    () -> actionEvent,
-                                    (callback, ke) -> callback.onActionEvent(deviceId, ke));
+                            if (actionEvent.getType() == Ki2ActionEvent.Type.KAROO) {
+                                KarooActionEvent karooActionEvent = actionEvent.getKarooActionEvent();
+                                if (karooActionEvent != null) {
+                                    broadcastData(callbackListAction,
+                                            () -> karooActionEvent,
+                                            (callback, ke) -> callback.onActionEvent(deviceId, ke));
+                                }
+                            } else if (actionEvent.getType() == Ki2ActionEvent.Type.EXTERNAL) {
+                                ExternalActionTarget target = actionEvent.getExternalActionTarget();
+                                if (target != null && externalActionManager != null) {
+                                    String deviceIdStr = deviceId.toString();
+                                    int switchType = switchEvent.getType().getValue();
+                                    int switchCommand = switchEvent.getCommand().getCommandNumber();
+                                    int switchRepeat = switchEvent.getRepeat();
+                                    long timestamp = System.currentTimeMillis();
+                                    int replicate = Math.max(1, actionEvent.getReplicate());
+                                    for (int i = 0; i < replicate; i++) {
+                                        externalActionManager.performAction(target,
+                                                deviceIdStr, switchType, switchCommand,
+                                                switchRepeat, timestamp);
+                                    }
+                                }
+                            }
                         }
                         break;
 

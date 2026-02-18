@@ -9,11 +9,14 @@ import androidx.preference.PreferenceManager;
 
 import com.valterc.ki2.R;
 import com.valterc.ki2.data.action.KarooActionEvent;
+import com.valterc.ki2.data.action.Ki2ActionEvent;
 import com.valterc.ki2.data.switches.SwitchCommand;
 import com.valterc.ki2.data.switches.SwitchCommandType;
 import com.valterc.ki2.data.switches.SwitchEvent;
 import com.valterc.ki2.data.switches.SwitchType;
 import com.valterc.ki2.data.action.KarooAction;
+import com.valterc.ki2.external.ExternalActionManager;
+import com.valterc.ki2.external.ExternalActionTarget;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -314,12 +317,51 @@ public class InputManager {
     }
 
     @Nullable
-    public KarooActionEvent onSwitch(SwitchEvent switchEvent) {
+    public Ki2ActionEvent onSwitch(SwitchEvent switchEvent) {
         if (switchEvent == null) {
             return null;
         }
 
-        return getKarooActionEvent(switchEvent);
+        Pair<String, String> preferencePair = preferenceMap.get(new Pair<>(switchEvent.getType(), switchEvent.getCommand().getCommandType()));
+        if (preferencePair == null) {
+            return null;
+        }
+
+        String preference = preferences.getString(preferencePair.first, preferencePair.second);
+        if (preference == null) {
+            return null;
+        }
+
+        if ("double_press_duplicate_single_press".equals(preference)) {
+            SwitchEvent singlePressEvent = new SwitchEvent(switchEvent.getType(), SwitchCommand.SINGLE_CLICK, switchEvent.getRepeat());
+            Ki2ActionEvent baseEvent = onSwitch(singlePressEvent);
+            if (baseEvent == null) {
+                return null;
+            }
+            return baseEvent.withReplicate(2);
+        }
+
+        if ("repeat_single_press".equals(preference)) {
+            if (switchEvent.getCommand() == SwitchCommand.LONG_PRESS_UP) {
+                return null;
+            }
+            SwitchEvent singlePressEvent = new SwitchEvent(switchEvent.getType(), SwitchCommand.SINGLE_CLICK, switchEvent.getRepeat());
+            return onSwitch(singlePressEvent);
+        }
+
+        if (ExternalActionManager.isExternalPreferenceValue(preference)) {
+            ExternalActionTarget target = ExternalActionManager.parsePreferenceValue(preference);
+            if (target == null) {
+                return null;
+            }
+            return Ki2ActionEvent.forExternal(target);
+        }
+
+        KarooActionEvent karooActionEvent = getKarooActionEvent(switchEvent);
+        if (karooActionEvent == null) {
+            return null;
+        }
+        return Ki2ActionEvent.forKaroo(karooActionEvent);
     }
 
 }
