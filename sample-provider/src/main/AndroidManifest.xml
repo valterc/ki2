@@ -4,20 +4,13 @@
     <application
         android:label="Sample Provider">
 
-        <!-- Ki2 discovers providers via queryIntentServices() with this action -->
-        <service
-            android:name=".SampleActionProviderService"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="com.valterc.ki2.ACTION_PROVIDER" />
-            </intent-filter>
-        </service>
-
-        <!-- Ki2 sends LIST_ACTIONS and PERFORM as broadcasts -->
+        <!-- Ki2 discovers providers via queryBroadcastReceivers() with ACTION_PROVIDER -->
+        <!-- and sends LIST_ACTIONS and PERFORM as broadcasts to the same receiver -->
         <receiver
             android:name=".SampleActionProviderReceiver"
             android:exported="true">
             <intent-filter>
+                <action android:name="com.valterc.ki2.ACTION_PROVIDER" />
                 <action android:name="com.valterc.ki2.action.LIST_ACTIONS" />
                 <action android:name="com.valterc.ki2.action.PERFORM" />
             </intent-filter>

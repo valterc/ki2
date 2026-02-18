@@ -229,9 +229,9 @@ public class ExternalActionManager {
         Intent intent = new Intent(ACTION_PROVIDER);
         List<ResolveInfo> resolveInfos;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            resolveInfos = packageManager.queryIntentServices(intent, PackageManager.ResolveInfoFlags.of(PackageManager.GET_META_DATA));
+            resolveInfos = packageManager.queryBroadcastReceivers(intent, PackageManager.ResolveInfoFlags.of(PackageManager.GET_META_DATA));
         } else {
-            resolveInfos = packageManager.queryIntentServices(intent, PackageManager.GET_META_DATA);
+            resolveInfos = packageManager.queryBroadcastReceivers(intent, PackageManager.GET_META_DATA);
         }
 
         if (resolveInfos == null) {
@@ -240,10 +240,10 @@ public class ExternalActionManager {
 
         List<ComponentName> components = new ArrayList<>();
         for (ResolveInfo info : resolveInfos) {
-            if (info.serviceInfo == null || info.serviceInfo.packageName == null || info.serviceInfo.name == null) {
+            if (info.activityInfo == null || info.activityInfo.packageName == null || info.activityInfo.name == null) {
                 continue;
             }
-            components.add(new ComponentName(info.serviceInfo.packageName, info.serviceInfo.name));
+            components.add(new ComponentName(info.activityInfo.packageName, info.activityInfo.name));
         }
 
         return components;
