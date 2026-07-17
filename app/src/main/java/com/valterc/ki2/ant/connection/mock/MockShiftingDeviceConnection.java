@@ -156,6 +156,7 @@ public class MockShiftingDeviceConnection implements IAntDeviceConnection {
     @Override
     public void disconnectSilent() {
         this.looper.quit();
+        this.connectionStatus = ConnectionStatus.CLOSED;
     }
 
     @Override
