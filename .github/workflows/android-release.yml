@@ -45,26 +45,18 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew build
 
-    - name: Get release notes
-      uses: cardinalby/git-get-release-action@1.2.4
-      id: release-notes
-      env:
-        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-      with:
-        tag: ${{ github.ref_name }}
-
     - name: Generate Manifest file
+      env:
+        GH_TOKEN: ${{ github.token }}
       run: |
-        cat > app/build/release-notes<< EOF
-        ${{ steps.release-notes.outputs.body }}
-        EOF
-        python3 .scripts/generate-manifest.py app/manifest-template.json app/build/manifest.json '${{ github.ref_name }}' '${{ github.run_number }}' app/build/release-notes   
+        gh release view ${{ github.ref_name }} --json body --jq .body > app/build/release-notes
+        python3 .scripts/generate-manifest.py app/manifest-template.json app/build/manifest.json '${{ github.ref_name }}' '${{ github.run_number }}' app/build/release-notes
 
     - name: Upload APK to release
       uses: svenstaro/upload-release-action@v2
       with:
         repo_name: valterc/ki2
-        repo_token: ${{ secrets.GH_TOKEN }}
+        repo_token: ${{ github.token }}
         file: app/build/outputs/apk/release/ki2-release.apk
         asset_name: ki2-release.apk
         overwrite: true
@@ -73,7 +65,7 @@ jobs:
       uses: svenstaro/upload-release-action@v2
       with:
         repo_name: valterc/ki2
-        repo_token: ${{ secrets.GH_TOKEN }}
+        repo_token: ${{ github.token }}
         file: app/src/main/res/drawable/ic_icon.png
         asset_name: icon.png
         overwrite: true
@@ -82,7 +74,7 @@ jobs:
       uses: svenstaro/upload-release-action@v2
       with:
         repo_name: valterc/ki2
-        repo_token: ${{ secrets.GH_TOKEN }}
+        repo_token: ${{ github.token }}
         file: app/build/manifest.json
         asset_name: manifest.json
         overwrite: true
