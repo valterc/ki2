@@ -139,4 +139,6 @@
     <string name="text_bike_battery">Bike Battery</string>
     <string name="text_yes">Yes</string>
     <string name="text_overlay_permission">Please allow Ki2 to <b>Display Over Other Apps</b>.</string>
+    <string name="text_d_fly_channel_status">D-Fly Channel Status</string>
+    <string name="text_d_fly_channel_press">Press the Di2 button associated to a D-Fly channel to see its status</string>
 </resources>
