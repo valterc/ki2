@@ -60,6 +60,7 @@ import com.valterc.ki2.services.callbacks.IShiftingCallback;
 import com.valterc.ki2.services.callbacks.ISwitchCallback;
 import com.valterc.ki2.services.debug.DebugHelper;
 import com.valterc.ki2.services.handler.ServiceHandler;
+import com.valterc.ki2.services.karoo.KarooRideStateListener;
 import com.valterc.ki2.update.background.BackgroundUpdateChecker;
 import com.valterc.ki2.update.background.IUpdateCheckerListener;
 import com.valterc.ki2.update.post.PostUpdateActions;
@@ -518,6 +519,7 @@ public class Ki2Service extends Service implements IAntScanListener, IDeviceConn
     private BackgroundUpdateChecker backgroundUpdateChecker;
     private PreferencesStore preferencesStore;
     private DevicePreferencesStore devicePreferencesStore;
+    private KarooRideStateListener karooRideStateListener;
 
     @Override
     public IBinder onBind(Intent arg0) {
@@ -539,10 +541,13 @@ public class Ki2Service extends Service implements IAntScanListener, IDeviceConn
         backgroundUpdateChecker = new BackgroundUpdateChecker(this, this);
         preferencesStore = new PreferencesStore(this, this::onPreferences);
         devicePreferencesStore = new DevicePreferencesStore(this, this::onDevicePreferences);
+        karooRideStateListener = new KarooRideStateListener(this, this::onRideStatus);
+        karooRideStateListener.start();
 
         DebugHelper.init(deviceStore);
         PostUpdateActions.executePostInit(new PostUpdateContext(this, deviceStore));
         devicePreferencesStore.setDevices(deviceStore.getDevices());
+
 
         registerReceiver(receiverReconnectDevices, new IntentFilter("io.hammerhead.action.RECONNECT_DEVICES"), Context.RECEIVER_EXPORTED);
         registerReceiver(receiverInRide, new IntentFilter("io.hammerhead.action.IN_RIDE"), Context.RECEIVER_EXPORTED);
@@ -567,6 +572,10 @@ public class Ki2Service extends Service implements IAntScanListener, IDeviceConn
         callbackListAction.kill();
         callbackListMessage.kill();
         backgroundUpdateChecker.dispose();
+
+        if (karooRideStateListener != null) {
+            karooRideStateListener.dispose();
+        }
 
         serviceHandler.dispose();
 
@@ -782,9 +791,7 @@ public class Ki2Service extends Service implements IAntScanListener, IDeviceConn
                 if (rideStatusMessage != null) {
                     if (rideStatusMessage.getRideStatus() == RideStatus.ONGOING) {
                         serviceHandler.postRetriableAction(() -> {
-                            if (antConnectionManager.isNoConnectionEstablished()) {
-                                antConnectionManager.restartClosedConnections(this);
-                            }
+                            antConnectionManager.restartClosedConnections(this);
                         });
                     } else if (rideStatusMessage.getRideStatus() == RideStatus.FINISHED) {
                         backgroundUpdateChecker.tryCheckForUpdates();
@@ -822,6 +829,15 @@ public class Ki2Service extends Service implements IAntScanListener, IDeviceConn
             Message updateAvailableMessage = new UpdateAvailableMessage(releaseInfo);
             onMessage(updateAvailableMessage);
         });
+    }
+
+    private void onRideStatus(RideStatus rideStatus) {
+        if (rideStatus == null) {
+            return;
+        }
+
+        Timber.i("Received Karoo ride status: %s", rideStatus);
+        serviceHandler.postRetriableAction(() -> onMessage(new RideStatusMessage(rideStatus)));
     }
 
     private void onPreferences(PreferencesView preferencesView) {

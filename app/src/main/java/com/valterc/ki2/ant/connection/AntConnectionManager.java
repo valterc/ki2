@@ -61,10 +61,12 @@ public class AntConnectionManager {
                     (existingConnection.getConnectionStatus() == ConnectionStatus.ESTABLISHED ||
                             existingConnection.getConnectionStatus() == ConnectionStatus.CONNECTING ||
                             existingConnection.getConnectionStatus() == ConnectionStatus.CLOSED)) {
-                return;
+                if (existingConnection.connect()) {
+                    return;
+                }
             }
 
-            existingConnection.disconnect();
+            existingConnection.disconnectSilent();
         }
 
         try {

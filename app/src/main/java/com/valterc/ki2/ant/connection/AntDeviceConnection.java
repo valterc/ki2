@@ -29,7 +29,7 @@ import timber.log.Timber;
 
 public class AntDeviceConnection implements IAntDeviceConnection, IDeviceConnectionListener {
 
-    private static final int MAX_RECONNECT_ATTEMPTS = 10;
+    private static final int MAX_RECONNECT_ATTEMPTS = 20;
     private static final int TIME_MS_MESSAGE_TIMEOUT = 30_000;
     private static final int TIME_S_CONNECTION_TRACKER_INTERVAL = 30;
 
@@ -57,7 +57,7 @@ public class AntDeviceConnection implements IAntDeviceConnection, IDeviceConnect
 
         postConnectionStatus(deviceId, ConnectionStatus.NEW);
         executorService.schedule(this::connectionTracker, TIME_S_CONNECTION_TRACKER_INTERVAL * 2, TimeUnit.SECONDS);
-        connect();
+        connectOnce();
     }
 
     private void connectInternal() throws Exception {
@@ -77,7 +77,7 @@ public class AntDeviceConnection implements IAntDeviceConnection, IDeviceConnect
             public void onChannelDeath() {
                 Timber.w("[%s] Channel died", deviceId);
                 disconnectInternal();
-                connect();
+                connectOnce();
             }
         }, null);
 
@@ -86,7 +86,7 @@ public class AntDeviceConnection implements IAntDeviceConnection, IDeviceConnect
     }
 
     private void attemptConnect() {
-        if (disconnected || connectionStatus == ConnectionStatus.CLOSED) {
+        if (disconnected) {
             return;
         }
 
@@ -108,8 +108,24 @@ public class AntDeviceConnection implements IAntDeviceConnection, IDeviceConnect
         }
     }
 
-    private void connect() {
-        if (disconnected || connectionStatus == ConnectionStatus.CLOSED) {
+    @Override
+    public boolean connect() {
+        if (disconnected) {
+            return false;
+        }
+
+        reconnectAttempts = 0;
+
+        if (connectionStatus != ConnectionStatus.CONNECTING
+                && connectionStatus != ConnectionStatus.ESTABLISHED) {
+            connectOnce();
+        }
+
+        return true;
+    }
+
+    private void connectOnce() {
+        if (disconnected) {
             return;
         }
 
@@ -121,7 +137,7 @@ public class AntDeviceConnection implements IAntDeviceConnection, IDeviceConnect
     }
 
     private void connectionTracker() {
-        if (disconnected || connectionStatus == ConnectionStatus.CLOSED) {
+        if (disconnected) {
             return;
         }
 
@@ -130,7 +146,7 @@ public class AntDeviceConnection implements IAntDeviceConnection, IDeviceConnect
                 timestampLastMessage = System.currentTimeMillis();
                 Timber.w("[%s] No ANT messages in last 30 seconds, restarting connection...", deviceId);
                 disconnectInternal();
-                connect();
+                connectOnce();
             }
         }
 
@@ -187,11 +203,16 @@ public class AntDeviceConnection implements IAntDeviceConnection, IDeviceConnect
     }
 
     @Override
-    public void disconnect() {
+    public void disconnectSilent() {
         disconnected = true;
         executorService.shutdownNow();
         disconnectInternal();
         reconnectAttempts = MAX_RECONNECT_ATTEMPTS;
+    }
+
+    @Override
+    public void disconnect() {
+        disconnectSilent();
         if (this.connectionStatus != ConnectionStatus.CLOSED) {
             postConnectionStatus(deviceId, ConnectionStatus.CLOSED);
         }
@@ -242,7 +263,7 @@ public class AntDeviceConnection implements IAntDeviceConnection, IDeviceConnect
             if (reconnectAttempts < MAX_RECONNECT_ATTEMPTS) {
                 reconnectAttempts++;
                 Timber.d("[%s] Retrying connection to device, attempt %d...", deviceId, reconnectAttempts);
-                connect();
+                connectOnce();
                 return;
             }
         }
