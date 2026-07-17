@@ -13,7 +13,6 @@ import android.os.Parcelable;
 import android.os.RemoteCallbackList;
 import android.os.RemoteException;
 
-import androidx.annotation.Nullable;
 import androidx.preference.PreferenceManager;
 
 import com.valterc.ki2.R;
