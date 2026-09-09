@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application
+        android:label="Sample Provider">
+
+        <!-- Ki2 discovers providers via queryBroadcastReceivers() with ACTION_PROVIDER -->
+        <!-- and sends LIST_ACTIONS and PERFORM as broadcasts to the same receiver -->
+        <receiver
+            android:name=".SampleActionProviderReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.valterc.ki2.ACTION_PROVIDER" />
+                <action android:name="com.valterc.ki2.action.LIST_ACTIONS" />
+                <action android:name="com.valterc.ki2.action.PERFORM" />
+            </intent-filter>
+        </receiver>
+
+    </application>
+
+</manifest>

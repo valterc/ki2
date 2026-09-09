@@ -11,8 +11,14 @@ import androidx.annotation.Nullable;
 import androidx.preference.ListPreference;
 
 import com.valterc.ki2.data.message.AudioAlertMessage;
+import com.valterc.ki2.external.ExternalAction;
+import com.valterc.ki2.external.ExternalActionDescriptor;
+import com.valterc.ki2.external.ExternalActionManager;
 import com.valterc.ki2.services.IKi2Service;
 import com.valterc.ki2.services.Ki2Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import timber.log.Timber;
 
@@ -33,6 +39,10 @@ public class SwitchListPreference extends ListPreference {
 
     private IKi2Service service;
     private boolean serviceBound;
+    private CharSequence[] baseEntries;
+    private CharSequence[] baseEntryValues;
+    private ExternalActionManager externalActionManager;
+    private final ExternalActionManager.Listener actionsListener = this::rebuildEntries;
 
     public SwitchListPreference(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
@@ -87,6 +97,9 @@ public class SwitchListPreference extends ListPreference {
     public void onAttached() {
         super.onAttached();
         serviceBound = getContext().bindService(Ki2Service.getIntent(), serviceConnection, Context.BIND_AUTO_CREATE);
+        externalActionManager = ExternalActionManager.getInstance(getContext());
+        externalActionManager.addListener(actionsListener);
+        rebuildEntries();
     }
 
     @Override
@@ -101,5 +114,73 @@ public class SwitchListPreference extends ListPreference {
                 // ignore
             }
         }
+
+        if (externalActionManager != null) {
+            externalActionManager.removeListener(actionsListener);
+        }
+    }
+
+    private void rebuildEntries() {
+        if (baseEntries == null) {
+            baseEntries = getEntries();
+            baseEntryValues = getEntryValues();
+        }
+
+        if (baseEntries == null || baseEntryValues == null) {
+            return;
+        }
+
+        if (externalActionManager == null) {
+            externalActionManager = ExternalActionManager.getInstance(getContext());
+        }
+
+        int switchMask = getSwitchMaskForPreferenceKey(getKey());
+        List<ExternalActionDescriptor> externalActions = externalActionManager.getExternalActionsSnapshot();
+
+        List<CharSequence> entries = new ArrayList<>();
+        List<CharSequence> values = new ArrayList<>();
+
+        for (int i = 0; i < baseEntries.length; i++) {
+            entries.add(baseEntries[i]);
+            values.add(baseEntryValues[i]);
+        }
+
+        for (ExternalActionDescriptor descriptor : externalActions) {
+            ExternalAction action = descriptor.getAction();
+            if (!isAllowedForSwitch(action, switchMask)) {
+                continue;
+            }
+            entries.add(action.getLabel() + " (" + descriptor.getAppLabel() + ")");
+            values.add(ExternalActionManager.toPreferenceValue(descriptor.getProviderComponent(), action.getActionId()));
+        }
+
+        setEntries(entries.toArray(new CharSequence[0]));
+        setEntryValues(values.toArray(new CharSequence[0]));
+    }
+
+    private boolean isAllowedForSwitch(@NonNull ExternalAction action, int switchMask) {
+        if (switchMask == 0) {
+            return true;
+        }
+        return (action.getAllowedSwitches() & switchMask) != 0;
+    }
+
+    private int getSwitchMaskForPreferenceKey(@Nullable String key) {
+        if (key == null) {
+            return 0;
+        }
+        if (key.contains("CH1")) {
+            return ExternalAction.SWITCH_CH1;
+        }
+        if (key.contains("CH2")) {
+            return ExternalAction.SWITCH_CH2;
+        }
+        if (key.contains("CH3")) {
+            return ExternalAction.SWITCH_CH3;
+        }
+        if (key.contains("CH4")) {
+            return ExternalAction.SWITCH_CH4;
+        }
+        return 0;
     }
 }
