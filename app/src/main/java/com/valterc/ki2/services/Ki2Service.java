@@ -497,6 +497,7 @@ public class Ki2Service extends Service implements IAntScanListener, IDeviceConn
         public void onReceive(final Context context, final Intent intent) {
             Timber.i("Received reconnect devices broadcast");
             serviceHandler.postRetriableAction(() -> antConnectionManager.restartClosedConnections(Ki2Service.this));
+            serviceHandler.postRetriableAction(Ki2Service.this::processConnections);
         }
     };
 
@@ -531,10 +532,10 @@ public class Ki2Service extends Service implements IAntScanListener, IDeviceConn
         PostUpdateActions.executePreInit(new PostUpdateContext(this, deviceStore));
 
         messageManager = new MessageManager();
-        antManager = new AntManager(this);
+        serviceHandler = new ServiceHandler();
+        antManager = new AntManager(this, this::onAntServiceReady);
         antScanner = new AntScanner(antManager, this);
         antConnectionManager = new AntConnectionManager(this, antManager);
-        serviceHandler = new ServiceHandler();
         deviceStore = new DeviceStore(this);
         connectionsDataManager = new ConnectionsDataManager();
         inputManager = new InputManager(this);
@@ -582,6 +583,11 @@ public class Ki2Service extends Service implements IAntScanListener, IDeviceConn
         unregisterReceiver(receiverReconnectDevices);
         unregisterReceiver(receiverInRide);
         super.onDestroy();
+    }
+
+    private void onAntServiceReady() {
+        serviceHandler.postRetriableAction(Ki2Service.this::processConnections);
+        serviceHandler.postAction(Ki2Service.this::processScan);
     }
 
     private void processScan() {
@@ -790,9 +796,8 @@ public class Ki2Service extends Service implements IAntScanListener, IDeviceConn
                 RideStatusMessage rideStatusMessage = RideStatusMessage.parse(message);
                 if (rideStatusMessage != null) {
                     if (rideStatusMessage.getRideStatus() == RideStatus.ONGOING) {
-                        serviceHandler.postRetriableAction(() -> {
-                            antConnectionManager.restartClosedConnections(this);
-                        });
+                        serviceHandler.postRetriableAction(() -> antConnectionManager.restartClosedConnections(this));
+                        serviceHandler.postRetriableAction(Ki2Service.this::processConnections);
                     } else if (rideStatusMessage.getRideStatus() == RideStatus.FINISHED) {
                         backgroundUpdateChecker.tryCheckForUpdates();
                     }
