@@ -43,6 +43,7 @@ public class AntManager {
 
     private final Context context;
     private final Handler handler;
+    private final Runnable serviceReadyCallback;
 
     private boolean disposed;
     private boolean antServiceBound;
@@ -59,6 +60,10 @@ public class AntManager {
                 antChannelProvider = antService.getChannelProvider();
             } catch (RemoteException e) {
                 Timber.e(e, "Unable to get ANT channel provider");
+            }
+
+            if (isAntServiceReady()) {
+                notifyServiceReady();
             }
         }
 
@@ -91,13 +96,36 @@ public class AntManager {
         }
     };
 
-    public AntManager(Context context) {
+    /**
+     * Create an ANT manager.
+     *
+     * @param context              Context.
+     * @param serviceReadyCallback Optional callback invoked, on the main thread, whenever the ANT
+     *                             service becomes ready. Since binding to the ANT service is
+     *                             asynchronous, this allows callers to (re)start any work that
+     *                             requires the ANT service to be available.
+     */
+    public AntManager(Context context, Runnable serviceReadyCallback) {
         this.context = context;
+        this.serviceReadyCallback = serviceReadyCallback;
         this.handler = new Handler(Looper.getMainLooper());
 
         context.registerReceiver(channelProviderStateChangedReceiver, new IntentFilter(AntChannelProvider.ACTION_CHANNEL_PROVIDER_STATE_CHANGED), Context.RECEIVER_EXPORTED);
 
         attemptBindToAntService();
+    }
+
+    private void notifyServiceReady() {
+        if (disposed || serviceReadyCallback == null) {
+            return;
+        }
+
+        try {
+            Timber.i("ANT service ready");
+            serviceReadyCallback.run();
+        } catch (Exception e) {
+            Timber.e(e, "Error while handling ANT service ready event");
+        }
     }
 
     private void attemptBindToAntService() {
