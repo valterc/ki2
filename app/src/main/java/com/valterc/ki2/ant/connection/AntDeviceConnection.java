@@ -156,12 +156,14 @@ public class AntDeviceConnection implements IAntDeviceConnection, IDeviceConnect
     }
 
     private void forwardMessage(MessageFromAntType messageFromAntType, AntMessageParcel antMessageParcel) {
+        ITransportHandler transportHandler = this.transportHandler;
         if (transportHandler == null) {
             messageQueue.add(new Pair<>(messageFromAntType, antMessageParcel));
-        } else {
-            pushQueuedMessages();
-            transportHandler.processAntMessage(messageFromAntType, antMessageParcel);
+            return;
         }
+
+        pushQueuedMessages();
+        transportHandler.processAntMessage(messageFromAntType, antMessageParcel);
     }
 
     private synchronized void pushQueuedMessages() {
