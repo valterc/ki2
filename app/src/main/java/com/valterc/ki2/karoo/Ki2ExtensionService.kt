@@ -39,6 +39,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import kotlin.time.Duration.Companion.milliseconds
 
 class Ki2ExtensionService : KarooExtension("ki2", BuildConfig.VERSION_NAME) {
 
@@ -102,13 +103,14 @@ class Ki2ExtensionService : KarooExtension("ki2", BuildConfig.VERSION_NAME) {
                 handlers.add(OverlayWindowHandler(this, extensionContext))
                 handlers.add(ShiftingAudioAlertHandler(extensionContext))
                 handlers.add(BatteryAlertHandler(extensionContext))
+                handlers.add(fitDeviceInfoHandler)
             }
         }
     }
 
     override fun startScan(emitter: Emitter<Device>) {
         val job = CoroutineScope(Dispatchers.IO).launch {
-            delay(1000)
+            delay(1000.milliseconds)
             extensionContext.serviceClient.savedDevices?.let {
                 for (device: DeviceId in it) {
                     val shiftingDevice = ShiftingDevice(extensionContext, device).source
@@ -130,6 +132,7 @@ class Ki2ExtensionService : KarooExtension("ki2", BuildConfig.VERSION_NAME) {
     }
 
     override fun startFit(emitter: Emitter<FitEffect>) {
+        Timber.i("FIT started")
         fitDeviceInfoHandler.start(emitter)
     }
 

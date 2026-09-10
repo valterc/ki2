@@ -210,6 +210,17 @@ public class PreferencesView implements Parcelable {
     }
 
     /**
+     * Indicates if FIT recording of Ki2 device information is enabled.
+     *
+     * @param context Ki2 application context. Cannot be a context generated from another package.
+     * @return True if FIT recording of device information setting is enabled, false otherwise.
+     */
+    public boolean isFitRecordingDeviceInfoEnabled(Context context) {
+        return getBoolean(context.getString(R.string.preference_fit_recording_device_info),
+                () -> context.getResources().getBoolean(R.bool.default_preference_fit_recording_device_info));
+    }
+
+    /**
      * Indicates if a switch press should turn screen on.
      *
      * @param context Ki2 application context. Cannot be a context generated from another package.
