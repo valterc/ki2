@@ -108,7 +108,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.8.7'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7'
 
-    implementation 'io.hammerhead:karoo-ext:1.1.2'
+    implementation 'io.hammerhead:karoo-ext:1.1.9'
     implementation files('libs/android_antlib_4-16-0.aar')
 
     testImplementation platform('org.junit:junit-bom:5.10.0')

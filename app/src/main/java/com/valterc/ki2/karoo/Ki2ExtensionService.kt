@@ -23,6 +23,7 @@ import com.valterc.ki2.karoo.datatypes.visual.DrivetrainSizeVisualDataType
 import com.valterc.ki2.karoo.datatypes.visual.GearsDetailedVisualDataType
 import com.valterc.ki2.karoo.datatypes.visual.GearsIndexVisualDataType
 import com.valterc.ki2.karoo.datatypes.visual.GearsSizeVisualDataType
+import com.valterc.ki2.karoo.fit.FitDeviceInfoHandler
 import com.valterc.ki2.karoo.overlay.OverlayWindowHandler
 import com.valterc.ki2.karoo.shifting.ShiftingAudioAlertHandler
 import com.valterc.ki2.karoo.device.ShiftingDevice
@@ -31,6 +32,7 @@ import io.hammerhead.karooext.extension.KarooExtension
 import io.hammerhead.karooext.internal.Emitter
 import io.hammerhead.karooext.models.Device
 import io.hammerhead.karooext.models.DeviceEvent
+import io.hammerhead.karooext.models.FitEffect
 import io.hammerhead.karooext.models.RequestAnt
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -58,6 +60,10 @@ class Ki2ExtensionService : KarooExtension("ki2", BuildConfig.VERSION_NAME) {
     }
 
     private val handlers = mutableListOf<RideHandler>()
+
+    private val fitDeviceInfoHandler by lazy {
+        return@lazy FitDeviceInfoHandler(extensionContext)
+    }
 
     override val types by lazy {
         listOf(
@@ -121,6 +127,10 @@ class Ki2ExtensionService : KarooExtension("ki2", BuildConfig.VERSION_NAME) {
         val deviceId = DeviceId(uid)
         extensionContext.karooDeviceTracking.deviceConnect(deviceId)
         ShiftingDevice(extensionContext, deviceId).connect(emitter)
+    }
+
+    override fun startFit(emitter: Emitter<FitEffect>) {
+        fitDeviceInfoHandler.start(emitter)
     }
 
     override fun onDestroy() {
