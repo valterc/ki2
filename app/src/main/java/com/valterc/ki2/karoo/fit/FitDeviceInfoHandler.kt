@@ -21,13 +21,15 @@ import java.util.function.Consumer
  * that post-ride tools are able to identify the drivetrain used on a ride.
  *
  * The identifiers mirror the fields the FIT profile defines on the native device info message,
- * which extensions are not allowed to write. Values are written as developer fields on event
- * messages so that the connection and disconnection of the device are timestamped.
+ * which extensions are not allowed to write. They are instead written as developer fields on
+ * fitness equipment event messages, a start event when the device starts being used and a stop
+ * event when it stops being used, so that the period the device was in use is timestamped.
  *
  * Shift events are not written by Ki2, they are recorded by the Karoo when the Ki2 sensors are
  * added to the Karoo sensors.
  *
- * This is only done when the FIT recording setting is enabled.
+ * This is only done while a ride is in progress and when the FIT recording setting is enabled.
+ * Disabling the setting mid-ride writes the stop event for the device in use.
  */
 class FitDeviceInfoHandler(extensionContext: Ki2ExtensionContext) : RideHandler(extensionContext) {
 
@@ -97,6 +99,8 @@ class FitDeviceInfoHandler(extensionContext: Ki2ExtensionContext) : RideHandler(
             this.emitter = null
             this.writtenDevice = null
         }
+
+        writeDeviceInfo()
     }
 
     override fun onRideStart() {
@@ -110,11 +114,11 @@ class FitDeviceInfoHandler(extensionContext: Ki2ExtensionContext) : RideHandler(
     private fun writeDeviceInfo() {
         val emitter = this.emitter ?: return
 
-        if (rideState is RideState.Idle || !enabled) {
+        if (rideState is RideState.Idle) {
             return
         }
 
-        val deviceId = connectedDevice
+        val deviceId = if (enabled) connectedDevice else null
         val oldDeviceId = writtenDevice
 
         if (oldDeviceId == deviceId) {
