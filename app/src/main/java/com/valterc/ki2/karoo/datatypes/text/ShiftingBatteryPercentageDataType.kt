@@ -17,6 +17,7 @@ import kotlinx.coroutines.launch
 import java.util.concurrent.locks.ReentrantLock
 import java.util.function.BiConsumer
 import kotlin.concurrent.withLock
+import kotlin.time.Duration.Companion.milliseconds
 
 class ShiftingBatteryPercentageDataType(
     private val extensionContext: Ki2ExtensionContext
@@ -56,7 +57,7 @@ class ShiftingBatteryPercentageDataType(
                     emitDataPoint(emitter)
                 }
 
-                delay(5_000)
+                delay(5_000.milliseconds)
             }
         }
 
