@@ -29,7 +29,7 @@ android {
     }
 
     namespace 'com.valterc.ki2'
-    compileSdk 34
+    compileSdk = 37
 
     base {
         archivesName = "ki2"
@@ -111,9 +111,11 @@ dependencies {
     implementation 'io.hammerhead:karoo-ext:1.1.2'
     implementation files('libs/android_antlib_4-16-0.aar')
 
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.0'
-    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.10.0'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.0'
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter-api'
+    testImplementation 'org.junit.jupiter:junit-jupiter-params'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     androidTestImplementation 'androidx.test.ext:junit:1.2.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
 }
