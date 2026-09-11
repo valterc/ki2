@@ -15,6 +15,16 @@ import java.util.stream.Collectors;
 
 public class DevicePreferences {
 
+    /**
+     * Maximum number of gears supported for custom front gearing.
+     */
+    public static final int MAX_GEAR_COUNT_FRONT = 3;
+
+    /**
+     * Maximum number of gears supported for custom rear gearing.
+     */
+    public static final int MAX_GEAR_COUNT_REAR = 13;
+
     private final Context context;
     private final DeviceId deviceId;
     private final SharedPreferences sharedPreferences;
@@ -158,8 +168,8 @@ public class DevicePreferences {
         if (gearing == null) {
             serializedArray = null;
         } else {
-            if (gearing.length == 0 || gearing.length > 12) {
-                throw new IllegalArgumentException("Invalid gearing: " + gearing.length);
+            if (gearing.length == 0 || gearing.length > MAX_GEAR_COUNT_FRONT) {
+                throw new IllegalArgumentException("Invalid front gearing: " + gearing.length);
             }
 
             serializedArray = Arrays.stream(gearing).mapToObj(String::valueOf).collect(Collectors.joining("-"));
@@ -196,8 +206,8 @@ public class DevicePreferences {
         if (gearing == null) {
             serializedArray = null;
         } else {
-            if (gearing.length == 0 || gearing.length > 12) {
-                throw new IllegalArgumentException("Invalid gearing: " + gearing.length);
+            if (gearing.length == 0 || gearing.length > MAX_GEAR_COUNT_REAR) {
+                throw new IllegalArgumentException("Invalid rear gearing: " + gearing.length);
             }
 
             serializedArray = Arrays.stream(gearing).mapToObj(String::valueOf).collect(Collectors.joining("-"));
