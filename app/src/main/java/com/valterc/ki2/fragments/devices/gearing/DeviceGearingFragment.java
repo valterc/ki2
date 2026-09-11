@@ -36,7 +36,7 @@ import java.util.Arrays;
 public class DeviceGearingFragment extends Fragment {
 
     private static final Integer[] OPTIONS_GEAR_COUNT_FRONT = {1, 2, 3};
-    private static final Integer[] OPTIONS_GEAR_COUNT_REAR = {9, 10, 11, 12};
+    private static final Integer[] OPTIONS_GEAR_COUNT_REAR = {9, 10, 11, 12, 13};
 
     private boolean serviceBound;
     private DeviceGearingViewModel viewModel;
