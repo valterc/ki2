@@ -1,5 +1,6 @@
 package com.valterc.ki2.karoo.fit
 
+import com.valterc.ki2.BuildConfig
 import com.valterc.ki2.data.connection.ConnectionInfo
 import com.valterc.ki2.data.connection.ConnectionStatus
 import com.valterc.ki2.data.device.DeviceId
@@ -17,8 +18,8 @@ import java.util.function.BiConsumer
 import java.util.function.Consumer
 
 /**
- * Writes the ANT identifiers of the Ki2 device in use into the FIT file recorded by the Karoo so
- * that post-ride tools are able to identify the drivetrain used on a ride.
+ * Writes the Ki2 version and the ANT identifiers of the Ki2 device in use into the FIT file
+ * recorded by the Karoo so that post-ride tools are able to identify the drivetrain used on a ride.
  *
  * The identifiers mirror the fields the FIT profile defines on the native device info message,
  * which extensions are not allowed to write. They are instead written as developer fields on
@@ -36,6 +37,7 @@ class FitDeviceInfoHandler(extensionContext: Ki2ExtensionContext) : RideHandler(
     companion object {
         private const val FIT_BASE_TYPE_UINT8: Short = 2
         private const val FIT_BASE_TYPE_UINT16: Short = 132
+        private const val FIT_BASE_TYPE_UINT32: Short = 134
 
         private const val FIT_EVENT_FITNESS_EQUIPMENT: Short = 27
 
@@ -43,12 +45,14 @@ class FitDeviceInfoHandler(extensionContext: Ki2ExtensionContext) : RideHandler(
         private const val FIT_EVENT_TYPE_STOP: Short = 1
     }
 
+    private val versionField =
+        DeveloperField(0, FIT_BASE_TYPE_UINT32, "ki2_version", "")
     private val deviceNumberField =
-        DeveloperField(0, FIT_BASE_TYPE_UINT16, "ki2_ant_device_number", "")
+        DeveloperField(1, FIT_BASE_TYPE_UINT16, "ki2_ant_device_number", "")
     private val deviceTypeField =
-        DeveloperField(1, FIT_BASE_TYPE_UINT8, "ki2_ant_device_type", "")
+        DeveloperField(2, FIT_BASE_TYPE_UINT8, "ki2_ant_device_type", "")
     private val transmissionTypeField =
-        DeveloperField(2, FIT_BASE_TYPE_UINT8, "ki2_ant_transmission_type", "")
+        DeveloperField(3, FIT_BASE_TYPE_UINT8, "ki2_ant_transmission_type", "")
 
     private var connectedDevice: DeviceId? = null
     private var writtenDevice: DeviceId? = null
@@ -129,12 +133,10 @@ class FitDeviceInfoHandler(extensionContext: Ki2ExtensionContext) : RideHandler(
             Timber.d("Writing FIT event Stop for device info for device %s", oldDeviceId.uid)
 
             emitter.onNext(
-                WriteEventMesg(FIT_EVENT_FITNESS_EQUIPMENT, FIT_EVENT_TYPE_STOP,
-                    listOf(
-                        FieldValue(deviceNumberField, oldDeviceId.deviceNumber.toDouble()),
-                        FieldValue(deviceTypeField, oldDeviceId.deviceTypeValue.toDouble()),
-                        FieldValue(transmissionTypeField, oldDeviceId.transmissionType.toDouble())
-                    )
+                WriteEventMesg(
+                    FIT_EVENT_FITNESS_EQUIPMENT,
+                    FIT_EVENT_TYPE_STOP,
+                    getFieldValues(oldDeviceId)
                 )
             )
         }
@@ -143,17 +145,22 @@ class FitDeviceInfoHandler(extensionContext: Ki2ExtensionContext) : RideHandler(
             Timber.d("Writing FIT event Start for device info for device %s", deviceId.uid)
 
             emitter.onNext(
-                WriteEventMesg(FIT_EVENT_FITNESS_EQUIPMENT, FIT_EVENT_TYPE_START,
-                    listOf(
-                        FieldValue(deviceNumberField, deviceId.deviceNumber.toDouble()),
-                        FieldValue(deviceTypeField, deviceId.deviceTypeValue.toDouble()),
-                        FieldValue(transmissionTypeField, deviceId.transmissionType.toDouble())
-                    )
+                WriteEventMesg(
+                    FIT_EVENT_FITNESS_EQUIPMENT,
+                    FIT_EVENT_TYPE_START,
+                    getFieldValues(deviceId)
                 )
             )
         }
 
         writtenDevice = deviceId
     }
+
+    private fun getFieldValues(deviceId: DeviceId) = listOf(
+        FieldValue(versionField, BuildConfig.VERSION_CODE.toDouble()),
+        FieldValue(deviceNumberField, deviceId.deviceNumber.toDouble()),
+        FieldValue(deviceTypeField, deviceId.deviceTypeValue.toDouble()),
+        FieldValue(transmissionTypeField, deviceId.transmissionType.toDouble())
+    )
 
 }
