@@ -16,6 +16,7 @@ import io.hammerhead.karooext.internal.ViewEmitter
 import io.hammerhead.karooext.models.ShowCustomStreamState
 import io.hammerhead.karooext.models.UpdateGraphicConfig
 import io.hammerhead.karooext.models.ViewConfig
+import androidx.core.graphics.createBitmap
 
 @Suppress("unused")
 @OptIn(ExperimentalGlanceRemoteViewsApi::class)
@@ -28,15 +29,12 @@ open class RenderedVisualDataType(
     private val glance = GlanceRemoteViews()
 
     override fun startView(context: Context, config: ViewConfig, emitter: ViewEmitter) {
+        val emitter = ThrottledViewEmitter(emitter)
         val extensionView = extensionViewProvider(extensionContext)
         val view = extensionView.createView(config)
         val remoteViews = RemoteViews(context.packageName, R.layout.remote_view_image)
 
-        val bitmap = Bitmap.createBitmap(
-            config.viewSize.first,
-            config.viewSize.second,
-            Bitmap.Config.ARGB_8888
-        )
+        val bitmap = createBitmap(config.viewSize.first, config.viewSize.second)
         val canvas = Canvas(bitmap)
 
         emitter.onNext(UpdateGraphicConfig(showHeader = false))

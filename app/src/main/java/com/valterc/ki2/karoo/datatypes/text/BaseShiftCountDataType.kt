@@ -5,6 +5,7 @@ import androidx.compose.ui.unit.DpSize
 import androidx.glance.appwidget.ExperimentalGlanceRemoteViewsApi
 import androidx.glance.appwidget.GlanceRemoteViews
 import com.valterc.ki2.karoo.Ki2ExtensionContext
+import com.valterc.ki2.karoo.datatypes.ThrottledViewEmitter
 import com.valterc.ki2.karoo.datatypes.views.TextView
 import com.valterc.ki2.karoo.shifting.ShiftCountHandler
 import io.hammerhead.karooext.extension.DataTypeImpl
@@ -23,6 +24,8 @@ abstract class BaseShiftCountDataType(private val extensionContext: Ki2Extension
     private val glance = GlanceRemoteViews()
 
     override fun startView(context: Context, config: ViewConfig, emitter: ViewEmitter) {
+        val emitter = ThrottledViewEmitter(emitter)
+
         emitter.onNext(UpdateGraphicConfig(showHeader = true))
         emitter.onNext(ShowCustomStreamState(message = "", color = null))
 
@@ -38,7 +41,7 @@ abstract class BaseShiftCountDataType(private val extensionContext: Ki2Extension
         }
     }
 
-    private suspend fun emitViewUpdate(context: Context, config: ViewConfig, emitter: ViewEmitter, shiftCount: Int) {
+    private suspend fun emitViewUpdate(context: Context, config: ViewConfig, emitter: ThrottledViewEmitter, shiftCount: Int) {
         val compositionResult = glance.compose(context, DpSize.Unspecified) {
             TextView(
                 shiftCount.toString(),

@@ -9,6 +9,7 @@ import com.valterc.ki2.data.device.DeviceId
 import com.valterc.ki2.data.preferences.device.DevicePreferencesView
 import com.valterc.ki2.data.shifting.ShiftingInfo
 import com.valterc.ki2.karoo.Ki2ExtensionContext
+import com.valterc.ki2.karoo.datatypes.ThrottledViewEmitter
 import com.valterc.ki2.karoo.datatypes.views.NotAvailable
 import com.valterc.ki2.karoo.datatypes.views.TextView
 import com.valterc.ki2.karoo.datatypes.views.Waiting
@@ -34,6 +35,8 @@ class GearRatioDataType(private val extensionContext: Ki2ExtensionContext) :
     private var shiftingGearingHelper = ShiftingGearingHelper(extensionContext.context)
 
     override fun startView(context: Context, config: ViewConfig, emitter: ViewEmitter) {
+        val emitter = ThrottledViewEmitter(emitter)
+
         emitter.onNext(UpdateGraphicConfig(showHeader = true))
         emitter.onNext(ShowCustomStreamState(message = "", color = null))
 
@@ -84,7 +87,7 @@ class GearRatioDataType(private val extensionContext: Ki2ExtensionContext) :
         }
     }
 
-    private suspend fun emitViewUpdate(context: Context, config: ViewConfig, emitter: ViewEmitter) {
+    private suspend fun emitViewUpdate(context: Context, config: ViewConfig, emitter: ThrottledViewEmitter) {
         val compositionResult =
             if (connectionInfo?.isConnected == true && shiftingGearingHelper.hasValidGearingInfo()) {
                 glance.compose(context, DpSize.Unspecified) {
