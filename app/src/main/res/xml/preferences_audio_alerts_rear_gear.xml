@@ -1,0 +1,104 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:title="@string/category_preference_audio_alert_rear_gears">
+
+    <PreferenceCategory app:title="@string/category_preference_audio_alert_rear_gears">
+
+        <com.valterc.ki2.views.preference.AudioAlertPreference
+            app:defaultValue="@string/default_preference_audio_alert_rear_gear"
+            app:entries="@array/preference_titles_audio_alert_type"
+            app:entryValues="@array/preference_values_audio_alert_type"
+            app:key="@string/preference_audio_alert_rear_gear_1"
+            app:summary="@string/summary_preference_audio_alert_rear_gear"
+            app:title="@string/title_preference_audio_alert_rear_gear_1" />
+
+        <com.valterc.ki2.views.preference.AudioAlertPreference
+            app:defaultValue="@string/default_preference_audio_alert_rear_gear"
+            app:entries="@array/preference_titles_audio_alert_type"
+            app:entryValues="@array/preference_values_audio_alert_type"
+            app:key="@string/preference_audio_alert_rear_gear_2"
+            app:summary="@string/summary_preference_audio_alert_rear_gear"
+            app:title="@string/title_preference_audio_alert_rear_gear_2" />
+
+        <com.valterc.ki2.views.preference.AudioAlertPreference
+            app:defaultValue="@string/default_preference_audio_alert_rear_gear"
+            app:entries="@array/preference_titles_audio_alert_type"
+            app:entryValues="@array/preference_values_audio_alert_type"
+            app:key="@string/preference_audio_alert_rear_gear_3"
+            app:summary="@string/summary_preference_audio_alert_rear_gear"
+            app:title="@string/title_preference_audio_alert_rear_gear_3" />
+
+        <com.valterc.ki2.views.preference.AudioAlertPreference
+            app:defaultValue="@string/default_preference_audio_alert_rear_gear"
+            app:entries="@array/preference_titles_audio_alert_type"
+            app:entryValues="@array/preference_values_audio_alert_type"
+            app:key="@string/preference_audio_alert_rear_gear_4"
+            app:summary="@string/summary_preference_audio_alert_rear_gear"
+            app:title="@string/title_preference_audio_alert_rear_gear_4" />
+
+        <com.valterc.ki2.views.preference.AudioAlertPreference
+            app:defaultValue="@string/default_preference_audio_alert_rear_gear"
+            app:entries="@array/preference_titles_audio_alert_type"
+            app:entryValues="@array/preference_values_audio_alert_type"
+            app:key="@string/preference_audio_alert_rear_gear_5"
+            app:summary="@string/summary_preference_audio_alert_rear_gear"
+            app:title="@string/title_preference_audio_alert_rear_gear_5" />
+
+        <com.valterc.ki2.views.preference.AudioAlertPreference
+            app:defaultValue="@string/default_preference_audio_alert_rear_gear"
+            app:entries="@array/preference_titles_audio_alert_type"
+            app:entryValues="@array/preference_values_audio_alert_type"
+            app:key="@string/preference_audio_alert_rear_gear_6"
+            app:summary="@string/summary_preference_audio_alert_rear_gear"
+            app:title="@string/title_preference_audio_alert_rear_gear_6" />
+
+        <com.valterc.ki2.views.preference.AudioAlertPreference
+            app:defaultValue="@string/default_preference_audio_alert_rear_gear"
+            app:entries="@array/preference_titles_audio_alert_type"
+            app:entryValues="@array/preference_values_audio_alert_type"
+            app:key="@string/preference_audio_alert_rear_gear_7"
+            app:summary="@string/summary_preference_audio_alert_rear_gear"
+            app:title="@string/title_preference_audio_alert_rear_gear_7" />
+
+        <com.valterc.ki2.views.preference.AudioAlertPreference
+            app:defaultValue="@string/default_preference_audio_alert_rear_gear"
+            app:entries="@array/preference_titles_audio_alert_type"
+            app:entryValues="@array/preference_values_audio_alert_type"
+            app:key="@string/preference_audio_alert_rear_gear_8"
+            app:summary="@string/summary_preference_audio_alert_rear_gear"
+            app:title="@string/title_preference_audio_alert_rear_gear_8" />
+
+        <com.valterc.ki2.views.preference.AudioAlertPreference
+            app:defaultValue="@string/default_preference_audio_alert_rear_gear"
+            app:entries="@array/preference_titles_audio_alert_type"
+            app:entryValues="@array/preference_values_audio_alert_type"
+            app:key="@string/preference_audio_alert_rear_gear_9"
+            app:summary="@string/summary_preference_audio_alert_rear_gear"
+            app:title="@string/title_preference_audio_alert_rear_gear_9" />
+
+        <com.valterc.ki2.views.preference.AudioAlertPreference
+            app:defaultValue="@string/default_preference_audio_alert_rear_gear"
+            app:entries="@array/preference_titles_audio_alert_type"
+            app:entryValues="@array/preference_values_audio_alert_type"
+            app:key="@string/preference_audio_alert_rear_gear_10"
+            app:summary="@string/summary_preference_audio_alert_rear_gear"
+            app:title="@string/title_preference_audio_alert_rear_gear_10" />
+
+        <com.valterc.ki2.views.preference.AudioAlertPreference
+            app:defaultValue="@string/default_preference_audio_alert_rear_gear"
+            app:entries="@array/preference_titles_audio_alert_type"
+            app:entryValues="@array/preference_values_audio_alert_type"
+            app:key="@string/preference_audio_alert_rear_gear_11"
+            app:summary="@string/summary_preference_audio_alert_rear_gear"
+            app:title="@string/title_preference_audio_alert_rear_gear_11" />
+
+        <com.valterc.ki2.views.preference.AudioAlertPreference
+            app:defaultValue="@string/default_preference_audio_alert_rear_gear"
+            app:entries="@array/preference_titles_audio_alert_type"
+            app:entryValues="@array/preference_values_audio_alert_type"
+            app:key="@string/preference_audio_alert_rear_gear_12"
+            app:summary="@string/summary_preference_audio_alert_rear_gear"
+            app:title="@string/title_preference_audio_alert_rear_gear_12" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

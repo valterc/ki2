@@ -27,6 +27,11 @@ import java.util.function.Supplier;
 @SuppressWarnings({"unchecked", "unused"})
 public class PreferencesView implements Parcelable {
 
+    /**
+     * Maximum rear gear index that can have a dedicated audio alert configured.
+     */
+    public static final int MAX_AUDIO_ALERT_REAR_GEAR = 12;
+
     private final Map<String, ?> preferenceMap;
 
     private Integer cachedAccentColor;
@@ -313,6 +318,19 @@ public class PreferencesView implements Parcelable {
     public String getAudioAlertUpcomingSynchroShift(Context context) {
         return getString(context.getString(R.string.preference_audio_alert_upcoming_synchro_shift),
                 context.getString(R.string.default_preference_audio_alert_upcoming_synchro_shift));
+    }
+
+    /**
+     * Get the audio alert for when shifting into a specific rear gear.
+     *
+     * @param context  Ki2 application context. Cannot be a context generated from another package.
+     * @param rearGear Rear gear index, starting at 1 for the lowest gear.
+     * @return Audio alert name for the given rear gear.
+     */
+    @NonNull
+    public String getAudioAlertRearGear(Context context, int rearGear) {
+        return getString(context.getString(R.string.preference_audio_alert_rear_gear_prefix) + rearGear,
+                context.getString(R.string.default_preference_audio_alert_rear_gear));
     }
 
     /**
