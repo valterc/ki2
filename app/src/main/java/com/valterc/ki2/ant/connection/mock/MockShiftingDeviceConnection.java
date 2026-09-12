@@ -150,7 +150,7 @@ public class MockShiftingDeviceConnection implements IAntDeviceConnection {
 
     @Override
     public boolean connect() {
-        return false;
+        return true;
     }
 
     @Override
