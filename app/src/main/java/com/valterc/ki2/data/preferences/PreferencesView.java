@@ -27,11 +27,6 @@ import java.util.function.Supplier;
 @SuppressWarnings({"unchecked", "unused"})
 public class PreferencesView implements Parcelable {
 
-    /**
-     * Maximum rear gear index that can have a dedicated audio alert configured.
-     */
-    public static final int MAX_AUDIO_ALERT_REAR_GEAR = 12;
-
     private final Map<String, ?> preferenceMap;
 
     private Integer cachedAccentColor;
@@ -324,7 +319,8 @@ public class PreferencesView implements Parcelable {
      * Get the audio alert for when shifting into a specific rear gear.
      *
      * @param context  Ki2 application context. Cannot be a context generated from another package.
-     * @param rearGear Rear gear index, starting at 1 for the lowest gear.
+     * @param rearGear Rear gear index, starting at 1 for the lowest gear, up to
+     *                 {@link com.valterc.ki2.data.preferences.device.DevicePreferences#MAX_GEAR_COUNT_REAR}.
      * @return Audio alert name for the given rear gear.
      */
     @NonNull

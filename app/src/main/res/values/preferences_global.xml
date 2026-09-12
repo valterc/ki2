@@ -46,6 +46,7 @@
     <string name="title_preference_audio_alert_rear_gear_10">Rear Gear 10</string>
     <string name="title_preference_audio_alert_rear_gear_11">Rear Gear 11</string>
     <string name="title_preference_audio_alert_rear_gear_12">Rear Gear 12</string>
+    <string name="title_preference_audio_alert_rear_gear_13">Rear Gear 13</string>
     <string name="title_preference_overlay_enabled">Enable Overlay</string>
     <string name="title_preference_overlay_triggers">Triggers</string>
     <string name="title_preference_overlay_duration">Duration</string>
@@ -66,7 +67,6 @@
     <string name="summary_preference_audio_alert_delay">Minimum delay between audio alerts</string>
     <string name="summary_preference_audio_alert_intensity">Perceived intensity of the audio alerts</string>
     <string name="summary_preference_audio_alert_rear_gears">Audio alerts when shifting into a specific rear gear</string>
-    <string name="summary_preference_audio_alert_rear_gear">Audio alert when shifting into this rear gear</string>
     <string name="summary_preference_overlay">Show an Overlay with shifting information in Ride</string>
     <string name="summary_preference_graphics">Customize graphical setting of Ki2 elements</string>
     <string name="summary_preference_overlay_enabled">Enable Overlay in Ride</string>
@@ -149,6 +149,7 @@
     <string name="preference_audio_alert_rear_gear_10">AUDIO_ALERT_REAR_GEAR_10</string>
     <string name="preference_audio_alert_rear_gear_11">AUDIO_ALERT_REAR_GEAR_11</string>
     <string name="preference_audio_alert_rear_gear_12">AUDIO_ALERT_REAR_GEAR_12</string>
+    <string name="preference_audio_alert_rear_gear_13">AUDIO_ALERT_REAR_GEAR_13</string>
     <string name="preference_overlay_enabled">OVERLAY_ENABLED</string>
     <string name="preference_overlay_triggers">OVERLAY_TRIGGERS</string>
     <string name="preference_overlay_duration">OVERLAY_DURATION</string>

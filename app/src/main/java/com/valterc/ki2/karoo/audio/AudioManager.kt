@@ -2,6 +2,7 @@ package com.valterc.ki2.karoo.audio
 
 import com.valterc.ki2.data.message.AudioAlertMessage
 import com.valterc.ki2.data.preferences.PreferencesView
+import com.valterc.ki2.data.preferences.device.DevicePreferences
 import com.valterc.ki2.karoo.Ki2ExtensionContext
 import io.hammerhead.karooext.models.HardwareType
 import io.hammerhead.karooext.models.PlayBeepPattern
@@ -36,7 +37,7 @@ class AudioManager(private val context: Ki2ExtensionContext) {
         audioAlertShiftingLimit = preferences.getAudioAlertShiftingLimit(context.context)
         audioAlertUpcomingSynchroShift =
             preferences.getAudioAlertUpcomingSynchroShift(context.context)
-        audioAlertRearGear = (1..PreferencesView.MAX_AUDIO_ALERT_REAR_GEAR).associateWith {
+        audioAlertRearGear = (1..DevicePreferences.MAX_GEAR_COUNT_REAR).associateWith {
             preferences.getAudioAlertRearGear(context.context, it)
         }
         delayBetweenAlerts = preferences.getDelayBetweenAudioAlerts(context.context)
