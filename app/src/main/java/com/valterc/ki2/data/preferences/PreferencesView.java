@@ -316,6 +316,20 @@ public class PreferencesView implements Parcelable {
     }
 
     /**
+     * Get the audio alert for when shifting into a specific rear gear.
+     *
+     * @param context  Ki2 application context. Cannot be a context generated from another package.
+     * @param rearGear Rear gear index, starting at 1 for the lowest gear, up to
+     *                 {@link com.valterc.ki2.data.preferences.device.DevicePreferences#MAX_GEAR_COUNT_REAR}.
+     * @return Audio alert name for the given rear gear.
+     */
+    @NonNull
+    public String getAudioAlertRearGear(Context context, int rearGear) {
+        return getString(context.getString(R.string.preference_audio_alert_rear_gear_prefix) + rearGear,
+                context.getString(R.string.default_preference_audio_alert_rear_gear));
+    }
+
+    /**
      * Delay between audio alerts in milliseconds.
      *
      * @param context Ki2 application context. Cannot be a context generated from another package.

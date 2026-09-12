@@ -2,6 +2,7 @@ package com.valterc.ki2.karoo.audio
 
 import com.valterc.ki2.data.message.AudioAlertMessage
 import com.valterc.ki2.data.preferences.PreferencesView
+import com.valterc.ki2.data.preferences.device.DevicePreferences
 import com.valterc.ki2.karoo.Ki2ExtensionContext
 import io.hammerhead.karooext.models.HardwareType
 import io.hammerhead.karooext.models.PlayBeepPattern
@@ -11,11 +12,16 @@ import kotlin.math.max
 
 class AudioManager(private val context: Ki2ExtensionContext) {
 
+    private companion object {
+        const val AUDIO_DISABLED = "disabled"
+    }
+
     private var enableAudioAlerts: Boolean = true
     private var audioAlertLowestGear: String? = null
     private var audioAlertHighestGear: String? = null
     private var audioAlertShiftingLimit: String? = null
     private var audioAlertUpcomingSynchroShift: String? = null
+    private var audioAlertRearGear: Map<Int, String> = emptyMap()
     private var delayBetweenAlerts: Int = 0
     private var timestampLastAlert: Long = 0
     private var intensity: AudioIntensity = AudioIntensity.Normal
@@ -31,6 +37,9 @@ class AudioManager(private val context: Ki2ExtensionContext) {
         audioAlertShiftingLimit = preferences.getAudioAlertShiftingLimit(context.context)
         audioAlertUpcomingSynchroShift =
             preferences.getAudioAlertUpcomingSynchroShift(context.context)
+        audioAlertRearGear = (1..DevicePreferences.MAX_GEAR_COUNT_REAR).associateWith {
+            preferences.getAudioAlertRearGear(context.context, it)
+        }
         delayBetweenAlerts = preferences.getDelayBetweenAudioAlerts(context.context)
         intensity = preferences.getAudioAlertIntensity(context.context)
     }
@@ -47,7 +56,7 @@ class AudioManager(private val context: Ki2ExtensionContext) {
             "karoo_bell_new" -> playKarooBellNew(adjustIntensity)
             "custom_single_beep" -> playSingleBeep(adjustIntensity)
             "custom_double_beep" -> playDoubleBeep(adjustIntensity)
-            "disabled" -> return
+            AUDIO_DISABLED -> return
             else -> Timber.i("Unknown audio requested '%s'", audio)
         }
     }
@@ -231,6 +240,21 @@ class AudioManager(private val context: Ki2ExtensionContext) {
     fun playUpcomingSynchroShiftAudioAlert() {
         tryTriggerAudioAlert {
             playAudio(audioAlertUpcomingSynchroShift)
+        }
+    }
+
+    fun hasRearGearAudioAlert(rearGear: Int): Boolean {
+        val audio = audioAlertRearGear[rearGear]
+        return audio != null && audio != AUDIO_DISABLED
+    }
+
+    fun playRearGearAudioAlert(rearGear: Int) {
+        if (!hasRearGearAudioAlert(rearGear)) {
+            return
+        }
+
+        tryTriggerAudioAlert {
+            playAudio(audioAlertRearGear[rearGear])
         }
     }
 
