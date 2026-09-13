@@ -23,6 +23,7 @@ import com.valterc.ki2.karoo.datatypes.visual.DrivetrainSizeVisualDataType
 import com.valterc.ki2.karoo.datatypes.visual.GearsDetailedVisualDataType
 import com.valterc.ki2.karoo.datatypes.visual.GearsIndexVisualDataType
 import com.valterc.ki2.karoo.datatypes.visual.GearsSizeVisualDataType
+import com.valterc.ki2.karoo.fit.FitDeviceInfoHandler
 import com.valterc.ki2.karoo.overlay.OverlayWindowHandler
 import com.valterc.ki2.karoo.shifting.ShiftingAudioAlertHandler
 import com.valterc.ki2.karoo.device.ShiftingDevice
@@ -31,12 +32,14 @@ import io.hammerhead.karooext.extension.KarooExtension
 import io.hammerhead.karooext.internal.Emitter
 import io.hammerhead.karooext.models.Device
 import io.hammerhead.karooext.models.DeviceEvent
+import io.hammerhead.karooext.models.FitEffect
 import io.hammerhead.karooext.models.RequestAnt
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import kotlin.time.Duration.Companion.milliseconds
 
 class Ki2ExtensionService : KarooExtension("ki2", BuildConfig.VERSION_NAME) {
 
@@ -58,6 +61,10 @@ class Ki2ExtensionService : KarooExtension("ki2", BuildConfig.VERSION_NAME) {
     }
 
     private val handlers = mutableListOf<RideHandler>()
+
+    private val fitDeviceInfoHandler by lazy {
+        return@lazy FitDeviceInfoHandler(extensionContext)
+    }
 
     override val types by lazy {
         listOf(
@@ -96,13 +103,14 @@ class Ki2ExtensionService : KarooExtension("ki2", BuildConfig.VERSION_NAME) {
                 handlers.add(OverlayWindowHandler(this, extensionContext))
                 handlers.add(ShiftingAudioAlertHandler(extensionContext))
                 handlers.add(BatteryAlertHandler(extensionContext))
+                handlers.add(fitDeviceInfoHandler)
             }
         }
     }
 
     override fun startScan(emitter: Emitter<Device>) {
         val job = CoroutineScope(Dispatchers.IO).launch {
-            delay(1000)
+            delay(1000.milliseconds)
             extensionContext.serviceClient.savedDevices?.let {
                 for (device: DeviceId in it) {
                     val shiftingDevice = ShiftingDevice(extensionContext, device).source
@@ -121,6 +129,11 @@ class Ki2ExtensionService : KarooExtension("ki2", BuildConfig.VERSION_NAME) {
         val deviceId = DeviceId(uid)
         extensionContext.karooDeviceTracking.deviceConnect(deviceId)
         ShiftingDevice(extensionContext, deviceId).connect(emitter)
+    }
+
+    override fun startFit(emitter: Emitter<FitEffect>) {
+        Timber.i("FIT started")
+        fitDeviceInfoHandler.start(emitter)
     }
 
     override fun onDestroy() {

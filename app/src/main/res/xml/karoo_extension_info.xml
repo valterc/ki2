@@ -3,7 +3,8 @@
     id="ki2"
     displayName="@string/app_name"
     icon="@drawable/ic_icon"
-    scansDevices="true">
+    scansDevices="true"
+    fitFile="true">
 
     <DataType
         description="Shifting battery %."

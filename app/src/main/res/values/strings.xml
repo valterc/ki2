@@ -134,6 +134,9 @@
     <string name="text_enabled_audio_alerts">Enabled Shifting audio alerts</string>
     <string name="text_ant_recording">ANT Recording</string>
     <string name="text_warning_ant_recording">WARNING!\n\nANT recording will record all ANT events to a file for debugging purposes.\n\nEnable ONLY when troubleshooting ANT issues, this feature vastly increases resource usage and battery consumption.\n\nUse at your own risk.</string>
+    <string name="text_fit_recording_device_info">FIT recording</string>
+    <string name="text_notice_fit_recording">Shift events are automatically recorded by Karoo when the Ki2 sensors are added to the Karoo sensors.</string>
+    <string name="text_warning_fit_recording_device_info">Ki2 only records the identifiers of the Di2 devices in use into the FIT file.\n\nShift events are NOT recorded by Ki2, those are recorded by Karoo.\n\nFor shift events to be recorded to the FIT file the Ki2 sensors must be added to the Karoo sensors.</string>
     <string name="text_gears">Gears</string>
     <string name="text_drivetrain">Drivetrain</string>
     <string name="text_bike_battery">Bike Battery</string>
