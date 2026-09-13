@@ -18,6 +18,7 @@ import com.valterc.ki2.karoo.Ki2ExtensionContext
 import com.valterc.ki2.karoo.Ki2ExtensionService
 import com.valterc.ki2.karoo.RideHandler
 import com.valterc.ki2.karoo.overlay.manager.OverlayManager
+import io.hammerhead.karooext.models.ActiveRideProfile
 import io.hammerhead.karooext.models.RideState
 import io.hammerhead.karooext.models.SystemNotification
 import timber.log.Timber
@@ -36,10 +37,15 @@ class OverlayWindowHandler(
     private var overlayManager: OverlayManager? = null
     private var overlayEnabled = false
     private var inRideApp = false
+    private var overlayAllowedInRideProfile = true
+    private var preferences: PreferencesView? = null
+    private var rideProfileName: String? = null
 
     private val preferencesListener = Consumer<PreferencesView> { preferences: PreferencesView ->
+        this.preferences = preferences
         overlayEnabled = preferences.isOverlayEnabled(service)
-        if (overlayEnabled) {
+        overlayAllowedInRideProfile = preferences.isOverlayAllowedForRideProfile(service, rideProfileName)
+        if (overlayEnabled && overlayAllowedInRideProfile) {
             open()
         } else {
             close()
@@ -78,6 +84,17 @@ class OverlayWindowHandler(
             }
         }
 
+        extensionContext.karooSystem.addConsumer { activeRideProfile: ActiveRideProfile ->
+            Timber.d("Received active ride profile: %s", activeRideProfile.profile.name)
+            rideProfileName = activeRideProfile.profile.name
+            overlayAllowedInRideProfile = preferences?.isOverlayAllowedForRideProfile(service, rideProfileName) ?: true
+            if (overlayAllowedInRideProfile) {
+                open()
+            } else {
+                close()
+            }
+        }
+
         service.registerReceiver(
             receiverRideAppOpened,
             IntentFilter("io.hammerhead.intent.action.RIDE_APP_OPENED"),
@@ -102,7 +119,7 @@ class OverlayWindowHandler(
             return
         }
 
-        if (!overlayEnabled || !inRideApp) {
+        if (!overlayEnabled || !inRideApp || !overlayAllowedInRideProfile) {
             return
         }
 

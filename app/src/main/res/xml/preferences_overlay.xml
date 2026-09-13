@@ -11,6 +11,13 @@
             app:summary="@string/summary_preference_overlay_enabled"
             app:title="@string/title_preference_overlay_enabled" />
 
+        <EditTextPreference
+            app:defaultValue="@string/default_preference_overlay_ride_profile_filter"
+            app:key="@string/preference_overlay_ride_profile_filter"
+            app:title="@string/title_preference_overlay_ride_profile_filter"
+            app:dependency="@string/preference_overlay_enabled"
+            />
+
         <MultiSelectListPreference
             app:defaultValue="@array/preference_values_overlay_triggers"
             app:entries="@array/preference_titles_overlay_triggers"

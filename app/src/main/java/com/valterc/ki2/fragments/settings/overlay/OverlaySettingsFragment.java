@@ -6,12 +6,17 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.util.TypedValue;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
+import androidx.preference.EditTextPreference;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
@@ -59,6 +64,12 @@ public class OverlaySettingsFragment extends PreferenceFragmentCompat {
 
             return true;
         });
+
+        EditTextPreference preferenceOverlayRideProfileFilter = findPreference(getString(R.string.preference_overlay_ride_profile_filter));
+        Objects.requireNonNull(preferenceOverlayRideProfileFilter).setSummaryProvider(preference -> {
+            String value = ((EditTextPreference) preference).getText();
+            return value == null || value.isBlank() ? getString(R.string.text_preference_overlay_ride_profile_filter_all) : value;
+        });
     }
 
     @Override
@@ -83,6 +94,8 @@ public class OverlaySettingsFragment extends PreferenceFragmentCompat {
             OverlayThemeDialogFragment.newInstance(preference.getKey()).show(getParentFragmentManager(), null);
         } else if (Objects.equals(preference.getKey(), getString(R.string.preference_overlay_opacity))) {
             handleOverlayOpacityDialog(preference);
+        } else if (Objects.equals(preference.getKey(), getString(R.string.preference_overlay_ride_profile_filter))) {
+            handleOverlayRideProfileFilterDialog((EditTextPreference) preference);
         } else if (Objects.equals(preference.getKey(), getString(R.string.preference_secondary_overlay_opacity))) {
             handleSecondaryOverlayOpacityDialog(preference);
         } else if (preference instanceof PositionPreference positionPreference) {
@@ -109,5 +122,39 @@ public class OverlaySettingsFragment extends PreferenceFragmentCompat {
 
         PreferencesView preferencesView = new PreferencesView(getContext());
         OverlayOpacityDialogFragment.newInstance(preference.getKey(), preferencesView.getSecondaryOverlayTheme(requireContext()), preferencesView.getSecondaryOverlayOpacity(requireContext())).show(getParentFragmentManager(), null);
+    }
+
+    private void handleOverlayRideProfileFilterDialog(@NonNull EditTextPreference preference) {
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_overlay_ride_profile_filter, null);
+        EditText editText = dialogView.findViewById(R.id.edittext_overlay_ride_profile_filter);
+        editText.setText(preference.getText());
+        editText.setSelection(editText.getText().length());
+
+        AlertDialog dialog = new AlertDialog.Builder(requireContext(), R.style.AlertDialogStyle)
+                .setTitle(R.string.title_preference_overlay_ride_profile_filter)
+                .setView(dialogView)
+                .setNegativeButton(R.string.text_cancel, null)
+                .setPositiveButton(R.string.text_ok, (d, which) -> applyOverlayRideProfileFilter(preference, editText.getText().toString()))
+                .create();
+
+        editText.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                applyOverlayRideProfileFilter(preference, editText.getText().toString());
+                dialog.dismiss();
+                return true;
+            }
+
+            return false;
+        });
+
+        Objects.requireNonNull(dialog.getWindow()).setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        dialog.show();
+    }
+
+    private void applyOverlayRideProfileFilter(@NonNull EditTextPreference preference, @NonNull String value) {
+        String filter = value.trim();
+        if (preference.callChangeListener(filter)) {
+            preference.setText(filter);
+        }
     }
 }

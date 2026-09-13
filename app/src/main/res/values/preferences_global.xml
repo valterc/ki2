@@ -55,6 +55,7 @@
     <string name="title_preference_overlay_theme">Theme</string>
     <string name="title_preference_overlay_opacity">Opacity</string>
     <string name="title_preference_overlay_position">Position</string>
+    <string name="title_preference_overlay_ride_profile_filter">Ride profile filter</string>
     <string name="title_preference_switch_turn_screen_on">Turn screen on</string>
     <string name="title_preference_accent_color">Accent Color</string>
 
@@ -78,6 +79,9 @@
     <string name="summary_preference_overlay_theme">Visual theme</string>
     <string name="summary_preference_overlay_opacity">Overlay view opacity, a low opacity will make the overlay translucent.</string>
     <string name="summary_preference_overlay_position">Overlay position in the Ride screen.</string>
+    <string name="summary_preference_overlay_ride_profile_filter">Only show overlays when the name of the active ride profile contains one of these words. Separate words with commas. Leave empty to show overlays in every ride profile.</string>
+    <string name="hint_preference_overlay_ride_profile_filter">di2, race, training</string>
+    <string name="text_preference_overlay_ride_profile_filter_all">All ride profiles</string>
     <string name="summary_preference_secondary_overlay">Show a secondary Overlay with shifting information in Ride</string>
     <string name="summary_preference_switch_turn_screen_on">Turn screen on when a switch is pressed</string>
     <string name="summary_preference_accent_color">Accent color used to highlight current gear</string>
@@ -106,6 +110,7 @@
     <string name="default_preference_overlay_theme">default_dark_gear_index</string>
     <integer name="default_preference_overlay_opacity">1</integer>
     <integer name="default_preference_overlay_position">0</integer>
+    <string name="default_preference_overlay_ride_profile_filter"></string>
     <bool name="default_preference_secondary_overlay_enabled">false</bool>
     <string name="default_preference_secondary_overlay_duration">-1</string>
     <string name="default_preference_secondary_overlay_theme">slim_dark</string>
@@ -161,6 +166,7 @@
     <string name="preference_overlay_opacity">OVERLAY_OPACITY</string>
     <string name="preference_overlay_position_x">OVERLAY_POSITION_X</string>
     <string name="preference_overlay_position_y">OVERLAY_POSITION_Y</string>
+    <string name="preference_overlay_ride_profile_filter">OVERLAY_RIDE_PROFILE_FILTER</string>
     <string name="preference_secondary_overlay_enabled">SECONDARY_OVERLAY_ENABLED</string>
     <string name="preference_secondary_overlay_triggers">SECONDARY_OVERLAY_TRIGGERS</string>
     <string name="preference_secondary_overlay_duration">SECONDARY_OVERLAY_DURATION</string>
