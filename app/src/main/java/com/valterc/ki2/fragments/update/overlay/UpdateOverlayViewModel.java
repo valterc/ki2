@@ -1,11 +1,15 @@
 package com.valterc.ki2.fragments.update.overlay;
 
+import android.content.Context;
+
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.valterc.ki2.BuildConfig;
 import com.valterc.ki2.data.update.ReleaseInfo;
+import com.valterc.ki2.data.update.UpdateStateStore;
 import com.valterc.ki2.update.GetLatestReleaseInfoTask;
 
 import java.util.concurrent.ExecutorService;
@@ -33,13 +37,14 @@ public class UpdateOverlayViewModel extends ViewModel {
         return releaseInfo;
     }
 
-    public void checkForUpdates() {
+    public void checkForUpdates(@NonNull Context context) {
         updateCheckStatus.postValue(UpdateCheckStatus.CHECKING);
+        boolean previewUpdatesEnabled = UpdateStateStore.isPreviewUpdatesEnabled(context);
         executor.submit(() -> {
             try {
-                ReleaseInfo releaseInfo = new GetLatestReleaseInfoTask().call();
+                ReleaseInfo releaseInfo = new GetLatestReleaseInfoTask(previewUpdatesEnabled).call();
                 this.releaseInfo.postValue(releaseInfo);
-                if (!releaseInfo.getName().equals(BuildConfig.VERSION_NAME)) {
+                if (releaseInfo.isUpdateFrom(BuildConfig.VERSION_NAME)) {
                     updateCheckStatus.postValue(UpdateCheckStatus.UPDATE_AVAILABLE);
                 } else {
                     updateCheckStatus.postValue(UpdateCheckStatus.NO_UPDATE_AVAILABLE);
