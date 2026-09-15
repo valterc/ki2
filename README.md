@@ -21,7 +21,7 @@ Ki2 is an extension for Hammerhead Karoo cycling computers. It is a companion ap
 - Change shifting mode
 - Overlay shifting information on top of the ride display
 - Receive notifications when shifting battery is low
-- Audio alerts before upcoming synchro shift or when reaching shifting limits
+- Audio alerts before upcoming synchro shift, when reaching shifting limits or when shifting into a specific rear gear
 
 > [!NOTE]
 > The following features require the Ki2 shifting devices to be added to Karoo as extension sensors:

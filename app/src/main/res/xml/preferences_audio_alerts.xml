@@ -67,6 +67,12 @@
             app:title="@string/title_preference_audio_alert_upcoming_synchro_shift"
             app:dependency="@string/preference_audio_alerts_enabled" />
 
+        <Preference
+            app:fragment="com.valterc.ki2.fragments.settings.RearGearAudioAlertsSettingsFragment"
+            app:summary="@string/summary_preference_audio_alert_rear_gears"
+            app:title="@string/title_preference_audio_alert_rear_gears"
+            app:dependency="@string/preference_audio_alerts_enabled" />
+
     </PreferenceCategory>
 
 </PreferenceScreen>

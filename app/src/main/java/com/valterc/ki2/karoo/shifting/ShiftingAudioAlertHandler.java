@@ -32,6 +32,13 @@ public class ShiftingAudioAlertHandler extends RideHandler {
         }
 
         if (lastShiftingInfo != null &&
+                shiftingInfo.getRearGear() != lastShiftingInfo.getRearGear() &&
+                getExtensionContext().getAudioManager().hasRearGearAudioAlert(shiftingInfo.getRearGear())) {
+            getExtensionContext().getAudioManager().playRearGearAudioAlert(shiftingInfo.getRearGear());
+            return;
+        }
+
+        if (lastShiftingInfo != null &&
                 shiftingInfo.getRearGear() == 1 && shiftingInfo.getFrontGear() == 1 &&
                 (lastShiftingInfo.getRearGear() != 1 || lastShiftingInfo.getFrontGear() != 1)) {
             getExtensionContext().getAudioManager().playLowestGearAudioAlert();
