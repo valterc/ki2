@@ -65,6 +65,7 @@
     <string name="text_dismiss">Dismiss</string>
     <string name="text_param_low_battery">Battery of %1$s at %2$d%%</string>
     <string name="text_di2_low_battery">Di2 low battery</string>
+    <string name="text_external_action_subtitle">From %s</string>
     <string name="text_update_complete">Update complete</string>
     <string name="text_update_complete_restart">Update complete, please restart Karoo</string>
     <string name="text_ki2_updated">Ki2 updated</string>
