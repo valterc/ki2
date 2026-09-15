@@ -19,6 +19,7 @@ import com.valterc.ki2.karoo.views.KarooTheme;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -450,6 +451,45 @@ public class PreferencesView implements Parcelable {
 
             return context.getResources().getInteger(R.integer.default_preference_overlay_position);
         });
+    }
+
+    /**
+     * Get the configured ride profile name filter for overlays.
+     * <p>
+     * A comma separated list of words. Overlays are only displayed when the name of the active
+     * Karoo ride profile contains at least one of these words. An empty value means that overlays
+     * are displayed in every ride profile.
+     *
+     * @param context Ki2 application context. Cannot be a context generated from another package.
+     * @return Overlay ride profile filter.
+     */
+    @NonNull
+    public String getOverlayRideProfileFilter(Context context) {
+        String value = getString(context.getString(R.string.preference_overlay_ride_profile_filter),
+                () -> context.getString(R.string.default_preference_overlay_ride_profile_filter));
+        return value == null ? "" : value;
+    }
+
+    /**
+     * Indicates if overlays can be displayed for the given ride profile name.
+     *
+     * @param context         Ki2 application context. Cannot be a context generated from another package.
+     * @param rideProfileName Name of the active ride profile, can be null if unknown.
+     * @return True if overlays can be displayed for the given ride profile, False otherwise.
+     */
+    public boolean isOverlayAllowedForRideProfile(Context context, @Nullable String rideProfileName) {
+        String filter = getOverlayRideProfileFilter(context);
+
+        if (filter.isBlank() || rideProfileName == null) {
+            return true;
+        }
+
+        String name = rideProfileName.toLowerCase(Locale.ROOT);
+
+        return Arrays.stream(filter.split(","))
+                .map(word -> word.trim().toLowerCase(Locale.ROOT))
+                .filter(word -> !word.isEmpty())
+                .anyMatch(name::contains);
     }
 
     /**
