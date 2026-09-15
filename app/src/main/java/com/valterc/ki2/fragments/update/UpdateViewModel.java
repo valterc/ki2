@@ -70,7 +70,7 @@ public class UpdateViewModel extends ViewModel {
 
         if (releaseInfo == null) {
             this.updateStatus.postValue(UpdateStatus.START);
-        } else if (!releaseInfo.getName().equals(BuildConfig.VERSION_NAME)) {
+        } else if (releaseInfo.isUpdateFrom(BuildConfig.VERSION_NAME)) {
             this.updateStatus.postValue(UpdateStatus.UPDATE_AVAILABLE);
         } else {
             this.updateStatus.postValue(UpdateStatus.NO_UPDATE_AVAILABLE);
@@ -97,11 +97,12 @@ public class UpdateViewModel extends ViewModel {
         return updateProgress;
     }
 
-    public void checkForUpdates() {
+    public void checkForUpdates(@NonNull Context context) {
         updateStatus.postValue(UpdateStatus.CHECKING_FOR_UPDATE);
+        boolean previewUpdatesEnabled = UpdateStateStore.isPreviewUpdatesEnabled(context);
         executor.submit(() -> {
             try {
-                ReleaseInfo releaseInfo = new GetLatestReleaseInfoTask().call();
+                ReleaseInfo releaseInfo = new GetLatestReleaseInfoTask(previewUpdatesEnabled).call();
                 setReleaseInfo(releaseInfo);
             } catch (Exception e) {
                 errorMessage.postValue(e.getMessage());

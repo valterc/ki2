@@ -33,12 +33,13 @@ public class BackgroundUpdateChecker {
 
     private void checkForUpdates() {
         if (UpdateStateStore.shouldAutomaticallyCheckForUpdatesInBackground(context)) {
-            GetLatestReleaseInfoTask getLatestReleaseInfoTask = new GetLatestReleaseInfoTask();
+            GetLatestReleaseInfoTask getLatestReleaseInfoTask =
+                    new GetLatestReleaseInfoTask(UpdateStateStore.isPreviewUpdatesEnabled(context));
             try {
                 Timber.d("Attempting to check for updates");
                 ReleaseInfo releaseInfo = getLatestReleaseInfoTask.call();
 
-                boolean updateAvailable = !releaseInfo.getName().equals(BuildConfig.VERSION_NAME);
+                boolean updateAvailable = releaseInfo.isUpdateFrom(BuildConfig.VERSION_NAME);
                 UpdateStateStore.checkedForUpdates(context, updateAvailable, releaseInfo.getName());
 
                 if (updateAvailable) {

@@ -135,7 +135,7 @@ public class UpdateFragment extends Fragment {
 
         Button buttonCheckForUpdates = view.findViewById(R.id.button_update_check_for_updates);
         Button buttonUpdate = view.findViewById(R.id.button_update);
-        buttonCheckForUpdates.setOnClickListener((event) -> viewModel.checkForUpdates());
+        buttonCheckForUpdates.setOnClickListener((event) -> viewModel.checkForUpdates(requireContext()));
         buttonUpdate.setOnClickListener((event) -> {
             if (UpdateStateStore.isFirstUpdate(requireContext())) {
                 new UpdateTutorialDialog(requireContext(), null, () -> viewModel.performUpdate(requireActivity())).show();
@@ -148,8 +148,11 @@ public class UpdateFragment extends Fragment {
 
         viewModel.getReleaseInfo().observe(getViewLifecycleOwner(), releaseInfo -> {
             if (releaseInfo != null) {
-                textViewNewVersion.setText(releaseInfo.getName());
-                textViewAvailableNewVersion.setText(releaseInfo.getName());
+                String version = releaseInfo.isPreview()
+                        ? getString(R.string.text_param_version_preview, releaseInfo.getName())
+                        : releaseInfo.getName();
+                textViewNewVersion.setText(version);
+                textViewAvailableNewVersion.setText(version);
                 textViewReleaseDate.setText(DATE_TIME_FORMATTER.format(releaseInfo.getPublishedAt()));
                 textViewReleaseDetails.setText(formatMarkdown(releaseInfo.getDescription()));
             }
@@ -269,7 +272,7 @@ public class UpdateFragment extends Fragment {
         if (viewModel != null &&
                 (viewModel.getUpdateStatus().getValue() == null ||
                         viewModel.getUpdateStatus().getValue() == UpdateStatus.START)) {
-            viewModel.checkForUpdates();
+            viewModel.checkForUpdates(requireContext());
         }
     }
 

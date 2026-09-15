@@ -115,6 +115,14 @@ Make sure you are using the [latest Ki2 version](https://github.com/valterc/ki2/
 
 The gear size (teeth count) is automatically obtained from the shifting unit, when supported. If the shifting unit is misconfigured then the wrong information will be displayed in Ki2. Please use the official mobile application from the shifting unit manufacturer to configure the correct chainring information. This might not be supported in all bicycles or shifting systems. It is also possible to use custom gearing information, open the device details in Ki2 to edit custom gearing. You should also configure the Karoo sensor with the same gearing information - this has to be done manually.
 
+### Preview updates
+
+Ki2 releases use the version format `MAJOR.MINOR`, for example `15.0`. Preview releases add a preview suffix to the version, for example `16.0-preview.1`, and are published as GitHub pre-releases.
+
+Preview versions contain the newest features but may be unstable. By default Ki2 only updates to stable versions. To receive preview versions, enable `Preview updates` in `Ki2` > `Settings` > `Update`. While the setting is enabled, Ki2 always notifies and updates to the latest available version, whether it is a preview version or a stable version.
+
+Ki2 updates to whichever release is currently the latest in GitHub, which is not necessarily a higher version than the installed one. This means that removing or changing the latest release in GitHub prompts a downgrade.
+
 ### It does not work or I have a problem
 
 If after you diagnose/troubleshoot the problem you still cannot find a solution, please open an issue in this github repository. Explain the problem in detail and explain what you are trying to achieve. Keep in mind that there is no official support for this project.

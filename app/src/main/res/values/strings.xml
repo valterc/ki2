@@ -85,6 +85,7 @@
     <string name="text_update">Update</string>
     <string name="text_update_error_permissions">Permission not granted. You need to allow Ki2 to install unknown apps.</string>
     <string name="text_param_update_available_version">Update available for Ki2, version %s.</string>
+    <string name="text_param_version_preview">%s (preview)</string>
     <string name="text_update_tutorial_2">Enable <b>Allow from this source</b> for Ki2 to be able to install the update.</string>
     <string name="text_update_tutorial_1">When prompted by the system, press <b>Settings</b> and enable app installation. This is required for the app update.</string>
     <string name="text_update_tutorial_3">After enabling <b>Allow from this source</b>, press the left bottom Karoo button to return to the update installation.</string>
