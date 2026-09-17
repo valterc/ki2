@@ -123,7 +123,7 @@ Preview versions contain the newest features but may be unstable. By default Ki2
 
 ### It does not work or I have a problem
 
-Please diagnose/troubleshoot the problem first. If you exhausted all troubleshooting steps and still cannot find a solution, please open an issue in this github repository. Explain what you are trying to achieve, explain the problem in detail and explain and what you've tried so far. Keep in mind that there is no official support for this project.
+Please diagnose/troubleshoot the problem first. If you exhausted all troubleshooting steps and still cannot find a solution, please open an issue in this github repository. Explain what you are trying to achieve, explain the problem in detail and explain what you've tried so far. Keep in mind that there is no official support for this project.
 
 ## License and notices
 
