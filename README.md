@@ -2,7 +2,7 @@
 
 Ki2 is an extension for Hammerhead Karoo cycling computers. It is a companion app for electronic shifting groupsets produced by a Japanese company.
 
-[![Buy me a coffee](https://img.shields.io/badge/☕-Buy%20me%20a%20coffee-blue)](https://www.paypal.com/donate/?business=N6PWH859NY7W6&no_recurring=1&item_name=Buy+me+a+coffee&currency_code=EUR) [![Validate workflow](https://github.com/valterc/ki2/actions/workflows/android-validate.yml/badge.svg?branch=main)](https://github.com/valterc/ki2/actions/workflows/android-validate.yml) [![Latest Release](https://img.shields.io/github/v/release/valterc/ki2?label=Latest%20Release)](https://github.com/valterc/ki2/releases/latest/)
+[![Buy me a coffee](https://img.shields.io/badge/☕-Buy%20me%20a%20coffee-blue)](https://ko-fi.com/valterc) [![Validate workflow](https://github.com/valterc/ki2/actions/workflows/android-validate.yml/badge.svg?branch=main)](https://github.com/valterc/ki2/actions/workflows/android-validate.yml) [![Latest Release](https://img.shields.io/github/v/release/valterc/ki2?label=Latest%20Release)](https://github.com/valterc/ki2/releases/latest/)
 
 ## Screenshots
 
@@ -80,7 +80,7 @@ Battery gain/loss is marginal and negligible for this particular test given the 
 
 ## How can I help?
 
-Is this useful for you? [Buy me a coffee](https://www.paypal.com/donate/?business=N6PWH859NY7W6&no_recurring=1&item_name=Buy+me+a+coffee&currency_code=EUR).
+Is this useful for you? [Buy me a coffee](https://ko-fi.com/valterc).
 
 ## Support + Future development
 
@@ -97,7 +97,7 @@ Maybe, it might or might not be possible, given that:
 - Karoo extensions have a limited set of features.
 - The information from the shifting system may not be well understood, since many details are not publicly available.
 
-Open an issue and I might consider working on it, or feel free to contribute yourself. Submissions that are outside the _scope_ of the project may be rejected.
+Open an issue and I might consider working on it, or feel free to contribute yourself. Gimmick features or submissions that are outside the _scope_ of the project may be rejected.
 
 ### I tried cloning the repo but the build fails on my machine
 
@@ -121,11 +121,9 @@ Ki2 releases use the version format `MAJOR.MINOR`, for example `15.0`. Preview r
 
 Preview versions contain the newest features but may be unstable. By default Ki2 only updates to stable versions. To receive preview versions, enable `Preview updates` in `Ki2` > `Settings` > `Update`. While the setting is enabled, Ki2 always notifies and updates to the latest available version, whether it is a preview version or a stable version.
 
-Ki2 updates to whichever release is currently the latest in GitHub, which is not necessarily a higher version than the installed one. This means that removing or changing the latest release in GitHub prompts a downgrade.
-
 ### It does not work or I have a problem
 
-If after you diagnose/troubleshoot the problem you still cannot find a solution, please open an issue in this github repository. Explain the problem in detail and explain what you are trying to achieve. Keep in mind that there is no official support for this project.
+Please diagnose/troubleshoot the problem first. If you exhausted all troubleshooting steps and still cannot find a solution, please open an issue in this github repository. Explain what you are trying to achieve, explain the problem in detail and explain and what you've tried so far. Keep in mind that there is no official support for this project.
 
 ## License and notices
 
