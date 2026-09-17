@@ -44,7 +44,7 @@ public class UpdateOverlayViewModel extends ViewModel {
             try {
                 ReleaseInfo releaseInfo = new GetLatestReleaseInfoTask(previewUpdatesEnabled).call();
                 this.releaseInfo.postValue(releaseInfo);
-                if (releaseInfo.isUpdateFrom(BuildConfig.VERSION_NAME)) {
+                if (releaseInfo.isUpdateFrom(BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE)) {
                     updateCheckStatus.postValue(UpdateCheckStatus.UPDATE_AVAILABLE);
                 } else {
                     updateCheckStatus.postValue(UpdateCheckStatus.NO_UPDATE_AVAILABLE);

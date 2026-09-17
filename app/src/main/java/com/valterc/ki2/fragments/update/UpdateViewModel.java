@@ -70,7 +70,7 @@ public class UpdateViewModel extends ViewModel {
 
         if (releaseInfo == null) {
             this.updateStatus.postValue(UpdateStatus.START);
-        } else if (releaseInfo.isUpdateFrom(BuildConfig.VERSION_NAME)) {
+        } else if (releaseInfo.isUpdateFrom(BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE)) {
             this.updateStatus.postValue(UpdateStatus.UPDATE_AVAILABLE);
         } else {
             this.updateStatus.postValue(UpdateStatus.NO_UPDATE_AVAILABLE);

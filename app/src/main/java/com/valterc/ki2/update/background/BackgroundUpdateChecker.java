@@ -39,7 +39,7 @@ public class BackgroundUpdateChecker {
                 Timber.d("Attempting to check for updates");
                 ReleaseInfo releaseInfo = getLatestReleaseInfoTask.call();
 
-                boolean updateAvailable = releaseInfo.isUpdateFrom(BuildConfig.VERSION_NAME);
+                boolean updateAvailable = releaseInfo.isUpdateFrom(BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE);
                 UpdateStateStore.checkedForUpdates(context, updateAvailable, releaseInfo.getName());
 
                 if (updateAvailable) {

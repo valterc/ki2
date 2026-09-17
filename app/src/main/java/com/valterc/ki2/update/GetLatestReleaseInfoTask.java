@@ -36,7 +36,9 @@ public class GetLatestReleaseInfoTask implements Callable<ReleaseInfo> {
     public static final String KEY_PUBLISHED_DATE = "published_at";
     public static final String KEY_TAG_NAME = "tag_name";
     public static final String KEY_URL = "html_url";
+    public static final String KEY_MANIFEST_VERSION_CODE = "latestVersionCode";
     public static final String PATTERN_PACKAGE_NAME_END = "release.apk";
+    public static final String NAME_MANIFEST = "manifest.json";
 
     private final boolean includePreviewReleases;
 
@@ -137,14 +139,18 @@ public class GetLatestReleaseInfoTask implements Callable<ReleaseInfo> {
         String packageName = null;
         String packageUrl = null;
         long packageSizeBytes = -1;
+        String manifestUrl = null;
 
         for (int i = 0; i < jsonArrayAssets.size(); i++) {
             JsonObject jsonAssetObject = jsonArrayAssets.get(i).getAsJsonObject();
+            String assetName = jsonAssetObject.get(KEY_NAME).getAsString();
 
-            if (jsonAssetObject.get(KEY_NAME).getAsString().endsWith(PATTERN_PACKAGE_NAME_END)) {
-                packageName = jsonAssetObject.get(KEY_NAME).getAsString();
+            if (assetName.endsWith(PATTERN_PACKAGE_NAME_END)) {
+                packageName = assetName;
                 packageUrl = jsonAssetObject.get(KEY_PACKAGE_URL).getAsString();
                 packageSizeBytes = jsonAssetObject.get(KEY_PACKAGE_SIZE).getAsLong();
+            } else if (NAME_MANIFEST.equals(assetName)) {
+                manifestUrl = jsonAssetObject.get(KEY_PACKAGE_URL).getAsString();
             }
         }
 
@@ -172,7 +178,36 @@ public class GetLatestReleaseInfoTask implements Callable<ReleaseInfo> {
                 packageName,
                 packageUrl,
                 packageSizeBytes,
-                getBoolean(jsonObject, KEY_PRERELEASE) || Version.isPreview(name));
+                getBoolean(jsonObject, KEY_PRERELEASE) || Version.isPreview(name),
+                getVersionCode(manifestUrl));
+    }
+
+    /**
+     * Get the version code of a release from its manifest asset.
+     * <p>
+     * Releases that do not publish a manifest have an unknown version code.
+     *
+     * @param manifestUrl URL of the release manifest asset, may be null.
+     * @return Version code of the release or {@link ReleaseInfo#VERSION_CODE_UNKNOWN}.
+     */
+    private static int getVersionCode(@Nullable String manifestUrl) {
+        if (manifestUrl == null) {
+            return ReleaseInfo.VERSION_CODE_UNKNOWN;
+        }
+
+        try {
+            JsonObject jsonManifest = getJson(manifestUrl).getAsJsonObject();
+            JsonElement jsonElementVersionCode = jsonManifest.get(KEY_MANIFEST_VERSION_CODE);
+
+            if (jsonElementVersionCode == null || jsonElementVersionCode.isJsonNull()) {
+                return ReleaseInfo.VERSION_CODE_UNKNOWN;
+            }
+
+            return jsonElementVersionCode.getAsInt();
+        } catch (Exception e) {
+            Timber.w(e, "Unable to read version code from release manifest");
+            return ReleaseInfo.VERSION_CODE_UNKNOWN;
+        }
     }
 
     @Nullable
