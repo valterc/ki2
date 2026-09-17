@@ -15,6 +15,7 @@ public class UpdateInfo implements Parcelable {
     private final Instant checkInstant;
     private final boolean updateAvailable;
     private final String updateVersion;
+    private final boolean previewUpdatesEnabled;
 
     public static final Parcelable.Creator<UpdateInfo> CREATOR = new Parcelable.Creator<UpdateInfo>() {
         public UpdateInfo createFromParcel(Parcel in) {
@@ -33,7 +34,8 @@ public class UpdateInfo implements Parcelable {
                       boolean autoUpdateEnabled,
                       Instant checkInstant,
                       boolean updateAvailable,
-                      String updateVersion) {
+                      String updateVersion,
+                      boolean previewUpdatesEnabled) {
         this.previousVersion = previousVersion;
         this.newVersion = newVersion;
         this.updateInstant = updateInstant;
@@ -42,6 +44,7 @@ public class UpdateInfo implements Parcelable {
         this.checkInstant = checkInstant;
         this.updateAvailable = updateAvailable;
         this.updateVersion = updateVersion;
+        this.previewUpdatesEnabled = previewUpdatesEnabled;
     }
 
     private UpdateInfo(Parcel in) {
@@ -53,6 +56,7 @@ public class UpdateInfo implements Parcelable {
         this.checkInstant = Instant.ofEpochMilli(in.readLong());
         this.updateAvailable = in.readByte() == 1;
         this.updateVersion = in.readString();
+        this.previewUpdatesEnabled = in.readByte() == 1;
     }
 
     @Override
@@ -65,6 +69,7 @@ public class UpdateInfo implements Parcelable {
         dest.writeLong(checkInstant.toEpochMilli());
         dest.writeByte(updateAvailable ? (byte)1 : 0);
         dest.writeString(updateVersion);
+        dest.writeByte(previewUpdatesEnabled ? (byte)1 : 0);
     }
 
     @Override
@@ -102,6 +107,10 @@ public class UpdateInfo implements Parcelable {
 
     public String getUpdateVersion() {
         return updateVersion;
+    }
+
+    public boolean isPreviewUpdatesEnabled() {
+        return previewUpdatesEnabled;
     }
 
 }

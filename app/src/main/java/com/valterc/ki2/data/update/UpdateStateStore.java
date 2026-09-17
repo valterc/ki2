@@ -77,6 +77,12 @@ public final class UpdateStateStore {
         return sharedPreferences.getBoolean(PREFERENCE_KEY_ONGOING_UPDATE, false);
     }
 
+    public static boolean isPreviewUpdatesEnabled(Context context) {
+        SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return defaultSharedPreferences.getBoolean(context.getString(R.string.preference_preview_updates),
+                context.getResources().getBoolean(R.bool.default_preference_preview_updates));
+    }
+
     public static boolean shouldAutomaticallyCheckForUpdatesInApp(Context context) {
         SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences sharedPreferences = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
@@ -105,6 +111,20 @@ public final class UpdateStateStore {
         editor.apply();
     }
 
+    /**
+     * Clear the result of the last update check, forcing a new update check to be performed.
+     *
+     * @param context Context.
+     */
+    public static void resetUpdateCheckState(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.remove(PREFERENCE_KEY_CHECK_INSTANT);
+        editor.remove(PREFERENCE_KEY_UPDATE_AVAILABLE);
+        editor.remove(PREFERENCE_KEY_UPDATE_VERSION);
+        editor.apply();
+    }
+
     @NonNull
     public static UpdateInfo getUpdateInfo(Context context) {
         SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
@@ -118,8 +138,8 @@ public final class UpdateStateStore {
                 defaultSharedPreferences.getBoolean(context.getString(R.string.preference_auto_update), true),
                 Instant.ofEpochMilli(sharedPreferences.getLong(PREFERENCE_KEY_CHECK_INSTANT, 0)),
                 sharedPreferences.getBoolean(PREFERENCE_KEY_UPDATE_AVAILABLE, false),
-                sharedPreferences.getString(PREFERENCE_KEY_UPDATE_VERSION, null));
-
+                sharedPreferences.getString(PREFERENCE_KEY_UPDATE_VERSION, null),
+                isPreviewUpdatesEnabled(context));
     }
 
     public static boolean isFirstUpdate(Context context) {

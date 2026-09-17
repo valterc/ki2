@@ -10,6 +10,12 @@
             app:summary="@string/summary_preference_auto_update"
             app:title="@string/title_preference_auto_update" />
 
+        <SwitchPreference
+            app:defaultValue="@bool/default_preference_preview_updates"
+            app:key="@string/preference_preview_updates"
+            app:summary="@string/summary_preference_preview_updates"
+            app:title="@string/title_preference_preview_updates" />
+
         <Preference
             app:title="@string/text_check_for_updates">
             <intent android:targetPackage="com.valterc.ki2"

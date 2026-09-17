@@ -104,7 +104,7 @@ public class UpdateOverlayFragment extends Fragment {
                 savedInstanceState.getBoolean(STATE_KEY_SHOULD_REMOVE, false)) {
             handler.postDelayed(this::removeSelf, 250);
         } else {
-            handler.postDelayed(viewModel::checkForUpdates, 500);
+            handler.postDelayed(() -> viewModel.checkForUpdates(requireContext()), 500);
         }
     }
 

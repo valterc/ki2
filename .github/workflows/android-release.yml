@@ -12,6 +12,27 @@ jobs:
 
     steps:
     - uses: actions/checkout@v5
+
+    - name: Validate tag and determine release type
+      id: release
+      run: |
+        TAG="${{ github.ref_name }}"
+        if [[ "${TAG}" =~ ^[0-9]+(\.[0-9]+)*$ ]]; then
+          echo "Stable release: ${TAG}"
+          echo "preview=false" >> $GITHUB_OUTPUT
+        elif [[ "${TAG}" =~ ^[0-9]+(\.[0-9]+)*-preview(\.[0-9]+)?$ ]]; then
+          echo "Preview release: ${TAG}"
+          echo "preview=true" >> $GITHUB_OUTPUT
+        else
+          echo "Invalid tag '${TAG}'. Expected a stable version such as '16.0' or a preview version such as '16.0-preview.1'."
+          exit 1
+        fi
+
+    - name: Mark release as preview
+      if: steps.release.outputs.preview == 'true'
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: gh release edit ${{ github.ref_name }} --prerelease --latest=false
     
     - name: Set up JDK 25
       uses: actions/setup-java@v5
@@ -78,3 +99,9 @@ jobs:
         file: app/build/manifest.json
         asset_name: manifest.json
         overwrite: true
+
+    - name: Mark release as latest
+      if: steps.release.outputs.preview == 'false'
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: gh release edit ${{ github.ref_name }} --prerelease=false --latest

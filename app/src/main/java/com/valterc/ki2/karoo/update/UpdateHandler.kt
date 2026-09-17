@@ -36,9 +36,15 @@ class UpdateHandler(extensionContext: Ki2ExtensionContext) : RideHandler(extensi
 
     private fun onUpdateAvailableMessage(updateAvailableMessage: UpdateAvailableMessage) {
         Timber.d("Update available, showing notification")
+        val releaseInfo = updateAvailableMessage.releaseInfo
+        val version = if (releaseInfo.isPreview) {
+            extensionContext.context.getString(R.string.text_param_version_preview, releaseInfo.name)
+        } else {
+            releaseInfo.name
+        }
         extensionContext.karooSystem.dispatch(SystemNotification(
             "ki2-update",
-            message = extensionContext.context.getString(R.string.text_param_update_available_version, updateAvailableMessage.releaseInfo.name),
+            message = extensionContext.context.getString(R.string.text_param_update_available_version, version),
             header = extensionContext.context.getString(R.string.text_update_ki2),
             action = extensionContext.context.getString(R.string.text_update),
             actionIntent = "com.valterc.ki2.action.UPDATE"
