@@ -26,7 +26,7 @@ import com.valterc.ki2.data.shifting.ShiftingMode;
 import com.valterc.ki2.data.switches.SwitchCommand;
 import com.valterc.ki2.data.switches.SwitchData;
 import com.valterc.ki2.data.switches.SwitchEvent;
-import com.valterc.ki2.data.switches.SwitchType;
+import com.valterc.ki2.data.switches.SwitchChannel;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -207,19 +207,19 @@ public class ShimanoShiftingProfileHandler implements IDeviceProfileHandler {
 
         int sequenceNumberCH2 = (int) (MessageUtils.numberFromBytes(payload, 1, 1) & 15);
         SwitchCommand switchCommandCH2 = SwitchCommand.fromCommandNumber((int) MessageUtils.numberFromBytes(payload, 1, 1) & 240);
-        handleSwitch(switchCommandCH2, switchDataCH2, sequenceNumberCH2, SwitchType.D_FLY_CH2);
+        handleSwitch(switchCommandCH2, switchDataCH2, sequenceNumberCH2, SwitchChannel.D_FLY_CH2);
 
         int sequenceNumberCH1 = (int) (MessageUtils.numberFromBytes(payload, 2, 1) & 15);
         SwitchCommand switchCommandCH1 = SwitchCommand.fromCommandNumber((int) MessageUtils.numberFromBytes(payload, 2, 1) & 240);
-        handleSwitch(switchCommandCH1, switchDataCH1, sequenceNumberCH1, SwitchType.D_FLY_CH1);
+        handleSwitch(switchCommandCH1, switchDataCH1, sequenceNumberCH1, SwitchChannel.D_FLY_CH1);
 
         int sequenceNumberCH4 = (int) (MessageUtils.numberFromBytes(payload, 3, 1) & 15);
         SwitchCommand switchCommandCH4 = SwitchCommand.fromCommandNumber((int) MessageUtils.numberFromBytes(payload, 3, 1) & 240);
-        handleSwitch(switchCommandCH4, switchDataCH4, sequenceNumberCH4, SwitchType.D_FLY_CH4);
+        handleSwitch(switchCommandCH4, switchDataCH4, sequenceNumberCH4, SwitchChannel.D_FLY_CH4);
 
         int sequenceNumberCH3 = (int) (MessageUtils.numberFromBytes(payload, 4, 1) & 15);
         SwitchCommand switchCommandCH3 = SwitchCommand.fromCommandNumber((int) MessageUtils.numberFromBytes(payload, 4, 1) & 240);
-        handleSwitch(switchCommandCH3, switchDataCH3, sequenceNumberCH3, SwitchType.D_FLY_CH3);
+        handleSwitch(switchCommandCH3, switchDataCH3, sequenceNumberCH3, SwitchChannel.D_FLY_CH3);
 
         Timber.d("[%s] Received switch info: {CH1={command=%s, sequence=%s}, CH2={command=%s, sequence=%s}, CH3={command=%s, sequence=%s}, CH4={command=%s, sequence=%s}}",
                 deviceId,
@@ -229,7 +229,7 @@ public class ShimanoShiftingProfileHandler implements IDeviceProfileHandler {
                 switchCommandCH4, sequenceNumberCH4);
     }
 
-    private void handleSwitch(SwitchCommand switchCommand, SwitchData switchData, int sequenceNumber, SwitchType type) {
+    private void handleSwitch(SwitchCommand switchCommand, SwitchData switchData, int sequenceNumber, SwitchChannel channel) {
         if (switchCommand != SwitchCommand.NO_SWITCH
                 && switchData.getSequenceNumber() != -1
                 && switchData.getSequenceNumber() != sequenceNumber) {
@@ -240,7 +240,7 @@ public class ShimanoShiftingProfileHandler implements IDeviceProfileHandler {
                 switchData.resetRepeat();
             }
 
-            deviceConnectionListener.onData(deviceId, DataType.SWITCH, new SwitchEvent(type, switchCommand, switchData.getRepeat()));
+            deviceConnectionListener.onData(deviceId, DataType.SWITCH, new SwitchEvent(channel, switchCommand, switchData.getRepeat()));
         }
         switchData.setSequenceNumber(sequenceNumber);
     }

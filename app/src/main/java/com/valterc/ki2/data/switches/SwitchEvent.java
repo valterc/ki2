@@ -7,7 +7,7 @@ import androidx.annotation.NonNull;
 
 public class SwitchEvent implements Parcelable {
 
-    private final SwitchType type;
+    private final SwitchChannel channel;
     private final SwitchCommand command;
     private final int repeat;
 
@@ -22,20 +22,20 @@ public class SwitchEvent implements Parcelable {
     };
 
     private SwitchEvent(Parcel in) {
-        type = SwitchType.fromValue(in.readInt());
+        channel = SwitchChannel.fromValue(in.readInt());
         command = SwitchCommand.fromCommandNumber(in.readInt());
         repeat = in.readInt();
     }
 
-    public SwitchEvent(SwitchType type, SwitchCommand command, int repeat) {
-        this.type = type;
+    public SwitchEvent(SwitchChannel channel, SwitchCommand command, int repeat) {
+        this.channel = channel;
         this.command = command;
         this.repeat = repeat;
     }
 
     @Override
     public void writeToParcel(Parcel out, int flags) {
-        out.writeInt(type.getValue());
+        out.writeInt(channel.getValue());
         out.writeInt(command.getCommandNumber());
         out.writeInt(repeat);
     }
@@ -45,8 +45,8 @@ public class SwitchEvent implements Parcelable {
         return 0;
     }
 
-    public SwitchType getType() {
-        return type;
+    public SwitchChannel getChannel() {
+        return channel;
     }
 
     public SwitchCommand getCommand() {
@@ -65,13 +65,13 @@ public class SwitchEvent implements Parcelable {
         SwitchEvent that = (SwitchEvent) o;
 
         if (repeat != that.repeat) return false;
-        if (type != that.type) return false;
+        if (channel != that.channel) return false;
         return command == that.command;
     }
 
     @Override
     public int hashCode() {
-        int result = type != null ? type.hashCode() : 0;
+        int result = channel != null ? channel.hashCode() : 0;
         result = 31 * result + (command != null ? command.hashCode() : 0);
         result = 31 * result + repeat;
         return result;
@@ -81,7 +81,7 @@ public class SwitchEvent implements Parcelable {
     @Override
     public String toString() {
         return "SwitchEvent{" +
-                "type=" + type +
+                "channel=" + channel +
                 ", command=" + command +
                 ", repeat=" + repeat +
                 '}';

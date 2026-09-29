@@ -12,7 +12,7 @@ import com.valterc.ki2.data.action.KarooActionEvent;
 import com.valterc.ki2.data.switches.SwitchCommand;
 import com.valterc.ki2.data.switches.SwitchCommandType;
 import com.valterc.ki2.data.switches.SwitchEvent;
-import com.valterc.ki2.data.switches.SwitchType;
+import com.valterc.ki2.data.switches.SwitchChannel;
 import com.valterc.ki2.data.action.KarooAction;
 
 import java.util.HashMap;
@@ -66,7 +66,7 @@ public class InputManager {
          * Double press events
          */
         preferenceToSwitchKeyMap.put("double_press_duplicate_single_press", (switchEvent, converter) ->
-                new KarooActionEvent(converter.apply(new SwitchEvent(switchEvent.getType(), SwitchCommand.SINGLE_CLICK, switchEvent.getRepeat())), 2));
+                new KarooActionEvent(converter.apply(new SwitchEvent(switchEvent.getChannel(), SwitchCommand.SINGLE_CLICK, switchEvent.getRepeat())), 2));
 
         /*
          *   Hold events
@@ -133,7 +133,7 @@ public class InputManager {
             if (switchEvent.getCommand() == SwitchCommand.LONG_PRESS_UP) {
                 return null;
             }
-            return converter.apply(new SwitchEvent(switchEvent.getType(), SwitchCommand.SINGLE_CLICK, switchEvent.getRepeat()));
+            return converter.apply(new SwitchEvent(switchEvent.getChannel(), SwitchCommand.SINGLE_CLICK, switchEvent.getRepeat()));
         });
         preferenceToSwitchKeyMap.put("hold_short_single_bottom_left", (switchEvent, converter) -> {
             if (switchEvent.getCommand() != SwitchCommand.LONG_PRESS_DOWN) {
@@ -257,44 +257,44 @@ public class InputManager {
     /**
      * This map translates physical switch (Left, Right) commands to a preference key.
      */
-    private final Map<Pair<SwitchType, SwitchCommandType>, Pair<String, String>> preferenceMap;
+    private final Map<Pair<SwitchChannel, SwitchCommandType>, Pair<String, String>> preferenceMap;
 
     public InputManager(Context context) {
         this.preferences = PreferenceManager.getDefaultSharedPreferences(context);
 
         this.preferenceMap = new HashMap<>();
-        this.preferenceMap.put(new Pair<>(SwitchType.D_FLY_CH1, SwitchCommandType.SINGLE_PRESS),
+        this.preferenceMap.put(new Pair<>(SwitchChannel.D_FLY_CH1, SwitchCommandType.SINGLE_PRESS),
                 new Pair<>(context.getString(R.string.preference_switch_ch1_single_press), context.getString(R.string.default_preference_switch_ch1_single_press)));
-        this.preferenceMap.put(new Pair<>(SwitchType.D_FLY_CH1, SwitchCommandType.DOUBLE_PRESS),
+        this.preferenceMap.put(new Pair<>(SwitchChannel.D_FLY_CH1, SwitchCommandType.DOUBLE_PRESS),
                 new Pair<>(context.getString(R.string.preference_switch_ch1_double_press), context.getString(R.string.default_preference_switch_ch1_double_press)));
-        this.preferenceMap.put(new Pair<>(SwitchType.D_FLY_CH1, SwitchCommandType.HOLD),
+        this.preferenceMap.put(new Pair<>(SwitchChannel.D_FLY_CH1, SwitchCommandType.HOLD),
                 new Pair<>(context.getString(R.string.preference_switch_ch1_hold), context.getString(R.string.default_preference_switch_ch1_hold)));
 
-        this.preferenceMap.put(new Pair<>(SwitchType.D_FLY_CH2, SwitchCommandType.SINGLE_PRESS),
+        this.preferenceMap.put(new Pair<>(SwitchChannel.D_FLY_CH2, SwitchCommandType.SINGLE_PRESS),
                 new Pair<>(context.getString(R.string.preference_switch_ch2_single_press), context.getString(R.string.default_preference_switch_ch2_single_press)));
-        this.preferenceMap.put(new Pair<>(SwitchType.D_FLY_CH2, SwitchCommandType.DOUBLE_PRESS),
+        this.preferenceMap.put(new Pair<>(SwitchChannel.D_FLY_CH2, SwitchCommandType.DOUBLE_PRESS),
                 new Pair<>(context.getString(R.string.preference_switch_ch2_double_press), context.getString(R.string.default_preference_switch_ch2_double_press)));
-        this.preferenceMap.put(new Pair<>(SwitchType.D_FLY_CH2, SwitchCommandType.HOLD),
+        this.preferenceMap.put(new Pair<>(SwitchChannel.D_FLY_CH2, SwitchCommandType.HOLD),
                 new Pair<>(context.getString(R.string.preference_switch_ch2_hold), context.getString(R.string.default_preference_switch_ch2_hold)));
 
-        this.preferenceMap.put(new Pair<>(SwitchType.D_FLY_CH3, SwitchCommandType.SINGLE_PRESS),
+        this.preferenceMap.put(new Pair<>(SwitchChannel.D_FLY_CH3, SwitchCommandType.SINGLE_PRESS),
                 new Pair<>(context.getString(R.string.preference_switch_ch3_single_press), context.getString(R.string.default_preference_switch)));
-        this.preferenceMap.put(new Pair<>(SwitchType.D_FLY_CH3, SwitchCommandType.DOUBLE_PRESS),
+        this.preferenceMap.put(new Pair<>(SwitchChannel.D_FLY_CH3, SwitchCommandType.DOUBLE_PRESS),
                 new Pair<>(context.getString(R.string.preference_switch_ch3_double_press), context.getString(R.string.default_preference_switch)));
-        this.preferenceMap.put(new Pair<>(SwitchType.D_FLY_CH3, SwitchCommandType.HOLD),
+        this.preferenceMap.put(new Pair<>(SwitchChannel.D_FLY_CH3, SwitchCommandType.HOLD),
                 new Pair<>(context.getString(R.string.preference_switch_ch3_hold), context.getString(R.string.default_preference_switch)));
 
-        this.preferenceMap.put(new Pair<>(SwitchType.D_FLY_CH4, SwitchCommandType.SINGLE_PRESS),
+        this.preferenceMap.put(new Pair<>(SwitchChannel.D_FLY_CH4, SwitchCommandType.SINGLE_PRESS),
                 new Pair<>(context.getString(R.string.preference_switch_ch4_single_press), context.getString(R.string.default_preference_switch)));
-        this.preferenceMap.put(new Pair<>(SwitchType.D_FLY_CH4, SwitchCommandType.DOUBLE_PRESS),
+        this.preferenceMap.put(new Pair<>(SwitchChannel.D_FLY_CH4, SwitchCommandType.DOUBLE_PRESS),
                 new Pair<>(context.getString(R.string.preference_switch_ch4_double_press), context.getString(R.string.default_preference_switch)));
-        this.preferenceMap.put(new Pair<>(SwitchType.D_FLY_CH4, SwitchCommandType.HOLD),
+        this.preferenceMap.put(new Pair<>(SwitchChannel.D_FLY_CH4, SwitchCommandType.HOLD),
                 new Pair<>(context.getString(R.string.preference_switch_ch4_hold), context.getString(R.string.default_preference_switch)));
     }
 
     @Nullable
     private KarooActionEvent getKarooActionEvent(SwitchEvent switchEvent) {
-        Pair<String, String> preferencePair = preferenceMap.get(new Pair<>(switchEvent.getType(), switchEvent.getCommand().getCommandType()));
+        Pair<String, String> preferencePair = preferenceMap.get(new Pair<>(switchEvent.getChannel(), switchEvent.getCommand().getCommandType()));
         if (preferencePair == null) {
             return null;
         }
@@ -306,7 +306,7 @@ public class InputManager {
 
         BiFunction<SwitchEvent, Function<SwitchEvent, KarooActionEvent>, KarooActionEvent> keyFunction = preferenceToSwitchKeyMap.get(preference);
         if (keyFunction == null) {
-            Timber.w("Invalid karoo command from combination, switch: %s, command type: %s", switchEvent.getType(), switchEvent.getCommand().getCommandType());
+            Timber.w("Invalid karoo command from combination, switch: %s, command type: %s", switchEvent.getChannel(), switchEvent.getCommand().getCommandType());
             return null;
         }
 

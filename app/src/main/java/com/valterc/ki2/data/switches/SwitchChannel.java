@@ -1,6 +1,6 @@
 package com.valterc.ki2.data.switches;
 
-public enum SwitchType {
+public enum SwitchChannel {
 
     D_FLY_CH1(1),
     D_FLY_CH2(2),
@@ -8,10 +8,10 @@ public enum SwitchType {
     D_FLY_CH4(4),
     UNKNOWN(255);
 
-    public static SwitchType fromValue(int value) {
-        for (SwitchType switchType : values()) {
-            if (switchType.value == value) {
-                return switchType;
+    public static SwitchChannel fromValue(int value) {
+        for (SwitchChannel switchChannel : values()) {
+            if (switchChannel.value == value) {
+                return switchChannel;
             }
         }
 
@@ -20,7 +20,7 @@ public enum SwitchType {
 
     private final int value;
 
-    SwitchType(int value) {
+    SwitchChannel(int value) {
         this.value = value;
     }
 

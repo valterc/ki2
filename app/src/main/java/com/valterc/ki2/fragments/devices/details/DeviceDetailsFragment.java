@@ -32,7 +32,7 @@ import com.valterc.ki2.data.preferences.device.DevicePreferences;
 import com.valterc.ki2.data.shifting.FrontTeethPattern;
 import com.valterc.ki2.data.shifting.RearTeethPattern;
 import com.valterc.ki2.data.shifting.ShiftingInfo;
-import com.valterc.ki2.data.switches.SwitchType;
+import com.valterc.ki2.data.switches.SwitchChannel;
 import com.valterc.ki2.fragments.IKarooKeyListener;
 import com.valterc.ki2.services.Ki2Service;
 import com.valterc.ki2.views.DrivetrainView;
@@ -389,16 +389,16 @@ public class DeviceDetailsFragment extends Fragment implements IKarooKeyListener
         viewModel.getSwitchEvent().observe(getViewLifecycleOwner(), switchEvent -> {
             TextView textViewSwitch;
 
-            if (switchEvent.getType() == SwitchType.D_FLY_CH1) {
+            if (switchEvent.getChannel() == SwitchChannel.D_FLY_CH1) {
                 textViewSwitch = textViewSwitchCH1;
                 timestampSwitchCH1 = System.currentTimeMillis();
-            } else if (switchEvent.getType() == SwitchType.D_FLY_CH2) {
+            } else if (switchEvent.getChannel() == SwitchChannel.D_FLY_CH2) {
                 textViewSwitch = textViewSwitchCH2;
                 timestampSwitchCH2 = System.currentTimeMillis();
-            } else if (switchEvent.getType() == SwitchType.D_FLY_CH3) {
+            } else if (switchEvent.getChannel() == SwitchChannel.D_FLY_CH3) {
                 textViewSwitch = textViewSwitchCH3;
                 timestampSwitchCH3 = System.currentTimeMillis();
-            } else if (switchEvent.getType() == SwitchType.D_FLY_CH4) {
+            } else if (switchEvent.getChannel() == SwitchChannel.D_FLY_CH4) {
                 textViewSwitch = textViewSwitchCH4;
                 timestampSwitchCH4 = System.currentTimeMillis();
             } else {
@@ -431,19 +431,19 @@ public class DeviceDetailsFragment extends Fragment implements IKarooKeyListener
 
             if (autoClear) {
                 handler.postDelayed(() -> {
-                    if (switchEvent.getType() == SwitchType.D_FLY_CH1) {
+                    if (switchEvent.getChannel() == SwitchChannel.D_FLY_CH1) {
                         if (System.currentTimeMillis() - timestampSwitchCH1 > SWITCH_AUTO_CLEAR_DELAY_MS * 0.8) {
                             textViewSwitchCH1.setText(R.string.dash);
                         }
-                    } else if (switchEvent.getType() == SwitchType.D_FLY_CH2) {
+                    } else if (switchEvent.getChannel() == SwitchChannel.D_FLY_CH2) {
                         if (System.currentTimeMillis() - timestampSwitchCH2 > SWITCH_AUTO_CLEAR_DELAY_MS * 0.8) {
                             textViewSwitchCH2.setText(R.string.dash);
                         }
-                    } else if (switchEvent.getType() == SwitchType.D_FLY_CH3) {
+                    } else if (switchEvent.getChannel() == SwitchChannel.D_FLY_CH3) {
                         if (System.currentTimeMillis() - timestampSwitchCH3 > SWITCH_AUTO_CLEAR_DELAY_MS * 0.8) {
                             textViewSwitchCH3.setText(R.string.dash);
                         }
-                    } else if (switchEvent.getType() == SwitchType.D_FLY_CH4) {
+                    } else if (switchEvent.getChannel() == SwitchChannel.D_FLY_CH4) {
                         if (System.currentTimeMillis() - timestampSwitchCH4 > SWITCH_AUTO_CLEAR_DELAY_MS * 0.8) {
                             textViewSwitchCH4.setText(R.string.dash);
                         }
