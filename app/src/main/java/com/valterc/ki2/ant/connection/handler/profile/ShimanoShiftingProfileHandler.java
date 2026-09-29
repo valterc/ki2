@@ -23,15 +23,22 @@ import com.valterc.ki2.data.shifting.FrontTeethPattern;
 import com.valterc.ki2.data.shifting.RearTeethPattern;
 import com.valterc.ki2.data.shifting.ShiftingInfoBuilder;
 import com.valterc.ki2.data.shifting.ShiftingMode;
+import com.valterc.ki2.data.switches.WirelessSwitchBatteryLevel;
 import com.valterc.ki2.data.switches.SwitchCommand;
 import com.valterc.ki2.data.switches.SwitchData;
 import com.valterc.ki2.data.switches.SwitchEvent;
+import com.valterc.ki2.data.switches.SwitchSide;
 import com.valterc.ki2.data.switches.SwitchChannel;
+import com.valterc.ki2.data.switches.SwitchType;
+import com.valterc.ki2.data.switches.WirelessSwitchInfo;
+import com.valterc.ki2.data.switches.WirelessSwitchesInfo;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import timber.log.Timber;
@@ -40,6 +47,7 @@ import timber.log.Timber;
 public class ShimanoShiftingProfileHandler implements IDeviceProfileHandler {
 
     private static final Collection<CommandType> SUPPORTED_COMMANDS = Collections.singletonList(CommandType.SHIFTING_MODE);
+    private static final int WIRELESS_SWITCH_SLOTS = 4;
 
     private final DeviceId deviceId;
     private final ITransportHandler transportHandler;
@@ -70,7 +78,8 @@ public class ShimanoShiftingProfileHandler implements IDeviceProfileHandler {
                 SlaveStatusIndicator.FRONT_SPEEDS_MAX,
                 SlaveStatusIndicator.REAR_SPEEDS_MAX,
                 SlaveStatusIndicator.SWITCH_COMMAND_NUMBER,
-                SlaveStatusIndicator.CHAINRINGS));
+                SlaveStatusIndicator.CHAINRINGS,
+                SlaveStatusIndicator.WIRELESS_SWITCH_INFO));
         this.broadcastData = new byte[8];
 
         this.shiftingInfoBuilder = new ShiftingInfoBuilder();
@@ -125,10 +134,33 @@ public class ShimanoShiftingProfileHandler implements IDeviceProfileHandler {
                 handleChainringsPage(payload);
                 break;
 
+            case WIRELESS_SWITCH:
+                handleWirelessSwitchPage(payload);
+                break;
+
             default:
                 Timber.d("[%s] Unhandled page %s: %s", deviceId, pageType, Arrays.toString(payload));
                 break;
         }
+    }
+
+    private void handleWirelessSwitchPage(byte[] payload) {
+        this.missingIndicators.remove(SlaveStatusIndicator.WIRELESS_SWITCH_INFO);
+
+        int batteryLevels = (int) MessageUtils.numberFromBytes(payload, 5, 1);
+        List<WirelessSwitchInfo> switches = new ArrayList<>(WIRELESS_SWITCH_SLOTS);
+
+        for (int i = 0; i < WIRELESS_SWITCH_SLOTS; i++) {
+            int definition = (int) MessageUtils.numberFromBytes(payload, 1 + i, 1);
+            SwitchType type = SwitchType.fromValue(definition >> 4);
+            SwitchSide side = SwitchSide.fromFlags(definition & 15);
+            WirelessSwitchBatteryLevel batteryLevel = WirelessSwitchBatteryLevel.fromValue((batteryLevels >> (i * 2)) & 3);
+
+            switches.add(new WirelessSwitchInfo(i + 1, type, side, batteryLevel));
+        }
+
+        Timber.d("[%s] Received wireless switch info: %s", deviceId, switches);
+        deviceConnectionListener.onData(deviceId, DataType.WIRELESS_SWITCHES, new WirelessSwitchesInfo(switches));
     }
 
     private void handleChainringsPage(byte[] payload) {
