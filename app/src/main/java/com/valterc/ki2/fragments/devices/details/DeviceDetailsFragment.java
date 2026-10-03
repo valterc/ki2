@@ -18,7 +18,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.widget.TextViewCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.checkbox.MaterialCheckBox;
@@ -31,6 +33,8 @@ import com.valterc.ki2.data.shifting.FrontTeethPattern;
 import com.valterc.ki2.data.shifting.RearTeethPattern;
 import com.valterc.ki2.data.shifting.ShiftingInfo;
 import com.valterc.ki2.data.switches.SwitchChannel;
+import com.valterc.ki2.data.switches.WirelessSwitchInfo;
+import com.valterc.ki2.data.switches.WirelessSwitchesInfo;
 import com.valterc.ki2.fragments.IKarooKeyListener;
 import com.valterc.ki2.services.Ki2Service;
 import com.valterc.ki2.views.DrivetrainView;
@@ -150,6 +154,7 @@ public class DeviceDetailsFragment extends Fragment implements IKarooKeyListener
 
         LinearLayout linearLayoutWaitingForDataBattery = view.findViewById(R.id.linearlayout_device_details_waiting_data_battery);
         TextView textViewBattery = view.findViewById(R.id.textview_device_details_battery);
+        LinearLayout linearLayoutWirelessSwitchBatteries = view.findViewById(R.id.linearlayout_device_details_wireless_switch_batteries);
 
         LinearLayout linearLayoutWaitingForDataManufacturer = view.findViewById(R.id.linearlayout_device_details_waiting_data_manufacturer);
         TextView textViewManufacturer = view.findViewById(R.id.textview_device_details_manufacturer_name);
@@ -338,6 +343,9 @@ public class DeviceDetailsFragment extends Fragment implements IKarooKeyListener
             linearLayoutWaitingForDataBattery.setVisibility(View.GONE);
         });
 
+        Transformations.distinctUntilChanged(viewModel.getWirelessSwitchesInfo()).observe(getViewLifecycleOwner(), wirelessSwitchesInfo ->
+                setWirelessSwitchBatteries(linearLayoutWirelessSwitchBatteries, wirelessSwitchesInfo));
+
         viewModel.getManufacturerInfo().observe(getViewLifecycleOwner(), manufacturerInfo -> {
             textViewManufacturer.setText(manufacturerInfo.getManufacturer().getName());
             textViewSerialNumber.setText(manufacturerInfo.getSerialNumber());
@@ -433,6 +441,85 @@ public class DeviceDetailsFragment extends Fragment implements IKarooKeyListener
     @Override
     public boolean onKarooKeyPressed(KarooKey karooKey) {
         return false;
+    }
+
+    private void setWirelessSwitchBatteries(LinearLayout linearLayout, WirelessSwitchesInfo wirelessSwitchesInfo) {
+        linearLayout.removeAllViews();
+
+        for (WirelessSwitchInfo wirelessSwitchInfo : wirelessSwitchesInfo.getSwitches()) {
+            View viewSwitchBattery = getLayoutInflater().inflate(R.layout.view_item_device_details_wireless_switch_battery, linearLayout, false);
+
+            TextView textViewName = viewSwitchBattery.findViewById(R.id.textview_wireless_switch_battery_name);
+            textViewName.setText(getWirelessSwitchBatteryName(wirelessSwitchInfo));
+
+            TextView textViewLevel = viewSwitchBattery.findViewById(R.id.textview_wireless_switch_battery_level);
+            switch (wirelessSwitchInfo.getBatteryLevel()) {
+                case LOW:
+                    textViewLevel.setText(R.string.text_battery_low);
+                    break;
+
+                case MID:
+                    textViewLevel.setText(R.string.text_battery_mid);
+                    break;
+
+                case HIGH:
+                    textViewLevel.setText(R.string.text_battery_high);
+                    break;
+
+                case UNKNOWN:
+                default:
+                    textViewLevel.setText(R.string.text_unknown);
+                    break;
+            }
+
+            BatteryIndicator batteryIndicator = BatteryIndicator.fromWirelessSwitchBatteryLevel(wirelessSwitchInfo.getBatteryLevel());
+            if (batteryIndicator != null) {
+                batteryIndicator.applyTo(textViewLevel);
+            } else {
+                TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(textViewLevel, 0, 0, 0, 0);
+            }
+
+            linearLayout.addView(viewSwitchBattery);
+        }
+    }
+
+    private String getWirelessSwitchBatteryName(WirelessSwitchInfo wirelessSwitchInfo) {
+        String typeName;
+        switch (wirelessSwitchInfo.getType()) {
+            case ROAD_SHIFTER:
+                typeName = getString(R.string.text_road_shifter);
+                break;
+
+            case TT_SHIFTER:
+                typeName = getString(R.string.text_tt_shifter);
+                break;
+
+            case TT_SWITCH:
+                typeName = getString(R.string.text_tt_switch);
+                break;
+
+            case MTB_SWITCH:
+                typeName = getString(R.string.text_mtb_switch);
+                break;
+
+            case SWITCH:
+            default:
+                typeName = getString(R.string.text_switch);
+                break;
+        }
+
+        switch (wirelessSwitchInfo.getSide()) {
+            case LEFT:
+                return getString(R.string.text_param_side_switch_battery, getString(R.string.text_left), typeName);
+
+            case RIGHT:
+                return getString(R.string.text_param_side_switch_battery, getString(R.string.text_right), typeName);
+
+            case LEFT_OR_RIGHT:
+            case NONE:
+            default:
+                return getString(R.string.text_param_switch_battery, typeName);
+        }
     }
 
     private void setGearingText(TextView textView, DevicePreferences devicePreferences, ShiftingInfo shiftingInfo) {

@@ -25,8 +25,8 @@
     <string name="title_preference_switch_hold">Hold</string>
     <string name="title_preference_ant_recording">Record ANT communication</string>
     <string name="title_preference_fit_recording_device_info">Record device information</string>
-    <string name="title_preference_battery_level_low">Battery low</string>
-    <string name="title_preference_battery_level_critical">Battery critical</string>
+    <string name="title_preference_battery_level_low">Main battery low</string>
+    <string name="title_preference_battery_level_critical">Main battery critical</string>
     <string name="title_preference_auto_update">Auto update</string>
     <string name="title_preference_preview_updates">Preview updates</string>
     <string name="title_preference_audio_alerts_enabled">Enable Audio Alerts</string>

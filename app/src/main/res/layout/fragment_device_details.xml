@@ -370,7 +370,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/text_battery"
+                            android:text="@string/text_main_battery"
                             android:textColor="@color/hh_light_grey"
                             android:textSize="13sp" />
 
@@ -414,6 +414,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:background="@color/hh_divider_color" />
+
+                <LinearLayout
+                    android:id="@+id/linearlayout_device_details_wireless_switch_batteries"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
