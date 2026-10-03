@@ -10,6 +10,12 @@
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
 
+    <queries>
+        <intent>
+            <action android:name="com.valterc.ki2.ACTION_PROVIDER" />
+        </intent>
+    </queries>
+
     <application
         android:name=".Ki2Application"
         android:icon="@drawable/ic_icon"
