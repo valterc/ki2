@@ -3,7 +3,6 @@ package com.valterc.ki2.fragments.devices.details;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -19,7 +18,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.core.widget.TextViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -36,6 +34,7 @@ import com.valterc.ki2.data.switches.SwitchChannel;
 import com.valterc.ki2.fragments.IKarooKeyListener;
 import com.valterc.ki2.services.Ki2Service;
 import com.valterc.ki2.views.DrivetrainView;
+import com.valterc.ki2.views.battery.BatteryIndicator;
 
 import timber.log.Timber;
 
@@ -335,31 +334,7 @@ public class DeviceDetailsFragment extends Fragment implements IKarooKeyListener
             int batteryValue = batteryInfo.getValue();
             textViewBattery.setText(getString(R.string.text_param_percentage, batteryValue));
 
-            int color;
-            int drawableId;
-
-            if (batteryValue >= 80) {
-                color = requireContext().getColor(R.color.hh_green);
-                drawableId = R.drawable.ic_battery_5;
-            } else if (batteryValue >= 70) {
-                color = requireContext().getColor(R.color.hh_green);
-                drawableId = R.drawable.ic_battery_4;
-            } else if (batteryValue >= 50) {
-                color = requireContext().getColor(R.color.hh_green);
-                drawableId = R.drawable.ic_battery_3;
-            } else if (batteryValue >= 30) {
-                color = requireContext().getColor(R.color.hh_yellow_dark);
-                drawableId = R.drawable.ic_battery_2;
-            } else if (batteryValue >= 20) {
-                color = requireContext().getColor(R.color.hh_orange_dark);
-                drawableId = R.drawable.ic_battery_1;
-            } else {
-                color = requireContext().getColor(R.color.hh_red);
-                drawableId = R.drawable.ic_battery_0;
-            }
-
-            TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(textViewBattery, 0, 0, drawableId, 0);
-            TextViewCompat.setCompoundDrawableTintList(textViewBattery, ColorStateList.valueOf(color));
+            BatteryIndicator.fromPercentage(batteryValue).applyTo(textViewBattery);
             linearLayoutWaitingForDataBattery.setVisibility(View.GONE);
         });
 
