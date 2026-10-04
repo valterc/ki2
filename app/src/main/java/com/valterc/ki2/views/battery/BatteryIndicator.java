@@ -5,9 +5,11 @@ import android.widget.TextView;
 
 import androidx.annotation.ColorRes;
 import androidx.annotation.DrawableRes;
+import androidx.annotation.Nullable;
 import androidx.core.widget.TextViewCompat;
 
 import com.valterc.ki2.R;
+import com.valterc.ki2.data.switches.WirelessSwitchBatteryLevel;
 
 public enum BatteryIndicator {
 
@@ -32,6 +34,20 @@ public enum BatteryIndicator {
         }
 
         return LEVEL_0;
+    }
+
+    @Nullable
+    public static BatteryIndicator fromWirelessSwitchBatteryLevel(WirelessSwitchBatteryLevel wirelessSwitchBatteryLevel) {
+        switch (wirelessSwitchBatteryLevel) {
+            case HIGH:
+                return LEVEL_5;
+            case MID:
+                return LEVEL_3;
+            case LOW:
+                return LEVEL_1;
+            default:
+                return null;
+        }
     }
 
     private final int colorId;
