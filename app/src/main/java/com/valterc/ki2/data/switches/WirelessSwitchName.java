@@ -28,4 +28,15 @@ public final class WirelessSwitchName {
         };
     }
 
+    @NonNull
+    public static String getShortTypeName(Context context, WirelessSwitchInfo wirelessSwitchInfo) {
+        return switch (wirelessSwitchInfo.getType()) {
+            case ROAD_SHIFTER -> context.getString(R.string.text_short_road_shifter);
+            case TT_SHIFTER -> context.getString(R.string.text_short_tt_shifter);
+            case TT_SWITCH -> context.getString(R.string.text_short_tt_switch);
+            case MTB_SWITCH -> context.getString(R.string.text_short_mtb_switch);
+            default -> context.getString(R.string.text_short_switch);
+        };
+    }
+
 }

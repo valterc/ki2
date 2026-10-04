@@ -270,6 +270,24 @@ public class ServiceClient {
     }
 
     /**
+     * Register a weak referenced listener that will receive wireless switches info from the main ride device.
+     *
+     * @param wirelessSwitchesConsumer Consumer that will receive wireless switches events. It will be referenced using a weak reference so the owner must keep a strong reference.
+     */
+    public void registerWirelessSwitchesWeakListener(BiConsumer<DeviceId, WirelessSwitchesInfo> wirelessSwitchesConsumer) {
+        deviceDataFrontend.registerWirelessSwitchesWeakListener(wirelessSwitchesConsumer);
+    }
+
+    /**
+     * Unregister a weak referenced listener that will receive wireless switches info from the main ride device.
+     *
+     * @param wirelessSwitchesConsumer Consumer that will receive wireless switches events. It will be referenced using a weak reference so the owner must keep a strong reference.
+     */
+    public void unregisterWirelessSwitchesWeakListener(BiConsumer<DeviceId, WirelessSwitchesInfo> wirelessSwitchesConsumer) {
+        deviceDataFrontend.unregisterWirelessSwitchesWeakListener(wirelessSwitchesConsumer);
+    }
+
+    /**
      * Register a weak referenced listener that will receive wireless switches info from all devices.
      *
      * @param wirelessSwitchesConsumer Consumer that will receive wireless switches events. It will be referenced using a weak reference so the owner must keep a strong reference.

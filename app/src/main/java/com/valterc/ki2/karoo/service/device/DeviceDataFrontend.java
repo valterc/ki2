@@ -235,6 +235,20 @@ public class DeviceDataFrontend {
         registrationBatteryInfo.unregister();
     }
 
+    public void registerWirelessSwitchesWeakListener(BiConsumer<DeviceId, WirelessSwitchesInfo> wirelessSwitchesConsumer) {
+        handler.post(() -> {
+            dataRouter.registerWirelessSwitchesWeakListener(wirelessSwitchesConsumer);
+            maybeStartEvents();
+        });
+    }
+
+    public void unregisterWirelessSwitchesWeakListener(BiConsumer<DeviceId, WirelessSwitchesInfo> wirelessSwitchesConsumer) {
+        handler.post(() -> {
+            dataRouter.unregisterWirelessSwitchesWeakListener(wirelessSwitchesConsumer);
+            maybeStopWirelessSwitchesEvents();
+        });
+    }
+
     public void registerUnfilteredWirelessSwitchesWeakListener(BiConsumer<DeviceId, WirelessSwitchesInfo> wirelessSwitchesConsumer) {
         handler.post(() -> {
             dataRouter.registerUnfilteredWirelessSwitchesWeakListener(wirelessSwitchesConsumer);

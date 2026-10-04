@@ -44,6 +44,12 @@
     <string name="text_tt_switch">TT Switch</string>
     <string name="text_mtb_switch">MTB Switch</string>
     <string name="text_switch">Switch</string>
+    <string name="text_no_switches">No switches</string>
+    <string name="text_short_road_shifter">Road</string>
+    <string name="text_short_tt_shifter">TT Sh</string>
+    <string name="text_short_tt_switch">TT Sw</string>
+    <string name="text_short_mtb_switch">MTB</string>
+    <string name="text_short_switch">Sw</string>
     <string name="text_battery_low">LOW</string>
     <string name="text_battery_mid">MID</string>
     <string name="text_battery_high">HIGH</string>

@@ -18,6 +18,7 @@ import com.valterc.ki2.karoo.datatypes.text.RearShiftCountDataType
 import com.valterc.ki2.karoo.datatypes.text.ShiftCountDataType
 import com.valterc.ki2.karoo.datatypes.text.ShiftingBatteryPercentageDataType
 import com.valterc.ki2.karoo.datatypes.text.ShiftingModeDataType
+import com.valterc.ki2.karoo.datatypes.text.SwitchBatteriesDataType
 import com.valterc.ki2.karoo.datatypes.visual.BikeBatteryVisualDataType
 import com.valterc.ki2.karoo.datatypes.visual.DrivetrainIndexVisualDataType
 import com.valterc.ki2.karoo.datatypes.visual.DrivetrainSizeVisualDataType
@@ -71,6 +72,7 @@ class Ki2ExtensionService : KarooExtension("ki2", BuildConfig.VERSION_NAME) {
         listOf(
             ShiftingBatteryPercentageDataType(extensionContext),
             ShiftingModeDataType(extensionContext),
+            SwitchBatteriesDataType(extensionContext),
             GearRatioDataType(extensionContext),
             GearsIndexDataType(extensionContext),
             GearsSizeDataType(extensionContext),
