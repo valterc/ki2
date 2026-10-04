@@ -5,6 +5,7 @@ import android.content.Intent
 import com.valterc.ki2.BuildConfig
 import com.valterc.ki2.data.device.DeviceId
 import com.valterc.ki2.karoo.battery.BatteryAlertHandler
+import com.valterc.ki2.karoo.battery.WirelessSwitchBatteryAlertHandler
 import com.valterc.ki2.karoo.datatypes.text.FrontGearIndexDataType
 import com.valterc.ki2.karoo.datatypes.text.FrontGearSizeDataType
 import com.valterc.ki2.karoo.datatypes.text.FrontShiftCountDataType
@@ -103,6 +104,7 @@ class Ki2ExtensionService : KarooExtension("ki2", BuildConfig.VERSION_NAME) {
                 handlers.add(OverlayWindowHandler(this, extensionContext))
                 handlers.add(ShiftingAudioAlertHandler(extensionContext))
                 handlers.add(BatteryAlertHandler(extensionContext))
+                handlers.add(WirelessSwitchBatteryAlertHandler(extensionContext))
                 handlers.add(fitDeviceInfoHandler)
             }
         }

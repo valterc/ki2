@@ -20,6 +20,7 @@ import com.valterc.ki2.data.message.Message;
 import com.valterc.ki2.data.preferences.PreferencesView;
 import com.valterc.ki2.data.preferences.device.DevicePreferencesView;
 import com.valterc.ki2.data.shifting.ShiftingInfo;
+import com.valterc.ki2.data.switches.WirelessSwitchesInfo;
 import com.valterc.ki2.karoo.service.device.DeviceDataFrontend;
 import com.valterc.ki2.karoo.service.listeners.DataStreamWeakListenerList;
 import com.valterc.ki2.karoo.service.listeners.ServiceCallbackRegistration;
@@ -266,6 +267,24 @@ public class ServiceClient {
      */
     public void unregisterUnfilteredBatteryInfoWeakListener(BiConsumer<DeviceId, BatteryInfo> batteryInfoConsumer) {
         deviceDataFrontend.unregisterUnfilteredBatteryInfoWeakListener(batteryInfoConsumer);
+    }
+
+    /**
+     * Register a weak referenced listener that will receive wireless switches info from all devices.
+     *
+     * @param wirelessSwitchesConsumer Consumer that will receive wireless switches events. It will be referenced using a weak reference so the owner must keep a strong reference.
+     */
+    public void registerUnfilteredWirelessSwitchesWeakListener(BiConsumer<DeviceId, WirelessSwitchesInfo> wirelessSwitchesConsumer) {
+        deviceDataFrontend.registerUnfilteredWirelessSwitchesWeakListener(wirelessSwitchesConsumer);
+    }
+
+    /**
+     * Unregister a weak referenced listener that will receive wireless switches info from all devices.
+     *
+     * @param wirelessSwitchesConsumer Consumer that will receive wireless switches events. It will be referenced using a weak reference so the owner must keep a strong reference.
+     */
+    public void unregisterUnfilteredWirelessSwitchesWeakListener(BiConsumer<DeviceId, WirelessSwitchesInfo> wirelessSwitchesConsumer) {
+        deviceDataFrontend.unregisterUnfilteredWirelessSwitchesWeakListener(wirelessSwitchesConsumer);
     }
 
     /**

@@ -27,6 +27,7 @@
     <string name="title_preference_fit_recording_device_info">Record device information</string>
     <string name="title_preference_battery_level_low">Main battery low</string>
     <string name="title_preference_battery_level_critical">Main battery critical</string>
+    <string name="title_preference_wireless_switch_battery_notification">Wireless switch battery low</string>
     <string name="title_preference_auto_update">Auto update</string>
     <string name="title_preference_preview_updates">Preview updates</string>
     <string name="title_preference_audio_alerts_enabled">Enable Audio Alerts</string>
@@ -62,7 +63,8 @@
 
     <string name="summary_preference_ant_recording">Record all ANT events and data into a file for debugging</string>
     <string name="summary_preference_fit_recording_device_info">Record identifiers of the Di2 device in use into the ride FIT file</string>
-    <string name="summary_preference_battery_notification">Show notifications when the shifting battery level is at or below a certain value</string>
+    <string name="summary_preference_battery_notification">Show notifications when the main battery level is at or below a certain value, or when a wireless switch battery is low</string>
+    <string name="summary_preference_wireless_switch_battery_notification">Show notifications when a wireless switch reports a low battery</string>
     <string name="summary_preference_auto_update">Automatically check for application updates</string>
     <string name="summary_preference_preview_updates">Include preview versions. Preview versions may be unstable</string>
     <string name="summary_preference_audio_alerts_enabled">Enable shifting Audio alerts</string>
@@ -98,6 +100,7 @@
     <bool name="default_preference_switch_turn_screen_on">true</bool>
     <string name="default_preference_battery_level_low">20</string>
     <string name="default_preference_battery_level_critical">10</string>
+    <bool name="default_preference_wireless_switch_battery_notification">true</bool>
     <bool name="default_preference_audio_alerts_enabled">true</bool>
     <string name="default_preference_audio_alert_delay">0</string>
     <string name="default_preference_audio_alert_intensity">normal</string>
@@ -140,6 +143,7 @@
     <string name="preference_ant_recording">ANT_RECORDING</string>
     <string name="preference_battery_level_low">BATTERY_LEVEL_LOW</string>
     <string name="preference_battery_level_critical">BATTERY_LEVEL_CRITICAL</string>
+    <string name="preference_wireless_switch_battery_notification">WIRELESS_SWITCH_BATTERY_NOTIFICATION</string>
     <string name="preference_auto_update">AUTO_UPDATE</string>
     <string name="preference_preview_updates">PREVIEW_UPDATES</string>
     <string name="preference_audio_alerts_enabled">AUDIO_ALERTS_ENABLED</string>

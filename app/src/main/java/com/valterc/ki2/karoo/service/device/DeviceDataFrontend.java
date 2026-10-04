@@ -13,6 +13,7 @@ import com.valterc.ki2.data.device.BatteryInfo;
 import com.valterc.ki2.data.device.DeviceId;
 import com.valterc.ki2.data.preferences.device.DevicePreferencesView;
 import com.valterc.ki2.data.shifting.ShiftingInfo;
+import com.valterc.ki2.data.switches.WirelessSwitchesInfo;
 import com.valterc.ki2.karoo.service.listeners.ServiceCallbackRegistration;
 import com.valterc.ki2.services.IKi2Service;
 import com.valterc.ki2.services.callbacks.IActionCallback;
@@ -20,6 +21,7 @@ import com.valterc.ki2.services.callbacks.IBatteryCallback;
 import com.valterc.ki2.services.callbacks.IConnectionInfoCallback;
 import com.valterc.ki2.services.callbacks.IDevicePreferencesCallback;
 import com.valterc.ki2.services.callbacks.IShiftingCallback;
+import com.valterc.ki2.services.callbacks.IWirelessSwitchesCallback;
 
 import java.util.function.BiConsumer;
 
@@ -50,6 +52,16 @@ public class DeviceDataFrontend {
             });
         }
     }, callback -> service.registerBatteryListener(callback), callback -> service.unregisterBatteryListener(callback));
+
+    private final ServiceCallbackRegistration<IWirelessSwitchesCallback> registrationWirelessSwitches = new ServiceCallbackRegistration<>(new IWirelessSwitchesCallback.Stub() {
+        @Override
+        public void onWirelessSwitches(DeviceId deviceId, WirelessSwitchesInfo wirelessSwitchesInfo) {
+            handler.post(() -> {
+                dataRouter.onWirelessSwitches(deviceId, wirelessSwitchesInfo);
+                maybeStopWirelessSwitchesEvents();
+            });
+        }
+    }, callback -> service.registerWirelessSwitchesListener(callback), callback -> service.unregisterWirelessSwitchesListener(callback));
 
     private final ServiceCallbackRegistration<IShiftingCallback> registrationShiftingInfo = new ServiceCallbackRegistration<>(new IShiftingCallback.Stub() {
         @Override
@@ -92,6 +104,7 @@ public class DeviceDataFrontend {
 
         registrationConnectionInfo.setUnregistered();
         registrationBatteryInfo.setUnregistered();
+        registrationWirelessSwitches.setUnregistered();
         registrationShiftingInfo.setUnregistered();
         registrationAction.setUnregistered();
         registrationDevicePreferences.setUnregistered();
@@ -104,6 +117,7 @@ public class DeviceDataFrontend {
     private void maybeStartEvents() {
         maybeStartConnectionEvents();
         maybeStartBatteryEvents();
+        maybeStartWirelessSwitchesEvents();
         maybeStartActionEvents();
         maybeStartShiftingEvents();
         maybeStartDevicePreferencesEvents();
@@ -145,6 +159,7 @@ public class DeviceDataFrontend {
         if (!dataRouter.hasConnectionInfoListeners() &&
                 !dataRouter.hasShiftingInfoListeners() &&
                 !dataRouter.hasBatteryInfoListeners() &&
+                !dataRouter.hasWirelessSwitchesListeners() &&
                 !dataRouter.hasDevicePreferencesListeners()) {
             return;
         }
@@ -160,6 +175,7 @@ public class DeviceDataFrontend {
         if (dataRouter.hasConnectionInfoListeners() ||
                 dataRouter.hasShiftingInfoListeners() ||
                 dataRouter.hasBatteryInfoListeners() ||
+                dataRouter.hasWirelessSwitchesListeners() ||
                 dataRouter.hasDevicePreferencesListeners()) {
             return;
         }
@@ -217,6 +233,44 @@ public class DeviceDataFrontend {
         }
 
         registrationBatteryInfo.unregister();
+    }
+
+    public void registerUnfilteredWirelessSwitchesWeakListener(BiConsumer<DeviceId, WirelessSwitchesInfo> wirelessSwitchesConsumer) {
+        handler.post(() -> {
+            dataRouter.registerUnfilteredWirelessSwitchesWeakListener(wirelessSwitchesConsumer);
+            maybeStartEvents();
+        });
+    }
+
+    public void unregisterUnfilteredWirelessSwitchesWeakListener(BiConsumer<DeviceId, WirelessSwitchesInfo> wirelessSwitchesConsumer) {
+        handler.post(() -> {
+            dataRouter.unregisterUnfilteredWirelessSwitchesWeakListener(wirelessSwitchesConsumer);
+            maybeStopWirelessSwitchesEvents();
+        });
+    }
+
+    private void maybeStartWirelessSwitchesEvents() {
+        if (service == null) {
+            return;
+        }
+
+        if (!dataRouter.hasWirelessSwitchesListeners()) {
+            return;
+        }
+
+        registrationWirelessSwitches.register();
+    }
+
+    private void maybeStopWirelessSwitchesEvents() {
+        if (service == null) {
+            return;
+        }
+
+        if (dataRouter.hasWirelessSwitchesListeners()) {
+            return;
+        }
+
+        registrationWirelessSwitches.unregister();
     }
 
     public void registerShiftingInfoWeakListener(BiConsumer<DeviceId, ShiftingInfo> shiftingInfoConsumer) {
@@ -307,6 +361,7 @@ public class DeviceDataFrontend {
         if (!dataRouter.hasConnectionInfoListeners() &&
                 !dataRouter.hasShiftingInfoListeners() &&
                 !dataRouter.hasBatteryInfoListeners() &&
+                !dataRouter.hasWirelessSwitchesListeners() &&
                 !dataRouter.hasDevicePreferencesListeners()) {
             return;
         }
@@ -322,6 +377,7 @@ public class DeviceDataFrontend {
         if (dataRouter.hasConnectionInfoListeners() ||
                 dataRouter.hasShiftingInfoListeners() ||
                 dataRouter.hasBatteryInfoListeners() ||
+                dataRouter.hasWirelessSwitchesListeners() ||
                 dataRouter.hasDevicePreferencesListeners()) {
             return;
         }

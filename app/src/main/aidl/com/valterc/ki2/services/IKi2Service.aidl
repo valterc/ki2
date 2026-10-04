@@ -12,6 +12,7 @@ import com.valterc.ki2.services.callbacks.IScanCallback;
 import com.valterc.ki2.services.callbacks.IMessageCallback;
 import com.valterc.ki2.services.callbacks.IPreferencesCallback;
 import com.valterc.ki2.services.callbacks.IDevicePreferencesCallback;
+import com.valterc.ki2.services.callbacks.IWirelessSwitchesCallback;
 
 import com.valterc.ki2.data.device.DeviceId;
 import com.valterc.ki2.data.message.Message;
@@ -70,5 +71,8 @@ interface IKi2Service {
     void saveDevice(in DeviceId deviceId);
     void deleteDevice(in DeviceId deviceId);
     List<DeviceId> getSavedDevices();
+
+    void registerWirelessSwitchesListener(IWirelessSwitchesCallback callback);
+    void unregisterWirelessSwitchesListener(IWirelessSwitchesCallback callback);
 
 }

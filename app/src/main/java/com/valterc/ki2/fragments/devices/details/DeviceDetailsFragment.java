@@ -34,6 +34,7 @@ import com.valterc.ki2.data.shifting.RearTeethPattern;
 import com.valterc.ki2.data.shifting.ShiftingInfo;
 import com.valterc.ki2.data.switches.SwitchChannel;
 import com.valterc.ki2.data.switches.WirelessSwitchInfo;
+import com.valterc.ki2.data.switches.WirelessSwitchName;
 import com.valterc.ki2.data.switches.WirelessSwitchesInfo;
 import com.valterc.ki2.fragments.IKarooKeyListener;
 import com.valterc.ki2.services.Ki2Service;
@@ -484,42 +485,7 @@ public class DeviceDetailsFragment extends Fragment implements IKarooKeyListener
     }
 
     private String getWirelessSwitchBatteryName(WirelessSwitchInfo wirelessSwitchInfo) {
-        String typeName;
-        switch (wirelessSwitchInfo.getType()) {
-            case ROAD_SHIFTER:
-                typeName = getString(R.string.text_road_shifter);
-                break;
-
-            case TT_SHIFTER:
-                typeName = getString(R.string.text_tt_shifter);
-                break;
-
-            case TT_SWITCH:
-                typeName = getString(R.string.text_tt_switch);
-                break;
-
-            case MTB_SWITCH:
-                typeName = getString(R.string.text_mtb_switch);
-                break;
-
-            case SWITCH:
-            default:
-                typeName = getString(R.string.text_switch);
-                break;
-        }
-
-        switch (wirelessSwitchInfo.getSide()) {
-            case LEFT:
-                return getString(R.string.text_param_side_switch_battery, getString(R.string.text_left), typeName);
-
-            case RIGHT:
-                return getString(R.string.text_param_side_switch_battery, getString(R.string.text_right), typeName);
-
-            case LEFT_OR_RIGHT:
-            case NONE:
-            default:
-                return getString(R.string.text_param_switch_battery, typeName);
-        }
+        return getString(R.string.text_param_switch_battery, WirelessSwitchName.getName(requireContext(), wirelessSwitchInfo));
     }
 
     private void setGearingText(TextView textView, DevicePreferences devicePreferences, ShiftingInfo shiftingInfo) {

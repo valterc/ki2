@@ -1,6 +1,8 @@
 package com.valterc.ki2.karoo
 
 import android.content.Context
+import com.valterc.ki2.data.device.DeviceId
+import com.valterc.ki2.data.device.DeviceName
 import com.valterc.ki2.input.ActionManager
 import com.valterc.ki2.karoo.audio.AudioManager
 import com.valterc.ki2.karoo.device.KarooSensorDeviceTracking
@@ -16,4 +18,9 @@ class Ki2ExtensionContext(val extension: String, val context: Context) {
     val actionManager: ActionManager = ActionManager(this)
     val shiftCountHandler: ShiftCountHandler = ShiftCountHandler(this)
     val karooDeviceTracking: KarooSensorDeviceTracking = KarooSensorDeviceTracking()
+
+    fun getDeviceName(deviceId: DeviceId): String {
+        return serviceClient.getDevicePreferences(deviceId)?.getName(context)
+            ?: DeviceName.getDefaultName(context, deviceId)
+    }
 }

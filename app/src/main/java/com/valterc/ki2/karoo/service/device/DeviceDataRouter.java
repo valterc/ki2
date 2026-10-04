@@ -9,6 +9,7 @@ import com.valterc.ki2.data.device.BatteryInfo;
 import com.valterc.ki2.data.device.DeviceId;
 import com.valterc.ki2.data.preferences.device.DevicePreferencesView;
 import com.valterc.ki2.data.shifting.ShiftingInfo;
+import com.valterc.ki2.data.switches.WirelessSwitchesInfo;
 import com.valterc.ki2.karoo.service.listeners.KeyedDataStreamWeakListenerList;
 import com.valterc.ki2.karoo.service.listeners.BiDataStreamWeakListenerList;
 
@@ -31,6 +32,7 @@ public class DeviceDataRouter {
     private final KeyedDataStreamWeakListenerList<DeviceId, BatteryInfo> batteryInfoUnfilteredListeners;
     private final KeyedDataStreamWeakListenerList<DeviceId, ShiftingInfo> shiftingInfoUnfilteredListeners;
     private final KeyedDataStreamWeakListenerList<DeviceId, DevicePreferencesView> devicePreferencesUnfilteredListener;
+    private final KeyedDataStreamWeakListenerList<DeviceId, WirelessSwitchesInfo> wirelessSwitchesUnfilteredListeners;
 
     private final BiDataStreamWeakListenerList<DeviceId, KarooActionEvent> actionEventListeners;
 
@@ -50,6 +52,7 @@ public class DeviceDataRouter {
         batteryInfoUnfilteredListeners = new KeyedDataStreamWeakListenerList<>();
         shiftingInfoUnfilteredListeners = new KeyedDataStreamWeakListenerList<>();
         devicePreferencesUnfilteredListener = new KeyedDataStreamWeakListenerList<>();
+        wirelessSwitchesUnfilteredListeners = new KeyedDataStreamWeakListenerList<>();
 
         actionEventListeners = new BiDataStreamWeakListenerList<>();
 
@@ -94,6 +97,18 @@ public class DeviceDataRouter {
 
     public boolean hasBatteryInfoListeners() {
         return batteryInfoListeners.hasListeners() || batteryInfoUnfilteredListeners.hasListeners();
+    }
+
+    public void registerUnfilteredWirelessSwitchesWeakListener(BiConsumer<DeviceId, WirelessSwitchesInfo> wirelessSwitchesConsumer) {
+        wirelessSwitchesUnfilteredListeners.addListener(wirelessSwitchesConsumer);
+    }
+
+    public void unregisterUnfilteredWirelessSwitchesWeakListener(BiConsumer<DeviceId, WirelessSwitchesInfo> wirelessSwitchesConsumer) {
+        wirelessSwitchesUnfilteredListeners.removeListener(wirelessSwitchesConsumer);
+    }
+
+    public boolean hasWirelessSwitchesListeners() {
+        return wirelessSwitchesUnfilteredListeners.hasListeners();
     }
 
     public void registerShiftingInfoWeakListener(BiConsumer<DeviceId, ShiftingInfo> shiftingInfoConsumer) {
@@ -245,6 +260,10 @@ public class DeviceDataRouter {
         }
 
         batteryInfoUnfilteredListeners.pushData(deviceId, batteryInfo);
+    }
+
+    public void onWirelessSwitches(DeviceId deviceId, WirelessSwitchesInfo wirelessSwitchesInfo) {
+        wirelessSwitchesUnfilteredListeners.pushData(deviceId, wirelessSwitchesInfo);
     }
 
     public void onShifting(DeviceId deviceId, ShiftingInfo shiftingInfo) {

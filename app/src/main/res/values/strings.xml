@@ -36,7 +36,7 @@
     <string name="text_connection_status">Connection Status</string>
     <string name="text_main_battery">Main Battery</string>
     <string name="text_param_switch_battery">%1$s Battery</string>
-    <string name="text_param_side_switch_battery">%1$s %2$s Battery</string>
+    <string name="text_param_side_switch">%1$s %2$s</string>
     <string name="text_left">Left</string>
     <string name="text_right">Right</string>
     <string name="text_road_shifter">Road Shifter</string>
@@ -77,6 +77,11 @@
     <string name="text_dismiss">Dismiss</string>
     <string name="text_param_low_battery">Battery of %1$s at %2$d%%</string>
     <string name="text_di2_low_battery">Di2 low battery</string>
+    <plurals name="text_low_switch_battery_header">
+        <item quantity="one">Low switch battery</item>
+        <item quantity="other">Low switch batteries</item>
+    </plurals>
+    <string name="text_param_switch_low_battery">%1$s (%2$s)</string>
     <string name="text_update_complete">Update complete</string>
     <string name="text_update_complete_restart">Update complete, please restart Karoo</string>
     <string name="text_ki2_updated">Ki2 updated</string>

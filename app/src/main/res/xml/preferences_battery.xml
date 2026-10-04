@@ -21,6 +21,12 @@
             app:title="@string/title_preference_battery_level_critical"
             app:useSimpleSummaryProvider="true" />
 
+        <SwitchPreference
+            app:defaultValue="@bool/default_preference_wireless_switch_battery_notification"
+            app:key="@string/preference_wireless_switch_battery_notification"
+            app:summary="@string/summary_preference_wireless_switch_battery_notification"
+            app:title="@string/title_preference_wireless_switch_battery_notification" />
+
     </com.valterc.ki2.views.preference.MultiLinePreferenceCategory>
 
 </PreferenceScreen>
