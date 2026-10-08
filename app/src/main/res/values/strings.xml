@@ -34,7 +34,7 @@
     <string name="text_unable_to_remove">Unable to remove</string>
     <string name="text_signal">Signal</string>
     <string name="text_connection_status">Connection Status</string>
-    <string name="text_main_battery">Main Battery</string>
+    <string name="text_shifting_battery">Shifting Battery</string>
     <string name="text_param_switch_battery">%1$s Battery</string>
     <string name="text_param_side_switch">%1$s %2$s</string>
     <string name="text_left">Left</string>
