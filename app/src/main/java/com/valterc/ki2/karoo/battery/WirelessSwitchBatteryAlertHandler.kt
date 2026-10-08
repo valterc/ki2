@@ -1,5 +1,7 @@
 package com.valterc.ki2.karoo.battery
 
+import android.os.Handler
+import android.os.Looper
 import com.valterc.ki2.R
 import com.valterc.ki2.data.device.DeviceId
 import com.valterc.ki2.data.preferences.PreferencesView
@@ -16,8 +18,18 @@ import java.util.function.Consumer
 
 class WirelessSwitchBatteryAlertHandler(extensionContext: Ki2ExtensionContext) : RideHandler(extensionContext) {
 
+    companion object {
+        private const val ALERT_DURATION_MS = 12_000L
+        private const val ALERT_GAP_MS = 1_000L
+    }
+
     private var alertsEnabled = false
     private val alertMap = mutableMapOf<WirelessSwitchBatteryAlertKey, WirelessSwitchBatteryAlertRecord>()
+
+    private val handler = Handler(Looper.getMainLooper())
+    private val alertQueue = ArrayDeque<WirelessSwitchBatteryAlertRecord>()
+    private var alertShowing = false
+    private val showNextAlertRunnable = Runnable { showNextAlert() }
 
     private val preferencesConsumer = Consumer<PreferencesView> { preferences ->
         alertsEnabled = preferences.isWirelessSwitchBatteryNotificationEnabled(extensionContext.context)
@@ -58,6 +70,11 @@ class WirelessSwitchBatteryAlertHandler(extensionContext: Ki2ExtensionContext) :
     }
 
     override fun onRideEnd() {
+        handler.post {
+            handler.removeCallbacks(showNextAlertRunnable)
+            alertQueue.clear()
+            alertShowing = false
+        }
         alertMap.values.forEach { alertRecord ->
             alertRecord.alertedInRide = false
         }
@@ -73,9 +90,15 @@ class WirelessSwitchBatteryAlertHandler(extensionContext: Ki2ExtensionContext) :
             .sortedWith(compareBy({ it.deviceId.uid }, { it.wirelessSwitchInfo.slot }))
 
         if (rideState is RideState.Recording) {
-            lowBatteryRecords.filter { !it.alertedInRide }.forEach { alertRecord ->
-                alertRecord.alertedInRide = true
-                alertInRide(alertRecord)
+            val pendingAlertRecords = lowBatteryRecords.filter { !it.alertedInRide }
+            if (pendingAlertRecords.isNotEmpty()) {
+                pendingAlertRecords.forEach { it.alertedInRide = true }
+                handler.post {
+                    alertQueue.addAll(pendingAlertRecords)
+                    if (!alertShowing) {
+                        showNextAlert()
+                    }
+                }
             }
         }
 
@@ -92,6 +115,29 @@ class WirelessSwitchBatteryAlertHandler(extensionContext: Ki2ExtensionContext) :
         }
     }
 
+    private fun showNextAlert() {
+        alertShowing = false
+
+        while (alertQueue.isNotEmpty()) {
+            val alertRecord = alertQueue.removeFirst()
+
+            if (alertRecord !in alertMap.values ||
+                alertRecord.wirelessSwitchInfo.batteryLevel != WirelessSwitchBatteryLevel.LOW) {
+                continue
+            }
+
+            if (rideState !is RideState.Recording) {
+                alertRecord.alertedInRide = false
+                continue
+            }
+
+            alertInRide(alertRecord)
+            alertShowing = true
+            handler.postDelayed(showNextAlertRunnable, ALERT_DURATION_MS + ALERT_GAP_MS)
+            return
+        }
+    }
+
     private fun alertInRide(alertRecord: WirelessSwitchBatteryAlertRecord) {
         extensionContext.karooSystem.dispatch(
             InRideAlert(
@@ -99,7 +145,7 @@ class WirelessSwitchBatteryAlertHandler(extensionContext: Ki2ExtensionContext) :
                 R.drawable.ic_hh_battery,
                 getTitle(1),
                 getDescription(alertRecord),
-                12_000,
+                ALERT_DURATION_MS,
                 backgroundColor = R.color.hh_red_600,
                 textColor = R.color.white
             )
