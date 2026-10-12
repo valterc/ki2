@@ -50,7 +50,9 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release
+            if(!properties.getProperty("RELEASE_STORE_FILE", "").empty){
+                signingConfig signingConfigs.release
+            }
         }
     }
 
