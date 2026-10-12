@@ -57,15 +57,12 @@ class SwitchBatteriesDataType(private val extensionContext: Ki2ExtensionContext)
         emitter.onNext(UpdateGraphicConfig(showHeader = true))
         emitter.onNext(ShowCustomStreamState(message = "", color = null))
 
-        val stateLock = Any()
         var state = ViewState()
         val states = Channel<ViewState>(Channel.CONFLATED)
 
         fun updateState(transform: (ViewState) -> ViewState) {
-            synchronized(stateLock) {
-                state = transform(state)
-                states.trySend(state)
-            }
+            state = transform(state)
+            states.trySend(state)
         }
 
         val job = CoroutineScope(Dispatchers.IO).launch {
