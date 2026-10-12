@@ -2,10 +2,12 @@ package com.valterc.ki2.data.switches;
 
 public enum SwitchType {
 
-    D_FLY_CH1(1),
-    D_FLY_CH2(2),
-    D_FLY_CH3(3),
-    D_FLY_CH4(4),
+    NONE(0),
+    ROAD_SHIFTER(1),
+    TT_SHIFTER(2),
+    TT_SWITCH(3),
+    MTB_SWITCH(4),
+    SWITCH(5),
     UNKNOWN(255);
 
     public static SwitchType fromValue(int value) {

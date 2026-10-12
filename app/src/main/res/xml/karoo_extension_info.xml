@@ -13,6 +13,13 @@
         typeId="DATATYPE_SHIFTING_BATTERY_PERCENTAGE" />
 
     <DataType
+        description="Battery level of each paired wireless switch."
+        displayName="Switch Batteries"
+        graphical="true"
+        icon="@drawable/ic_hh_battery"
+        typeId="DATATYPE_SWITCH_BATTERIES" />
+
+    <DataType
         description="Shifting mode. Pressing the text will change the shifting mode."
         displayName="Shifting Mode"
         graphical="true"

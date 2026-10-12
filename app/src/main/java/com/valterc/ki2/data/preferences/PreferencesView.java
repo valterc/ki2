@@ -268,6 +268,11 @@ public class PreferencesView implements Parcelable {
         return Integer.valueOf(value);
     }
 
+    public boolean isWirelessSwitchBatteryNotificationEnabled(Context context) {
+        return getBoolean(context.getString(R.string.preference_wireless_switch_battery_notification),
+                () -> context.getResources().getBoolean(R.bool.default_preference_wireless_switch_battery_notification));
+    }
+
     /**
      * Indicates if audio alerts are enabled.
      *

@@ -5,6 +5,7 @@ import android.content.Intent
 import com.valterc.ki2.BuildConfig
 import com.valterc.ki2.data.device.DeviceId
 import com.valterc.ki2.karoo.battery.BatteryAlertHandler
+import com.valterc.ki2.karoo.battery.WirelessSwitchBatteryAlertHandler
 import com.valterc.ki2.karoo.datatypes.text.FrontGearIndexDataType
 import com.valterc.ki2.karoo.datatypes.text.FrontGearSizeDataType
 import com.valterc.ki2.karoo.datatypes.text.FrontShiftCountDataType
@@ -17,6 +18,7 @@ import com.valterc.ki2.karoo.datatypes.text.RearShiftCountDataType
 import com.valterc.ki2.karoo.datatypes.text.ShiftCountDataType
 import com.valterc.ki2.karoo.datatypes.text.ShiftingBatteryPercentageDataType
 import com.valterc.ki2.karoo.datatypes.text.ShiftingModeDataType
+import com.valterc.ki2.karoo.datatypes.text.SwitchBatteriesDataType
 import com.valterc.ki2.karoo.datatypes.visual.BikeBatteryVisualDataType
 import com.valterc.ki2.karoo.datatypes.visual.DrivetrainIndexVisualDataType
 import com.valterc.ki2.karoo.datatypes.visual.DrivetrainSizeVisualDataType
@@ -70,6 +72,7 @@ class Ki2ExtensionService : KarooExtension("ki2", BuildConfig.VERSION_NAME) {
         listOf(
             ShiftingBatteryPercentageDataType(extensionContext),
             ShiftingModeDataType(extensionContext),
+            SwitchBatteriesDataType(extensionContext),
             GearRatioDataType(extensionContext),
             GearsIndexDataType(extensionContext),
             GearsSizeDataType(extensionContext),
@@ -103,6 +106,7 @@ class Ki2ExtensionService : KarooExtension("ki2", BuildConfig.VERSION_NAME) {
                 handlers.add(OverlayWindowHandler(this, extensionContext))
                 handlers.add(ShiftingAudioAlertHandler(extensionContext))
                 handlers.add(BatteryAlertHandler(extensionContext))
+                handlers.add(WirelessSwitchBatteryAlertHandler(extensionContext))
                 handlers.add(fitDeviceInfoHandler)
             }
         }

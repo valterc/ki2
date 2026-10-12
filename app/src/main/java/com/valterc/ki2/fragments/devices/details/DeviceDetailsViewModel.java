@@ -21,6 +21,7 @@ import com.valterc.ki2.data.info.ManufacturerInfo;
 import com.valterc.ki2.data.preferences.device.DevicePreferences;
 import com.valterc.ki2.data.shifting.ShiftingInfo;
 import com.valterc.ki2.data.switches.SwitchEvent;
+import com.valterc.ki2.data.switches.WirelessSwitchesInfo;
 import com.valterc.ki2.services.IKi2Service;
 import com.valterc.ki2.services.callbacks.IConnectionDataInfoCallback;
 
@@ -67,6 +68,7 @@ public class DeviceDetailsViewModel extends ViewModel {
                 postDataIfAvailable(dataMap, DataType.BATTERY, batteryInfo);
                 postDataIfAvailable(dataMap, DataType.SWITCH, switchEvent);
                 postDataIfAvailable(dataMap, DataType.SIGNAL, signalInfo);
+                postDataIfAvailable(dataMap, DataType.WIRELESS_SWITCHES, wirelessSwitchesInfo);
             }
         }
     };
@@ -88,6 +90,7 @@ public class DeviceDetailsViewModel extends ViewModel {
     private final MutableLiveData<BatteryInfo> batteryInfo;
     private final MutableLiveData<SwitchEvent> switchEvent;
     private final MutableLiveData<SignalInfo> signalInfo;
+    private final MutableLiveData<WirelessSwitchesInfo> wirelessSwitchesInfo;
 
     public DeviceDetailsViewModel() {
         this.service = new MutableLiveData<>();
@@ -97,6 +100,7 @@ public class DeviceDetailsViewModel extends ViewModel {
         this.batteryInfo = new MutableLiveData<>();
         this.switchEvent = new MutableLiveData<>();
         this.signalInfo = new MutableLiveData<>();
+        this.wirelessSwitchesInfo = new MutableLiveData<>();
     }
 
     public DeviceId getDeviceId() {
@@ -141,6 +145,10 @@ public class DeviceDetailsViewModel extends ViewModel {
 
     public LiveData<SignalInfo> getSignalInfo() {
         return signalInfo;
+    }
+
+    public LiveData<WirelessSwitchesInfo> getWirelessSwitchesInfo() {
+        return wirelessSwitchesInfo;
     }
 
     public void reconnect() throws Exception {

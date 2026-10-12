@@ -45,6 +45,7 @@ import com.valterc.ki2.data.preferences.device.DevicePreferencesView;
 import com.valterc.ki2.data.ride.RideStatus;
 import com.valterc.ki2.data.shifting.ShiftingInfo;
 import com.valterc.ki2.data.switches.SwitchEvent;
+import com.valterc.ki2.data.switches.WirelessSwitchesInfo;
 import com.valterc.ki2.data.update.ReleaseInfo;
 import com.valterc.ki2.input.InputManager;
 import com.valterc.ki2.services.callbacks.IActionCallback;
@@ -58,6 +59,7 @@ import com.valterc.ki2.services.callbacks.IPreferencesCallback;
 import com.valterc.ki2.services.callbacks.IScanCallback;
 import com.valterc.ki2.services.callbacks.IShiftingCallback;
 import com.valterc.ki2.services.callbacks.ISwitchCallback;
+import com.valterc.ki2.services.callbacks.IWirelessSwitchesCallback;
 import com.valterc.ki2.services.debug.DebugHelper;
 import com.valterc.ki2.services.handler.ServiceHandler;
 import com.valterc.ki2.services.karoo.KarooRideStateListener;
@@ -96,6 +98,8 @@ public class Ki2Service extends Service implements IAntScanListener, IDeviceConn
     private final RemoteCallbackList<IManufacturerInfoCallback> callbackListManufacturerInfo
             = new RemoteCallbackList<>();
     private final RemoteCallbackList<IBatteryCallback> callbackListBattery
+            = new RemoteCallbackList<>();
+    private final RemoteCallbackList<IWirelessSwitchesCallback> callbackListWirelessSwitches
             = new RemoteCallbackList<>();
     private final RemoteCallbackList<IShiftingCallback> callbackListShifting
             = new RemoteCallbackList<>();
@@ -235,6 +239,40 @@ public class Ki2Service extends Service implements IAntScanListener, IDeviceConn
         public void unregisterBatteryListener(IBatteryCallback callback) {
             if (callback != null) {
                 callbackListBattery.unregister(callback);
+            }
+
+            serviceHandler.postRetriableAction(Ki2Service.this::processConnections);
+        }
+
+        @Override
+        public void registerWirelessSwitchesListener(IWirelessSwitchesCallback callback) {
+            if (callback == null) {
+                return;
+            }
+
+            callbackListWirelessSwitches.register(callback);
+            serviceHandler.postAction(() -> {
+                for (ConnectionDataManager connectionDataManager : connectionsDataManager.getDataManagers()) {
+                    try {
+                        WirelessSwitchesInfo wirelessSwitchesInfo = (WirelessSwitchesInfo) connectionDataManager.getData(DataType.WIRELESS_SWITCHES);
+                        if (wirelessSwitchesInfo != null) {
+                            callback.onWirelessSwitches(
+                                    connectionDataManager.getDeviceId(),
+                                    wirelessSwitchesInfo);
+                        }
+                    } catch (RemoteException e) {
+                        Timber.w(e, "Error during callback execution");
+                        break;
+                    }
+                }
+            });
+            serviceHandler.postRetriableAction(Ki2Service.this::processConnections);
+        }
+
+        @Override
+        public void unregisterWirelessSwitchesListener(IWirelessSwitchesCallback callback) {
+            if (callback != null) {
+                callbackListWirelessSwitches.unregister(callback);
             }
 
             serviceHandler.postRetriableAction(Ki2Service.this::processConnections);
@@ -565,6 +603,7 @@ public class Ki2Service extends Service implements IAntScanListener, IDeviceConn
 
         callbackListManufacturerInfo.kill();
         callbackListBattery.kill();
+        callbackListWirelessSwitches.kill();
         callbackListShifting.kill();
         callbackListSwitch.kill();
         callbackListScan.kill();
@@ -607,6 +646,7 @@ public class Ki2Service extends Service implements IAntScanListener, IDeviceConn
         if (callbackListSwitch.getRegisteredCallbackCount() != 0
                 || callbackListConnectionInfo.getRegisteredCallbackCount() != 0
                 || callbackListBattery.getRegisteredCallbackCount() != 0
+                || callbackListWirelessSwitches.getRegisteredCallbackCount() != 0
                 || callbackListConnectionDataInfo.getRegisteredCallbackCount() != 0
                 || callbackListManufacturerInfo.getRegisteredCallbackCount() != 0
                 || callbackListShifting.getRegisteredCallbackCount() != 0
@@ -698,6 +738,12 @@ public class Ki2Service extends Service implements IAntScanListener, IDeviceConn
                         broadcastData(callbackListBattery,
                                 () -> (BatteryInfo) connectionsDataManager.getData(deviceId, dataType),
                                 (callback, battery) -> callback.onBattery(deviceId, battery));
+                        break;
+
+                    case WIRELESS_SWITCHES:
+                        broadcastData(callbackListWirelessSwitches,
+                                () -> (WirelessSwitchesInfo) connectionsDataManager.getData(deviceId, dataType),
+                                (callback, wirelessSwitches) -> callback.onWirelessSwitches(deviceId, wirelessSwitches));
                         break;
 
                     case SWITCH:

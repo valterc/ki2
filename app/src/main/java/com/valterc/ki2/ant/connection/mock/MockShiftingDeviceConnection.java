@@ -20,7 +20,13 @@ import com.valterc.ki2.data.shifting.FrontTeethPattern;
 import com.valterc.ki2.data.shifting.RearTeethPattern;
 import com.valterc.ki2.data.shifting.ShiftingInfoBuilder;
 import com.valterc.ki2.data.shifting.ShiftingMode;
+import com.valterc.ki2.data.switches.WirelessSwitchBatteryLevel;
+import com.valterc.ki2.data.switches.SwitchSide;
+import com.valterc.ki2.data.switches.SwitchType;
+import com.valterc.ki2.data.switches.WirelessSwitchInfo;
+import com.valterc.ki2.data.switches.WirelessSwitchesInfo;
 
+import java.util.Arrays;
 import java.util.Random;
 
 public class MockShiftingDeviceConnection implements IAntDeviceConnection {
@@ -105,6 +111,12 @@ public class MockShiftingDeviceConnection implements IAntDeviceConnection {
 
                     deviceConnectionListener.onData(deviceId, DataType.BATTERY, new BatteryInfo(battery));
                     deviceConnectionListener.onData(deviceId, DataType.MANUFACTURER_INFO, manufacturerInfoBuilder.build());
+                    deviceConnectionListener.onData(deviceId, DataType.WIRELESS_SWITCHES, new WirelessSwitchesInfo(Arrays.asList(
+                            new WirelessSwitchInfo(1, SwitchType.ROAD_SHIFTER, SwitchSide.LEFT, WirelessSwitchBatteryLevel.LOW),
+                            new WirelessSwitchInfo(2, SwitchType.ROAD_SHIFTER, SwitchSide.RIGHT, WirelessSwitchBatteryLevel.MID),
+                            new WirelessSwitchInfo(3, SwitchType.TT_SWITCH, SwitchSide.NONE, WirelessSwitchBatteryLevel.UNKNOWN),
+                            new WirelessSwitchInfo(4, SwitchType.NONE, SwitchSide.LEFT_OR_RIGHT, WirelessSwitchBatteryLevel.HIGH),
+                            new WirelessSwitchInfo(5, SwitchType.UNKNOWN, SwitchSide.LEFT, WirelessSwitchBatteryLevel.LOW))));
                     handler.postDelayed(this::runDataFlow, TIME_MS_INIT_CONNECT);
                 }, (long) (TIME_MS_INIT_CONNECT + TIME_MS_INIT_CONNECT * random.nextDouble()));
             }

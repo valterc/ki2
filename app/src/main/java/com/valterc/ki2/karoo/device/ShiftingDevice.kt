@@ -4,7 +4,6 @@ import com.valterc.ki2.data.connection.ConnectionInfo
 import com.valterc.ki2.data.connection.ConnectionStatus
 import com.valterc.ki2.data.device.BatteryInfo
 import com.valterc.ki2.data.device.DeviceId
-import com.valterc.ki2.data.device.DeviceName
 import com.valterc.ki2.data.preferences.PreferencesView
 import com.valterc.ki2.data.preferences.device.DevicePreferencesView
 import com.valterc.ki2.data.shifting.ShiftingInfo
@@ -49,9 +48,7 @@ class ShiftingDevice(
                 DataType.dataTypeId(extensionContext.extension, Ki2DataType.Type.DI2),
                 DataType.dataTypeId(extensionContext.extension, Ki2DataType.Type.STEPS)
             ),
-            extensionContext.serviceClient.getDevicePreferences(deviceId)
-                ?.getName(extensionContext.context)
-                ?: DeviceName.getDefaultName(extensionContext.context, deviceId)
+            extensionContext.getDeviceName(deviceId)
         )
     }
 

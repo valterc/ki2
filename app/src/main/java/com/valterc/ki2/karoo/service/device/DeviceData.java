@@ -8,6 +8,7 @@ import com.valterc.ki2.data.device.BatteryInfo;
 import com.valterc.ki2.data.device.DeviceId;
 import com.valterc.ki2.data.preferences.device.DevicePreferencesView;
 import com.valterc.ki2.data.shifting.ShiftingInfo;
+import com.valterc.ki2.data.switches.WirelessSwitchesInfo;
 
 public class DeviceData {
 
@@ -16,6 +17,7 @@ public class DeviceData {
     private BatteryInfo batteryInfo;
     private ShiftingInfo shiftingInfo;
     private DevicePreferencesView preferences;
+    private WirelessSwitchesInfo wirelessSwitchesInfo;
 
     public DeviceData(@NonNull DeviceId deviceId) {
         this.deviceId = deviceId;
@@ -60,5 +62,14 @@ public class DeviceData {
 
     public void setPreferences(DevicePreferencesView preferences) {
         this.preferences = preferences;
+    }
+
+    @Nullable
+    public WirelessSwitchesInfo getWirelessSwitchesInfo() {
+        return wirelessSwitchesInfo;
+    }
+
+    public void setWirelessSwitchesInfo(WirelessSwitchesInfo wirelessSwitchesInfo) {
+        this.wirelessSwitchesInfo = wirelessSwitchesInfo;
     }
 }

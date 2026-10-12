@@ -3,7 +3,6 @@ package com.valterc.ki2.karoo.battery
 import com.valterc.ki2.R
 import com.valterc.ki2.data.device.BatteryInfo
 import com.valterc.ki2.data.device.DeviceId
-import com.valterc.ki2.data.device.DeviceName
 import com.valterc.ki2.data.preferences.PreferencesView
 import com.valterc.ki2.karoo.Ki2ExtensionContext
 import com.valterc.ki2.karoo.RideHandler
@@ -90,13 +89,7 @@ class BatteryAlertHandler(extensionContext: Ki2ExtensionContext) : RideHandler(e
             return
         }
 
-        val devicePreferences =
-            extensionContext.serviceClient.getDevicePreferences(batteryAlertRecord.deviceId)
-        val deviceName =
-            devicePreferences?.getName(extensionContext.context) ?: DeviceName.getDefaultName(
-                extensionContext.context,
-                batteryAlertRecord.deviceId
-            )
+        val deviceName = extensionContext.getDeviceName(batteryAlertRecord.deviceId)
         val title = extensionContext.context.getString(R.string.text_di2_low_battery)
         val detail = extensionContext.context.getString(
             R.string.text_param_low_battery,

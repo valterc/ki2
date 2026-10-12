@@ -3,7 +3,6 @@ package com.valterc.ki2.fragments.devices.details;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -21,6 +20,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.widget.TextViewCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.checkbox.MaterialCheckBox;
@@ -32,10 +32,14 @@ import com.valterc.ki2.data.preferences.device.DevicePreferences;
 import com.valterc.ki2.data.shifting.FrontTeethPattern;
 import com.valterc.ki2.data.shifting.RearTeethPattern;
 import com.valterc.ki2.data.shifting.ShiftingInfo;
-import com.valterc.ki2.data.switches.SwitchType;
+import com.valterc.ki2.data.switches.SwitchChannel;
+import com.valterc.ki2.data.switches.WirelessSwitchInfo;
+import com.valterc.ki2.data.switches.WirelessSwitchName;
+import com.valterc.ki2.data.switches.WirelessSwitchesInfo;
 import com.valterc.ki2.fragments.IKarooKeyListener;
 import com.valterc.ki2.services.Ki2Service;
 import com.valterc.ki2.views.DrivetrainView;
+import com.valterc.ki2.views.battery.BatteryIndicator;
 
 import timber.log.Timber;
 
@@ -151,6 +155,7 @@ public class DeviceDetailsFragment extends Fragment implements IKarooKeyListener
 
         LinearLayout linearLayoutWaitingForDataBattery = view.findViewById(R.id.linearlayout_device_details_waiting_data_battery);
         TextView textViewBattery = view.findViewById(R.id.textview_device_details_battery);
+        LinearLayout linearLayoutWirelessSwitchBatteries = view.findViewById(R.id.linearlayout_device_details_wireless_switch_batteries);
 
         LinearLayout linearLayoutWaitingForDataManufacturer = view.findViewById(R.id.linearlayout_device_details_waiting_data_manufacturer);
         TextView textViewManufacturer = view.findViewById(R.id.textview_device_details_manufacturer_name);
@@ -335,33 +340,12 @@ public class DeviceDetailsFragment extends Fragment implements IKarooKeyListener
             int batteryValue = batteryInfo.getValue();
             textViewBattery.setText(getString(R.string.text_param_percentage, batteryValue));
 
-            int color;
-            int drawableId;
-
-            if (batteryValue >= 80) {
-                color = requireContext().getColor(R.color.hh_green);
-                drawableId = R.drawable.ic_battery_5;
-            } else if (batteryValue >= 70) {
-                color = requireContext().getColor(R.color.hh_green);
-                drawableId = R.drawable.ic_battery_4;
-            } else if (batteryValue >= 50) {
-                color = requireContext().getColor(R.color.hh_green);
-                drawableId = R.drawable.ic_battery_3;
-            } else if (batteryValue >= 30) {
-                color = requireContext().getColor(R.color.hh_yellow_dark);
-                drawableId = R.drawable.ic_battery_2;
-            } else if (batteryValue >= 20) {
-                color = requireContext().getColor(R.color.hh_orange_dark);
-                drawableId = R.drawable.ic_battery_1;
-            } else {
-                color = requireContext().getColor(R.color.hh_red);
-                drawableId = R.drawable.ic_battery_0;
-            }
-
-            TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(textViewBattery, 0, 0, drawableId, 0);
-            TextViewCompat.setCompoundDrawableTintList(textViewBattery, ColorStateList.valueOf(color));
+            BatteryIndicator.fromPercentage(batteryValue).applyTo(textViewBattery);
             linearLayoutWaitingForDataBattery.setVisibility(View.GONE);
         });
+
+        Transformations.distinctUntilChanged(viewModel.getWirelessSwitchesInfo()).observe(getViewLifecycleOwner(), wirelessSwitchesInfo ->
+                setWirelessSwitchBatteries(linearLayoutWirelessSwitchBatteries, wirelessSwitchesInfo));
 
         viewModel.getManufacturerInfo().observe(getViewLifecycleOwner(), manufacturerInfo -> {
             textViewManufacturer.setText(manufacturerInfo.getManufacturer().getName());
@@ -389,16 +373,16 @@ public class DeviceDetailsFragment extends Fragment implements IKarooKeyListener
         viewModel.getSwitchEvent().observe(getViewLifecycleOwner(), switchEvent -> {
             TextView textViewSwitch;
 
-            if (switchEvent.getType() == SwitchType.D_FLY_CH1) {
+            if (switchEvent.getChannel() == SwitchChannel.D_FLY_CH1) {
                 textViewSwitch = textViewSwitchCH1;
                 timestampSwitchCH1 = System.currentTimeMillis();
-            } else if (switchEvent.getType() == SwitchType.D_FLY_CH2) {
+            } else if (switchEvent.getChannel() == SwitchChannel.D_FLY_CH2) {
                 textViewSwitch = textViewSwitchCH2;
                 timestampSwitchCH2 = System.currentTimeMillis();
-            } else if (switchEvent.getType() == SwitchType.D_FLY_CH3) {
+            } else if (switchEvent.getChannel() == SwitchChannel.D_FLY_CH3) {
                 textViewSwitch = textViewSwitchCH3;
                 timestampSwitchCH3 = System.currentTimeMillis();
-            } else if (switchEvent.getType() == SwitchType.D_FLY_CH4) {
+            } else if (switchEvent.getChannel() == SwitchChannel.D_FLY_CH4) {
                 textViewSwitch = textViewSwitchCH4;
                 timestampSwitchCH4 = System.currentTimeMillis();
             } else {
@@ -431,19 +415,19 @@ public class DeviceDetailsFragment extends Fragment implements IKarooKeyListener
 
             if (autoClear) {
                 handler.postDelayed(() -> {
-                    if (switchEvent.getType() == SwitchType.D_FLY_CH1) {
+                    if (switchEvent.getChannel() == SwitchChannel.D_FLY_CH1) {
                         if (System.currentTimeMillis() - timestampSwitchCH1 > SWITCH_AUTO_CLEAR_DELAY_MS * 0.8) {
                             textViewSwitchCH1.setText(R.string.dash);
                         }
-                    } else if (switchEvent.getType() == SwitchType.D_FLY_CH2) {
+                    } else if (switchEvent.getChannel() == SwitchChannel.D_FLY_CH2) {
                         if (System.currentTimeMillis() - timestampSwitchCH2 > SWITCH_AUTO_CLEAR_DELAY_MS * 0.8) {
                             textViewSwitchCH2.setText(R.string.dash);
                         }
-                    } else if (switchEvent.getType() == SwitchType.D_FLY_CH3) {
+                    } else if (switchEvent.getChannel() == SwitchChannel.D_FLY_CH3) {
                         if (System.currentTimeMillis() - timestampSwitchCH3 > SWITCH_AUTO_CLEAR_DELAY_MS * 0.8) {
                             textViewSwitchCH3.setText(R.string.dash);
                         }
-                    } else if (switchEvent.getType() == SwitchType.D_FLY_CH4) {
+                    } else if (switchEvent.getChannel() == SwitchChannel.D_FLY_CH4) {
                         if (System.currentTimeMillis() - timestampSwitchCH4 > SWITCH_AUTO_CLEAR_DELAY_MS * 0.8) {
                             textViewSwitchCH4.setText(R.string.dash);
                         }
@@ -458,6 +442,50 @@ public class DeviceDetailsFragment extends Fragment implements IKarooKeyListener
     @Override
     public boolean onKarooKeyPressed(KarooKey karooKey) {
         return false;
+    }
+
+    private void setWirelessSwitchBatteries(LinearLayout linearLayout, WirelessSwitchesInfo wirelessSwitchesInfo) {
+        linearLayout.removeAllViews();
+
+        for (WirelessSwitchInfo wirelessSwitchInfo : wirelessSwitchesInfo.getSwitches()) {
+            View viewSwitchBattery = getLayoutInflater().inflate(R.layout.view_item_device_details_wireless_switch_battery, linearLayout, false);
+
+            TextView textViewName = viewSwitchBattery.findViewById(R.id.textview_wireless_switch_battery_name);
+            textViewName.setText(getWirelessSwitchBatteryName(wirelessSwitchInfo));
+
+            TextView textViewLevel = viewSwitchBattery.findViewById(R.id.textview_wireless_switch_battery_level);
+            switch (wirelessSwitchInfo.getBatteryLevel()) {
+                case LOW:
+                    textViewLevel.setText(R.string.text_battery_low);
+                    break;
+
+                case MID:
+                    textViewLevel.setText(R.string.text_battery_mid);
+                    break;
+
+                case HIGH:
+                    textViewLevel.setText(R.string.text_battery_high);
+                    break;
+
+                case UNKNOWN:
+                default:
+                    textViewLevel.setText(R.string.text_unknown);
+                    break;
+            }
+
+            BatteryIndicator batteryIndicator = BatteryIndicator.fromWirelessSwitchBatteryLevel(wirelessSwitchInfo.getBatteryLevel());
+            if (batteryIndicator != null) {
+                batteryIndicator.applyTo(textViewLevel);
+            } else {
+                TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(textViewLevel, 0, 0, 0, 0);
+            }
+
+            linearLayout.addView(viewSwitchBattery);
+        }
+    }
+
+    private String getWirelessSwitchBatteryName(WirelessSwitchInfo wirelessSwitchInfo) {
+        return getString(R.string.text_param_switch_battery, WirelessSwitchName.getName(requireContext(), wirelessSwitchInfo));
     }
 
     private void setGearingText(TextView textView, DevicePreferences devicePreferences, ShiftingInfo shiftingInfo) {

@@ -23,7 +23,8 @@ public enum SlaveStatusIndicator {
     SWITCH_DFLY_CH3(524288),
     SWITCH_DFLY_CH4(1048576),
     SYSTEM_FUNCTIONS(2097152),
-    CHAINRINGS(4194304);
+    CHAINRINGS(4194304),
+    WIRELESS_SWITCH_INFO(8388608);
 
     public static SlaveStatusIndicator fromFlag(int flag) {
         for (SlaveStatusIndicator slaveStatusIndicator : values()) {
