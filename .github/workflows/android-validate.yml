@@ -30,11 +30,18 @@ jobs:
         GH_KEY: ${{ secrets.GH_KEY || github.token }}
       run: |
         echo "<?xml version=\"1.0\" encoding=\"utf-8\"?><resources><string name=\"network_key\">${{ secrets.S_NETWORK_KEY }}</string></resources>" > app/src/main/res/values/secrets.xml
-        echo ${ANDROID_RELEASE_KEY_BASE64} | base64 -d > app/release-application-key
-        echo "RELEASE_STORE_FILE=release-application-key" >> local.properties
-        echo "RELEASE_STORE_PASSWORD=${ANDROID_RELEASE_KEY_PASSWORD}" >> local.properties
-        echo "RELEASE_KEY_ALIAS=${ANDROID_RELEASE_KEY_ALIAS}" >> local.properties
-        echo "RELEASE_KEY_PASSWORD=${ANDROID_RELEASE_KEY_PASSWORD}" >> local.properties
+        if [[ -n "${ANDROID_RELEASE_KEY_BASE64}" || -n "${ANDROID_RELEASE_KEY_ALIAS}" || -n "${ANDROID_RELEASE_KEY_PASSWORD}" ]]; then
+          : "${ANDROID_RELEASE_KEY_BASE64:?Release signing key is missing}"
+          : "${ANDROID_RELEASE_KEY_ALIAS:?Release signing key alias is missing}"
+          : "${ANDROID_RELEASE_KEY_PASSWORD:?Release signing key password is missing}"
+          printf '%s' "${ANDROID_RELEASE_KEY_BASE64}" | base64 -d > app/release-application-key
+          echo "RELEASE_STORE_FILE=release-application-key" >> local.properties
+          echo "RELEASE_STORE_PASSWORD=${ANDROID_RELEASE_KEY_PASSWORD}" >> local.properties
+          echo "RELEASE_KEY_ALIAS=${ANDROID_RELEASE_KEY_ALIAS}" >> local.properties
+          echo "RELEASE_KEY_PASSWORD=${ANDROID_RELEASE_KEY_PASSWORD}" >> local.properties
+        else
+          echo "::notice::Release signing secrets are unavailable; building an unsigned release APK."
+        fi
         echo "gpr.user=${GH_USER}" >> local.properties
         echo "gpr.key=${GH_KEY}" >> local.properties
 
