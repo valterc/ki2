@@ -50,6 +50,18 @@ public class WirelessSwitchesInfo implements Parcelable {
         return switches;
     }
 
+    public WirelessSwitchBatteryLevel getLowestBatteryLevel() {
+        WirelessSwitchBatteryLevel lowest = WirelessSwitchBatteryLevel.UNKNOWN;
+        for (WirelessSwitchInfo wirelessSwitchInfo : switches) {
+            WirelessSwitchBatteryLevel level = wirelessSwitchInfo.getBatteryLevel();
+            if (level != WirelessSwitchBatteryLevel.UNKNOWN &&
+                    (lowest == WirelessSwitchBatteryLevel.UNKNOWN || level.getValue() < lowest.getValue())) {
+                lowest = level;
+            }
+        }
+        return lowest;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

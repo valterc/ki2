@@ -27,6 +27,9 @@ class SwitchBatteriesView @JvmOverloads constructor(context: Context, attrs: Att
     }
     private var rows = emptyList<Row>()
 
+    val rowCount: Int
+        get() = rows.size
+
     fun setSwitches(switches: List<WirelessSwitchInfo>) {
         val switchesByType = switches.sortedBy { it.slot }.groupBy { it.type }.toSortedMap()
         rows = switchesByType.values.map { rowSwitches ->
@@ -113,15 +116,7 @@ class SwitchBatteriesView @JvmOverloads constructor(context: Context, attrs: Att
     private fun createBatteryView(level: WirelessSwitchBatteryLevel): BatteryView {
         return BatteryView(context, null).apply {
             orientation = BatteryView.Orientation.VERTICAL_TOP
-            value = when (level) {
-                WirelessSwitchBatteryLevel.HIGH -> 1f
-                WirelessSwitchBatteryLevel.MID -> 0.5f
-                WirelessSwitchBatteryLevel.LOW -> 0.15f
-                else -> 0f
-            }
-            val color = context.getColor(BatteryIndicator.fromWirelessSwitchBatteryLevel(level)?.colorId ?: R.color.hh_grey)
-            setForegroundColor(color)
-            setBorderColor(color)
+            setWirelessSwitchBatteryLevel(level)
         }
     }
 

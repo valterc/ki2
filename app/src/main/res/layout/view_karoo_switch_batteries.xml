@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -32,9 +33,7 @@
             android:textSize="18sp"
             android:includeFontPadding="false"
             android:lineSpacingMultiplier="0.7"
-            android:fontFamily="ibm-plex-sans-condensed"
-            android:maxLines="2"
-            android:ellipsize="end" />
+            android:fontFamily="ibm-plex-sans-condensed" />
 
     </LinearLayout>
 
@@ -48,6 +47,15 @@
             android:id="@+id/switchbatteriesview_karoo"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:visibility="invisible" />
+
+        <com.valterc.ki2.views.battery.BatteryView
+            android:id="@+id/batteryview_karoo_switch_battery"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            app:orientation="vertical_top"
+            android:contentDescription="@null"
             android:visibility="invisible" />
 
         <TextView

@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.valterc.ki2.R;
+import com.valterc.ki2.data.switches.WirelessSwitchBatteryLevel;
 
 @SuppressWarnings("unused")
 public class BatteryView extends View {
@@ -164,6 +165,27 @@ public class BatteryView extends View {
 
     public float getValue() {
         return value;
+    }
+
+    public void setWirelessSwitchBatteryLevel(WirelessSwitchBatteryLevel level) {
+        switch (level) {
+            case HIGH:
+                setValue(1f);
+                break;
+            case MID:
+                setValue(0.5f);
+                break;
+            case LOW:
+                setValue(0.15f);
+                break;
+            default:
+                setValue(0f);
+                break;
+        }
+        BatteryIndicator indicator = BatteryIndicator.fromWirelessSwitchBatteryLevel(level);
+        int color = getContext().getColor(indicator == null ? R.color.hh_grey : indicator.getColorId());
+        setForegroundColor(color);
+        setBorderColor(color);
     }
 
     public void setOrientation(Orientation orientation) {

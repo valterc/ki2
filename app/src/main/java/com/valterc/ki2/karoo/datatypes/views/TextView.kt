@@ -28,6 +28,7 @@ fun TextView(
     dataAlignment: ViewConfig.Alignment = ViewConfig.Alignment.RIGHT,
     fontSize: Int = 50,
     action: Action? = null,
+    transparentBackground: Boolean = false,
 ) {
     var boxModifier = GlanceModifier
         .fillMaxSize()
@@ -56,8 +57,8 @@ fun TextView(
                 fontSize = (fontSize * 0.97).sp,
                 fontFamily = FontFamily.Monospace
             ),
-            modifier = GlanceModifier
-                .background(Color(1f, 1f, 1f, 1f), Color(0f, 0f, 0f, 1f))
+            modifier = (if (transparentBackground) GlanceModifier else
+                GlanceModifier.background(Color.White, Color.Black))
                 .padding(top = (-fontSize * 0.09).dp)
         )
     }

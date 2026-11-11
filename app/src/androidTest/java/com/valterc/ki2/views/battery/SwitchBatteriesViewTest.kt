@@ -1,31 +1,55 @@
 package com.valterc.ki2.views.battery
 
 import android.content.Context
+import android.content.ContextWrapper
+import android.content.Intent
+import android.content.ServiceConnection
+import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Rect
 import android.os.Parcel
-import android.view.LayoutInflater
+import android.text.Layout
 import android.view.View
+import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.RemoteViews
 import android.widget.TextView
 import androidx.core.graphics.createBitmap
+import androidx.compose.ui.unit.DpSize
+import androidx.glance.appwidget.ExperimentalGlanceRemoteViewsApi
+import androidx.glance.appwidget.GlanceRemoteViews
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.valterc.ki2.R
+import com.valterc.ki2.data.connection.ConnectionInfo
+import com.valterc.ki2.data.connection.ConnectionStatus
+import com.valterc.ki2.data.device.DeviceId
 import com.valterc.ki2.data.switches.SwitchSide
 import com.valterc.ki2.data.switches.SwitchType
 import com.valterc.ki2.data.switches.WirelessSwitchBatteryLevel
 import com.valterc.ki2.data.switches.WirelessSwitchInfo
+import com.valterc.ki2.data.switches.WirelessSwitchesInfo
+import com.valterc.ki2.karoo.Ki2ExtensionContext
+import com.valterc.ki2.karoo.datatypes.RenderedVisualDataType
+import com.valterc.ki2.karoo.datatypes.views.NotAvailable
+import com.valterc.ki2.karoo.datatypes.views.Waiting
+import com.valterc.ki2.karoo.datatypes.visual.SwitchBatteryVisualDataType
+import com.valterc.ki2.karoo.views.SwitchBatteriesExtensionView
+import io.hammerhead.karooext.models.ViewConfig
+import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.util.function.BiConsumer
 import kotlin.math.roundToInt
+import kotlin.math.ceil
+import com.valterc.ki2.karoo.datatypes.views.TextView as DataTextView
 
 @RunWith(AndroidJUnit4::class)
 class SwitchBatteriesViewTest {
@@ -142,7 +166,7 @@ class SwitchBatteriesViewTest {
     @Test
     fun headerShowsTitleAndIconWithoutOverlappingBatteriesOrMessages() {
         for ((width, height) in listOf(478 to 642, 478 to 126, 238 to 126)) {
-            val view = layoutWithBattery()
+            val view = layoutWithBattery(width, height)
             val bitmap = render(view, width, height)
             val header = view.findViewById<View>(R.id.linearlayout_karoo_switch_batteries_header)
             val title = view.findViewById<TextView>(R.id.textview_karoo_switch_batteries_header)
@@ -150,16 +174,11 @@ class SwitchBatteriesViewTest {
             val content = view.findViewById<View>(R.id.framelayout_karoo_switch_batteries_content)
             val batteries = view.findViewById<SwitchBatteriesView>(R.id.switchbatteriesview_karoo)
             val message = view.findViewById<TextView>(R.id.textview_karoo_switch_batteries_message)
-            val battery = bounds(bitmap, R.color.hh_green)
+            val battery = bounds(bitmap, BatteryIndicator.LEVEL_5.colorId)
 
             assertEquals(context.getString(R.string.text_switch_batteries), title.text.toString())
             assertTrue(title.width > 0 && title.height > 0)
-            assertEquals(if (width == 238) 2 else 1, title.layout.lineCount)
-            for (line in 0 until title.layout.lineCount) {
-                assertEquals("The full header title must fit without truncation", 0, title.layout.getEllipsisCount(line))
-                assertTrue(title.layout.getLineWidth(line) <= title.width)
-            }
-            assertTrue(title.layout.height <= title.height)
+            assertTitleFits(title)
             assertTrue(icon.drawable != null && icon.width > 0 && icon.height > 0)
             assertTrue(header.bottom <= content.top)
             assertTrue(content.height > 0)
@@ -176,6 +195,150 @@ class SwitchBatteriesViewTest {
             assertEquals(context.getString(R.string.text_waiting_for_data), message.text.toString())
             waitingBitmap.recycle()
             bitmap.recycle()
+        }
+    }
+
+    @Test
+    fun lowestBatteryVisualAlwaysUsesFullTitleAndBatteryView() {
+        assertTrue(RenderedVisualDataType::class.java.isAssignableFrom(SwitchBatteryVisualDataType::class.java))
+        val cases = listOf(
+            listOf(WirelessSwitchBatteryLevel.HIGH) to WirelessSwitchBatteryLevel.HIGH,
+            listOf(WirelessSwitchBatteryLevel.HIGH, WirelessSwitchBatteryLevel.MID) to WirelessSwitchBatteryLevel.MID,
+            listOf(WirelessSwitchBatteryLevel.HIGH, WirelessSwitchBatteryLevel.UNKNOWN, WirelessSwitchBatteryLevel.LOW) to WirelessSwitchBatteryLevel.LOW,
+            listOf(WirelessSwitchBatteryLevel.UNKNOWN) to WirelessSwitchBatteryLevel.UNKNOWN
+        )
+        for ((width, height) in listOf(478 to 642, 478 to 126, 238 to 126)) {
+            for ((levels, expected) in cases) {
+                val view = layoutWithBattery(width, height, showLowestBatteryOnly = true, levels = levels)
+                val bitmap = render(view, width, height)
+                val title = view.findViewById<TextView>(R.id.textview_karoo_switch_batteries_header)
+                val batteryView = view.findViewById<BatteryView>(R.id.batteryview_karoo_switch_battery)
+                assertEquals(context.getString(R.string.text_switch_battery), title.text.toString())
+                assertFalse(title.text.contains("(visual)"))
+                assertTitleFits(title)
+                assertEquals(View.VISIBLE, batteryView.visibility)
+                assertEquals(BatteryView.Orientation.VERTICAL_TOP, batteryView.orientation)
+                assertEquals(batteryView.width * 2, batteryView.height)
+                assertEquals(View.INVISIBLE, view.findViewById<View>(R.id.switchbatteriesview_karoo).visibility)
+                assertEquals(View.INVISIBLE, view.findViewById<View>(R.id.textview_karoo_switch_batteries_message).visibility)
+                val colorId = BatteryIndicator.fromWirelessSwitchBatteryLevel(expected)?.colorId ?: R.color.hh_grey
+                assertEquals(context.getColor(colorId), batteryView.foregroundColor)
+                assertEquals(context.getColor(colorId), batteryView.borderColor)
+                val expectedValue = when (expected) {
+                    WirelessSwitchBatteryLevel.HIGH -> 1f
+                    WirelessSwitchBatteryLevel.MID -> 0.5f
+                    WirelessSwitchBatteryLevel.LOW -> 0.15f
+                    WirelessSwitchBatteryLevel.UNKNOWN -> 0f
+                }
+                assertEquals(expectedValue, batteryView.value, 0f)
+                assertEquals(if (expected == WirelessSwitchBatteryLevel.UNKNOWN) "Unknown" else expected.name, batteryView.contentDescription)
+                val battery = bounds(bitmap, colorId)
+                assertTrue(battery.top >= view.findViewById<View>(R.id.linearlayout_karoo_switch_batteries_header).bottom)
+                bitmap.recycle()
+            }
+        }
+    }
+
+    @Test
+    fun headerAbbreviatesOnlyForMultipleRowsAndInsufficientWidth() {
+        val oneRow = listOf(
+            switch(1, SwitchType.TT_SWITCH, SwitchSide.NONE, WirelessSwitchBatteryLevel.HIGH),
+            switch(2, SwitchType.TT_SWITCH, SwitchSide.NONE, WirelessSwitchBatteryLevel.MID),
+            switch(3, SwitchType.TT_SWITCH, SwitchSide.NONE, WirelessSwitchBatteryLevel.LOW)
+        )
+        val twoRows = listOf(
+            oneRow.first(),
+            switch(2, SwitchType.ROAD_SHIFTER, SwitchSide.LEFT, WirelessSwitchBatteryLevel.LOW)
+        )
+        val threeRows = twoRows + switch(3, SwitchType.MTB_SWITCH, SwitchSide.RIGHT, WirelessSwitchBatteryLevel.MID)
+        for (showLowestBatteryOnly in listOf(false, true)) {
+            val fullTitle = context.getString(if (showLowestBatteryOnly) R.string.text_switch_battery else R.string.text_switch_batteries)
+            val shortTitle = context.getString(R.string.text_short_switch_batteries)
+            val reference = layoutWithBattery(showLowestBatteryOnly = showLowestBatteryOnly)
+            val header = reference.findViewById<TextView>(R.id.textview_karoo_switch_batteries_header)
+            val fullText = header.transformationMethod.getTransformation(fullTitle, header)
+            val shortText = header.transformationMethod.getTransformation(shortTitle, header)
+            val widthOutsideText = reference.width - header.width + header.compoundPaddingLeft + header.compoundPaddingRight
+            val fullWidth = ceil(Layout.getDesiredWidth(fullText, header.paint)).toInt() + widthOutsideText
+            val shortWidth = ceil(Layout.getDesiredWidth(shortText, header.paint)).toInt() + widthOutsideText
+            for (gridSize in listOf(1 to 1, 2 to 1, 30 to 30, 60 to 30)) {
+                for (width in listOf(fullWidth + 1, fullWidth - 1, shortWidth)) {
+                    for (switches in listOf(emptyList(), oneRow.take(1), oneRow, twoRows, threeRows)) {
+                        val view = layoutWithBattery(
+                            width, showLowestBatteryOnly = showLowestBatteryOnly,
+                            gridSize = gridSize, switches = switches
+                        )
+                        val bitmap = render(view, width, reference.height)
+                        val title = view.findViewById<TextView>(R.id.textview_karoo_switch_batteries_header)
+                        val rowCount = switches.map { it.type }.distinct().size
+                        val shouldShorten = !showLowestBatteryOnly && rowCount > 1 && width < fullWidth
+                        assertEquals(if (shouldShorten) shortTitle else fullTitle, title.text.toString())
+                        if (shouldShorten) {
+                            assertEquals(1, title.layout.lineCount)
+                        }
+                        assertTitleFits(title)
+                        bitmap.recycle()
+                    }
+                }
+            }
+        }
+    }
+
+    @Test
+    fun headerUpdatesWhenVisibleBatteryRowsChange() {
+        val deviceId = DeviceId(1, 1, 1)
+        val oneRow = listOf(switch(1, SwitchType.TT_SWITCH, SwitchSide.NONE, WirelessSwitchBatteryLevel.HIGH))
+        val twoRows = oneRow + switch(2, SwitchType.ROAD_SHIFTER, SwitchSide.LEFT, WirelessSwitchBatteryLevel.LOW)
+        for (showLowestBatteryOnly in listOf(false, true)) {
+            layoutWithBattery(238, showLowestBatteryOnly = showLowestBatteryOnly, switches = twoRows) { extensionView, view ->
+                val title = view.findViewById<TextView>(R.id.textview_karoo_switch_batteries_header)
+                val fullTitle = context.getString(if (showLowestBatteryOnly) R.string.text_switch_battery else R.string.text_switch_batteries)
+                val multipleRowsTitle = if (showLowestBatteryOnly) fullTitle else context.getString(R.string.text_short_switch_batteries)
+                assertEquals(multipleRowsTitle, title.text.toString())
+
+                val switchesConsumer = consumer<WirelessSwitchesInfo>(extensionView, "switchesConsumer")
+                switchesConsumer.accept(deviceId, WirelessSwitchesInfo(oneRow))
+                assertEquals(fullTitle, title.text.toString())
+                assertTitleFits(title)
+
+                switchesConsumer.accept(deviceId, WirelessSwitchesInfo(twoRows))
+                assertEquals(multipleRowsTitle, title.text.toString())
+                assertTitleFits(title)
+
+                consumer<ConnectionInfo>(extensionView, "connectionInfoConsumer").accept(
+                    deviceId, ConnectionInfo(ConnectionStatus.CLOSED)
+                )
+                assertEquals(fullTitle, title.text.toString())
+                assertTitleFits(title)
+            }
+        }
+    }
+
+    @OptIn(ExperimentalGlanceRemoteViewsApi::class)
+    @Test
+    fun batteryTextAndStatusViewsHaveTransparentBackgroundsInBothThemes() = runBlocking {
+        for (nightMode in listOf(Configuration.UI_MODE_NIGHT_NO, Configuration.UI_MODE_NIGHT_YES)) {
+            val configuration = Configuration(context.resources.configuration).apply {
+                uiMode = (uiMode and Configuration.UI_MODE_NIGHT_MASK.inv()) or nightMode
+            }
+            val themedContext = context.createConfigurationContext(configuration)
+            for (text in listOf("LOW", "...", "N/A")) {
+                val remoteViews = GlanceRemoteViews().compose(themedContext, DpSize.Unspecified) {
+                    when (text) {
+                        "..." -> Waiting(transparentBackground = true)
+                        "N/A" -> NotAvailable(transparentBackground = true)
+                        else -> DataTextView(text, fontSize = 30, transparentBackground = true)
+                    }
+                }.remoteViews
+                val view = remoteViews.apply(themedContext, FrameLayout(themedContext))
+                val bitmap = render(view, 238, 126)
+                val textView = findTextView(view, text)
+                assertTrue("Text must be present in the remote view", textView != null)
+                assertNull("Text background must be transparent", textView?.background)
+                assertEquals(0, bitmap.getPixel(0, 0))
+                assertEquals(0, bitmap.getPixel(bitmap.width - 1, bitmap.height - 1))
+                bitmap.recycle()
+            }
         }
     }
 
@@ -234,14 +397,74 @@ class SwitchBatteriesViewTest {
         setSwitches(switches.toList())
     }
 
-    private fun layoutWithBattery(): View {
-        return LayoutInflater.from(context).inflate(R.layout.view_karoo_switch_batteries, null).apply {
-            findViewById<SwitchBatteriesView>(R.id.switchbatteriesview_karoo).apply {
-                setSwitches(listOf(switch(1, SwitchType.TT_SWITCH, SwitchSide.NONE, WirelessSwitchBatteryLevel.HIGH)))
-                visibility = View.VISIBLE
-            }
-            findViewById<TextView>(R.id.textview_karoo_switch_batteries_message).visibility = View.INVISIBLE
+    private fun layoutWithBattery(
+        width: Int = 478,
+        height: Int = 126,
+        showLowestBatteryOnly: Boolean = false,
+        levels: List<WirelessSwitchBatteryLevel> = listOf(WirelessSwitchBatteryLevel.HIGH),
+        gridSize: Pair<Int, Int> = 30 to 30,
+        switches: List<WirelessSwitchInfo> = levels.mapIndexed { index, level ->
+            switch(index + 1, SwitchType.TT_SWITCH, SwitchSide.NONE, level)
+        },
+        onCreated: (SwitchBatteriesExtensionView, View) -> Unit = { _, _ -> }
+    ): View {
+        val detachedContext = object : ContextWrapper(context) {
+            override fun bindService(service: Intent, connection: ServiceConnection, flags: Int) = true
+            override fun unbindService(connection: ServiceConnection) {}
         }
+        val extensionContext = Ki2ExtensionContext("ki2", detachedContext)
+        val extensionView = SwitchBatteriesExtensionView(extensionContext, showLowestBatteryOnly)
+        try {
+            val deviceId = DeviceId(1, 1, 1)
+            consumer<ConnectionInfo>(extensionView, "connectionInfoConsumer").accept(
+                deviceId, ConnectionInfo(ConnectionStatus.ESTABLISHED)
+            )
+            consumer<WirelessSwitchesInfo>(extensionView, "switchesConsumer").accept(
+                deviceId, WirelessSwitchesInfo(switches)
+            )
+            val view = extensionView.createView(
+                ViewConfig(
+                    gridSize = gridSize,
+                    viewSize = width to height,
+                    textSize = 30,
+                    alignment = ViewConfig.Alignment.RIGHT
+                )
+            )
+            onCreated(extensionView, view)
+            return view
+        } finally {
+            extensionView.dispose()
+            extensionContext.serviceClient.dispose()
+            extensionContext.karooSystem.disconnect()
+        }
+    }
+
+    private fun assertTitleFits(title: TextView) {
+        assertFalse(title.includeFontPadding)
+        assertEquals(0.7f, title.lineSpacingMultiplier, 0f)
+        assertTrue(title.layout.lineCount > 0)
+        for (line in 0 until title.layout.lineCount) {
+            assertEquals("The full header title must fit without truncation", 0, title.layout.getEllipsisCount(line))
+            assertTrue(title.layout.getLineWidth(line) <= title.width)
+        }
+        assertTrue(title.layout.height <= title.height)
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    private fun <T> consumer(view: SwitchBatteriesExtensionView, name: String): BiConsumer<DeviceId, T> {
+        return SwitchBatteriesExtensionView::class.java.getDeclaredField(name).apply {
+            isAccessible = true
+        }.get(view) as BiConsumer<DeviceId, T>
+    }
+
+    private fun findTextView(view: View, text: String): TextView? {
+        if (view is TextView && view.text.toString() == text) return view
+        if (view is ViewGroup) {
+            for (index in 0 until view.childCount) {
+                findTextView(view.getChildAt(index), text)?.let { return it }
+            }
+        }
+        return null
     }
 
     private fun render(view: View, width: Int, height: Int): Bitmap {

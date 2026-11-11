@@ -23,7 +23,8 @@ import io.hammerhead.karooext.models.ViewConfig
 @Composable
 fun Waiting(
     dataAlignment: ViewConfig.Alignment = ViewConfig.Alignment.RIGHT,
-    fontSize: Int = 20
+    fontSize: Int = 20,
+    transparentBackground: Boolean = false
 ) {
     Box(
         modifier = GlanceModifier
@@ -46,8 +47,8 @@ fun Waiting(
                 fontSize = fontSize.sp,
                 fontFamily = FontFamily.SansSerif
             ),
-            modifier = GlanceModifier
-                .background(Color(1f, 1f, 1f, 1f), Color(0f, 0f, 0f, 1f))
+            modifier = if (transparentBackground) GlanceModifier else
+                GlanceModifier.background(Color.White, Color.Black)
         )
     }
 }
