@@ -147,7 +147,19 @@ class SwitchBatteriesExtensionView(
             messageView.setText(R.string.text_no_switches)
         } else if (showLowestBatteryOnly) {
             val level = info.lowestBatteryLevel
-            batteryView.setWirelessSwitchBatteryLevel(level)
+            batteryView.value = when (level) {
+                WirelessSwitchBatteryLevel.HIGH -> 1f
+                WirelessSwitchBatteryLevel.MID -> 0.5f
+                WirelessSwitchBatteryLevel.LOW -> 0.15f
+                WirelessSwitchBatteryLevel.UNKNOWN -> 0f
+            }
+            val color = context.getColor(when (level) {
+                WirelessSwitchBatteryLevel.HIGH, WirelessSwitchBatteryLevel.MID -> R.color.hh_success_green_600
+                WirelessSwitchBatteryLevel.LOW -> R.color.hh_red
+                WirelessSwitchBatteryLevel.UNKNOWN -> R.color.hh_grey
+            })
+            batteryView.setForegroundColor(color)
+            batteryView.setBorderColor(color)
             batteryView.contentDescription = context.getString(when (level) {
                 WirelessSwitchBatteryLevel.LOW -> R.string.text_battery_low
                 WirelessSwitchBatteryLevel.MID -> R.string.text_battery_mid

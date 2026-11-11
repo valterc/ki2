@@ -116,7 +116,19 @@ class SwitchBatteriesView @JvmOverloads constructor(context: Context, attrs: Att
     private fun createBatteryView(level: WirelessSwitchBatteryLevel): BatteryView {
         return BatteryView(context, null).apply {
             orientation = BatteryView.Orientation.VERTICAL_TOP
-            setWirelessSwitchBatteryLevel(level)
+            value = when (level) {
+                WirelessSwitchBatteryLevel.HIGH -> 1f
+                WirelessSwitchBatteryLevel.MID -> 0.5f
+                WirelessSwitchBatteryLevel.LOW -> 0.15f
+                WirelessSwitchBatteryLevel.UNKNOWN -> 0f
+            }
+            val color = context.getColor(when (level) {
+                WirelessSwitchBatteryLevel.HIGH, WirelessSwitchBatteryLevel.MID -> R.color.hh_success_green_600
+                WirelessSwitchBatteryLevel.LOW -> R.color.hh_red
+                WirelessSwitchBatteryLevel.UNKNOWN -> R.color.hh_grey
+            })
+            setForegroundColor(color)
+            setBorderColor(color)
         }
     }
 

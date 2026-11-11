@@ -174,7 +174,7 @@ class SwitchBatteriesViewTest {
             val content = view.findViewById<View>(R.id.framelayout_karoo_switch_batteries_content)
             val batteries = view.findViewById<SwitchBatteriesView>(R.id.switchbatteriesview_karoo)
             val message = view.findViewById<TextView>(R.id.textview_karoo_switch_batteries_message)
-            val battery = bounds(bitmap, BatteryIndicator.LEVEL_5.colorId)
+            val battery = bounds(bitmap, R.color.hh_success_green_600)
 
             assertEquals(context.getString(R.string.text_switch_batteries), title.text.toString())
             assertTrue(title.width > 0 && title.height > 0)
@@ -194,6 +194,40 @@ class SwitchBatteriesViewTest {
             assertEquals(content.height, message.height)
             assertEquals(context.getString(R.string.text_waiting_for_data), message.text.toString())
             waitingBitmap.recycle()
+            bitmap.recycle()
+        }
+    }
+
+    @Test
+    fun switchBatteriesPreserveLevelFillsAndColors() {
+        val switchesView = view()
+        val cases = listOf(
+            Triple(WirelessSwitchBatteryLevel.HIGH, 1f, R.color.hh_success_green_600),
+            Triple(WirelessSwitchBatteryLevel.MID, 0.5f, R.color.hh_success_green_600),
+            Triple(WirelessSwitchBatteryLevel.LOW, 0.15f, R.color.hh_red),
+            Triple(WirelessSwitchBatteryLevel.UNKNOWN, 0f, R.color.hh_grey)
+        )
+        for ((level, expectedValue, colorId) in cases + cases.reversed()) {
+            switchesView.setSwitches(listOf(switch(1, SwitchType.TT_SWITCH, SwitchSide.NONE, level)))
+            val bitmap = render(switchesView, maximumWidth * 4, maximumWidth * 2 + 2)
+            val batteryView = BatteryView(context, null).apply {
+                orientation = BatteryView.Orientation.VERTICAL_TOP
+                borderStrokeWidth = maximumWidth * 0.1f
+                value = expectedValue
+                setForegroundColor(context.getColor(colorId))
+                setBorderColor(context.getColor(colorId))
+            }
+            val expected = render(batteryView, maximumWidth, maximumWidth * 2)
+            val actual = Bitmap.createBitmap(
+                bitmap,
+                ((bitmap.width - expected.width) / 2f).roundToInt(),
+                ((bitmap.height - expected.height) / 2f).roundToInt(),
+                expected.width,
+                expected.height
+            )
+            assertTrue("Battery fill and color must match $level", expected.sameAs(actual))
+            actual.recycle()
+            expected.recycle()
             bitmap.recycle()
         }
     }
@@ -221,7 +255,11 @@ class SwitchBatteriesViewTest {
                 assertEquals(batteryView.width * 2, batteryView.height)
                 assertEquals(View.INVISIBLE, view.findViewById<View>(R.id.switchbatteriesview_karoo).visibility)
                 assertEquals(View.INVISIBLE, view.findViewById<View>(R.id.textview_karoo_switch_batteries_message).visibility)
-                val colorId = BatteryIndicator.fromWirelessSwitchBatteryLevel(expected)?.colorId ?: R.color.hh_grey
+                val colorId = when (expected) {
+                    WirelessSwitchBatteryLevel.HIGH, WirelessSwitchBatteryLevel.MID -> R.color.hh_success_green_600
+                    WirelessSwitchBatteryLevel.LOW -> R.color.hh_red
+                    WirelessSwitchBatteryLevel.UNKNOWN -> R.color.hh_grey
+                }
                 assertEquals(context.getColor(colorId), batteryView.foregroundColor)
                 assertEquals(context.getColor(colorId), batteryView.borderColor)
                 val expectedValue = when (expected) {
