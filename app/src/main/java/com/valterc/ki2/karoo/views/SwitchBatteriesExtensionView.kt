@@ -125,6 +125,7 @@ class SwitchBatteriesExtensionView(
         val batteriesView = batteriesView ?: return
         val batteryView = batteryView ?: return
         val messageView = messageView ?: return
+        val viewConfig = viewConfig ?: return
         val info = switchesInfo?.takeIf { switchesDeviceId == connectionDeviceId }
 
         if (connectionInfo?.isConnected != true || info == null) {
@@ -132,14 +133,18 @@ class SwitchBatteriesExtensionView(
             batteryView.visibility = View.INVISIBLE
             messageView.visibility = View.VISIBLE
             messageView.setText(
-                if (showLowestBatteryOnly && connectionInfo?.isClosed == true) R.string.text_na
-                else R.string.text_waiting_for_data
+                when {
+                    connectionInfo?.isClosed == true -> R.string.text_na
+                    // Karoo uses 60 grid columns for full width, independently of screen resolution.
+                    viewConfig.gridSize.first < 60 -> R.string.text_short_waiting_for_data
+                    else -> R.string.text_waiting_for_data
+                }
             )
         } else if (info.switches.isEmpty()) {
             batteriesView.visibility = View.INVISIBLE
             batteryView.visibility = View.INVISIBLE
             messageView.visibility = View.VISIBLE
-            messageView.setText(if (showLowestBatteryOnly) R.string.text_na else R.string.text_no_switches)
+            messageView.setText(R.string.text_no_switches)
         } else if (showLowestBatteryOnly) {
             val level = info.lowestBatteryLevel
             batteryView.setWirelessSwitchBatteryLevel(level)

@@ -343,6 +343,79 @@ class SwitchBatteriesViewTest {
     }
 
     @Test
+    fun waitingMessageUsesGridSpanWithoutChangingOtherMessages() {
+        val deviceId = DeviceId(1, 1, 1)
+        val cases = listOf(
+            Triple(238, 30 to 12, R.string.text_short_waiting_for_data),
+            Triple(478, 60 to 12, R.string.text_waiting_for_data),
+            Triple(478, 30 to 12, R.string.text_short_waiting_for_data),
+            Triple(638, 60 to 30, R.string.text_waiting_for_data),
+            Triple(318, 30 to 30, R.string.text_short_waiting_for_data)
+        )
+        for (showLowestBatteryOnly in listOf(false, true)) {
+            for ((width, gridSize, waitingTextId) in cases) {
+                layoutWithBattery(width, showLowestBatteryOnly = showLowestBatteryOnly, gridSize = gridSize) { extensionView, view ->
+                    val connectionConsumer = consumer<ConnectionInfo>(extensionView, "connectionInfoConsumer")
+                    val message = view.findViewById<TextView>(R.id.textview_karoo_switch_batteries_message)
+                    val waitingText = context.getString(waitingTextId)
+
+                    repeat(2) {
+                        connectionConsumer.accept(deviceId, ConnectionInfo(ConnectionStatus.CONNECTING))
+                        assertEquals(View.VISIBLE, message.visibility)
+                        assertEquals(waitingText, message.text.toString())
+                        assertEquals(1, message.layout.lineCount)
+                        assertEquals(0, message.layout.getEllipsisCount(0))
+                        assertTrue(message.layout.getLineWidth(0) <= message.width - message.compoundPaddingLeft - message.compoundPaddingRight)
+                        assertTrue(message.layout.height <= message.height)
+                    }
+
+                    connectionConsumer.accept(deviceId, ConnectionInfo(ConnectionStatus.ESTABLISHED))
+                    assertEquals(View.INVISIBLE, message.visibility)
+                    consumer<WirelessSwitchesInfo>(extensionView, "switchesConsumer").accept(
+                        deviceId, WirelessSwitchesInfo(emptyList())
+                    )
+                    assertEquals(View.VISIBLE, message.visibility)
+                    assertEquals(
+                        context.getString(if (showLowestBatteryOnly) R.string.text_na else R.string.text_no_switches),
+                        message.text.toString()
+                    )
+
+                    connectionConsumer.accept(deviceId, ConnectionInfo(ConnectionStatus.CLOSED))
+                    assertEquals(
+                        if (showLowestBatteryOnly) context.getString(R.string.text_na) else waitingText,
+                        message.text.toString()
+                    )
+                }
+            }
+        }
+    }
+
+    @Test
+    fun waitingMessageUpdatesWhenGridSpanChanges() {
+        val deviceId = DeviceId(1, 1, 1)
+        for (showLowestBatteryOnly in listOf(false, true)) {
+            layoutWithBattery(showLowestBatteryOnly = showLowestBatteryOnly) { extensionView, _ ->
+                consumer<ConnectionInfo>(extensionView, "connectionInfoConsumer").accept(
+                    deviceId, ConnectionInfo(ConnectionStatus.CONNECTING)
+                )
+                for (columns in listOf(30, 60, 30, 60)) {
+                    val view = extensionView.createView(
+                        ViewConfig(gridSize = columns to 12, viewSize = 478 to 126, textSize = 30)
+                    )
+                    val message = view.findViewById<TextView>(R.id.textview_karoo_switch_batteries_message)
+                    assertEquals(View.VISIBLE, message.visibility)
+                    assertEquals(
+                        context.getString(
+                            if (columns == 30) R.string.text_short_waiting_for_data else R.string.text_waiting_for_data
+                        ),
+                        message.text.toString()
+                    )
+                }
+            }
+        }
+    }
+
+    @Test
     fun singleSquareKeepsSingleAndPairedBatteriesReadable() {
         val minimumHeight = (24 * context.resources.displayMetrics.density).roundToInt()
         for (paired in listOf(false, true)) {
