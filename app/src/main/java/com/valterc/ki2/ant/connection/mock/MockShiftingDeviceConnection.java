@@ -25,6 +25,7 @@ import com.valterc.ki2.data.switches.SwitchSide;
 import com.valterc.ki2.data.switches.SwitchType;
 import com.valterc.ki2.data.switches.WirelessSwitchInfo;
 import com.valterc.ki2.data.switches.WirelessSwitchesInfo;
+import com.valterc.ki2.services.debug.DebugHelper;
 
 import java.util.Arrays;
 import java.util.Random;
@@ -36,7 +37,7 @@ public class MockShiftingDeviceConnection implements IAntDeviceConnection {
     private static final int TIME_MS_DATA_UPDATE = 500;
     private static final int VALUE_INIT_BATTERY_MIN = 20;
     private static final int VALUE_INIT_BATTERY_MAX = 70;
-    private static final float PROBABILITY_INIT_DISCONNECT = .5f;
+    private static final float PROBABILITY_INIT_DISCONNECT = 0f;
     private static final float PROBABILITY_DATA_REAR_SHIFT = .033f;
     private static final float PROBABILITY_DATA_FRONT_SHIFT = .025f;
     private static final float PROBABILITY_DATA_BATTERY_DECREASE = .001f;
@@ -111,12 +112,21 @@ public class MockShiftingDeviceConnection implements IAntDeviceConnection {
 
                     deviceConnectionListener.onData(deviceId, DataType.BATTERY, new BatteryInfo(battery));
                     deviceConnectionListener.onData(deviceId, DataType.MANUFACTURER_INFO, manufacturerInfoBuilder.build());
-                    deviceConnectionListener.onData(deviceId, DataType.WIRELESS_SWITCHES, new WirelessSwitchesInfo(Arrays.asList(
-                            new WirelessSwitchInfo(1, SwitchType.ROAD_SHIFTER, SwitchSide.LEFT, WirelessSwitchBatteryLevel.LOW),
-                            new WirelessSwitchInfo(2, SwitchType.ROAD_SHIFTER, SwitchSide.RIGHT, WirelessSwitchBatteryLevel.MID),
-                            new WirelessSwitchInfo(3, SwitchType.TT_SWITCH, SwitchSide.NONE, WirelessSwitchBatteryLevel.UNKNOWN),
-                            new WirelessSwitchInfo(4, SwitchType.NONE, SwitchSide.LEFT_OR_RIGHT, WirelessSwitchBatteryLevel.HIGH),
-                            new WirelessSwitchInfo(5, SwitchType.UNKNOWN, SwitchSide.LEFT, WirelessSwitchBatteryLevel.LOW))));
+
+                    if (deviceId.getDeviceNumber() == DebugHelper.MOCK_DEVICE_ID_1) {
+                        deviceConnectionListener.onData(deviceId, DataType.WIRELESS_SWITCHES, new WirelessSwitchesInfo(Arrays.asList(
+                                new WirelessSwitchInfo(1, SwitchType.ROAD_SHIFTER, SwitchSide.LEFT, WirelessSwitchBatteryLevel.LOW),
+                                new WirelessSwitchInfo(2, SwitchType.ROAD_SHIFTER, SwitchSide.RIGHT, WirelessSwitchBatteryLevel.MID))));
+
+                    } else if (deviceId.getDeviceNumber() == DebugHelper.MOCK_DEVICE_ID_2) {
+                        deviceConnectionListener.onData(deviceId, DataType.WIRELESS_SWITCHES, new WirelessSwitchesInfo(Arrays.asList(
+                                new WirelessSwitchInfo(1, SwitchType.ROAD_SHIFTER, SwitchSide.LEFT, WirelessSwitchBatteryLevel.LOW),
+                                new WirelessSwitchInfo(2, SwitchType.ROAD_SHIFTER, SwitchSide.RIGHT, WirelessSwitchBatteryLevel.MID),
+                                new WirelessSwitchInfo(3, SwitchType.TT_SWITCH, SwitchSide.NONE, WirelessSwitchBatteryLevel.UNKNOWN),
+                                new WirelessSwitchInfo(4, SwitchType.NONE, SwitchSide.LEFT_OR_RIGHT, WirelessSwitchBatteryLevel.HIGH),
+                                new WirelessSwitchInfo(5, SwitchType.UNKNOWN, SwitchSide.LEFT, WirelessSwitchBatteryLevel.LOW))));
+                    }
+
                     handler.postDelayed(this::runDataFlow, TIME_MS_INIT_CONNECT);
                 }, (long) (TIME_MS_INIT_CONNECT + TIME_MS_INIT_CONNECT * random.nextDouble()));
             }
