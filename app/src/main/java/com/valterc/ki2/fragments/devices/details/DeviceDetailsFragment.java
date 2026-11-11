@@ -3,6 +3,7 @@ package com.valterc.ki2.fragments.devices.details;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -15,6 +16,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.ColorRes;
+import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -33,13 +36,13 @@ import com.valterc.ki2.data.shifting.FrontTeethPattern;
 import com.valterc.ki2.data.shifting.RearTeethPattern;
 import com.valterc.ki2.data.shifting.ShiftingInfo;
 import com.valterc.ki2.data.switches.SwitchChannel;
+import com.valterc.ki2.data.switches.WirelessSwitchBatteryLevel;
 import com.valterc.ki2.data.switches.WirelessSwitchInfo;
 import com.valterc.ki2.data.switches.WirelessSwitchName;
 import com.valterc.ki2.data.switches.WirelessSwitchesInfo;
 import com.valterc.ki2.fragments.IKarooKeyListener;
 import com.valterc.ki2.services.Ki2Service;
 import com.valterc.ki2.views.DrivetrainView;
-import com.valterc.ki2.views.battery.BatteryIndicator;
 
 import timber.log.Timber;
 
@@ -340,7 +343,7 @@ public class DeviceDetailsFragment extends Fragment implements IKarooKeyListener
             int batteryValue = batteryInfo.getValue();
             textViewBattery.setText(getString(R.string.text_param_percentage, batteryValue));
 
-            BatteryIndicator.fromPercentage(batteryValue).applyTo(textViewBattery);
+            setBatteryPercentageIcon(textViewBattery, batteryValue);
             linearLayoutWaitingForDataBattery.setVisibility(View.GONE);
         });
 
@@ -444,6 +447,61 @@ public class DeviceDetailsFragment extends Fragment implements IKarooKeyListener
         return false;
     }
 
+    private static void setBatteryPercentageIcon(TextView textView, int percentage) {
+        int drawableId;
+        int colorId;
+        if (percentage >= 80) {
+            drawableId = R.drawable.ic_battery_5;
+            colorId = R.color.hh_success_green_600;
+        } else if (percentage >= 70) {
+            drawableId = R.drawable.ic_battery_4;
+            colorId = R.color.hh_success_green_600;
+        } else if (percentage >= 50) {
+            drawableId = R.drawable.ic_battery_3;
+            colorId = R.color.hh_success_green_600;
+        } else if (percentage >= 30) {
+            drawableId = R.drawable.ic_battery_2;
+            colorId = R.color.hh_yellow_darker;
+        } else if (percentage >= 20) {
+            drawableId = R.drawable.ic_battery_1;
+            colorId = R.color.hh_red;
+        } else {
+            drawableId = R.drawable.ic_battery_0;
+            colorId = R.color.hh_red;
+        }
+        setBatteryIcon(textView, drawableId, colorId);
+    }
+
+    private static void setBatteryIcon(TextView textView, @DrawableRes int drawableId, @ColorRes int colorId) {
+        TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(textView, 0, 0, drawableId, 0);
+        TextViewCompat.setCompoundDrawableTintList(textView, ColorStateList.valueOf(textView.getContext().getColor(colorId)));
+    }
+
+    private static void setWirelessSwitchBatteryLevel(TextView textView, WirelessSwitchBatteryLevel level) {
+        switch (level) {
+            case LOW:
+                textView.setText(R.string.text_battery_low);
+                setBatteryIcon(textView, R.drawable.ic_battery_1, R.color.hh_red);
+                break;
+
+            case MID:
+                textView.setText(R.string.text_battery_mid);
+                setBatteryIcon(textView, R.drawable.ic_battery_3, R.color.hh_success_green_600);
+                break;
+
+            case HIGH:
+                textView.setText(R.string.text_battery_high);
+                setBatteryIcon(textView, R.drawable.ic_battery_5, R.color.hh_success_green_600);
+                break;
+
+            case UNKNOWN:
+            default:
+                textView.setText(R.string.text_unknown);
+                TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(textView, 0, 0, 0, 0);
+                break;
+        }
+    }
+
     private void setWirelessSwitchBatteries(LinearLayout linearLayout, WirelessSwitchesInfo wirelessSwitchesInfo) {
         linearLayout.removeAllViews();
 
@@ -454,31 +512,7 @@ public class DeviceDetailsFragment extends Fragment implements IKarooKeyListener
             textViewName.setText(getWirelessSwitchBatteryName(wirelessSwitchInfo));
 
             TextView textViewLevel = viewSwitchBattery.findViewById(R.id.textview_wireless_switch_battery_level);
-            switch (wirelessSwitchInfo.getBatteryLevel()) {
-                case LOW:
-                    textViewLevel.setText(R.string.text_battery_low);
-                    break;
-
-                case MID:
-                    textViewLevel.setText(R.string.text_battery_mid);
-                    break;
-
-                case HIGH:
-                    textViewLevel.setText(R.string.text_battery_high);
-                    break;
-
-                case UNKNOWN:
-                default:
-                    textViewLevel.setText(R.string.text_unknown);
-                    break;
-            }
-
-            BatteryIndicator batteryIndicator = BatteryIndicator.fromWirelessSwitchBatteryLevel(wirelessSwitchInfo.getBatteryLevel());
-            if (batteryIndicator != null) {
-                batteryIndicator.applyTo(textViewLevel);
-            } else {
-                TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(textViewLevel, 0, 0, 0, 0);
-            }
+            setWirelessSwitchBatteryLevel(textViewLevel, wirelessSwitchInfo.getBatteryLevel());
 
             linearLayout.addView(viewSwitchBattery);
         }

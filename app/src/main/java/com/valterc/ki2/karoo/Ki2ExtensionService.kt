@@ -18,13 +18,15 @@ import com.valterc.ki2.karoo.datatypes.text.RearShiftCountDataType
 import com.valterc.ki2.karoo.datatypes.text.ShiftCountDataType
 import com.valterc.ki2.karoo.datatypes.text.ShiftingBatteryPercentageDataType
 import com.valterc.ki2.karoo.datatypes.text.ShiftingModeDataType
-import com.valterc.ki2.karoo.datatypes.text.SwitchBatteriesDataType
+import com.valterc.ki2.karoo.datatypes.text.SwitchBatteryDataType
 import com.valterc.ki2.karoo.datatypes.visual.BikeBatteryVisualDataType
 import com.valterc.ki2.karoo.datatypes.visual.DrivetrainIndexVisualDataType
 import com.valterc.ki2.karoo.datatypes.visual.DrivetrainSizeVisualDataType
 import com.valterc.ki2.karoo.datatypes.visual.GearsDetailedVisualDataType
 import com.valterc.ki2.karoo.datatypes.visual.GearsIndexVisualDataType
 import com.valterc.ki2.karoo.datatypes.visual.GearsSizeVisualDataType
+import com.valterc.ki2.karoo.datatypes.visual.SwitchBatteriesVisualDataType
+import com.valterc.ki2.karoo.datatypes.visual.SwitchBatteryVisualDataType
 import com.valterc.ki2.karoo.fit.FitDeviceInfoHandler
 import com.valterc.ki2.karoo.overlay.OverlayWindowHandler
 import com.valterc.ki2.karoo.shifting.ShiftingAudioAlertHandler
@@ -71,8 +73,8 @@ class Ki2ExtensionService : KarooExtension("ki2", BuildConfig.VERSION_NAME) {
     override val types by lazy {
         listOf(
             ShiftingBatteryPercentageDataType(extensionContext),
+            SwitchBatteryDataType(extensionContext),
             ShiftingModeDataType(extensionContext),
-            SwitchBatteriesDataType(extensionContext),
             GearRatioDataType(extensionContext),
             GearsIndexDataType(extensionContext),
             GearsSizeDataType(extensionContext),
@@ -84,6 +86,8 @@ class Ki2ExtensionService : KarooExtension("ki2", BuildConfig.VERSION_NAME) {
             FrontShiftCountDataType(extensionContext),
             RearShiftCountDataType(extensionContext),
 
+            SwitchBatteriesVisualDataType(extensionContext),
+            SwitchBatteryVisualDataType(extensionContext),
             GearsIndexVisualDataType(extensionContext),
             GearsSizeVisualDataType(extensionContext),
             GearsDetailedVisualDataType(extensionContext),

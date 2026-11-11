@@ -35,6 +35,9 @@
     <string name="text_signal">Signal</string>
     <string name="text_connection_status">Connection Status</string>
     <string name="text_shifting_battery">Shifting Battery</string>
+    <string name="text_switch_batteries">Switch Batteries</string>
+    <string name="text_short_switch_batteries">Switches</string>
+    <string name="text_switch_battery">Switch Battery</string>
     <string name="text_param_switch_battery">%1$s Battery</string>
     <string name="text_param_side_switch">%1$s %2$s</string>
     <string name="text_left">Left</string>
@@ -69,6 +72,7 @@
     <string name="text_dfly_ch3">D-Fly Ch. 3</string>
     <string name="text_dfly_ch4">D-Fly Ch. 4</string>
     <string name="text_waiting_for_data">Waiting for data…</string>
+    <string name="text_short_waiting_for_data">...</string>
     <string name="text_reconnect">Reconnect</string>
     <string name="text_param_percentage">%d%%</string>
     <string name="text_unable_to_connect">Unable to connect</string>

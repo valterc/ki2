@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/linearlayout_karoo_switch_batteries_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="5dp">
+
+        <ImageView
+            android:id="@+id/imageview_karoo_switch_batteries_header"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_hh_battery"
+            android:contentDescription="@null" />
+
+        <TextView
+            android:id="@+id/textview_karoo_switch_batteries_header"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="6dp"
+            android:gravity="end"
+            android:text="@string/text_switch_batteries"
+            android:textAllCaps="true"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:includeFontPadding="false"
+            android:lineSpacingMultiplier="0.7"
+            android:fontFamily="ibm-plex-sans-condensed" />
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/framelayout_karoo_switch_batteries_content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <com.valterc.ki2.views.battery.SwitchBatteriesView
+            android:id="@+id/switchbatteriesview_karoo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="invisible" />
+
+        <com.valterc.ki2.views.battery.BatteryView
+            android:id="@+id/batteryview_karoo_switch_battery"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            app:orientation="vertical_top"
+            android:contentDescription="@null"
+            android:visibility="invisible" />
+
+        <TextView
+            android:id="@+id/textview_karoo_switch_batteries_message"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingHorizontal="5dp"
+            android:gravity="center_vertical|end"
+            android:text="@string/text_waiting_for_data"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:fontFamily="sans-serif" />
+
+    </FrameLayout>
+
+</LinearLayout>

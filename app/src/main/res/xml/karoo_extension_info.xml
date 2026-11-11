@@ -13,11 +13,11 @@
         typeId="DATATYPE_SHIFTING_BATTERY_PERCENTAGE" />
 
     <DataType
-        description="Battery level of each paired wireless switch."
-        displayName="Switch Batteries"
+        description="Lowest known battery level of wireless switches."
+        displayName="Switch Battery"
         graphical="true"
         icon="@drawable/ic_hh_battery"
-        typeId="DATATYPE_SWITCH_BATTERIES" />
+        typeId="DATATYPE_SWITCH_BATTERY" />
 
     <DataType
         description="Shifting mode. Pressing the text will change the shifting mode."
@@ -95,6 +95,20 @@
         graphical="true"
         icon="@drawable/ic_hh_gear"
         typeId="DATATYPE_REAR_SHIFT_COUNT" />
+
+    <DataType
+        description="Battery visual level of each paired wireless switch."
+        displayName="Switch Batteries (visual)"
+        graphical="true"
+        icon="@drawable/ic_hh_battery"
+        typeId="DATATYPE_VISUAL_SWITCH_BATTERIES" />
+
+    <DataType
+        description="Battery icon for the lowest known battery level of wireless switches."
+        displayName="Switch Battery (visual)"
+        graphical="true"
+        icon="@drawable/ic_hh_battery"
+        typeId="DATATYPE_VISUAL_SWITCH_BATTERY" />
 
     <DataType
         description="Gears visual view with gear index."

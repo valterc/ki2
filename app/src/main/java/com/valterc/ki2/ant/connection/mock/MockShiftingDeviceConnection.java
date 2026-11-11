@@ -28,6 +28,7 @@ import com.valterc.ki2.data.switches.WirelessSwitchesInfo;
 import com.valterc.ki2.services.debug.DebugHelper;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 public class MockShiftingDeviceConnection implements IAntDeviceConnection {
@@ -125,6 +126,8 @@ public class MockShiftingDeviceConnection implements IAntDeviceConnection {
                                 new WirelessSwitchInfo(3, SwitchType.TT_SWITCH, SwitchSide.NONE, WirelessSwitchBatteryLevel.UNKNOWN),
                                 new WirelessSwitchInfo(4, SwitchType.NONE, SwitchSide.LEFT_OR_RIGHT, WirelessSwitchBatteryLevel.HIGH),
                                 new WirelessSwitchInfo(5, SwitchType.UNKNOWN, SwitchSide.LEFT, WirelessSwitchBatteryLevel.LOW))));
+                    } else {
+                        deviceConnectionListener.onData(deviceId, DataType.WIRELESS_SWITCHES, new WirelessSwitchesInfo(List.of()));
                     }
 
                     handler.postDelayed(this::runDataFlow, TIME_MS_INIT_CONNECT);
