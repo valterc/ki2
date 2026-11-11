@@ -13,11 +13,11 @@ import com.valterc.ki2.data.switches.WirelessSwitchBatteryLevel;
 
 public enum BatteryIndicator {
 
-    LEVEL_5(R.color.hh_green, R.drawable.ic_battery_5),
-    LEVEL_4(R.color.hh_green, R.drawable.ic_battery_4),
-    LEVEL_3(R.color.hh_green, R.drawable.ic_battery_3),
-    LEVEL_2(R.color.hh_yellow_dark, R.drawable.ic_battery_2),
-    LEVEL_1(R.color.hh_orange_dark, R.drawable.ic_battery_1),
+    LEVEL_5(R.color.hh_success_green_600, R.drawable.ic_battery_5),
+    LEVEL_4(R.color.hh_success_green_600, R.drawable.ic_battery_4),
+    LEVEL_3(R.color.hh_success_green_600, R.drawable.ic_battery_3),
+    LEVEL_2(R.color.hh_yellow_darker, R.drawable.ic_battery_2),
+    LEVEL_1(R.color.hh_red, R.drawable.ic_battery_1),
     LEVEL_0(R.color.hh_red, R.drawable.ic_battery_0);
 
     public static BatteryIndicator fromPercentage(int percentage) {
